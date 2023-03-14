@@ -54,7 +54,13 @@ public class SocketClient extends WebSocketClient {
     @Override
     public void onMessage(String message) {
         System.out.println("In ->> " + message);
-        UpdateProcessor.getInstance().notifyMessage(message, address);
+        try {
+            UpdateProcessor.getInstance().notifyMessage(message, address);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override

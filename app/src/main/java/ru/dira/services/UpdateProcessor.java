@@ -63,6 +63,7 @@ public class UpdateProcessor {
     private long timeServerStartup = 0;
     private RoomDao roomDao;
     private MemberDao memberDao;
+    private  SocketClient socketClient;
     private Context context;
 
 
@@ -71,7 +72,7 @@ public class UpdateProcessor {
         if(updateProcessor != null) throw new SingletonException();
         this.context = context;
         try {
-            SocketClient socketClient = new SocketClient(new URI(OFFICIAL_ADDRESS));
+            socketClient = new SocketClient(new URI(OFFICIAL_ADDRESS));
             setupSocketClient(socketClient);
             socketClient.connect();
             socketClients.put(OFFICIAL_ADDRESS, socketClient);

@@ -35,7 +35,7 @@ public class Notifier {
 
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, DIRA_ID)
-                        .setSmallIcon(R.drawable.notification)
+                        .setSmallIcon(R.drawable.logo_solid)
                         .setContentTitle(message.getAuthorNickname())
                         .setContentText(message.getText())
                         .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -55,8 +55,19 @@ public class Notifier {
             RoomActivity.pendingRoomSecret = room.getSecretName();
             RoomActivity.pendingRoomName = room.getName();
 
-            PendingIntent intent = PendingIntent.getActivity(context, 0,
+            PendingIntent intent;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                intent = PendingIntent.getActivity(context, 0,
+                        notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+            }
+            else
+            {
+                intent = PendingIntent.getActivity(context, 0,
                     notificationIntent, 0);
+            }
+
+
             builder.setContentIntent(intent);
         }
 
