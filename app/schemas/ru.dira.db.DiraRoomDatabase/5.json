@@ -1,0 +1,177 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 5,
+    "identityHash": "ee7ccceef2d155065128e4d96cc63672",
+    "entities": [
+      {
+        "tableName": "Room",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`secretName` TEXT NOT NULL, `name` TEXT, `lastMessageId` TEXT, `imagePath` TEXT, `lastUpdatedTime` INTEGER NOT NULL, `updatedRead` INTEGER NOT NULL DEFAULT true, `lastUpdateId` INTEGER NOT NULL, `timeServerStartup` INTEGER NOT NULL, PRIMARY KEY(`secretName`))",
+        "fields": [
+          {
+            "fieldPath": "secretName",
+            "columnName": "secretName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastMessageId",
+            "columnName": "lastMessageId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imagePath",
+            "columnName": "imagePath",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastUpdatedTime",
+            "columnName": "lastUpdatedTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedRead",
+            "columnName": "updatedRead",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "true"
+          },
+          {
+            "fieldPath": "lastUpdateId",
+            "columnName": "lastUpdateId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timeServerStartup",
+            "columnName": "timeServerStartup",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "secretName"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Message",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `authorId` TEXT, `roomSecret` TEXT, `text` TEXT, `authorNickname` TEXT, `time` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "authorId",
+            "columnName": "authorId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "roomSecret",
+            "columnName": "roomSecret",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "text",
+            "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "authorNickname",
+            "columnName": "authorNickname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Member",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idPlusSecret` TEXT NOT NULL, `id` TEXT, `nickname` TEXT, `imagePath` TEXT, `roomSecret` TEXT, `lastTimeUpdated` INTEGER NOT NULL, PRIMARY KEY(`idPlusSecret`))",
+        "fields": [
+          {
+            "fieldPath": "idPlusSecret",
+            "columnName": "idPlusSecret",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nickname",
+            "columnName": "nickname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "imagePath",
+            "columnName": "imagePath",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "roomSecret",
+            "columnName": "roomSecret",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastTimeUpdated",
+            "columnName": "lastTimeUpdated",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idPlusSecret"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ee7ccceef2d155065128e4d96cc63672')"
+    ]
+  }
+}

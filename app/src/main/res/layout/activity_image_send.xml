@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rootView"
+
+    android:background="@color/dark"
+
+    tools:context=".activities.ImageSendActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/imageContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <ru.dira.components.PreviewImageView
+            android:id="@+id/fileImageView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+
+
+            android:scaleType="fitCenter"
+            android:src="@drawable/placeholder"
+            android:transitionName="@string/transition_image_prepare"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ru.dira.components.VideoPlayer
+            android:id="@+id/videoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="0dp"
+        android:elevation="10dp"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:orientation="horizontal"
+        android:background="@drawable/message_input"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <EditText
+            android:id="@+id/message_box"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginVertical="8dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/montserratsemibold"
+            android:hint="@string/type_message_hint"
+            android:textColor="@color/white"
+            android:textColorHint="@color/light_gray"
+            android:inputType="textMultiLine|textCapSentences"
+            android:layout_marginLeft="14dp"
+            android:maxHeight="150dp"
+
+
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/editButton"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_gravity="bottom"
+            android:layout_marginVertical="7dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="4dp"
+            android:background="@drawable/gray_rounded"
+            android:onClick="editImageButtonClick"
+            android:padding="8dp"
+
+            app:srcCompat="@drawable/ic_brush"
+            />
+
+        <ImageView
+            android:id="@+id/sendButton"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_gravity="bottom"
+            android:layout_marginVertical="7dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="7dp"
+            android:background="@drawable/accent_rounded"
+            android:onClick="sendButtonClick"
+
+            android:padding="8dp"
+            app:srcCompat="@drawable/ic_send" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

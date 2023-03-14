@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/messageback"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="0dp"
+    android:paddingVertical="6dp"
+    android:paddingLeft="60dp"
+    android:paddingRight="15dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/time_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:fontFamily="@font/montserratsemibold"
+            android:gravity="bottom"
+            android:paddingLeft="5dp"
+            android:layout_marginRight="8dp"
+            android:paddingBottom="5dp"
+            android:text="00:00"
+            android:textColor="@color/light_gray"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:id="@+id/message_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/self_message"
+            android:orientation="vertical">
+
+            <ru.dira.components.MessageTextView
+                android:id="@+id/message_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="all"
+                android:layout_margin="10dp"
+
+                android:textIsSelectable="true"
+                android:fontFamily="@font/montserratsemibold"
+                android:text="самса по 60р с рыбой и капустой"
+                android:textColor="@color/light_gray"
+
+                android:includeFontPadding="false"
+                android:textSize="15sp"
+                />
+
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/emoji_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🐈"
+            android:textColor="@color/dark"
+            android:textSize="42sp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

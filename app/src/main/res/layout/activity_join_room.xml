@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/AppSlideTheme"
+
+    android:background="@color/dark"
+    tools:context=".activities.JoinRoomActivity">
+
+    <ImageView
+        android:id="@+id/button_back"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:background="?actionBarItemBackground"
+        android:padding="10dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_join_room"
+        app:layout_constraintTop_toBottomOf="@+id/button_back">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="24dp"
+            android:orientation="vertical">
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserratbold"
+                android:text="@string/join_room"
+                android:textColor="@color/white"
+                android:textSize="48sp" />
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserratsemibold"
+                android:text="@string/enter_invitation_code"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/invite_code_input"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/dark_rect"
+                android:fontFamily="@font/montserratsemibold"
+                android:gravity="center"
+                android:hint="p312AFds4lKj#"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingHorizontal="8dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/light_gray" />
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserratsemibold"
+                android:text="@string/tip_invitation_code_title"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="12dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserratsemibold"
+                android:text="@string/tip_invitation_code_text"
+                android:textColor="@color/light_gray"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/button_create_new"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="18dp"
+        android:background="@drawable/dark_rect"
+        android:fontFamily="@font/montserratsemibold"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:text="@string/create_room"
+        android:gravity="center"
+        android:paddingHorizontal="18dp"
+        android:src="@drawable/ic_next"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_join_room" />
+
+    <ImageView
+        android:id="@+id/button_join_room"
+        android:layout_width="90dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="18dp"
+        android:background="@drawable/accent_rounded"
+        android:padding="16dp"
+        android:src="@drawable/ic_next"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

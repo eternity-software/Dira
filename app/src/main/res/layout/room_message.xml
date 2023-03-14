@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/messageback"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:paddingVertical="6dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="60dp">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/picture_container"
+            android:layout_width="40dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="100dp"
+            android:layout_height="40dp">
+            <ImageView
+                android:id="@+id/profile_picture"
+
+                android:src="@drawable/placeholder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </androidx.cardview.widget.CardView>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="50"
+
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/nickname_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+
+                android:fontFamily="@font/montserratbold"
+                android:paddingHorizontal="3dp"
+                android:paddingVertical="5dp"
+                android:text="Author"
+                android:textSize="12sp"
+
+                android:textColor="@color/white" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+
+                <LinearLayout
+                    android:id="@+id/message_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/dialog_message"
+
+
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/message_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:autoLink="all"
+                        android:layout_margin="10dp"
+
+                        android:textIsSelectable="true"
+                        android:fontFamily="@font/montserratsemibold"
+                        android:text="самса по 60р с рыбой и капустой vk.com"
+                        android:textColor="@color/dark"
+                        android:textColorHint="@color/dark"
+                        android:textColorHighlight="@color/dark"
+                        android:textColorLink="@color/gray"
+                        android:layout_gravity="right"
+
+                        android:includeFontPadding="false"
+                        android:textSize="15sp"
+                        />
+
+
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/emoji_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🐈"
+                    android:textColor="@color/accent"
+                    android:textSize="42sp" />
+
+                <TextView
+                    android:id="@+id/time_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+
+                    android:fontFamily="@font/montserratsemibold"
+                    android:gravity="bottom"
+                    android:paddingLeft="5dp"
+                    android:paddingBottom="5dp"
+                    android:text="00:00"
+                    android:textColor="@color/light_gray"
+
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

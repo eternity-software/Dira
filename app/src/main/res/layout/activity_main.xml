@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark"
+    tools:context=".activities.RoomSelectorActivity">
+
+
+    <FrameLayout
+        android:id="@+id/frame_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/dark"
+            android:divider="@color/dark"
+            android:dividerHeight="0dp"
+            android:footerDividersEnabled="false"
+            android:visibility="visible"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+
+    </FrameLayout>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:elevation="0dp"
+        android:background="@color/dark"
+       >
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:clipChildren="true"
+            android:background="@color/dark"
+            app:layout_scrollFlags="scroll|snap"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+
+                    <TextView
+                        android:id="@+id/status_text"
+                        android:layout_width="317dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/montserratbold"
+                        android:gravity="center_vertical"
+                        android:text="@string/rooms"
+                        android:textColor="@color/white"
+                        android:textSize="24sp"
+                        />
+
+                    <ImageView
+                        android:id="@+id/status_light"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:visibility="gone"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/circle"
+                        android:layout_marginHorizontal="12dp"/>
+
+                    <ImageView
+                        android:id="@+id/button_new_room"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_plus"
+                        android:padding="6dp"
+                        android:background="@drawable/dark_rect"
+                        app:tint="@color/accent" />
+
+                    <RelativeLayout
+                        android:id="@+id/personality_button"
+                        android:layout_width="40dp"
+                        android:layout_margin="15dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/outline_circle"
+                        android:layout_height="40dp">
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            app:cardCornerRadius="50dp"
+                            android:layout_margin="4dp"
+                            app:cardBackgroundColor="@color/accent"
+                            android:layout_height="match_parent">
+                            <ImageView
+                                android:id="@+id/profile_picture"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:adjustViewBounds="true"
+                                android:src="@drawable/placeholder"/>
+                        </androidx.cardview.widget.CardView>
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

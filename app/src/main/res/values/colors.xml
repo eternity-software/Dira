@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="accent">#00FFE0</color>
+    <color name="accent_dark">#00BAA3</color>
+    <color name="dark">#202020</color>
+    <color name="light_gray">#CDCDCD</color>
+    <color name="medium_light_gray">#6D6D6D</color>
+    <color name="gray">#424242</color>
+    <color name="white">#FFFFFF</color>
+    <color name="yellow">#FFEB3B</color>
+    <color name="red">#F44336</color>
+</resources>

@@ -1,0 +1,70 @@
+<resources>
+    <string name="app_name">Dira</string>
+    <string name="dira_user">Anon</string>
+
+    <!-- Room Selector -->
+    <string name="rooms">Rooms</string>
+    <string name="you_prefix">You</string>
+    <string name="read">Read</string>
+    <string name="not_read">Not read</string>
+    <string name="rooms_list_last">That’s all rooms stored on device</string>
+    <string name="no_messages">History is empty</string>
+
+    <!-- Join room -->
+    <string name="join_room">Join room</string>
+    <string name="enter_invitation_code">Enter invitation code</string>
+    <string name="tip_invitation_code_title">How to get invite code?</string>
+    <string name="tip_invitation_code_text">Ask someone from room for the code, then type it above. Invitation code usually have expiration time.</string>
+
+    <!-- Create room -->
+    <string name="create_room">Create room</string>
+    <string name="room_name">Name of room</string>
+    <string name="room_name_hint">My roblox friends</string>
+    <string name="first_room_message">First message of room</string>
+    <string name="first_room_message_hint">how can I get more robux</string>
+    <string name="updates_expire_time">Updates expire time</string>
+    <string name="room_secret">Room secret name</string>
+    <string name="host_server">Host server</string>
+    <string name="official_host_server">Official server</string>
+    <string name="tip_room_title">What is room?</string>
+    <string name="tip_room_text">Room is a place for chatting. Anyone in room has all access to it and cannot be kicked from it, because room secret never changes and every room member has access to it.</string>
+
+    <!-- Your personality -->
+    <string name="your_personality">Your personality</string>
+    <string name="your_picture">Your picture</string>
+    <string name="change">Change</string>
+    <string name="your_nickname">Your name</string>
+    <string name="your_nickname_hint">dreestoon</string>
+    <string name="your_id">Your ID</string>
+    <string name="your_id_hint">88005553636</string>
+    <string name="your_id_tip">With ID Dira can know who is who. Changing ID is like recreating your account in all chats.</string>
+    <string name="personality_tip_title">What is personality?</string>
+    <string name="personality_tip_text">It’s your default account information applied to new rooms. You can change your name or avatar for specific room.</string>
+
+    <!-- Message formatting -->
+    <string name="you">You</string>
+
+    <!-- Room -->
+    <string name="type_message_hint">Type message here</string>
+    <string name="members_count">%s members</string>
+
+    <!-- Room info -->
+    <string name="edit">Edit</string>
+    <string name="invite">Invite</string>
+    <string name="leave">Leave</string>
+
+    <!-- Edit room -->
+    <string name="edit_room">Edit room</string>
+    <string name="room_picture">Room picture</string>
+    <string name="edit_room_name">Room name</string>
+    <string name="edit_room_host">Room host</string>
+    <string name="edit_room_update_expire">Update expire</string>
+
+    <!-- Invitation code -->
+    <string name="invitation_code">Invitation code</string>
+    <string name="invitation_code_tip">This invitation code to %s will expire soon.</string>
+
+    <!--Transitions -->
+    <string name="transition_image_prepare">img_prepare_transition</string>
+
+</resources>
