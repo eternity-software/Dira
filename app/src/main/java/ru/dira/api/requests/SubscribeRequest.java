@@ -3,7 +3,7 @@ package ru.dira.api.requests;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SubscribeRequest extends Request{
+public class SubscribeRequest extends Request {
 
     private List<String> roomSecrets = new ArrayList<>();
 

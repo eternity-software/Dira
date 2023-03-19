@@ -5,13 +5,18 @@ import android.content.Context;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+
+import ru.dira.db.converters.AttachmentConverter;
 import ru.dira.utils.CacheUtils;
 import ru.dira.utils.KeyGenerator;
 
 @Entity
+@TypeConverters({AttachmentConverter.class})
 public class Message {
 
     @PrimaryKey
@@ -22,6 +27,7 @@ public class Message {
     private String text;
     private String authorNickname;
     private long time;
+    private ArrayList<Attachment> attachments = new ArrayList<>();
 
     @Ignore
     public Message(String authorId, String text, String authorNickname) {
@@ -31,13 +37,11 @@ public class Message {
         this.authorNickname = authorNickname;
     }
 
-    public Message()
-    {
+    public Message() {
 
     }
 
-    public static Message generateMessage(Context context, String roomSecret)
-    {
+    public static Message generateMessage(Context context, String roomSecret) {
         Message message = new Message();
 
         message.setAuthorId(CacheUtils.getInstance().getString(CacheUtils.ID, context));
@@ -46,6 +50,14 @@ public class Message {
         message.setRoomSecret(roomSecret);
         return message;
 
+    }
+
+    public ArrayList<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(ArrayList<Attachment> attachments) {
+        this.attachments = attachments;
     }
 
     public String getRoomSecret() {

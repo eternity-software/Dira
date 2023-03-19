@@ -8,7 +8,6 @@ import androidx.room.Query;
 import java.util.List;
 
 import ru.dira.db.entities.Message;
-import ru.dira.db.entities.Room;
 
 @Dao
 public interface MessageDao {

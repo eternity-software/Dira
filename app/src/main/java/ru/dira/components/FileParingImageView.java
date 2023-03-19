@@ -22,6 +22,7 @@ public class FileParingImageView extends ShapeableImageView {
     public FileParingImageView(Context context) {
         super(context);
     }
+
     public FileParingImageView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
@@ -41,12 +42,11 @@ public class FileParingImageView extends ShapeableImageView {
         return bitmap;
     }
 
-    public void setFileInfo(FileInfo filePath)
-    {
-        this.fileInfo = filePath;
-    }
-
     public FileInfo getFileInfo() {
         return fileInfo;
+    }
+
+    public void setFileInfo(FileInfo filePath) {
+        this.fileInfo = filePath;
     }
 }

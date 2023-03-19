@@ -47,6 +47,8 @@
     <!-- Room -->
     <string name="type_message_hint">Type message here</string>
     <string name="members_count">%s members</string>
+    <string name="attachment_large_title">This attachment too large</string>
+    <string name="download">Download</string>
 
     <!-- Room info -->
     <string name="edit">Edit</string>

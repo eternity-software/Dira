@@ -6,6 +6,8 @@ import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -33,27 +35,21 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
     private ImageView thumbNail;
     private boolean isInit = false;
     private boolean isLoadingLayerEnabled = false;
+    private long delay = 0;
     private VideoPlayerListener videoPlayerListener;
-
-    public interface VideoPlayerListener
-    {
-        void onStarted();
-        void onPaused();
-        void onReleased();
-    }
+    private String currentPlaying;
 
     public VideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
-       initViews();
+        initViews();
     }
 
     public void setVideoPlayerListener(VideoPlayerListener videoPlayerListener) {
         this.videoPlayerListener = videoPlayerListener;
     }
 
-    public void initViews()
-    {
-        if(isInit) return;
+    public void initViews() {
+        if (isInit) return;
 
 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -66,15 +62,20 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
             public void onLayoutChange(View v,
                                        int left, int top, int right, int bottom,
                                        int leftWas, int topWas, int rightWas, int bottomWas) {
-                if(mediaPlayer == null) return;
-                int widthWas = rightWas - leftWas; // Right exclusive, left inclusive
-                if (v.getWidth() != widthWas) {
-                    adjustAspectRatio(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
+                if (mediaPlayer == null) return;
+                try {
+                    int widthWas = rightWas - leftWas; // Right exclusive, left inclusive
+                    if (v.getWidth() != widthWas) {
+                        adjustAspectRatio(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
+                    }
+                    int heightWas = bottomWas - topWas; // Bottom exclusive, top inclusive
+                    if (v.getHeight() != heightWas) {
+                        adjustAspectRatio(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
+                    }
+                } catch (Exception e) {
+
                 }
-                int heightWas = bottomWas - topWas; // Bottom exclusive, top inclusive
-                if (v.getHeight() != heightWas) {
-                    adjustAspectRatio(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
-                }
+
             }
         });
         isInit = true;
@@ -82,32 +83,30 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
 
     public void setLoadingLayerEnabled(boolean loadingLayerEnabled) {
         isLoadingLayerEnabled = loadingLayerEnabled;
-        if(loadingLayerEnabled)
-        {
+        if (loadingLayerEnabled) {
             loadingView.setVisibility(VISIBLE);
-        }
-        else
-        {
+        } else {
             loadingView.setVisibility(INVISIBLE);
         }
     }
 
-    public void release()
-    {
-        if(mediaPlayer != null)
-        {
-            mediaPlayer.release();
-            if(videoPlayerListener != null) videoPlayerListener.onReleased();
+    public void release() {
+        if (mediaPlayer != null) {
+            try {
+                mediaPlayer.release();
+            } catch (Exception e) {
+
+            }
+
+            if (videoPlayerListener != null) videoPlayerListener.onReleased();
         }
     }
 
-    public void show(long animationDuration)
-    {
+    public void show(long animationDuration) {
         rootView.animate().alpha(1).setDuration(animationDuration).start();
     }
 
-    public void hideLoading(long animationDuration)
-    {
+    public void hideLoading(long animationDuration) {
         loadingView.animate().alpha(0).setDuration(animationDuration).start();
     }
 
@@ -116,8 +115,6 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
         initViews();
         return rootView;
     }
-
-
 
     private void adjustAspectRatio(int videoWidth, int videoHeight) {
 
@@ -152,16 +149,18 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
 
     }
 
-    public void setVideoThumbnail(String filePath)
-    {
-       thumbNail.setImageBitmap(ThumbnailUtils.createVideoThumbnail(filePath, MediaStore.Video.Thumbnails.MINI_KIND));
+    public void setVideoThumbnail(String filePath) {
+        thumbNail.setImageBitmap(ThumbnailUtils.createVideoThumbnail(filePath, MediaStore.Video.Thumbnails.MINI_KIND));
     }
 
     public void play(String filePath) throws VideoPlayerException {
         try {
             initViews();
-            if(mediaPlayer == null) throw new VideoPlayerException();
-            setVideoThumbnail(filePath);
+            if (mediaPlayer == null) throw new VideoPlayerException();
+
+
+            if(delay == 0) setVideoThumbnail(filePath);
+            mediaPlayer.stop();
             mediaPlayer.setDataSource(filePath);
             mediaPlayer.prepareAsync();
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -171,7 +170,7 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
                     mediaPlayer.start();
                     thumbNail.setVisibility(INVISIBLE);
                     hideLoading(200);
-                    if(videoPlayerListener != null) videoPlayerListener.onStarted();
+                    if (videoPlayerListener != null) videoPlayerListener.onStarted();
                     mediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
                         @Override
                         public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
@@ -181,29 +180,31 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
                     });
                 }
             });
+            currentPlaying = filePath;
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void pause()
-    {
-        if(mediaPlayer == null) return;
+    public void pause() {
+        if (mediaPlayer == null) return;
         mediaPlayer.pause();
-        if(videoPlayerListener != null) videoPlayerListener.onPaused();
+        if (videoPlayerListener != null) videoPlayerListener.onPaused();
     }
 
-    public void play()
-    {
-        if(mediaPlayer == null) return;
+    public void play() {
+        if (mediaPlayer == null) return;
         mediaPlayer.start();
-        if(videoPlayerListener != null) videoPlayerListener.onStarted();
+        if (videoPlayerListener != null) videoPlayerListener.onStarted();
     }
 
-    public void setLooping(boolean isLooping)
-    {
-        if(mediaPlayer == null) return;
+    public void setLooping(boolean isLooping) {
+        if (mediaPlayer == null) return;
         mediaPlayer.setLooping(isLooping);
+    }
+
+    public void setDelay(long delay) {
+        this.delay = delay;
     }
 
     @Override
@@ -211,34 +212,72 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
         final Surface s = new Surface(surface);
 
 
-        try {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
 
 
-            mediaPlayer = new MediaPlayer();
+                    Thread.sleep(delay);
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                mediaPlayer = new MediaPlayer();
 
 
-            mediaPlayer.setSurface(s);
-            mediaPlayer.setLooping(true);
+                                mediaPlayer.setSurface(s);
+                                mediaPlayer.setLooping(true);
 
 
+
+                                if (currentPlaying != null) {
+                                    play(currentPlaying);
+                                }
 
 
 //            mediaPlayer.setOnBufferingUpdateListener(this);
 //            mediaPlayer.setOnCompletionListener(this);
 
+                                if (videoPlayerListener != null) videoPlayerListener.onReady();
+                                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                            }
+                            catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
 
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                        }
+                    });
 
 
-        } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalStateException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+
+                } catch (IllegalArgumentException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (SecurityException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IllegalStateException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+
+    }
+
+    public void setVolume(float volume) {
+        if (mediaPlayer != null) {
+            try {
+                mediaPlayer.setVolume(volume, volume);
+            } catch (Exception e) {
+
+            }
+
         }
     }
 
@@ -249,11 +288,22 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
 
     @Override
     public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
+        release();
         return false;
     }
 
     @Override
     public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
 
+    }
+
+    public interface VideoPlayerListener {
+        void onStarted();
+
+        void onPaused();
+
+        void onReleased();
+
+        void onReady();
     }
 }

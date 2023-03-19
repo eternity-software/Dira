@@ -1,4 +1,4 @@
-package ru.dira.attachments;
+package ru.dira.storage.images;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -26,27 +26,15 @@ public class WaterfallBalancer {
     private BalancerCallback balancerCallback;
 
 
-    public static interface BalancerCallback
-    {
-        void onActiveWaterfallsCountChange(int count);
-    }
-
-    public void setBalancerCallback(BalancerCallback balancerCallback) {
-        this.balancerCallback = balancerCallback;
-    }
-
-    public WaterfallBalancer(Activity activity, int balancerCount, final RecyclerView recyclerView)
-    {
+    public WaterfallBalancer(Activity activity, int balancerCount, final RecyclerView recyclerView) {
         lastWaterfallId = 0;
-        for(int i = 0; i < balancerCount; i++)
-        {
+        for (int i = 0; i < balancerCount; i++) {
             WaterfallImageLoader waterfallImageLoader = new WaterfallImageLoader(activity);
             waterfallImageLoader.setWaterfallCallback(new WaterfallImageLoader.WaterfallCallback() {
                 @Override
                 public void onImageProcessedSuccess(FilePreview fileParingImageView) {
                     imagesInTask.remove(fileParingImageView);
-                    if(DEBUG_MODE)
-                    {
+                    if (DEBUG_MODE) {
                         fileParingImageView.setBackgroundColor(Color.GREEN);
                     }
 
@@ -55,8 +43,7 @@ public class WaterfallBalancer {
                 @Override
                 public void onImageProcessedError(FilePreview fileParingImageView) {
                     imagesInTask.remove(fileParingImageView);
-                    if(DEBUG_MODE)
-                    {
+                    if (DEBUG_MODE) {
                         fileParingImageView.setBackgroundColor(Color.RED);
                     }
                 }
@@ -71,9 +58,8 @@ public class WaterfallBalancer {
                 @Override
                 public void onFinishedAllTasks() {
                     activeWaterfalls -= 1;
-                    if(activeWaterfalls == 0) clearCancelled();
-                    if(balancerCallback != null)
-                    {
+                    if (activeWaterfalls == 0) clearCancelled();
+                    if (balancerCallback != null) {
                         balancerCallback.onActiveWaterfallsCountChange(activeWaterfalls);
                     }
                 }
@@ -82,8 +68,7 @@ public class WaterfallBalancer {
                 public void onStarted() {
                     activeWaterfalls++;
 
-                    if(balancerCallback != null)
-                    {
+                    if (balancerCallback != null) {
                         balancerCallback.onActiveWaterfallsCountChange(activeWaterfalls);
                     }
                 }
@@ -94,11 +79,13 @@ public class WaterfallBalancer {
         }
     }
 
-    public void clearCancelled()
-    {
-        for(FilePreview cancelled : cancelledList)
-        {
-           // imagesInTask.remove(cancelled);
+    public void setBalancerCallback(BalancerCallback balancerCallback) {
+        this.balancerCallback = balancerCallback;
+    }
+
+    public void clearCancelled() {
+        for (FilePreview cancelled : cancelledList) {
+            // imagesInTask.remove(cancelled);
         }
     }
 
@@ -110,9 +97,7 @@ public class WaterfallBalancer {
             if (DEBUG_MODE) {
                 fileParingImageView.setBackgroundColor(Color.DKGRAY);
             }
-        }
-        else
-        {
+        } else {
             if (DEBUG_MODE) {
                 fileParingImageView.setBackgroundColor(Color.YELLOW);
             }
@@ -126,7 +111,9 @@ public class WaterfallBalancer {
         }
 
 
+    }
 
-
+    public interface BalancerCallback {
+        void onActiveWaterfallsCountChange(int count);
     }
 }

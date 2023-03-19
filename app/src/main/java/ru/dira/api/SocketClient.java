@@ -5,16 +5,14 @@ import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 
-import ru.dira.services.SocketListener;
-import ru.dira.services.UpdateProcessor;
-import ru.dira.services.UpdaterService;
+import ru.dira.updates.UpdateProcessor;
+import ru.dira.updates.listeners.SocketListener;
 
 public class SocketClient extends WebSocketClient {
 
-    private String address;
+    private final String address;
 
     private SocketListener socketListener;
 
@@ -23,20 +21,19 @@ public class SocketClient extends WebSocketClient {
         this.address = serverUri.getHost();
     }
 
-    public void setSocketListener(SocketListener socketListener) {
-        this.socketListener = socketListener;
-    }
-
     public SocketClient(URI serverUri) {
         super(serverUri);
         this.address = serverUri.getHost();
     }
 
+    public void setSocketListener(SocketListener socketListener) {
+        this.socketListener = socketListener;
+    }
+
     @Override
     public void onOpen(ServerHandshake handshakedata) {
         System.out.println("new connection opened");
-        if(socketListener != null)
-        {
+        if (socketListener != null) {
             socketListener.onSocketOpened();
         }
 
@@ -45,8 +42,7 @@ public class SocketClient extends WebSocketClient {
     @Override
     public void onClose(int code, String reason, boolean remote) {
         System.out.println("closed with exit code " + code + " additional info: " + reason);
-        if(socketListener != null)
-        {
+        if (socketListener != null) {
             socketListener.onSocketClosed();
         }
     }
@@ -56,9 +52,7 @@ public class SocketClient extends WebSocketClient {
         System.out.println("In ->> " + message);
         try {
             UpdateProcessor.getInstance().notifyMessage(message, address);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -22,22 +22,7 @@ public class FileInfo {
         //this.duration = getFormattedVideoDuration(context);
     }
 
-    public String getMimeType() {
-        return mimeType;
-    }
-
-    public boolean isImage()
-    {
-        return mimeType.startsWith("image");
-    }
-
-    public boolean isVideo()
-    {
-        return mimeType.startsWith("video");
-    }
-
-    public static String getFormattedVideoDuration(Context context, String filePath)
-    {
+    public static String getFormattedVideoDuration(Context context, String filePath) {
 
         MediaPlayer mp = MediaPlayer.create(context, Uri.parse(filePath));
         int duration = mp.getDuration();
@@ -46,30 +31,34 @@ public class FileInfo {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(duration);
 
 
-
         long seconds = TimeUnit.MILLISECONDS.toSeconds(duration) -
                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration));
         return getFormattedNumber(minutes) + ":" + getFormattedNumber(seconds);
     }
 
-
-
-    private static String getFormattedNumber(long num)
-    {
+    private static String getFormattedNumber(long num) {
         String minutesString;
-        if(num < 10)
-        {
+        if (num < 10) {
             minutesString = "0" + num;
-        }
-        else
-        {
+        } else {
             minutesString = String.valueOf(num);
         }
         return minutesString;
     }
 
-    public Bitmap getVideoThumbnail()
-    {
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public boolean isImage() {
+        return mimeType.startsWith("image");
+    }
+
+    public boolean isVideo() {
+        return mimeType.startsWith("video");
+    }
+
+    public Bitmap getVideoThumbnail() {
         return ThumbnailUtils.createVideoThumbnail(filePath, MediaStore.Video.Thumbnails.MINI_KIND);
     }
 

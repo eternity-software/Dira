@@ -21,8 +21,7 @@ public class StringFormatter {
     }
 
 
-    public static int getEmojiCount(String s)
-    {
+    public static int getEmojiCount(String s) {
         int emojiCount = 0;
 
         for (int i = 0; i < s.length(); i++) {
@@ -32,10 +31,10 @@ public class StringFormatter {
             }
         }
 
-        return emojiCount/2;
+        return emojiCount / 2;
     }
 
-    public static boolean isEmoji(String message){
+    public static boolean isEmoji(String message) {
         return message.matches("(?:[\uD83C\uDF00-\uD83D\uDDFF]|[\uD83E\uDD00-\uD83E\uDDFF]|" +
                 "[\uD83D\uDE00-\uD83D\uDE4F]|[\uD83D\uDE80-\uD83D\uDEFF]|" +
                 "[\u2600-\u26FF]\uFE0F?|[\u2700-\u27BF]\uFE0F?|\u24C2\uFE0F?|" +

@@ -56,16 +56,16 @@ public class Room {
         return message;
     }
 
+    public void setMessage(Message message) {
+        this.message = message;
+    }
+
     public String getImagePath() {
         return imagePath;
     }
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
-    }
-
-    public void setMessage(Message message) {
-        this.message = message;
     }
 
     public long getLastUpdateId() {

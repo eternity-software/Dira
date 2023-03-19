@@ -1,30 +1,23 @@
-package ru.dira.services;
+package ru.dira.updates;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.Image;
-
-import androidx.room.RoomDatabase;
 
 import com.google.gson.Gson;
 
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 
-import java.net.ContentHandler;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import ru.dira.activities.RoomSelectorActivity;
-import ru.dira.adapters.RoomSelectorAdapter;
 import ru.dira.api.InviteRoom;
 import ru.dira.api.RoomMember;
 import ru.dira.api.SocketClient;
 import ru.dira.api.requests.GetUpdatesRequest;
 import ru.dira.api.requests.Request;
-import ru.dira.api.requests.RoomUpdateRequest;
 import ru.dira.api.requests.SubscribeRequest;
 import ru.dira.api.updates.MemberUpdate;
 import ru.dira.api.updates.NewMessageUpdate;
@@ -34,11 +27,11 @@ import ru.dira.api.updates.ServerSyncUpdate;
 import ru.dira.api.updates.Update;
 import ru.dira.api.updates.UpdateDeserializer;
 import ru.dira.api.updates.UpdateType;
-import ru.dira.attachments.ImageStorage;
 import ru.dira.db.DiraMessageDatabase;
 import ru.dira.db.DiraRoomDatabase;
 import ru.dira.db.daos.MemberDao;
 import ru.dira.db.daos.RoomDao;
+import ru.dira.db.entities.Attachment;
 import ru.dira.db.entities.Member;
 import ru.dira.db.entities.Message;
 import ru.dira.db.entities.Room;
@@ -46,30 +39,47 @@ import ru.dira.exceptions.OldUpdateException;
 import ru.dira.exceptions.SingletonException;
 import ru.dira.exceptions.UnablePerformRequestException;
 import ru.dira.notifications.Notifier;
+import ru.dira.storage.AppStorage;
+import ru.dira.storage.attachments.AttachmentsStorage;
+import ru.dira.storage.attachments.SaveAttachmentTask;
+import ru.dira.updates.listeners.SocketListener;
+import ru.dira.updates.listeners.UpdateListener;
+import ru.dira.updates.listeners.UpdateProcessorListener;
 import ru.dira.utils.CacheUtils;
 import ru.dira.utils.DiraApplication;
 
+/**
+ * UpdateProcessor is a core Dira class
+ * <p>
+ * It receives and sends all changes to be synced with other users
+ *
+ * @author Mikhail
+ */
 public class UpdateProcessor {
 
     public static final String OFFICIAL_ADDRESS = "ws://164.132.138.80:8888";
 
     private static UpdateProcessor updateProcessor;
-
-    private HashMap<String, SocketClient> socketClients = new HashMap<>();
-    private HashMap<Long, UpdateListener> updateCallbacks = new HashMap<>();
-    private List<UpdateListener> updateListeners = new ArrayList<>();
-    private List<UpdateProcessorListener> processorListeners = new ArrayList<>();
+    int updatedRoomsCount = 0;
+    private final HashMap<String, SocketClient> socketClients = new HashMap<>();
+    private final HashMap<Long, UpdateListener> updateCallbacks = new HashMap<>();
+    private final List<UpdateListener> updateListeners = new ArrayList<>();
+    private final List<UpdateProcessorListener> processorListeners = new ArrayList<>();
+    /**
+     * Requests ids counter
+     */
     private long lastRequestId = 0;
+    /**
+     * Server startup time allows to sync updates ids
+     */
     private long timeServerStartup = 0;
     private RoomDao roomDao;
     private MemberDao memberDao;
-    private  SocketClient socketClient;
-    private Context context;
-
-
+    private SocketClient socketClient;
+    private final Context context;
 
     public UpdateProcessor(Context context) throws SingletonException {
-        if(updateProcessor != null) throw new SingletonException();
+        if (updateProcessor != null) throw new SingletonException();
         this.context = context;
         try {
             socketClient = new SocketClient(new URI(OFFICIAL_ADDRESS));
@@ -83,14 +93,12 @@ public class UpdateProcessor {
         }
     }
 
-    public static UpdateProcessor getInstance()
-    {
+    public static UpdateProcessor getInstance() {
         return updateProcessor;
     }
 
-    public static UpdateProcessor getInstance(Context context)
-    {
-        if(updateProcessor == null) {
+    public static UpdateProcessor getInstance(Context context) {
+        if (updateProcessor == null) {
             try {
                 updateProcessor = new UpdateProcessor(context);
             } catch (SingletonException e) {
@@ -100,31 +108,25 @@ public class UpdateProcessor {
         return updateProcessor;
     }
 
-    public float getActiveSocketsPercent()
-    {
+    public float getActiveSocketsPercent() {
         int countActive = 0;
 
-        for(SocketClient socketClient : socketClients.values())
-        {
-            if(socketClient.isOpen()) countActive++;
+        for (SocketClient socketClient : socketClients.values()) {
+            if (socketClient.isOpen()) countActive++;
         }
 
         return countActive / (float) socketClients.size();
     }
 
-    public void addCustomServer(String address)
-    {
+    public void addCustomServer(String address) {
         socketClients.put(address, null);
     }
 
-    public void removeCustomServer(String address)
-    {
+    public void removeCustomServer(String address) {
         try {
             socketClients.get(address).close();
             socketClients.remove(address);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -133,69 +135,55 @@ public class UpdateProcessor {
         return new HashMap<>(socketClients);
     }
 
-    public void notifyMessage(String message, String address)
-    {
-
+    public void notifyMessage(String message, String address) {
         Update update = UpdateDeserializer.deserialize(message);
-        if(updateCallbacks.containsKey(update.getOriginRequestId()))
-        {
+        if (updateCallbacks.containsKey(update.getOriginRequestId())) {
             try {
                 updateCallbacks.get(update.getOriginRequestId()).onUpdate(update);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-
         try {
 
-           if(update.getUpdateType() == UpdateType.SERVER_SYNC)
-           {
-               ServerSyncUpdate serverSyncUpdate = (ServerSyncUpdate) update;
-               timeServerStartup = serverSyncUpdate.getTimeServerStart();
-           }
-
+            if (update.getUpdateType() == UpdateType.SERVER_SYNC) {
+                ServerSyncUpdate serverSyncUpdate = (ServerSyncUpdate) update;
+                timeServerStartup = serverSyncUpdate.getTimeServerStart();
+            }
 
             Room roomUpdate = roomDao.getRoomBySecretName(update.getRoomSecret());
-           if(roomUpdate != null)
-           {
-               if(roomUpdate.getTimeServerStartup() != timeServerStartup)
-               {
-                   roomUpdate.setLastUpdateId(0);
-                   roomUpdate.setTimeServerStartup(timeServerStartup);
-                   roomDao.update(roomUpdate);
-               }
-               if(roomUpdate.getLastUpdateId() < update.getUpdateId())
-               {
+            if (roomUpdate != null) {
+                if (roomUpdate.getTimeServerStartup() != timeServerStartup) {
+                    roomUpdate.setLastUpdateId(0);
+                    roomUpdate.setTimeServerStartup(timeServerStartup);
+                    roomDao.update(roomUpdate);
+                }
+                if (roomUpdate.getLastUpdateId() < update.getUpdateId()) {
 
-                   if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
-                       updateMember(((MemberUpdate) update));
-                       roomUpdate.setLastUpdateId(update.getUpdateId());
-                   }
+                    if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
+                        updateMember(((MemberUpdate) update));
+                        roomUpdate.setLastUpdateId(update.getUpdateId());
+                    }
 
-               }
-               roomDao.update(roomUpdate);
+                }
+                roomDao.update(roomUpdate);
 
-           }
+            }
 
             if (update.getUpdateType() == UpdateType.NEW_ROOM_UPDATE) {
 
                 NewRoomUpdate newRoomUpdate = (NewRoomUpdate) update;
-
-
-
                 InviteRoom inviteRoom = newRoomUpdate.getInviteRoom();
 
                 Room oldRoom = roomDao.getRoomBySecretName(newRoomUpdate.getRoomSecret());
-                if(oldRoom == null) {
+                if (oldRoom == null) {
 
                     Room room = new Room(inviteRoom.getName(), System.currentTimeMillis(), inviteRoom.getSecretName());
 
                     if (inviteRoom.getBase64pic() != null) {
-                        Bitmap bitmap = ImageStorage.getBitmapFromBase64(inviteRoom.getBase64pic());
-                        room.setImagePath(ImageStorage.saveToInternalStorage(bitmap, room.getSecretName(), context));
+                        Bitmap bitmap = AppStorage.getBitmapFromBase64(inviteRoom.getBase64pic());
+                        room.setImagePath(AppStorage.saveToInternalStorage(bitmap, room.getSecretName(), context));
                     }
 
                     room.setLastUpdateId(0);
@@ -215,8 +203,8 @@ public class UpdateProcessor {
                         member.setNickname(roomMember.getNickname());
 
                         if (roomMember.getImageBase64() != null) {
-                            Bitmap bitmap = ImageStorage.getBitmapFromBase64(roomMember.getImageBase64());
-                            String path = ImageStorage.saveToInternalStorage(bitmap, member.getId() + "_" + roomMember.getRoomSecret(), context);
+                            Bitmap bitmap = AppStorage.getBitmapFromBase64(roomMember.getImageBase64());
+                            String path = AppStorage.saveToInternalStorage(bitmap, member.getId() + "_" + roomMember.getRoomSecret(), context);
                             member.setImagePath(path);
                         }
 
@@ -231,16 +219,23 @@ public class UpdateProcessor {
                     roomDao.insertAll(room);
                 }
 
-            }
-            else if (update.getUpdateType() == UpdateType.NEW_MESSAGE_UPDATE) {
-                if(DiraApplication.isBackgrounded())
-                {
+            } else if (update.getUpdateType() == UpdateType.NEW_MESSAGE_UPDATE) {
+                if (DiraApplication.isBackgrounded()) {
                     Notifier.notifyMessage(((NewMessageUpdate) update).getMessage(), context);
                 }
-                updateRoom(((NewMessageUpdate) update));
-            }
-            else if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
-                updateRoom(((RoomUpdate) update));
+
+                updateRoom(update);
+
+
+                for (Attachment attachment : ((NewMessageUpdate) update).getMessage().getAttachments()) {
+
+                    SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment,
+                            ((NewMessageUpdate) update).getMessage().getRoomSecret());
+
+                    AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask);
+                }
+            } else if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
+                updateRoom(update);
             }
 
 
@@ -251,150 +246,129 @@ public class UpdateProcessor {
                     e.printStackTrace();
                 }
             }
-        }
-         catch (OldUpdateException oldUpdateException)
-        {
+        } catch (OldUpdateException oldUpdateException) {
             oldUpdateException.printStackTrace();
             return;
         }
     }
 
-
-    public void updateMember(MemberUpdate memberUpdate)
-    {
-        if(memberUpdate.getId().equals(CacheUtils.getInstance().getString(CacheUtils.ID, context))) return;
-
+    /**
+     * Apply changes of room member to local database
+     *
+     * @param memberUpdate
+     */
+    public void updateMember(MemberUpdate memberUpdate) {
+        if (memberUpdate.getId().equals(CacheUtils.getInstance().getString(CacheUtils.ID, context)))
+            return;
 
         Member member = memberDao.getMemberByIdAndRoomSecret(memberUpdate.getId(), memberUpdate.getRoomSecret());
 
-
-
         boolean hasMemberInDatabase = true;
 
-        if(member == null) {
+        if (member == null) {
             hasMemberInDatabase = false;
             member = new Member(memberUpdate.getId(), memberUpdate.getNickname(),
                     null, memberUpdate.getRoomSecret(), memberUpdate.getUpdateTime());
         }
 
-            member.setLastTimeUpdated(memberUpdate.getUpdateTime());
-            member.setNickname(memberUpdate.getNickname());
+        member.setLastTimeUpdated(memberUpdate.getUpdateTime());
+        member.setNickname(memberUpdate.getNickname());
 
-            if(memberUpdate.getBase64pic() != null)
-            {
-                Bitmap bitmap = ImageStorage.getBitmapFromBase64(memberUpdate.getBase64pic());
-                String path = ImageStorage.saveToInternalStorage(bitmap, member.getId() + "_" + memberUpdate.getRoomSecret(), context);
-                member.setImagePath(path);
-            }
+        if (memberUpdate.getBase64pic() != null) {
+            Bitmap bitmap = AppStorage.getBitmapFromBase64(memberUpdate.getBase64pic());
+            String path = AppStorage.saveToInternalStorage(bitmap,
+                    member.getId() + "_" + memberUpdate.getRoomSecret(), context);
+            member.setImagePath(path);
+        }
 
-            if(hasMemberInDatabase)
-            {
-                System.out.println("updating member");
-                memberDao.update(member);
-            }
-            else
-            {
-                System.out.println("inserting member");
-                memberDao.insertAll(member);
-
-            }
-
-    }
-
-    private void updateRoom(RoomUpdate roomUpdate) throws OldUpdateException {
-
-        Room room = roomDao.getRoomBySecretName(roomUpdate.getRoomSecret());
-        if(room != null)
-        {
-            System.out.println(room.getLastUpdateId() + ", mew " + roomUpdate.getUpdateId());
-            if(room.getLastUpdateId() < roomUpdate.getUpdateId())
-            {
-                room.setLastUpdateId(roomUpdate.getUpdateId());
-                room.setName(roomUpdate.getName());
-                if(roomUpdate.getBase64Pic() != null)
-                {
-                    Bitmap bitmap = ImageStorage.getBitmapFromBase64(roomUpdate.getBase64Pic());
-                    String path = ImageStorage.saveToInternalStorage(bitmap, room.getSecretName(), context);
-                    room.setImagePath(path);
-                }
-
-                roomDao.update(room);
-
-            }
-            else
-            {
-                System.out.println(room.getLastUpdateId() + " " + roomUpdate.getUpdateId());
-                throw new OldUpdateException();
-            }
-
+        if (hasMemberInDatabase) {
+            memberDao.update(member);
+        } else {
+            memberDao.insertAll(member);
         }
     }
 
-    private void updateRoom(NewMessageUpdate newMessageUpdate) throws OldUpdateException {
-        Message newMessage = newMessageUpdate.getMessage();
-        Room room = roomDao.getRoomBySecretName(newMessage.getRoomSecret());
-        if(room != null)
-        {
+    /**
+     * Apply changes of room to local database
+     *
+     * Argument can be represented only with
+     * {@link ru.dira.api.updates.NewMessageUpdate NewMessageUpdate} and {@link ru.dira.api.updates.RoomUpdate RoomUpdate}
+     * @param update
+     */
+    private void updateRoom(Update update) throws OldUpdateException {
+        Message newMessage = null;
+
+        String roomSecret = update.getRoomSecret();
+
+        if (update instanceof NewMessageUpdate) {
+            newMessage = ((NewMessageUpdate) update).getMessage();
+            roomSecret = ((NewMessageUpdate) update).getMessage().getRoomSecret();
+        }
+
+        Room room = roomDao.getRoomBySecretName(roomSecret);
+        if (room != null) {
 
 
             compareStartupTimes(room);
-            if(room.getLastUpdateId() < newMessageUpdate.getUpdateId())
-            {
-                room.setLastUpdateId(newMessageUpdate.getUpdateId());
-                room.setLastMessageId(newMessage.getId());
-                room.setLastUpdatedTime(newMessage.getTime());
-                room.setUpdatedRead(false);
+            if (room.getLastUpdateId() < update.getUpdateId()) {
+                room.setLastUpdateId(update.getUpdateId());
+
+                if (newMessage != null) {
+                    room.setLastMessageId(newMessage.getId());
+                    room.setLastUpdatedTime(newMessage.getTime());
+                    room.setUpdatedRead(false);
+                }
+
+                if (update instanceof RoomUpdate) {
+                    room.setName(((RoomUpdate) update).getName());
+                    if (((RoomUpdate) update).getBase64Pic() != null) {
+                        Bitmap bitmap = AppStorage.getBitmapFromBase64(((RoomUpdate) update).getBase64Pic());
+                        String path = AppStorage.saveToInternalStorage(bitmap, room.getSecretName(), context);
+                        room.setImagePath(path);
+                    }
+                }
+
                 DiraMessageDatabase.getDatabase(context).getMessageDao().insertAll(newMessage);
                 roomDao.update(room);
-            }
-            else
-            {
+            } else {
                 throw new OldUpdateException();
             }
 
         }
     }
 
-    private void compareStartupTimes(Room room)
-    {
-        if(room.getTimeServerStartup() != timeServerStartup)
-        {
+    private void compareStartupTimes(Room room) {
+        if (room.getTimeServerStartup() != timeServerStartup) {
             room.setLastUpdateId(0);
             room.setTimeServerStartup(timeServerStartup);
             roomDao.update(room);
         }
     }
 
-    public void addCallbackListener(UpdateListener updateListener, long requestId)
-    {
-        if(updateCallbacks.containsKey(requestId)) return;
+    public void addCallbackListener(UpdateListener updateListener, long requestId) {
+        if (updateCallbacks.containsKey(requestId)) return;
         updateCallbacks.remove(requestId);
     }
 
-    public void removeCallbackListener(long requestId)
-    {
+    public void removeCallbackListener(long requestId) {
         updateCallbacks.remove(requestId);
     }
 
-    public void addProcessorListener(UpdateProcessorListener updateListener)
-    {
-        if(processorListeners.contains(updateListener)) return;
+    public void addProcessorListener(UpdateProcessorListener updateListener) {
+        if (processorListeners.contains(updateListener)) return;
         processorListeners.add(updateListener);
     }
 
-    public void removeProcessorListener(UpdateProcessorListener updateListener)
-    {
+    public void removeProcessorListener(UpdateProcessorListener updateListener) {
         processorListeners.remove(updateListener);
     }
 
-    public void addUpdateListener(UpdateListener updateListener)
-    {
-        if(updateListeners.contains(updateListener)) return;
+    public void addUpdateListener(UpdateListener updateListener) {
+        if (updateListeners.contains(updateListener)) return;
         updateListeners.add(updateListener);
     }
 
-    public void removeUpdateListener(UpdateListener updateListener)
-    {
+    public void removeUpdateListener(UpdateListener updateListener) {
         updateListeners.remove(updateListener);
     }
 
@@ -410,6 +384,16 @@ public class UpdateProcessor {
         return sendRequest(request, null, address);
     }
 
+    /**
+     * Sends new request to active connection with callback and specific server address
+     *
+     * @param request
+     * @param callback
+     * @param address
+     * @return
+     * @throws WebsocketNotConnectedException
+     * @throws UnablePerformRequestException
+     */
     public Request sendRequest(Request request, UpdateListener callback, String address) throws WebsocketNotConnectedException, UnablePerformRequestException {
         try {
             request.setRequestId(lastRequestId);
@@ -435,30 +419,24 @@ public class UpdateProcessor {
             }
             lastRequestId++;
             return request;
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new UnablePerformRequestException();
         }
 
     }
 
-    public void notifySocketsCountChanged()
-    {
+    public void notifySocketsCountChanged() {
         float percent = getActiveSocketsPercent();
-        for(UpdateProcessorListener updateProcessorListener : processorListeners)
-        {
+        for (UpdateProcessorListener updateProcessorListener : processorListeners) {
             updateProcessorListener.onSocketsCountChange(percent);
         }
     }
 
-    public void reconnectSockets()
-    {
-        for(String address : socketClients.keySet())
-        {
+    public void reconnectSockets() {
+        for (String address : socketClients.keySet()) {
             SocketClient socketClient = socketClients.get(address);
-            if(socketClient != null) {
+            if (socketClient != null) {
                 if (socketClient.isClosed()) {
                     try {
                         socketClient = new SocketClient(new URI(address));
@@ -469,9 +447,7 @@ public class UpdateProcessor {
                     socketClient.connect();
 
                 }
-            }
-            else
-            {
+            } else {
                 try {
                     socketClient = new SocketClient(new URI(address));
                     setupSocketClient(socketClient);
@@ -485,18 +461,15 @@ public class UpdateProcessor {
 
         }
     }
-    int updatedRoomsCount = 0;
-    public void sendSubscribeRequest()
-    {
+
+    public void sendSubscribeRequest() {
 
         updatedRoomsCount = 0;
 
         List<Room> rooms = roomDao.getAllRoomsByUpdatedTime();
 
 
-
-        for(Room room : new ArrayList<>(rooms))
-        {
+        for (Room room : new ArrayList<>(rooms)) {
             Message message = DiraMessageDatabase.getDatabase(context).getMessageDao().getMessageById(room.getLastMessageId());
             room.setMessage(message);
             try {
@@ -506,14 +479,12 @@ public class UpdateProcessor {
                             public void onUpdate(Update update) {
                                 updatedRoomsCount++;
 
-                                if(updatedRoomsCount == rooms.size())
-                                {
+                                if (updatedRoomsCount == rooms.size()) {
                                     SubscribeRequest subscribeRequest = new SubscribeRequest();
 
                                     List<String> roomSecrets = new ArrayList<>();
 
-                                    for(Room room : roomDao.getAllRoomsByUpdatedTime())
-                                    {
+                                    for (Room room : roomDao.getAllRoomsByUpdatedTime()) {
                                         roomSecrets.add(room.getSecretName());
                                     }
 
@@ -526,9 +497,7 @@ public class UpdateProcessor {
                                 }
                             }
                         });
-            }
-            catch (Exception ignored)
-            {
+            } catch (Exception ignored) {
                 ignored.printStackTrace();
 
             }
@@ -537,8 +506,7 @@ public class UpdateProcessor {
 
     }
 
-    private void setupSocketClient(SocketClient socketClient)
-    {
+    private void setupSocketClient(SocketClient socketClient) {
         socketClient.setSocketListener(new SocketListener() {
             @Override
             public void onSocketOpened() {

@@ -3,8 +3,6 @@ package ru.dira.components;
 import android.content.Context;
 import android.text.Layout;
 import android.util.AttributeSet;
-import android.widget.TextView;
-
 
 
 public class MessageTextView extends androidx.appcompat.widget.AppCompatTextView {
@@ -19,20 +17,17 @@ public class MessageTextView extends androidx.appcompat.widget.AppCompatTextView
         int widthMode = MeasureSpec.getMode(widthSpec);
 
 
-
-            Layout layout = getLayout();
-            if (layout != null) {
-                int maxWidth = (int) Math.ceil(getMaxLineWidth2(layout));
-                widthSpec = MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.AT_MOST);
-            }
+        Layout layout = getLayout();
+        if (layout != null) {
+            int maxWidth = (int) Math.ceil(getMaxLineWidth2(layout));
+            widthSpec = MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.AT_MOST);
+        }
 
         super.onMeasure(widthSpec, heightSpec);
     }
 
 
-
-    public void initializeSize()
-    {
+    public void initializeSize() {
         try {
             int width = (int) getMaxLineWidth(getLayout());
             int height = getMeasuredHeight();
@@ -41,9 +36,7 @@ public class MessageTextView extends androidx.appcompat.widget.AppCompatTextView
             setWidth(width);
 
 
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

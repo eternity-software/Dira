@@ -1,7 +1,5 @@
 package ru.dira.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -10,6 +8,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 
@@ -23,8 +23,8 @@ import ru.dira.db.daos.RoomDao;
 import ru.dira.db.entities.Message;
 import ru.dira.db.entities.Room;
 import ru.dira.exceptions.UnablePerformRequestException;
-import ru.dira.services.UpdateListener;
-import ru.dira.services.UpdateProcessor;
+import ru.dira.updates.UpdateProcessor;
+import ru.dira.updates.listeners.UpdateListener;
 import ru.dira.utils.CacheUtils;
 import ru.dira.utils.KeyGenerator;
 import ru.dira.utils.SliderActivity;
@@ -59,7 +59,6 @@ public class CreateRoomActivity extends AppCompatActivity {
         });
 
 
-
         findViewById(R.id.button_create_new).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,8 +71,7 @@ public class CreateRoomActivity extends AppCompatActivity {
                         public void onUpdate(Update update) {
                             AcceptedStatusAnswer acceptedStatusAnswer = (AcceptedStatusAnswer) update;
 
-                            if(acceptedStatusAnswer.isAccepted())
-                            {
+                            if (acceptedStatusAnswer.isAccepted()) {
                                 RoomDao roomDao = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao();
 
                                 Room room = new Room(roomName, System.currentTimeMillis(), roomSecret);
@@ -93,9 +91,7 @@ public class CreateRoomActivity extends AppCompatActivity {
                                 UpdateProcessor.getInstance().sendSubscribeRequest();
                                 try {
                                     UpdateProcessor.getInstance().sendRequest(sendMessageRequest);
-                                }
-                                catch (Exception e)
-                                {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
 
@@ -111,9 +107,7 @@ public class CreateRoomActivity extends AppCompatActivity {
 
                         }
                     });
-                }
-                catch (WebsocketNotConnectedException e)
-                {
+                } catch (WebsocketNotConnectedException e) {
                     Toast.makeText(CreateRoomActivity.this, "Not connected", Toast.LENGTH_LONG).show();
                 } catch (UnablePerformRequestException e) {
                     e.printStackTrace();

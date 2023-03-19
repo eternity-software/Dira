@@ -2,7 +2,6 @@ package ru.dira.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.text.format.DateFormat;
 import android.util.TypedValue;
 

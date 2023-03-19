@@ -35,9 +35,9 @@
     <string name="you">Вы</string>
     <string name="type_message_hint">Сообщение</string>
     <string name="members_count">%s участников</string>
-    <string name="edit">Изменить</string>
-    <string name="invite">Пригласить</string>
-    <string name="leave">Покинуть</string>
+    <string name="edit">Ред.</string>
+    <string name="invite">Доб.</string>
+    <string name="leave">Выйти</string>
     <string name="edit_room">Изменить комнату</string>
     <string name="room_picture">Изображение комнаты</string>
     <string name="edit_room_name">Имя комнаты</string>

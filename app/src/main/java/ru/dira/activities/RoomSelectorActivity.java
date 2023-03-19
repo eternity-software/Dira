@@ -1,10 +1,5 @@
 package ru.dira.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
@@ -15,30 +10,30 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageView;
 
-import org.java_websocket.client.WebSocketClient;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import ru.dira.R;
 import ru.dira.adapters.RoomSelectorAdapter;
-import ru.dira.api.SocketClient;
 import ru.dira.api.requests.GetUpdatesRequest;
 import ru.dira.api.updates.Update;
 import ru.dira.api.updates.UpdateType;
-import ru.dira.attachments.ImageStorage;
 import ru.dira.db.DiraMessageDatabase;
 import ru.dira.db.DiraRoomDatabase;
 import ru.dira.db.entities.Message;
 import ru.dira.db.entities.Room;
 import ru.dira.notifications.Notifier;
-import ru.dira.services.UpdateListener;
-import ru.dira.services.UpdateProcessor;
-import ru.dira.services.UpdateProcessorListener;
 import ru.dira.services.UpdaterService;
+import ru.dira.storage.AppStorage;
+import ru.dira.updates.UpdateProcessor;
+import ru.dira.updates.listeners.UpdateListener;
+import ru.dira.updates.listeners.UpdateProcessorListener;
 import ru.dira.utils.CacheUtils;
 import ru.dira.utils.KeyGenerator;
 
@@ -56,18 +51,22 @@ public class RoomSelectorActivity extends AppCompatActivity implements UpdatePro
         setContentView(R.layout.activity_main);
 
         try {
-           // Thread.sleep(800);
+            // Thread.sleep(800);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if(getIntent().hasExtra(PENDING_ROOM_SECRET)) {
+        if (getIntent().hasExtra(PENDING_ROOM_SECRET)) {
             if (getIntent().getExtras().getString(PENDING_ROOM_SECRET) != null) {
                 Intent notificationIntent = new Intent(this, RoomSelectorActivity.class);
                 RoomActivity.pendingRoomSecret = getIntent().getExtras().getString(PENDING_ROOM_SECRET);
                 RoomActivity.pendingRoomName = getIntent().getExtras().getString(PENDING_ROOM_NAME);
                 startActivity(notificationIntent);
             }
+        }
+
+        if (!CacheUtils.getInstance().hasKey(CacheUtils.AUTO_LOAD_SIZE, this)) {
+            CacheUtils.getInstance().setLong(CacheUtils.AUTO_LOAD_SIZE, AppStorage.MAX_DEFAULT_ATTACHMENT_AUTOLOAD_SIZE, this);
         }
 
         startService(new Intent(this, UpdaterService.class));
@@ -88,8 +87,7 @@ public class RoomSelectorActivity extends AppCompatActivity implements UpdatePro
             }
         });
 
-        if(!CacheUtils.getInstance().hasKey(CacheUtils.ID, getApplicationContext()))
-        {
+        if (!CacheUtils.getInstance().hasKey(CacheUtils.ID, getApplicationContext())) {
             CacheUtils.getInstance().setString(CacheUtils.ID, KeyGenerator.generateId(), getApplicationContext());
             CacheUtils.getInstance().setString(CacheUtils.NICKNAME, getString(R.string.dira_user) + " " + new Random().nextInt(1000), getApplicationContext());
         }
@@ -105,17 +103,19 @@ public class RoomSelectorActivity extends AppCompatActivity implements UpdatePro
     }
 
 
-
-    private void askForPermissions()
-    {
+    private void askForPermissions() {
         List<String> permissions = new ArrayList<>();
         if (Build.VERSION.SDK_INT >= 33) {
-          permissions.add(Manifest.permission.ACCESS_NOTIFICATION_POLICY);
+            permissions.add(Manifest.permission.ACCESS_NOTIFICATION_POLICY);
+            permissions.add(Manifest.permission.READ_MEDIA_IMAGES);
+            permissions.add(Manifest.permission.READ_MEDIA_VIDEO);
         }
+
+
         permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            permissions.add(Manifest.permission.ACCESS_MEDIA_LOCATION );
+            permissions.add(Manifest.permission.ACCESS_MEDIA_LOCATION);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -133,9 +133,8 @@ public class RoomSelectorActivity extends AppCompatActivity implements UpdatePro
 
     }
 
-    private void updateRooms()
-    {
-        if(isRoomsUpdating) return;
+    private void updateRooms() {
+        if (isRoomsUpdating) return;
         isRoomsUpdating = true;
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         Thread loadDataThread = new Thread(new Runnable() {
@@ -143,19 +142,16 @@ public class RoomSelectorActivity extends AppCompatActivity implements UpdatePro
             public void run() {
                 List<Room> rooms = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getAllRoomsByUpdatedTime();
                 roomSelectorAdapter = new RoomSelectorAdapter(RoomSelectorActivity.this);
-                for(Room room : new ArrayList<>(rooms))
-                {
-                   Message message = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getMessageById(room.getLastMessageId());
-                   room.setMessage(message);
-                   try {
+                for (Room room : new ArrayList<>(rooms)) {
+                    Message message = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getMessageById(room.getLastMessageId());
+                    room.setMessage(message);
+                    try {
 
-                       UpdateProcessor.getInstance().sendRequest(new GetUpdatesRequest(room.getSecretName(), room.getLastUpdateId()));
-                   }
-                   catch (Exception ignored)
-                   {
-                       ignored.printStackTrace();
+                        UpdateProcessor.getInstance().sendRequest(new GetUpdatesRequest(room.getSecretName(), room.getLastUpdateId()));
+                    } catch (Exception ignored) {
+                        ignored.printStackTrace();
 
-                   }
+                    }
                 }
                 runOnUiThread(new Runnable() {
                     @Override
@@ -180,7 +176,7 @@ public class RoomSelectorActivity extends AppCompatActivity implements UpdatePro
         updateRooms();
         ImageView imageView = findViewById(R.id.profile_picture);
         String picPath = CacheUtils.getInstance().getString(CacheUtils.PICTURE, getApplicationContext());
-        if(picPath != null) imageView.setImageBitmap(ImageStorage.getImage(picPath));
+        if (picPath != null) imageView.setImageBitmap(AppStorage.getImage(picPath));
 
         Notifier.cancelAllNotifications(getApplicationContext());
     }
@@ -191,21 +187,15 @@ public class RoomSelectorActivity extends AppCompatActivity implements UpdatePro
             @Override
             public void run() {
                 ImageView imageView = findViewById(R.id.status_light);
-                if(percentOpened != 1)
-                {
-                    if(percentOpened == 0)
-                    {
+                if (percentOpened != 1) {
+                    if (percentOpened == 0) {
                         imageView.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
-                    }
-                    else
-                    {
-                        imageView.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.yellow),android.graphics.PorterDuff.Mode.SRC_IN);
+                    } else {
+                        imageView.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.yellow), android.graphics.PorterDuff.Mode.SRC_IN);
 
                     }
                     imageView.setVisibility(View.VISIBLE);
-                }
-                else
-                {
+                } else {
                     findViewById(R.id.status_light).setVisibility(View.GONE);
                 }
             }
@@ -221,12 +211,9 @@ public class RoomSelectorActivity extends AppCompatActivity implements UpdatePro
 
     @Override
     public void onUpdate(Update update) {
-        if(update.getUpdateType() == UpdateType.NEW_MESSAGE_UPDATE)
-        {
+        if (update.getUpdateType() == UpdateType.NEW_MESSAGE_UPDATE) {
             updateRooms();
-        }
-        else if(update.getUpdateType() == UpdateType.ROOM_UPDATE)
-        {
+        } else if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
             updateRooms();
         }
     }

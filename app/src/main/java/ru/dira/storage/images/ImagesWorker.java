@@ -1,4 +1,4 @@
-package ru.dira.attachments;
+package ru.dira.storage.images;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -8,18 +8,13 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.graphics.drawable.GradientDrawable;
 import android.provider.MediaStore;
-import android.widget.ImageView;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-import ru.dira.utils.Numbers;
-
 
 public class ImagesWorker {
-
 
 
     public static void saveBitmapToGallery(Bitmap finalBitmap, Activity activity) {

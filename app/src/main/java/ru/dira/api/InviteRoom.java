@@ -4,8 +4,6 @@ package ru.dira.api;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.dira.db.entities.Member;
-
 public class InviteRoom {
 
     private String secretName;

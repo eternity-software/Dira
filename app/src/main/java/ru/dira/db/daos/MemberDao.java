@@ -9,7 +9,6 @@ import androidx.room.Update;
 import java.util.List;
 
 import ru.dira.db.entities.Member;
-import ru.dira.db.entities.Room;
 
 @Dao
 public interface MemberDao {
@@ -27,7 +26,7 @@ public interface MemberDao {
     Member getMemberByIdAndRoomSecret(String id, String roomSecret);
 
     @Query("SELECT * FROM member WHERE roomSecret = :roomSecret")
-    List<Member> getMembersByRoomSecret( String roomSecret);
+    List<Member> getMembersByRoomSecret(String roomSecret);
 
     @Query("SELECT * FROM member ")
     List<Member> getAllMembers();

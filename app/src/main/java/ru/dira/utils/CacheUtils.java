@@ -3,16 +3,13 @@ package ru.dira.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class CacheUtils {
 
 
     public final static String ID = "id";
     public final static String NICKNAME = "nickname";
     public final static String PICTURE = "picture";
+    public final static String AUTO_LOAD_SIZE = "autoload_size";
 
     private final static String IDENTIFIER = "APP_SETTINGS";
     private static CacheUtils instance;

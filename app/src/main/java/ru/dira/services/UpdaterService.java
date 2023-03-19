@@ -6,30 +6,15 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 
-import com.google.gson.Gson;
-
-import org.java_websocket.exceptions.WebsocketNotConnectedException;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import ru.dira.api.SocketClient;
-import ru.dira.api.requests.Request;
-import ru.dira.api.updates.Update;
-import ru.dira.api.updates.UpdateDeserializer;
+import ru.dira.updates.UpdateProcessor;
 
 public class UpdaterService extends Service {
 
 
+    public static Runnable runnable = null;
+    public static UpdateProcessor updateProcessor;
     public Context context = this;
     public Handler handler = null;
-
-    public static Runnable runnable = null;
-
-    public static UpdateProcessor updateProcessor;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -38,7 +23,7 @@ public class UpdaterService extends Service {
 
     @Override
     public void onCreate() {
-       // Toast.makeText(this, "Service created!", Toast.LENGTH_LONG).show();
+        // Toast.makeText(this, "Service created!", Toast.LENGTH_LONG).show();
 
 
         handler = new Handler();
@@ -53,21 +38,17 @@ public class UpdaterService extends Service {
         updateProcessor = UpdateProcessor.getInstance(getApplicationContext());
 
 
-
-
-
-
         handler.postDelayed(runnable, 15000);
     }
-
 
 
     @Override
     public void onDestroy() {
         /* IF YOU WANT THIS SERVICE KILLED WITH THE APP THEN UNCOMMENT THE FOLLOWING LINE */
         //handler.removeCallbacks(runnable);
-      //  Toast.makeText(this, "Service stopped", Toast.LENGTH_LONG).show();
+        //  Toast.makeText(this, "Service stopped", Toast.LENGTH_LONG).show();
     }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 

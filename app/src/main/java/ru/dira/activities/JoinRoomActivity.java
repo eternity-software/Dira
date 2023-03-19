@@ -1,11 +1,11 @@
 package ru.dira.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Arrays;
 
@@ -14,10 +14,10 @@ import ru.dira.api.requests.JoinRoomRequest;
 import ru.dira.api.requests.UpdateMemberRequest;
 import ru.dira.api.updates.NewRoomUpdate;
 import ru.dira.api.updates.Update;
-import ru.dira.attachments.ImageStorage;
 import ru.dira.exceptions.UnablePerformRequestException;
-import ru.dira.services.UpdateListener;
-import ru.dira.services.UpdateProcessor;
+import ru.dira.storage.AppStorage;
+import ru.dira.updates.UpdateProcessor;
+import ru.dira.updates.listeners.UpdateListener;
 import ru.dira.utils.CacheUtils;
 import ru.dira.utils.SliderActivity;
 
@@ -29,6 +29,7 @@ public class JoinRoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_join_room);
         SliderActivity sliderActivity = new SliderActivity();
         sliderActivity.attachSlider(this);
+
 
         findViewById(R.id.button_back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,8 +56,7 @@ public class JoinRoomActivity extends AppCompatActivity {
                     UpdateProcessor.getInstance().sendRequest(joinRoomRequest, new UpdateListener() {
                         @Override
                         public void onUpdate(Update update) {
-                            if(update instanceof NewRoomUpdate)
-                            {
+                            if (update instanceof NewRoomUpdate) {
                                 UpdateProcessor.getInstance().sendSubscribeRequest();
                                 runOnUiThread(new Runnable() {
                                     @Override
@@ -68,9 +68,8 @@ public class JoinRoomActivity extends AppCompatActivity {
 
                                         String base64Pic = null;
 
-                                        if(picturePath != null)
-                                        {
-                                            base64Pic = ImageStorage.getBase64FromBitmap(ImageStorage.getImage(picturePath));
+                                        if (picturePath != null) {
+                                            base64Pic = AppStorage.getBase64FromBitmap(AppStorage.getImage(picturePath));
                                         }
 
                                         UpdateMemberRequest updateMemberRequest = new UpdateMemberRequest(nickname, base64Pic,

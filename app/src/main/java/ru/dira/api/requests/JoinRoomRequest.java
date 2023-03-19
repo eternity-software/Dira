@@ -1,6 +1,6 @@
 package ru.dira.api.requests;
 
-public class JoinRoomRequest extends Request{
+public class JoinRoomRequest extends Request {
 
     private String invitationCode;
 

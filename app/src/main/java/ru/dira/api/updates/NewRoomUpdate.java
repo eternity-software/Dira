@@ -7,7 +7,7 @@ public class NewRoomUpdate extends Update {
 
     private InviteRoom inviteRoom;
 
-    public NewRoomUpdate( InviteRoom inviteRoom) {
+    public NewRoomUpdate(InviteRoom inviteRoom) {
         super(0, UpdateType.ROOM_UPDATE);
         this.inviteRoom = inviteRoom;
     }

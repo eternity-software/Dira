@@ -1,7 +1,6 @@
 package ru.dira.bottomsheet.filepicker;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,28 +22,21 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import java.util.ArrayList;
 
 import ru.dira.R;
-import ru.dira.attachments.WaterfallBalancer;
+import ru.dira.storage.images.WaterfallBalancer;
 import ru.dira.utils.Numbers;
 
 
 public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     private View view;
     private ArrayList<String> images;
-    private boolean isShown = false;
+    private final boolean isShown = false;
 
     private FilePickerAdapter filePickerAdapter;
+    private ItemClickListener onItemClickListener;
 
     public ArrayList<FileInfo> getMedia() {
         return filePickerAdapter.getImages();
     }
-
-    private ItemClickListener onItemClickListener;
-
-    public static interface ItemClickListener
-    {
-        void onItemClick(int pos, View view);
-    }
-
 
     @Override
     public void show(@NonNull FragmentManager manager, @Nullable String tag) {
@@ -72,14 +64,9 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         return v;
     }
 
-
-
     public void setRunnable(ItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
-
-
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,14 +83,12 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         super.onActivityCreated(arg0);
 
 
-
         getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
 
         BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
 
 
         final FrameLayout bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
-
 
 
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -123,15 +108,11 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
                 float pix = Numbers.dpToPx(20, getContext()) * (1 - slideOffset);
                 float maxPix = Numbers.dpToPx(20, getContext());
 
-                if(pix < maxPix)
-                {
+                if (pix < maxPix) {
                     cardView.setRadius(pix);
-                }
-                else
-                {
+                } else {
                     cardView.setRadius(maxPix);
                 }
-
 
 
             }
@@ -154,9 +135,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
                             debugText.setText("Active waterfalls: " + count);
                         }
                     });
-                }
-                catch (Exception ignored)
-                {
+                } catch (Exception ignored) {
 
                 }
 
@@ -166,6 +145,10 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         gallery.setAdapter(filePickerAdapter);
 
 
+    }
+
+    public interface ItemClickListener {
+        void onItemClick(int pos, View view);
     }
 
 

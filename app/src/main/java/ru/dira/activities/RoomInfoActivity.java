@@ -1,13 +1,13 @@
 package ru.dira.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,14 +18,14 @@ import ru.dira.api.requests.CreateInviteRequest;
 import ru.dira.api.updates.NewInvitationUpdate;
 import ru.dira.api.updates.Update;
 import ru.dira.api.updates.UpdateType;
-import ru.dira.attachments.ImageStorage;
 import ru.dira.bottomsheet.InvitationCodeBottomSheet;
 import ru.dira.db.DiraRoomDatabase;
 import ru.dira.db.entities.Member;
 import ru.dira.db.entities.Room;
 import ru.dira.exceptions.UnablePerformRequestException;
-import ru.dira.services.UpdateListener;
-import ru.dira.services.UpdateProcessor;
+import ru.dira.storage.AppStorage;
+import ru.dira.updates.UpdateProcessor;
+import ru.dira.updates.listeners.UpdateListener;
 import ru.dira.utils.CacheUtils;
 import ru.dira.utils.SliderActivity;
 
@@ -71,37 +71,35 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                 ImageView inviteIcon = findViewById(R.id.icon_invite);
                 ProgressBar progressBar = findViewById(R.id.progress_circular);
 
-                if(progressBar.getVisibility() == View.VISIBLE) return;
+                if (progressBar.getVisibility() == View.VISIBLE) return;
                 inviteIcon.setVisibility(View.GONE);
                 progressBar.setVisibility(View.VISIBLE);
 
                 List<RoomMember> roomMembers = new ArrayList<>();
 
-                for(Member member : members)
-                {
+                for (Member member : members) {
                     roomMembers.add(new RoomMember(member.getId(), member.getNickname(),
-                            ImageStorage.getBase64FromBitmap(ImageStorage.getImage(member.getImagePath())),
-                                    member.getRoomSecret(),
-                                    member.getLastTimeUpdated()));
+                            AppStorage.getBase64FromBitmap(AppStorage.getImage(member.getImagePath())),
+                            member.getRoomSecret(),
+                            member.getLastTimeUpdated()));
                 }
 
                 roomMembers.add(new RoomMember(CacheUtils.getInstance().getString(CacheUtils.ID, getApplicationContext()),
                         CacheUtils.getInstance().getString(CacheUtils.NICKNAME, getApplicationContext()),
-                        ImageStorage.getBase64FromBitmap(ImageStorage.getImage(CacheUtils.getInstance().getString(CacheUtils.PICTURE, getApplicationContext()))),
+                        AppStorage.getBase64FromBitmap(AppStorage.getImage(CacheUtils.getInstance().getString(CacheUtils.PICTURE, getApplicationContext()))),
                         room.getSecretName(), System.currentTimeMillis()));
 
                 CreateInviteRequest createInviteRequest = new CreateInviteRequest(room.getName(),
                         room.getSecretName(),
-                        ImageStorage.getBase64FromBitmap(ImageStorage.getImage(room.getImagePath())),
+                        AppStorage.getBase64FromBitmap(AppStorage.getImage(room.getImagePath())),
                         roomMembers);
 
                 try {
                     UpdateProcessor.getInstance().sendRequest(createInviteRequest, new UpdateListener() {
                         @Override
                         public void onUpdate(Update update) {
-                            if(update.getUpdateType() == UpdateType.ROOM_CREATE_INVITATION)
-                            {
-                                NewInvitationUpdate newInvitationUpdate = (NewInvitationUpdate)  update;
+                            if (update.getUpdateType() == UpdateType.ROOM_CREATE_INVITATION) {
+                                NewInvitationUpdate newInvitationUpdate = (NewInvitationUpdate) update;
 
                                 runOnUiThread(new Runnable() {
                                     @Override
@@ -114,9 +112,7 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                                             invitationCodeBottomSheet.setCode(newInvitationUpdate.getInvitationCode());
                                             invitationCodeBottomSheet.setRoomName(room.getName());
                                             invitationCodeBottomSheet.show(getSupportFragmentManager(), "Invitation bottom sheet");
-                                        }
-                                        catch (Exception e)
-                                        {
+                                        } catch (Exception e) {
 
                                         }
 
@@ -149,8 +145,7 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
         UpdateProcessor.getInstance().removeUpdateListener(this);
     }
 
-    private void loadData()
-    {
+    private void loadData() {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -160,10 +155,9 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(room.getImagePath() != null)
-                        {
+                        if (room.getImagePath() != null) {
                             ImageView roomPicture = findViewById(R.id.room_picture);
-                            roomPicture.setImageBitmap(ImageStorage.getImage(room.getImagePath()));
+                            roomPicture.setImageBitmap(AppStorage.getImage(room.getImagePath()));
                         }
 
                         TextView roomName = findViewById(R.id.room_name);
@@ -177,8 +171,7 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
 
     @Override
     public void onUpdate(Update update) {
-        if(update.getUpdateType() == UpdateType.ROOM_UPDATE)
-        {
+        if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
             loadData();
         }
     }

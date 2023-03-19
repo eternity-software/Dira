@@ -5,7 +5,7 @@ public class MemberUpdate extends Update {
     private String nickname, base64pic, id;
     private long updateTime;
 
-    public MemberUpdate(String nickname, String base64pic,  String id, long updateTime) {
+    public MemberUpdate(String nickname, String base64pic, String id, long updateTime) {
         super(0, UpdateType.MEMBER_UPDATE);
         this.nickname = nickname;
         this.base64pic = base64pic;

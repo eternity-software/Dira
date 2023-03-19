@@ -74,6 +74,7 @@
                     android:text="@string/no_messages"
                     android:layout_marginTop="2dp"
                     android:textColor="@color/white"
+                    android:maxLines="1"
                     android:textSize="14sp" />
                 <TextView
                     android:id="@+id/time_text"

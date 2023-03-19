@@ -1,4 +1,7 @@
 package ru.dira.exceptions;
 
-public class UnablePerformRequestException extends Exception{
+/**
+ * Exception occurs when socket server is unreachable
+ */
+public class UnablePerformRequestException extends Exception {
 }

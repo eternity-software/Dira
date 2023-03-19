@@ -1,21 +1,18 @@
 package ru.dira.activities;
 
-import static ru.dira.attachments.ImageStorage.getRealPathFromURI;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import static ru.dira.storage.AppStorage.getRealPathFromURI;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.File;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +20,14 @@ import java.util.List;
 import ru.dira.BuildConfig;
 import ru.dira.R;
 import ru.dira.api.requests.UpdateMemberRequest;
-import ru.dira.attachments.ImageStorage;
-import ru.dira.attachments.ImagesWorker;
 import ru.dira.bottomsheet.filepicker.FilePickerBottomSheet;
 import ru.dira.components.FilePreview;
 import ru.dira.db.DiraRoomDatabase;
 import ru.dira.db.entities.Room;
 import ru.dira.exceptions.UnablePerformRequestException;
-import ru.dira.services.UpdateProcessor;
+import ru.dira.storage.AppStorage;
+import ru.dira.storage.images.ImagesWorker;
+import ru.dira.updates.UpdateProcessor;
 import ru.dira.utils.CacheUtils;
 import ru.dira.utils.ImageRotationFix;
 import ru.dira.utils.SliderActivity;
@@ -56,7 +53,7 @@ public class PersonalityActivity extends AppCompatActivity {
 
         ImageView imageView = findViewById(R.id.profile_picture);
         String picPath = CacheUtils.getInstance().getString(CacheUtils.PICTURE, getApplicationContext());
-        if(picPath != null) imageView.setImageBitmap(ImageStorage.getImage(picPath));
+        if (picPath != null) imageView.setImageBitmap(AppStorage.getImage(picPath));
 
         nicknameText.setText(CacheUtils.getInstance().getString(CacheUtils.NICKNAME, getApplicationContext()));
         idText.setText(CacheUtils.getInstance().getString(CacheUtils.ID, getApplicationContext()));
@@ -76,13 +73,12 @@ public class PersonalityActivity extends AppCompatActivity {
                     public void run() {
                         List<String> roomSecrets = new ArrayList<>();
 
-                        for(Room room : DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getAllRoomsByUpdatedTime())
-                        {
+                        for (Room room : DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getAllRoomsByUpdatedTime()) {
                             roomSecrets.add(room.getSecretName());
                         }
 
                         UpdateMemberRequest updateMemberRequest = new UpdateMemberRequest(nicknameText.getText().toString(),
-                                ImageStorage.getBase64FromBitmap(userPicture), roomSecrets,  idText.getText().toString(), System.currentTimeMillis());
+                                AppStorage.getBase64FromBitmap(userPicture), roomSecrets, idText.getText().toString(), System.currentTimeMillis());
 
                         try {
                             UpdateProcessor.getInstance().sendRequest(updateMemberRequest);
@@ -94,6 +90,8 @@ public class PersonalityActivity extends AppCompatActivity {
                             public void run() {
                                 CacheUtils.getInstance().setString(CacheUtils.NICKNAME, nicknameText.getText().toString(), getApplicationContext());
                                 CacheUtils.getInstance().setString(CacheUtils.ID, idText.getText().toString(), getApplicationContext());
+                                String path = AppStorage.saveToInternalStorage(userPicture, getApplicationContext());
+                                CacheUtils.getInstance().setString(CacheUtils.PICTURE, path, getApplicationContext());
                                 finish();
                             }
                         });
@@ -112,6 +110,7 @@ public class PersonalityActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -142,37 +141,31 @@ public class PersonalityActivity extends AppCompatActivity {
             String imageUri = data.getStringExtra("uri");
 
 
-
-
             try {
-               updateProfilePhoto(getRealPathFromURI(this, Uri.parse(imageUri)));
+                updateProfilePhoto(getRealPathFromURI(this, Uri.parse(imageUri)));
             } catch (Exception e) {
                 updateProfilePhoto(imageUri);
             }
 
 
-
-            // TODO: Upload image to server
         }
     }
 
 
-   public void updateProfilePhoto(String path)
-   {
-       userPicture = ImagesWorker.getCircleCroppedBitmap(ImageStorage.getImage(path), 256, 256);
-       userPicture = ImagesWorker.compressBitmap(userPicture);
-       path = ImageStorage.saveToInternalStorage(userPicture, getApplicationContext());
+    public void updateProfilePhoto(String path) {
+        userPicture = ImagesWorker.getCircleCroppedBitmap(AppStorage.getImage(path), 256, 256);
+        userPicture = ImagesWorker.compressBitmap(userPicture);
 
-       try {
-           userPicture = ImageRotationFix.rotateImageIfRequired(getApplicationContext(), userPicture, Uri.parse(path));
-       } catch (IOException e) {
-           e.printStackTrace();
-       }
-       ImageView imageView = findViewById(R.id.profile_picture);
-       imageView.setImageBitmap(userPicture);
 
-       CacheUtils.getInstance().setString(CacheUtils.PICTURE, path, getApplicationContext());
-   }
+        try {
+            userPicture = ImageRotationFix.rotateImageIfRequired(getApplicationContext(), userPicture, Uri.parse(path));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ImageView imageView = findViewById(R.id.profile_picture);
+        imageView.setImageBitmap(userPicture);
+
+    }
 
     public void pickImage() {
     /*    Intent intent = new Intent(Intent.ACTION_PICK,

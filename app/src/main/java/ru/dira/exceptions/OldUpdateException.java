@@ -1,4 +1,7 @@
 package ru.dira.exceptions;
 
-public class OldUpdateException extends Exception{
+/**
+ * Exception occurs when newer update was applied to room
+ */
+public class OldUpdateException extends Exception {
 }

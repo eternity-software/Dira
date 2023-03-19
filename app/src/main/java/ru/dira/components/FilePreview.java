@@ -27,7 +27,7 @@ public class FilePreview extends RelativeLayout {
 
     public void initComponent() {
 
-        if(!isInitialized) {
+        if (!isInitialized) {
 
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -41,8 +41,7 @@ public class FilePreview extends RelativeLayout {
 
     }
 
-    public void appearContorllers()
-    {
+    public void appearContorllers() {
         videoInfoView.setVisibility(VISIBLE);
         videoInfoView.setAlpha(0f);
         videoInfoView.animate().alpha(1f).setDuration(200).start();
@@ -53,30 +52,24 @@ public class FilePreview extends RelativeLayout {
         return fileParingImageView;
     }
 
-    public void setFileInfo(FileInfo fileInfo) {
-        this.fileInfo = fileInfo;
-        initComponent();
-        fileParingImageView.setFileInfo(fileInfo);
-        if(fileInfo.isVideo())
-        {
-            videoInfoView.setVisibility(VISIBLE);
-            setSubtitle("");
-        }
-        else
-        {
-            videoInfoView.setVisibility(INVISIBLE);
-        }
-    }
-
-    public void setSubtitle(String text)
-    {
+    public void setSubtitle(String text) {
 
         durationView.setText(text);
     }
 
-
-
     public FileInfo getFileInfo() {
         return fileInfo;
+    }
+
+    public void setFileInfo(FileInfo fileInfo) {
+        this.fileInfo = fileInfo;
+        initComponent();
+        fileParingImageView.setFileInfo(fileInfo);
+        if (fileInfo.isVideo()) {
+            videoInfoView.setVisibility(VISIBLE);
+            setSubtitle("");
+        } else {
+            videoInfoView.setVisibility(INVISIBLE);
+        }
     }
 }

@@ -6,11 +6,10 @@ public class VerifyRoomInfoRequest extends Request {
 
 
     public VerifyRoomInfoRequest(String name, String roomSecret) {
-        super(0,  RequestType.VERIFY_ROOM_INFO);
+        super(0, RequestType.VERIFY_ROOM_INFO);
         this.name = name;
         this.roomSecret = roomSecret;
     }
-
 
 
     public String getName() {

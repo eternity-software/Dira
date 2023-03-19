@@ -8,8 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 
 public class Transitions {
-    public static Bundle makeOneViewTransition(View fromView, Activity context, Intent intent, String transitionid)
-    {
+    public static Bundle makeOneViewTransition(View fromView, Activity context, Intent intent, String transitionid) {
         Bundle bundle = null;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
@@ -18,11 +17,10 @@ public class Transitions {
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(context, v, transitionid);
 
 
-
                 bundle = options.toBundle();
             }
         }
 
-       return bundle;
+        return bundle;
     }
 }

@@ -1,4 +1,4 @@
-package ru.dira.services;
+package ru.dira.updates.listeners;
 
 import ru.dira.api.updates.Update;
 

@@ -3,8 +3,6 @@ package ru.dira.components;
 import android.content.Context;
 import android.text.Layout;
 import android.util.AttributeSet;
-import android.widget.TextView;
-
 
 
 public class LeftMessageTextView extends androidx.appcompat.widget.AppCompatTextView {
@@ -15,8 +13,7 @@ public class LeftMessageTextView extends androidx.appcompat.widget.AppCompatText
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if(getLayout() != null)
-        {
+        if (getLayout() != null) {
             int width = (int) Math.ceil(getMaxLineWidth(getLayout()));
             int height = getMeasuredHeight();
             setMeasuredDimension(width, height);

@@ -3,21 +3,16 @@ package ru.dira.bottomsheet;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -31,8 +26,8 @@ public class InvitationCodeBottomSheet extends BottomSheetDialogFragment {
     private String roomName;
 
     // Нажатия на кнопки
-    private View.OnClickListener passiveButtonClick = null;
-    private View.OnClickListener activeButtonClick = null;
+    private final View.OnClickListener passiveButtonClick = null;
+    private final View.OnClickListener activeButtonClick = null;
 
     private View view;
 
@@ -58,7 +53,6 @@ public class InvitationCodeBottomSheet extends BottomSheetDialogFragment {
         final LinearLayout bottomSheet = dialog.findViewById(R.id.bottom_sheet);
 
         // Ловим COLLAPSED и не даём промежуточному положению существовать, а так же убираем слайд при невозможности отменить
-
 
 
     }
@@ -107,18 +101,18 @@ public class InvitationCodeBottomSheet extends BottomSheetDialogFragment {
         return v;
     }
 
-    public interface BottomSheetListener {
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
             bottomSheetListener = (BottomSheetListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
+            throw new ClassCastException(context
                     + " must implement BottomSheetListener");
         }
+    }
+
+    public interface BottomSheetListener {
     }
 
 

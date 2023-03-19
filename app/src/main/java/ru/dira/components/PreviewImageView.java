@@ -55,21 +55,24 @@ public class PreviewImageView extends FileParingImageView {
         init();
     }
 
+    public static double round(double value, int scale) {
+        return Math.round(value * Math.pow(10, scale)) / Math.pow(10, scale);
+    }
+
     public void setImageContainer(final View imageContainer) {
         this.imageContainer = imageContainer;
 
         imageContainer.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, final MotionEvent event) {
-                if(isAnimating)
-                {
+                if (isAnimating) {
                     hasDown = false;
-                   // return true;
+                    // return true;
                 }
 
                 actionsListener.onTouch(event);
                 float deltaY = (downY - event.getY());
-              //  Log.d("onPreviewImageTouch", "deltaY " + deltaY + " y " + event.getY() + " downY:" + downY);
+                //  Log.d("onPreviewImageTouch", "deltaY " + deltaY + " y " + event.getY() + " downY:" + downY);
                 float deltaX = (downX - event.getX());
                 if (height == 0) height = getHeight();
                 switch (event.getAction()) {
@@ -78,18 +81,17 @@ public class PreviewImageView extends FileParingImageView {
                         downY = event.getY();
                         downX = event.getX();
                         hasDown = true;
-                       // Log.d("PreviewImageView", "onTouch: DOWN *****************************");
+                        // Log.d("PreviewImageView", "onTouch: DOWN *****************************");
                         return true;
 
                     case MotionEvent.ACTION_MOVE:
-
 
 
 //                        Log.d("PREVIEW", "x=" + imageContainer.getX() + " downy=" + downY + " RAW_X=" + event.getRawX() +
 //                                " RAW_y=" + event.getRawY() + " height=" + getHeight() + " width=" + imageContainer.getWidth());
                         float k = 1f;
 
-                        if(!hasDown) return  true;
+                        if (!hasDown) return true;
 
                         if (!isZoomed) {
                             k = 1.5f;
@@ -104,12 +106,12 @@ public class PreviewImageView extends FileParingImageView {
                         }
 
                         imageContainer.setY(newY);
-                    //    Log.d("Preview imageview ", "new Y " + newY);
-                        float delta = Math.abs((float) deltaY / (height / 2f));
+                        //    Log.d("Preview imageview ", "new Y " + newY);
+                        float delta = Math.abs(deltaY / (height / 2f));
 
 
                         if (delta > 1) delta = 1;
-                       // Log.d("onPreviewImageTouch", "deltaY " + deltaY + " height " + height + " mmmmmmmmmmmmmmmm delta " + delta);
+                        // Log.d("onPreviewImageTouch", "deltaY " + deltaY + " height " + height + " mmmmmmmmmmmmmmmm delta " + delta);
                         actionsListener.onSlide(delta * 0.5f);
 
 
@@ -162,7 +164,7 @@ public class PreviewImageView extends FileParingImageView {
                             }
                             if (isZoomed) {
                                 zoomUpdate();
-                                imageContainer.animate().y((imageContainer.getHeight() / 2f) - event.getY()).x((imageContainer.getWidth()  / 2f /  zoomIncrease ) - event.getX()).scaleY(zoomIncrease).scaleX(zoomIncrease).setDuration(600).setInterpolator(new DecelerateInterpolator(5f))
+                                imageContainer.animate().y((imageContainer.getHeight() / 2f) - event.getY()).x((imageContainer.getWidth() / 2f / zoomIncrease) - event.getX()).scaleY(zoomIncrease).scaleX(zoomIncrease).setDuration(600).setInterpolator(new DecelerateInterpolator(5f))
                                         .setListener(new Animator.AnimatorListener() {
                                             @Override
                                             public void onAnimationStart(Animator animation) {
@@ -208,13 +210,8 @@ public class PreviewImageView extends FileParingImageView {
         });
     }
 
-
     public void setActionsListener(ImageActionsListener actionsListener) {
         this.actionsListener = actionsListener;
-    }
-
-    public static double round(double value, int scale) {
-        return Math.round(value * Math.pow(10, scale)) / Math.pow(10, scale);
     }
 
     public void returnToDefaultPos() {
@@ -223,7 +220,6 @@ public class PreviewImageView extends FileParingImageView {
 
         actionsListener.onReturn();
         zoomIncrease = 1f;
-
 
 
         // Использование строчки ниже ломает MotionEvent и делает дёрганными резкие движения перетаскивания по оси ординат
@@ -259,7 +255,6 @@ public class PreviewImageView extends FileParingImageView {
 
         // Альтернативное рабочее решение
         ObjectAnimator animation = ObjectAnimator.ofFloat(imageContainer, "translationY", 0);
-
 
 
         ObjectAnimator animationX = ObjectAnimator.ofFloat(imageContainer, "translationX", 0);
@@ -319,7 +314,6 @@ public class PreviewImageView extends FileParingImageView {
     }
 
 
-
     private void init() {
 
         height = 0;
@@ -364,7 +358,6 @@ public class PreviewImageView extends FileParingImageView {
         };
 
 
-
     }
 
     public boolean isZoomed() {
@@ -387,6 +380,7 @@ public class PreviewImageView extends FileParingImageView {
         void onZoom(float increase);
 
         void onSlide(float percent);
+
         void onTouch(final MotionEvent motionEvent);
 
         void onExitZoom();

@@ -18,24 +18,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import ru.dira.R;
-import ru.dira.attachments.WaterfallBalancer;
 import ru.dira.components.FilePreview;
+import ru.dira.storage.images.WaterfallBalancer;
 
 
 public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.ViewHolder> {
 
 
-    private LayoutInflater mInflater;
-
-    private ArrayList<FileInfo> images;
     private final int threadCount = 0;
-    private WaterfallBalancer waterfallBalancer;
-    private Activity context;
-    private FilePickerBottomSheet.ItemClickListener itemClickListener;
-
-    public void setBalancerCallback(WaterfallBalancer.BalancerCallback balancerCallback) {
-        waterfallBalancer.setBalancerCallback(balancerCallback);
-    }
+    private final LayoutInflater mInflater;
+    private final ArrayList<FileInfo> images;
+    private final WaterfallBalancer waterfallBalancer;
+    private final Activity context;
+    private final FilePickerBottomSheet.ItemClickListener itemClickListener;
+    private Runnable transitionReenter;
 
     public FilePickerAdapter(final Activity context, FilePickerBottomSheet.ItemClickListener itemClickListener, RecyclerView recyclerView) {
         this.mInflater = LayoutInflater.from(context);
@@ -48,11 +44,15 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
         registerTransitionListener();
     }
 
+    public void setBalancerCallback(WaterfallBalancer.BalancerCallback balancerCallback) {
+        waterfallBalancer.setBalancerCallback(balancerCallback);
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.file_picker_image, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-       viewHolder.fileParingImageView.getFileParingImageView().setImageDrawable(null);
+        viewHolder.fileParingImageView.getFileParingImageView().setImageDrawable(null);
         return viewHolder;
     }
 
@@ -80,29 +80,6 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
         return images.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        public FilePreview fileParingImageView;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            FilePreview picturesView = (FilePreview) itemView;
-
-
-            //  picturesView.setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400));
-
-            fileParingImageView = picturesView;
-            picturesView.setOnClickListener(this);
-
-
-        }
-
-        @Override
-        public void onClick(View view) {
-            onItemClick(view, getAdapterPosition());
-        }
-    }
-
     public ArrayList<FileInfo> getImages() {
         return images;
     }
@@ -120,27 +97,23 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
         transitionReenter = new Runnable() {
             @Override
             public void run() {
-                if(((FilePreview) view).getFileInfo().isVideo()) {
+                if (((FilePreview) view).getFileInfo().isVideo()) {
                     ((FilePreview) view).appearContorllers();
                 }
             }
         };
 
 
-
     }
 
-    private Runnable transitionReenter;
-
-    public void registerTransitionListener()
-    {
+    public void registerTransitionListener() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             final Transition sharedElementEnterTransition = context.getWindow().getSharedElementReenterTransition();
             sharedElementEnterTransition.addListener(new TransitionListenerAdapter() {
                 @Override
                 public void onTransitionEnd(Transition transition) {
                     super.onTransitionEnd(transition);
-                    if(transitionReenter != null) {
+                    if (transitionReenter != null) {
                         transitionReenter.run();
                     }
 
@@ -182,6 +155,7 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
 //            listOfAllMedia.add(absolutePathOfImage);
 //        }
 //        cursor.close();
+
         ArrayList<FileInfo> listOfAllMedia = new ArrayList<FileInfo>();
         String[] projection = {
                 MediaStore.Files.FileColumns._ID,
@@ -222,6 +196,31 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
             }
         }
         cursor.close();
+
+
         return listOfAllMedia;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        public FilePreview fileParingImageView;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            FilePreview picturesView = (FilePreview) itemView;
+
+
+            //  picturesView.setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400));
+
+            fileParingImageView = picturesView;
+            picturesView.setOnClickListener(this);
+
+
+        }
+
+        @Override
+        public void onClick(View view) {
+            onItemClick(view, getAdapterPosition());
+        }
     }
 }

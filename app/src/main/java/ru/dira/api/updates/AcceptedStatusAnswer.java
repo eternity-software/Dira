@@ -1,6 +1,6 @@
 package ru.dira.api.updates;
 
-public class AcceptedStatusAnswer extends Update{
+public class AcceptedStatusAnswer extends Update {
 
     private boolean isAccepted;
 
