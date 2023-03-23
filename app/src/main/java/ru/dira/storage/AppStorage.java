@@ -31,7 +31,7 @@ import ru.dira.utils.CacheUtils;
 
 public class AppStorage {
 
-    public static final String IMAGE_DIR = "diraImages";
+    public static final String IMAGE_DIR = "diraFiles";
     public static final String OFFICIAL_DOWNLOAD_STORAGE_ADDRESS = "http://164.132.138.80:4444/download/";
     public static final String OFFICIAL_UPLOAD_STORAGE_ADDRESS = "http://164.132.138.80:4444/upload/";
     public static final long MAX_DEFAULT_ATTACHMENT_AUTOLOAD_SIZE = 1024 * 1024 * 20; // 20 mb
@@ -138,14 +138,29 @@ public class AppStorage {
             return String.format("%d B", size);
     }
 
-    public static String saveToInternalStorage(Bitmap bitmapImage, Context context) {
-        return saveToInternalStorage(bitmapImage, (new Random()).nextInt(9000) + ".png", context);
+
+
+
+    public static String saveToInternalStorage(Bitmap bitmapImage, String roomSecret, Context context) {
+        return saveToInternalStorage(bitmapImage, (new Random()).nextInt(9000) + ".png", roomSecret, context);
     }
 
-    public static String saveToInternalStorage(Bitmap bitmapImage, String name, Context context) {
+    public static String saveToInternalStorage(Bitmap bitmapImage, String name, String roomSecret, Context context) {
         ContextWrapper cw = new ContextWrapper(context);
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir(IMAGE_DIR, Context.MODE_PRIVATE);
+
+        if(roomSecret == null)
+        {
+            directory = cw.getDir(IMAGE_DIR, Context.MODE_PRIVATE);
+        }
+        else
+        {
+            File file = new File(directory, roomSecret);
+            file.mkdirs();
+            directory = file;
+        }
+
         // Create imageDir
         String fileName = System.currentTimeMillis() + name + ".png";
         File imagePath = new File(directory, fileName);

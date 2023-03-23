@@ -106,8 +106,7 @@
                         android:layout_height="wrap_content"
                         android:autoLink="all"
                         android:layout_margin="10dp"
-                        android:visibility="gone"
-
+                        android:visibility="visible"
                         android:textIsSelectable="true"
                         android:fontFamily="@font/montserratsemibold"
                         android:text="самса по 60р с рыбой и капустой vk.com"
@@ -115,7 +114,7 @@
                         android:textColorHint="@color/dark"
                         android:textColorHighlight="@color/dark"
                         android:textColorLink="@color/gray"
-                        android:layout_gravity="right"
+                        android:layout_gravity="left"
 
                         android:includeFontPadding="false"
                         android:textSize="15sp"

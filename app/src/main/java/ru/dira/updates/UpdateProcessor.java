@@ -57,7 +57,7 @@ import ru.dira.utils.DiraApplication;
  */
 public class UpdateProcessor {
 
-    public static final String OFFICIAL_ADDRESS = "ws://164.132.138.80:8888";
+    public static final String OFFICIAL_ADDRESS = "ws://diraapp.com:8888";
 
     private static UpdateProcessor updateProcessor;
     int updatedRoomsCount = 0;
@@ -183,7 +183,7 @@ public class UpdateProcessor {
 
                     if (inviteRoom.getBase64pic() != null) {
                         Bitmap bitmap = AppStorage.getBitmapFromBase64(inviteRoom.getBase64pic());
-                        room.setImagePath(AppStorage.saveToInternalStorage(bitmap, room.getSecretName(), context));
+                        room.setImagePath(AppStorage.saveToInternalStorage(bitmap, room.getSecretName(), room.getSecretName(), context));
                     }
 
                     room.setLastUpdateId(0);
@@ -195,8 +195,14 @@ public class UpdateProcessor {
                         boolean hasMemberInDatabase = true;
                         if (member == null) {
                             hasMemberInDatabase = false;
+                            String imagePath = null;
+                            if(roomMember.getImageBase64() != null)
+                            {
+                                imagePath = AppStorage.saveToInternalStorage(
+                                        AppStorage.getBitmapFromBase64(roomMember.getImageBase64()), room.getSecretName(), context);
+                            }
                             member = new Member(roomMember.getId(), roomMember.getNickname(),
-                                    null, roomMember.getRoomSecret(), roomMember.getLastTimeUpdated());
+                                    imagePath, roomMember.getRoomSecret(), roomMember.getLastTimeUpdated());
                         }
 
                         member.setLastTimeUpdated(roomMember.getLastTimeUpdated());
@@ -204,7 +210,8 @@ public class UpdateProcessor {
 
                         if (roomMember.getImageBase64() != null) {
                             Bitmap bitmap = AppStorage.getBitmapFromBase64(roomMember.getImageBase64());
-                            String path = AppStorage.saveToInternalStorage(bitmap, member.getId() + "_" + roomMember.getRoomSecret(), context);
+                            String path = AppStorage.saveToInternalStorage(bitmap, member.getId() + "_" + roomMember.getRoomSecret(),
+                                    room.getSecretName(), context);
                             member.setImagePath(path);
                         }
 
@@ -277,7 +284,7 @@ public class UpdateProcessor {
         if (memberUpdate.getBase64pic() != null) {
             Bitmap bitmap = AppStorage.getBitmapFromBase64(memberUpdate.getBase64pic());
             String path = AppStorage.saveToInternalStorage(bitmap,
-                    member.getId() + "_" + memberUpdate.getRoomSecret(), context);
+                    member.getId() + "_" + memberUpdate.getRoomSecret(), memberUpdate.getRoomSecret(), context);
             member.setImagePath(path);
         }
 
@@ -323,14 +330,18 @@ public class UpdateProcessor {
                     room.setName(((RoomUpdate) update).getName());
                     if (((RoomUpdate) update).getBase64Pic() != null) {
                         Bitmap bitmap = AppStorage.getBitmapFromBase64(((RoomUpdate) update).getBase64Pic());
-                        String path = AppStorage.saveToInternalStorage(bitmap, room.getSecretName(), context);
+                        String path = AppStorage.saveToInternalStorage(bitmap, room.getSecretName(), room.getSecretName(), context);
                         room.setImagePath(path);
                     }
                 }
 
-                DiraMessageDatabase.getDatabase(context).getMessageDao().insertAll(newMessage);
+                if(newMessage != null)
+                {
+                    DiraMessageDatabase.getDatabase(context).getMessageDao().insertAll(newMessage);
+                }
                 roomDao.update(room);
             } else {
+
                 throw new OldUpdateException();
             }
 

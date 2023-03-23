@@ -177,19 +177,23 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, U
             String imageUri = data.getStringExtra("uri");
 
 
+
             try {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        System.out.println("uploading!");
                         try {
                             FilesUploader.uploadFile(imageUri, new Callback() {
                                 @Override
                                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
-
+                                    e.printStackTrace();
+                                    System.out.println(":(");
                                 }
 
                                 @Override
                                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                    System.out.println("uploading");
                                     if (response.isSuccessful()) {
                                         try {
                                             String fileTempName = new JSONObject(response.body().string()).getString("message");
@@ -222,7 +226,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, U
                                         }
                                     }
                                 }
-                            });
+                            }, getApplicationContext());
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

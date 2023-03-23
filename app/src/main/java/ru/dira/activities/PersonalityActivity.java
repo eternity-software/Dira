@@ -90,7 +90,7 @@ public class PersonalityActivity extends AppCompatActivity {
                             public void run() {
                                 CacheUtils.getInstance().setString(CacheUtils.NICKNAME, nicknameText.getText().toString(), getApplicationContext());
                                 CacheUtils.getInstance().setString(CacheUtils.ID, idText.getText().toString(), getApplicationContext());
-                                String path = AppStorage.saveToInternalStorage(userPicture, getApplicationContext());
+                                String path = AppStorage.saveToInternalStorage(userPicture, "userpic.png", null, getApplicationContext());
                                 CacheUtils.getInstance().setString(CacheUtils.PICTURE, path, getApplicationContext());
                                 finish();
                             }

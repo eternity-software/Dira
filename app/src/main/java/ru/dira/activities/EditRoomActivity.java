@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
 import java.io.IOException;
 
 import ru.dira.R;
@@ -121,8 +122,9 @@ public class EditRoomActivity extends AppCompatActivity {
 
 
         try {
-            roomPicture = ImageRotationFix.rotateImageIfRequired(getApplicationContext(), roomPicture, Uri.parse(path));
+            roomPicture = ImageRotationFix.rotateImageIfRequired(getApplicationContext(), roomPicture, Uri.fromFile(new File(path)));
         } catch (IOException e) {
+            roomPicture = AppStorage.getImage(path);
             e.printStackTrace();
         }
 
