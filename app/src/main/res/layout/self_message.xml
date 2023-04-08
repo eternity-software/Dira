@@ -61,15 +61,15 @@
 
                     android:adjustViewBounds="true"/>
 
-                <ru.dira.components.VideoPlayer
+                <com.diraapp.components.VideoPlayer
                     android:id="@+id/video_player"
                     android:layout_width="wrap_content"
-                    android:layout_height="400dp"
+                    android:layout_height="200dp"
                     android:adjustViewBounds="true"/>
             </androidx.cardview.widget.CardView>
 
 
-            <ru.dira.components.MessageTextView
+            <com.diraapp.components.MessageTextView
                 android:id="@+id/message_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ru.dira.components.FileParingImageView
+    <com.diraapp.components.FileParingImageView
         android:id="@+id/fileImageView"
         android:layout_width="match_parent"
 
@@ -24,7 +24,7 @@
         android:id="@+id/videoInfo"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ru.dira.components.FileParingImageView
+        <com.diraapp.components.FileParingImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="2dp"
