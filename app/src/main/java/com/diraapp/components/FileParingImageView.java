@@ -4,9 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
 
-import com.google.android.material.imageview.ShapeableImageView;
-
 import com.diraapp.bottomsheet.filepicker.FileInfo;
+import com.google.android.material.imageview.ShapeableImageView;
 
 /**
  * ImageView with rounded corners and that can be

@@ -1,5 +1,5 @@
 package com.diraapp.updates.listeners;
 
-public interface UpdateProcessorListener {
+public interface ProcessorListener {
     void onSocketsCountChange(float percentOpened);
 }

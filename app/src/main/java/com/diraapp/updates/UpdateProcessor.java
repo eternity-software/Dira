@@ -4,18 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.google.gson.Gson;
-
-import org.java_websocket.exceptions.WebsocketNotConnectedException;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import com.diraapp.api.InviteRoom;
-import com.diraapp.api.RoomMember;
 import com.diraapp.api.SocketClient;
 import com.diraapp.api.requests.GetUpdatesRequest;
 import com.diraapp.api.requests.Request;
@@ -23,7 +11,6 @@ import com.diraapp.api.requests.SubscribeRequest;
 import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.NewRoomUpdate;
-import com.diraapp.api.updates.RoomUpdate;
 import com.diraapp.api.updates.ServerSyncUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateDeserializer;
@@ -43,11 +30,20 @@ import com.diraapp.notifications.Notifier;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
+import com.diraapp.updates.listeners.ProcessorListener;
 import com.diraapp.updates.listeners.SocketListener;
 import com.diraapp.updates.listeners.UpdateListener;
-import com.diraapp.updates.listeners.UpdateProcessorListener;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.DiraApplication;
+import com.google.gson.Gson;
+
+import org.java_websocket.exceptions.WebsocketNotConnectedException;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * UpdateProcessor is a core Dira class
@@ -61,11 +57,12 @@ public class UpdateProcessor {
     public static final String OFFICIAL_ADDRESS = "ws://diraapp.com:8888";
 
     private static UpdateProcessor updateProcessor;
-    int updatedRoomsCount = 0;
     private final HashMap<String, SocketClient> socketClients = new HashMap<>();
-    private final HashMap<Long, UpdateListener> updateCallbacks = new HashMap<>();
+    private final HashMap<Long, UpdateListener> updateReplies = new HashMap<>();
     private final List<UpdateListener> updateListeners = new ArrayList<>();
-    private final List<UpdateProcessorListener> processorListeners = new ArrayList<>();
+    private final List<ProcessorListener> processorListeners = new ArrayList<>();
+    private final Context context;
+    int updatedRoomsCount = 0;
     /**
      * Requests ids counter
      */
@@ -77,10 +74,7 @@ public class UpdateProcessor {
     private RoomDao roomDao;
     private MemberDao memberDao;
     private SocketClient socketClient;
-
     private RoomUpdater roomUpdater;
-
-    private final Context context;
 
     public UpdateProcessor(Context context) throws SingletonException {
         if (updateProcessor != null) throw new SingletonException();
@@ -92,7 +86,7 @@ public class UpdateProcessor {
             socketClients.put(OFFICIAL_ADDRESS, socketClient);
             roomDao = DiraRoomDatabase.getDatabase(context).getRoomDao();
             memberDao = DiraRoomDatabase.getDatabase(context).getMemberDao();
-            roomUpdater = new RoomUpdater(roomDao, context);
+            roomUpdater = new RoomUpdater(roomDao, memberDao, context);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -113,43 +107,17 @@ public class UpdateProcessor {
         return updateProcessor;
     }
 
-    public float getActiveSocketsPercent() {
-        int countActive = 0;
-
-        for (SocketClient socketClient : socketClients.values()) {
-            if (socketClient.isOpen()) countActive++;
-        }
-
-        return countActive / (float) socketClients.size();
-    }
-
-    public long getTimeServerStartup() {
-        // TODO: startup time depend on room server
-        return timeServerStartup;
-    }
-
-    public void addCustomServer(String address) {
-        socketClients.put(address, null);
-    }
-
-    public void removeCustomServer(String address) {
-        try {
-            socketClients.get(address).close();
-            socketClients.remove(address);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public HashMap<String, SocketClient> getSocketClients() {
-        return new HashMap<>(socketClients);
-    }
-
+    /**
+     * Main handler for all updates
+     *
+     * @param message
+     * @param address
+     */
     public void notifyMessage(String message, String address) {
         Update update = UpdateDeserializer.deserialize(message);
-        if (updateCallbacks.containsKey(update.getOriginRequestId())) {
+        if (updateReplies.containsKey(update.getOriginRequestId())) {
             try {
-                updateCallbacks.get(update.getOriginRequestId()).onUpdate(update);
+                updateReplies.get(update.getOriginRequestId()).onUpdate(update);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -182,70 +150,17 @@ public class UpdateProcessor {
             }
 
             if (update.getUpdateType() == UpdateType.NEW_ROOM_UPDATE) {
-
-                NewRoomUpdate newRoomUpdate = (NewRoomUpdate) update;
-                InviteRoom inviteRoom = newRoomUpdate.getInviteRoom();
-
-                Room oldRoom = roomDao.getRoomBySecretName(newRoomUpdate.getRoomSecret());
-                if (oldRoom == null) {
-
-                    Room room = new Room(inviteRoom.getName(), System.currentTimeMillis(), inviteRoom.getSecretName());
-
-                    if (inviteRoom.getBase64pic() != null) {
-                        Bitmap bitmap = AppStorage.getBitmapFromBase64(inviteRoom.getBase64pic());
-                        room.setImagePath(AppStorage.saveToInternalStorage(bitmap, room.getSecretName(), room.getSecretName(), context));
-                    }
-
-                    room.setLastUpdateId(0);
-
-                    for (RoomMember roomMember : inviteRoom.getMemberList()) {
-
-                        Member member = memberDao.getMemberByIdAndRoomSecret(roomMember.getId(), roomMember.getRoomSecret());
-
-                        boolean hasMemberInDatabase = true;
-                        if (member == null) {
-                            hasMemberInDatabase = false;
-                            String imagePath = null;
-                            if(roomMember.getImageBase64() != null)
-                            {
-                                imagePath = AppStorage.saveToInternalStorage(
-                                        AppStorage.getBitmapFromBase64(roomMember.getImageBase64()), room.getSecretName(), context);
-                            }
-                            member = new Member(roomMember.getId(), roomMember.getNickname(),
-                                    imagePath, roomMember.getRoomSecret(), roomMember.getLastTimeUpdated());
-                        }
-
-                        member.setLastTimeUpdated(roomMember.getLastTimeUpdated());
-                        member.setNickname(roomMember.getNickname());
-
-                        if (roomMember.getImageBase64() != null) {
-                            Bitmap bitmap = AppStorage.getBitmapFromBase64(roomMember.getImageBase64());
-                            String path = AppStorage.saveToInternalStorage(bitmap, member.getId() + "_" + roomMember.getRoomSecret(),
-                                    room.getSecretName(), context);
-                            member.setImagePath(path);
-                        }
-
-                        if (hasMemberInDatabase) {
-                            memberDao.insertAll(member);
-                        } else {
-                            memberDao.update(member);
-                        }
-
-                    }
-
-                    roomDao.insertAll(room);
-                }
-
+                roomUpdater.onNewRoom((NewRoomUpdate) update);
             } else if (update.getUpdateType() == UpdateType.NEW_MESSAGE_UPDATE) {
                 if (DiraApplication.isBackgrounded()) {
                     Notifier.notifyMessage(((NewMessageUpdate) update).getMessage(), context);
                 }
-
                 roomUpdater.updateRoom(update);
 
-
+                /*
+                 * Save attachments
+                 */
                 for (Attachment attachment : ((NewMessageUpdate) update).getMessage().getAttachments()) {
-
                     SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment,
                             ((NewMessageUpdate) update).getMessage().getRoomSecret());
 
@@ -275,7 +190,7 @@ public class UpdateProcessor {
      * @param memberUpdate
      */
     public void updateMember(MemberUpdate memberUpdate) {
-        if (memberUpdate.getId().equals(CacheUtils.getInstance().getString(CacheUtils.ID, context)))
+        if (memberUpdate.getId().equals(new CacheUtils(context).getString(CacheUtils.ID)))
             return;
 
         Member member = memberDao.getMemberByIdAndRoomSecret(memberUpdate.getId(), memberUpdate.getRoomSecret());
@@ -305,45 +220,6 @@ public class UpdateProcessor {
         }
     }
 
-    public void addCallbackListener(UpdateListener updateListener, long requestId) {
-        if (updateCallbacks.containsKey(requestId)) return;
-        updateCallbacks.remove(requestId);
-    }
-
-    public void removeCallbackListener(long requestId) {
-        updateCallbacks.remove(requestId);
-    }
-
-    public void addProcessorListener(UpdateProcessorListener updateListener) {
-        if (processorListeners.contains(updateListener)) return;
-        processorListeners.add(updateListener);
-    }
-
-    public void removeProcessorListener(UpdateProcessorListener updateListener) {
-        processorListeners.remove(updateListener);
-    }
-
-    public void addUpdateListener(UpdateListener updateListener) {
-        if (updateListeners.contains(updateListener)) return;
-        updateListeners.add(updateListener);
-    }
-
-    public void removeUpdateListener(UpdateListener updateListener) {
-        updateListeners.remove(updateListener);
-    }
-
-    public Request sendRequest(Request request) throws UnablePerformRequestException {
-        return sendRequest(request, null, OFFICIAL_ADDRESS);
-    }
-
-    public Request sendRequest(Request request, UpdateListener callback) throws UnablePerformRequestException {
-        return sendRequest(request, callback, OFFICIAL_ADDRESS);
-    }
-
-    public Request sendRequest(Request request, String address) throws UnablePerformRequestException {
-        return sendRequest(request, null, address);
-    }
-
     /**
      * Sends new request to active connection with callback and specific server address
      *
@@ -364,7 +240,7 @@ public class UpdateProcessor {
                 System.out.println(sent);
                 socketClient.send(sent);
                 if (callback != null) {
-                    updateCallbacks.put(lastRequestId, new UpdateListener() {
+                    updateReplies.put(lastRequestId, new UpdateListener() {
                         @Override
                         public void onUpdate(Update update) {
                             try {
@@ -372,7 +248,7 @@ public class UpdateProcessor {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            updateCallbacks.remove(lastRequestId);
+                            updateReplies.remove(lastRequestId);
                         }
                     });
                 }
@@ -386,13 +262,28 @@ public class UpdateProcessor {
 
     }
 
+    public Request sendRequest(Request request) throws UnablePerformRequestException {
+        return sendRequest(request, null, OFFICIAL_ADDRESS);
+    }
+
+    public Request sendRequest(Request request, UpdateListener callback) throws UnablePerformRequestException {
+        return sendRequest(request, callback, OFFICIAL_ADDRESS);
+    }
+
+    public Request sendRequest(Request request, String address) throws UnablePerformRequestException {
+        return sendRequest(request, null, address);
+    }
+
     public void notifySocketsCountChanged() {
         float percent = getActiveSocketsPercent();
-        for (UpdateProcessorListener updateProcessorListener : processorListeners) {
-            updateProcessorListener.onSocketsCountChange(percent);
+        for (ProcessorListener processorListener : processorListeners) {
+            processorListener.onSocketsCountChange(percent);
         }
     }
 
+    /**
+     * Force to reconnect all sockets
+     */
     public void reconnectSockets() {
         Log.d("UpdateProcessor", "Reconnecting sockets..");
         for (String address : socketClients.keySet()) {
@@ -423,6 +314,12 @@ public class UpdateProcessor {
         }
     }
 
+    /**
+     * Subscribes client to all rooms and
+     * gets latest updates for each room
+     * <p>
+     * After subscription server will begin sending updates
+     */
     public void sendSubscribeRequest() {
 
         updatedRoomsCount = 0;
@@ -482,5 +379,69 @@ public class UpdateProcessor {
         });
 
     }
+
+    /**
+     * Callbacks
+     */
+
+    public void addCallbackListener(UpdateListener updateListener, long requestId) {
+        if (updateReplies.containsKey(requestId)) return;
+        updateReplies.remove(requestId);
+    }
+
+    public void removeCallbackListener(long requestId) {
+        updateReplies.remove(requestId);
+    }
+
+    public void addProcessorListener(ProcessorListener updateListener) {
+        if (processorListeners.contains(updateListener)) return;
+        processorListeners.add(updateListener);
+    }
+
+    public void removeProcessorListener(ProcessorListener updateListener) {
+        processorListeners.remove(updateListener);
+    }
+
+    public void addUpdateListener(UpdateListener updateListener) {
+        if (updateListeners.contains(updateListener)) return;
+        updateListeners.add(updateListener);
+    }
+
+    public void removeUpdateListener(UpdateListener updateListener) {
+        updateListeners.remove(updateListener);
+    }
+
+    public float getActiveSocketsPercent() {
+        int countActive = 0;
+
+        for (SocketClient socketClient : socketClients.values()) {
+            if (socketClient.isOpen()) countActive++;
+        }
+
+        return countActive / (float) socketClients.size();
+    }
+
+    public long getTimeServerStartup() {
+        // TODO: startup time depend on room server
+        return timeServerStartup;
+    }
+
+    public void addCustomServer(String address) throws URISyntaxException {
+        socketClients.put(address, new SocketClient(new URI(address)));
+    }
+
+    public void removeCustomServer(String address) {
+        try {
+            socketClients.get(address).close();
+            socketClients.remove(address);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public HashMap<String, SocketClient> getSocketClients() {
+        return new HashMap<>(socketClients);
+    }
+
 
 }

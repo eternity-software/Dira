@@ -15,11 +15,11 @@ import android.view.ViewGroup;
 import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-
 import com.diraapp.R;
 import com.diraapp.components.FilePreview;
 import com.diraapp.storage.images.WaterfallBalancer;
+
+import java.util.ArrayList;
 
 
 public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.ViewHolder> {

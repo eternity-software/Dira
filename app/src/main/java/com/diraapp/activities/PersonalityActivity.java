@@ -13,10 +13,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.diraapp.BuildConfig;
 import com.diraapp.R;
 import com.diraapp.api.requests.UpdateMemberRequest;
@@ -31,6 +27,10 @@ import com.diraapp.updates.UpdateProcessor;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.ImageRotationFix;
 import com.diraapp.utils.SliderActivity;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PersonalityActivity extends AppCompatActivity {
 
@@ -52,11 +52,14 @@ public class PersonalityActivity extends AppCompatActivity {
         versionView.setText(BuildConfig.VERSION_NAME + ", code " + BuildConfig.VERSION_CODE);
 
         ImageView imageView = findViewById(R.id.profile_picture);
-        String picPath = CacheUtils.getInstance().getString(CacheUtils.PICTURE, getApplicationContext());
+
+        CacheUtils cacheUtils = new CacheUtils(getApplicationContext());
+
+        String picPath = cacheUtils.getString(CacheUtils.PICTURE);
         if (picPath != null) imageView.setImageBitmap(AppStorage.getImage(picPath));
 
-        nicknameText.setText(CacheUtils.getInstance().getString(CacheUtils.NICKNAME, getApplicationContext()));
-        idText.setText(CacheUtils.getInstance().getString(CacheUtils.ID, getApplicationContext()));
+        nicknameText.setText(cacheUtils.getString(CacheUtils.NICKNAME));
+        idText.setText(cacheUtils.getString(CacheUtils.ID));
 
         findViewById(R.id.button_back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,10 +91,11 @@ public class PersonalityActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                CacheUtils.getInstance().setString(CacheUtils.NICKNAME, nicknameText.getText().toString(), getApplicationContext());
-                                CacheUtils.getInstance().setString(CacheUtils.ID, idText.getText().toString(), getApplicationContext());
+
+                                cacheUtils.setString(CacheUtils.NICKNAME, nicknameText.getText().toString());
+                                cacheUtils.setString(CacheUtils.ID, idText.getText().toString());
                                 String path = AppStorage.saveToInternalStorage(userPicture, "userpic.png", null, getApplicationContext());
-                                CacheUtils.getInstance().setString(CacheUtils.PICTURE, path, getApplicationContext());
+                                cacheUtils.setString(CacheUtils.PICTURE, path);
                                 finish();
                             }
                         });

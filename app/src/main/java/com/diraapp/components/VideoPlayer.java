@@ -20,10 +20,10 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 
-import java.io.IOException;
-
 import com.diraapp.R;
 import com.diraapp.exceptions.VideoPlayerException;
+
+import java.io.IOException;
 
 
 public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTextureListener {
@@ -159,7 +159,7 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
             if (mediaPlayer == null) throw new VideoPlayerException();
 
 
-            if(delay == 0) setVideoThumbnail(filePath);
+            if (delay == 0) setVideoThumbnail(filePath);
             mediaPlayer.stop();
             mediaPlayer.setDataSource(filePath);
             mediaPlayer.prepareAsync();
@@ -230,7 +230,6 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
                                 mediaPlayer.setLooping(true);
 
 
-
                                 if (currentPlaying != null) {
                                     play(currentPlaying);
                                 }
@@ -241,15 +240,12 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
 
                                 if (videoPlayerListener != null) videoPlayerListener.onReady();
                                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                            }
-                            catch (Exception e)
-                            {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
                         }
                     });
-
 
 
                 } catch (IllegalArgumentException e) {

@@ -2,8 +2,8 @@ package com.diraapp.api.requests;
 
 public class Request {
 
-    private long requestId;
     private final RequestType requestType;
+    private long requestId;
 
     public Request(long requestId, RequestType requestType) {
         this.requestId = requestId;

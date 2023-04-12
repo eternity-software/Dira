@@ -1,7 +1,5 @@
 package com.diraapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
@@ -9,6 +7,8 @@ import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.diraapp.R;
 import com.diraapp.components.PreviewImageView;
@@ -22,7 +22,7 @@ public class PreviewActivity extends AppCompatActivity {
     public static final String IS_VIDEO = "is_video";
 
     private VideoPlayer videoPlayer;
-    private   PreviewImageView previewImageView;
+    private PreviewImageView previewImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +37,9 @@ public class PreviewActivity extends AppCompatActivity {
         findViewById(R.id.save_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isVideo)
-                {
+                if (isVideo) {
                     addVideoToGallery(uri, getApplicationContext());
-                }
-                else
-                {
+                } else {
                     addImageToGallery(uri, getApplicationContext());
                 }
                 ImageView imageView = findViewById(R.id.save_button);
@@ -90,39 +87,36 @@ public class PreviewActivity extends AppCompatActivity {
         });
 
 
-        if(isVideo)
-        {
+        if (isVideo) {
 
-                videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
-                    @Override
-                    public void onStarted() {
+            videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
+                @Override
+                public void onStarted() {
 
+                }
+
+                @Override
+                public void onPaused() {
+
+                }
+
+                @Override
+                public void onReleased() {
+
+                }
+
+                @Override
+                public void onReady() {
+                    try {
+                        videoPlayer.play(uri);
+                    } catch (VideoPlayerException e) {
+                        e.printStackTrace();
                     }
-
-                    @Override
-                    public void onPaused() {
-
-                    }
-
-                    @Override
-                    public void onReleased() {
-
-                    }
-
-                    @Override
-                    public void onReady() {
-                        try {
-                            videoPlayer.play(uri);
-                        } catch (VideoPlayerException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+                }
+            });
 
 
-        }
-        else
-        {
+        } else {
             videoPlayer.setVisibility(View.GONE);
             previewImageView.setImageBitmap(AppStorage.getImage(uri));
         }

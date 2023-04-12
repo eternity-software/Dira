@@ -15,22 +15,20 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.diraapp.R;
+import com.diraapp.storage.images.WaterfallBalancer;
+import com.diraapp.utils.Numbers;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
 
-import com.diraapp.R;
-import com.diraapp.storage.images.WaterfallBalancer;
-import com.diraapp.utils.Numbers;
-
 
 public class FilePickerBottomSheet extends BottomSheetDialogFragment {
+    private final boolean isShown = false;
     private View view;
     private ArrayList<String> images;
-    private final boolean isShown = false;
-
     private FilePickerAdapter filePickerAdapter;
     private ItemClickListener onItemClickListener;
 

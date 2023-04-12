@@ -1,9 +1,9 @@
 package com.diraapp.api.requests;
 
 
-import java.util.List;
-
 import com.diraapp.api.RoomMember;
+
+import java.util.List;
 
 public class CreateInviteRequest extends Request {
 

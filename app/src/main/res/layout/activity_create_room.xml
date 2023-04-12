@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     style="@style/AppSlideTheme"
     android:background="@color/dark"
-    tools:context=".activities.CreateRoomActivity">
+    tools:context=".activities.createroom.CreateRoomActivity">
 
     <ImageView
         android:id="@+id/button_back"

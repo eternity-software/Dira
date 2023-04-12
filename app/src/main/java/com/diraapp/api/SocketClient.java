@@ -1,14 +1,14 @@
 package com.diraapp.api;
 
+import com.diraapp.updates.UpdateProcessor;
+import com.diraapp.updates.listeners.SocketListener;
+
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
-
-import com.diraapp.updates.UpdateProcessor;
-import com.diraapp.updates.listeners.SocketListener;
 
 public class SocketClient extends WebSocketClient {
 

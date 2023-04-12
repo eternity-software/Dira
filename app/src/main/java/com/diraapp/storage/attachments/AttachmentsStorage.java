@@ -2,25 +2,25 @@ package com.diraapp.storage.attachments;
 
 import android.content.Context;
 
+import com.diraapp.db.entities.Attachment;
+import com.diraapp.storage.AppStorage;
+import com.diraapp.storage.DownloadHandler;
+import com.diraapp.utils.CacheUtils;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.diraapp.db.entities.Attachment;
-import com.diraapp.storage.AppStorage;
-import com.diraapp.storage.DownloadHandler;
-import com.diraapp.utils.CacheUtils;
-
 public class AttachmentsStorage {
 
-    private static Thread attachmentDownloader;
     private static final List<SaveAttachmentTask> saveAttachmentTaskList = new ArrayList<>();
     private static final List<AttachmentsStorageListener> attachmentsStorageListeners = new ArrayList<>();
+    private static Thread attachmentDownloader;
 
     public static void saveAttachmentAsync(SaveAttachmentTask saveAttachmentTask) {
-        if(isAttachmentSaving(saveAttachmentTask.getAttachment())) return;
+        if (isAttachmentSaving(saveAttachmentTask.getAttachment())) return;
         if (attachmentDownloader == null) {
             attachmentDownloader = new Thread(new Runnable() {
                 @Override
@@ -60,30 +60,21 @@ public class AttachmentsStorage {
 
                                     saveAttachmentTaskList.remove(saveAttachmentTask);
 
-                                } catch (FileNotFoundException fileNotFoundException)
-                                {
+                                } catch (FileNotFoundException fileNotFoundException) {
                                     saveAttachmentTaskList.remove(saveAttachmentTask);
-                                    for(AttachmentsStorageListener attachmentsStorageListener : attachmentsStorageListeners)
-                                    {
-                                        try
-                                        {
+                                    for (AttachmentsStorageListener attachmentsStorageListener : attachmentsStorageListeners) {
+                                        try {
                                             attachmentsStorageListener.onAttachmentDownloadFailed(saveAttachmentTask.getAttachment());
-                                        }
-                                        catch (Exception e2)
-                                        {
+                                        } catch (Exception e2) {
                                             e2.printStackTrace();
                                         }
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    for(AttachmentsStorageListener attachmentsStorageListener : attachmentsStorageListeners)
-                                    {
-                                        try
-                                        {
+                                    for (AttachmentsStorageListener attachmentsStorageListener : attachmentsStorageListeners) {
+                                        try {
                                             attachmentsStorageListener.onAttachmentDownloadFailed(saveAttachmentTask.getAttachment());
-                                        }
-                                        catch (Exception e2)
-                                        {
+                                        } catch (Exception e2) {
                                             e2.printStackTrace();
                                         }
                                     }
@@ -101,24 +92,19 @@ public class AttachmentsStorage {
     }
 
 
-    public static void addAttachmentsStorageListener(AttachmentsStorageListener attachmentsStorageListener)
-    {
-        if(attachmentsStorageListeners.contains(attachmentsStorageListener)) return;
+    public static void addAttachmentsStorageListener(AttachmentsStorageListener attachmentsStorageListener) {
+        if (attachmentsStorageListeners.contains(attachmentsStorageListener)) return;
         attachmentsStorageListeners.add(attachmentsStorageListener);
     }
 
 
-    public static void removeAttachmentsStorageListener(AttachmentsStorageListener attachmentsStorageListener)
-    {
+    public static void removeAttachmentsStorageListener(AttachmentsStorageListener attachmentsStorageListener) {
         attachmentsStorageListeners.remove(attachmentsStorageListener);
     }
 
-    public static boolean isAttachmentSaving(Attachment attachmentToCompare)
-    {
-        for(SaveAttachmentTask saveAttachmentTask : saveAttachmentTaskList)
-        {
-            if(saveAttachmentTask.getAttachment().getFileUrl().equals(attachmentToCompare.getFileUrl()))
-            {
+    public static boolean isAttachmentSaving(Attachment attachmentToCompare) {
+        for (SaveAttachmentTask saveAttachmentTask : saveAttachmentTaskList) {
+            if (saveAttachmentTask.getAttachment().getFileUrl().equals(attachmentToCompare.getFileUrl())) {
                 return true;
             }
         }
@@ -132,9 +118,9 @@ public class AttachmentsStorage {
 
     public static File saveAttachment(Context context, Attachment attachment, String roomSecret, boolean autoLoad, DownloadHandler downloadHandler) throws IOException {
         File localFile = new File(context.getExternalCacheDir(), roomSecret + "_" + attachment.getFileUrl());
+        CacheUtils cacheUtils = new CacheUtils(context);
 
-
-        if (!autoLoad | attachment.getSize() < CacheUtils.getInstance().getLong(CacheUtils.AUTO_LOAD_SIZE, context)) {
+        if (!autoLoad | attachment.getSize() < cacheUtils.getLong(CacheUtils.AUTO_LOAD_SIZE)) {
             AppStorage.downloadFile(AppStorage.OFFICIAL_DOWNLOAD_STORAGE_ADDRESS + attachment.getFileUrl(), localFile, downloadHandler);
             return localFile;
         }

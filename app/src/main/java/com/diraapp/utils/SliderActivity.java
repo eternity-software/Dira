@@ -8,6 +8,7 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.annotation.ColorRes;
 import androidx.core.content.ContextCompat;
 
+import com.diraapp.R;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrInterface;
@@ -18,18 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import com.diraapp.R;
-
 public class SliderActivity {
 
+    private final List<SliderChangeListener> sliderChangeListenerList = new ArrayList<>();
     /**
      * Keyboard transparent issue
      * Code from https://github.com/r0adkll/Slidr/issues/72
      */
 
     private float percent = 0;
-
-    private final List<SliderChangeListener> sliderChangeListenerList = new ArrayList<>();
 
     public static void setAppTheme(Activity activity, int state) {
 

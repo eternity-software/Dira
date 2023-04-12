@@ -10,23 +10,23 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 
+import com.diraapp.bottomsheet.filepicker.FileInfo;
+import com.diraapp.components.FilePreview;
+import com.diraapp.utils.ImageRotationFix;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
-import com.diraapp.bottomsheet.filepicker.FileInfo;
-import com.diraapp.components.FilePreview;
-import com.diraapp.utils.ImageRotationFix;
-
 
 public class WaterfallImageLoader {
 
     private final List<FilePreview> imagesQueue = new ArrayList<>();
+    private final Activity activity;
     private boolean isRunning;
     private boolean isDataUpdated;
-    private final Activity activity;
     private WaterfallCallback waterfallCallback;
 
     public WaterfallImageLoader(Activity activity) {

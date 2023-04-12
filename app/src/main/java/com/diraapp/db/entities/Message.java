@@ -7,13 +7,13 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-
 import com.diraapp.db.converters.AttachmentConverter;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.KeyGenerator;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 
 @Entity
 @TypeConverters({AttachmentConverter.class})

@@ -9,6 +9,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.diraapp.storage.AppStorage;
+import com.diraapp.storage.FileClassifier;
+import com.diraapp.utils.ImageRotationFix;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -19,9 +23,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import com.diraapp.storage.AppStorage;
-import com.diraapp.storage.FileClassifier;
-import com.diraapp.utils.ImageRotationFix;
 
 public class FilesUploader {
 
@@ -30,13 +31,11 @@ public class FilesUploader {
         try {
 
             boolean isCopied = false;
-            if(FileClassifier.isImageFile(sourceFileUri)) {
+            if (FileClassifier.isImageFile(sourceFileUri)) {
                 Bitmap bitmap = null;
                 try {
                     bitmap = ImageRotationFix.rotateImageIfRequired(context, AppStorage.getBitmap(sourceFileUri), Uri.fromFile(new File(sourceFileUri)));
-                }
-                catch (IOException e)
-                {
+                } catch (IOException e) {
                     Handler mainHandler = new Handler(context.getMainLooper());
 
                     Runnable myRunnable = new Runnable() {
@@ -89,13 +88,13 @@ public class FilesUploader {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     e.printStackTrace();
-                    if(finalIsCopied) new File(finalSourceFileUri).delete();
+                    if (finalIsCopied) new File(finalSourceFileUri).delete();
                     callback.onFailure(call, e);
                 }
 
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    if(finalIsCopied) new File(finalSourceFileUri).delete();
+                    if (finalIsCopied) new File(finalSourceFileUri).delete();
                     callback.onResponse(call, response);
                 }
             });

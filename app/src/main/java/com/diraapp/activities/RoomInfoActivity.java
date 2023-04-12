@@ -9,9 +9,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.diraapp.R;
 import com.diraapp.api.RoomMember;
 import com.diraapp.api.requests.CreateInviteRequest;
@@ -28,6 +25,9 @@ import com.diraapp.updates.UpdateProcessor;
 import com.diraapp.updates.listeners.UpdateListener;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.SliderActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RoomInfoActivity extends AppCompatActivity implements UpdateListener, InvitationCodeBottomSheet.BottomSheetListener {
 

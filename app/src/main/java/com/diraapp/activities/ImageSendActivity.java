@@ -26,16 +26,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.SharedElementCallback;
 
-import java.io.File;
-import java.util.List;
-import java.util.Objects;
-
 import com.diraapp.R;
 import com.diraapp.components.FilePreview;
 import com.diraapp.components.PreviewImageView;
 import com.diraapp.components.VideoPlayer;
 import com.diraapp.transition.Transitions;
 import com.diraapp.utils.ImageRotationFix;
+
+import java.io.File;
+import java.util.List;
+import java.util.Objects;
 
 
 public class ImageSendActivity extends AppCompatActivity {
@@ -93,12 +93,10 @@ public class ImageSendActivity extends AppCompatActivity {
             sendButton.setImageResource(R.drawable.ic_check);
         }
 
-
         videoPlayer = findViewById(R.id.videoView);
         editText.setText(getIntent().getExtras().getString("text"));
         finalImageUri = imageUri;
         Bitmap bitmap = getIntent().getParcelableExtra("bitmap");
-
 
         if (!type.startsWith("image")) {
             editButton.setEnabled(false);
@@ -119,7 +117,6 @@ public class ImageSendActivity extends AppCompatActivity {
         }
 
         imageView.setActionsListener(new PreviewImageView.ImageActionsListener() {
-
 
             @Override
             public void onSlideDown() {
@@ -156,7 +153,6 @@ public class ImageSendActivity extends AppCompatActivity {
 
             }
         });
-
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getSharedElementEnterTransition().setDuration(300);
@@ -237,7 +233,6 @@ public class ImageSendActivity extends AppCompatActivity {
             showBottomBar();
         }
 
-
         setExitSharedElementCallback(new SharedElementCallback() {
             @Override
             public void onSharedElementStart(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots) {
@@ -271,13 +266,11 @@ public class ImageSendActivity extends AppCompatActivity {
             }
         });
         // overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
-
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
 
         // Checks whether a hardware keyboard is available
         if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO) {

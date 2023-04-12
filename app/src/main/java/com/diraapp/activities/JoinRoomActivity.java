@@ -7,9 +7,8 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Arrays;
-
 import com.diraapp.R;
+import com.diraapp.activities.createroom.CreateRoomActivity;
 import com.diraapp.api.requests.JoinRoomRequest;
 import com.diraapp.api.requests.UpdateMemberRequest;
 import com.diraapp.api.updates.NewRoomUpdate;
@@ -20,6 +19,8 @@ import com.diraapp.updates.UpdateProcessor;
 import com.diraapp.updates.listeners.UpdateListener;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.SliderActivity;
+
+import java.util.Arrays;
 
 public class JoinRoomActivity extends AppCompatActivity {
 

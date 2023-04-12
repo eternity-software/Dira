@@ -12,9 +12,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.diraapp.R;
 import com.diraapp.activities.RoomActivity;
 import com.diraapp.db.entities.Message;
@@ -22,6 +19,9 @@ import com.diraapp.db.entities.Room;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.TimeConverter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapter.ViewHolder> {
 

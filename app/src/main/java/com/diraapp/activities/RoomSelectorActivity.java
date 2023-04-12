@@ -15,10 +15,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import com.diraapp.R;
 import com.diraapp.adapters.RoomSelectorAdapter;
 import com.diraapp.api.requests.GetUpdatesRequest;
@@ -32,18 +28,24 @@ import com.diraapp.notifications.Notifier;
 import com.diraapp.services.UpdaterService;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.updates.UpdateProcessor;
+import com.diraapp.updates.listeners.ProcessorListener;
 import com.diraapp.updates.listeners.UpdateListener;
-import com.diraapp.updates.listeners.UpdateProcessorListener;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.KeyGenerator;
 
-public class RoomSelectorActivity extends AppCompatActivity implements UpdateProcessorListener, UpdateListener {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public class RoomSelectorActivity extends AppCompatActivity implements ProcessorListener, UpdateListener {
 
     public static final String PENDING_ROOM_SECRET = "pendingRoomSecret";
     public static final String PENDING_ROOM_NAME = "pendingRoomName";
 
     private RoomSelectorAdapter roomSelectorAdapter;
     private boolean isRoomsUpdating = false;
+
+    private CacheUtils cacheUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +67,10 @@ public class RoomSelectorActivity extends AppCompatActivity implements UpdatePro
             }
         }
 
-        if (!CacheUtils.getInstance().hasKey(CacheUtils.AUTO_LOAD_SIZE, this)) {
-            CacheUtils.getInstance().setLong(CacheUtils.AUTO_LOAD_SIZE, AppStorage.MAX_DEFAULT_ATTACHMENT_AUTOLOAD_SIZE, this);
+        cacheUtils = new CacheUtils(getApplicationContext());
+
+        if (!cacheUtils.hasKey(CacheUtils.AUTO_LOAD_SIZE)) {
+            cacheUtils.setLong(CacheUtils.AUTO_LOAD_SIZE, AppStorage.MAX_DEFAULT_ATTACHMENT_AUTOLOAD_SIZE);
         }
 
         startService(new Intent(this, UpdaterService.class));
@@ -87,9 +91,10 @@ public class RoomSelectorActivity extends AppCompatActivity implements UpdatePro
             }
         });
 
-        if (!CacheUtils.getInstance().hasKey(CacheUtils.ID, getApplicationContext())) {
-            CacheUtils.getInstance().setString(CacheUtils.ID, KeyGenerator.generateId(), getApplicationContext());
-            CacheUtils.getInstance().setString(CacheUtils.NICKNAME, getString(R.string.dira_user) + " " + new Random().nextInt(1000), getApplicationContext());
+
+        if (!cacheUtils.hasKey(CacheUtils.ID)) {
+            cacheUtils.setString(CacheUtils.ID, KeyGenerator.generateId());
+            cacheUtils.setString(CacheUtils.NICKNAME, getString(R.string.dira_user) + " " + new Random().nextInt(1000));
         }
 
 
@@ -175,7 +180,7 @@ public class RoomSelectorActivity extends AppCompatActivity implements UpdatePro
 
         updateRooms();
         ImageView imageView = findViewById(R.id.profile_picture);
-        String picPath = CacheUtils.getInstance().getString(CacheUtils.PICTURE, getApplicationContext());
+        String picPath = cacheUtils.getString(CacheUtils.PICTURE);
         if (picPath != null) imageView.setImageBitmap(AppStorage.getImage(picPath));
 
         Notifier.cancelAllNotifications(getApplicationContext());

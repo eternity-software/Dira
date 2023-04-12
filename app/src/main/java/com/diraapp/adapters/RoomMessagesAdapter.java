@@ -13,11 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import com.diraapp.R;
 import com.diraapp.activities.PreviewActivity;
 import com.diraapp.components.VideoPlayer;
@@ -34,6 +29,11 @@ import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.StringFormatter;
 import com.diraapp.utils.TimeConverter;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapter.ViewHolder> {
 
 
@@ -42,14 +42,17 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
     private static Thread thread;
     private final LayoutInflater layoutInflater;
     private final Activity context;
+    private final List<AttachmentsStorageListener> listeners = new ArrayList<>();
     private List<Message> messages = new ArrayList<>();
-    private List<AttachmentsStorageListener> listeners = new ArrayList<>();
     private HashMap<String, Member> members = new HashMap<>();
+
+    private final CacheUtils cacheUtils;
 
 
     public RoomMessagesAdapter(Activity context) {
         this.context = context;
         layoutInflater = LayoutInflater.from(context);
+        cacheUtils = new CacheUtils(context);
     }
 
     public void setMessages(List<Message> messages) {
@@ -68,7 +71,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
 
     @Override
     public int getItemViewType(int position) {
-        if (CacheUtils.getInstance().getString(CacheUtils.ID, context).equals(
+        if (cacheUtils.getString(CacheUtils.ID).equals(
                 messages.get(position).getAuthorId()
         )) {
             return VIEW_TYPE_SELF_MESSAGE;
@@ -92,8 +95,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        if(holder.attachmentsStorageListener != null)
-        {
+        if (holder.attachmentsStorageListener != null) {
             AttachmentsStorage.removeAttachmentsStorageListener(holder.attachmentsStorageListener);
             listeners.remove(holder.attachmentsStorageListener);
         }
@@ -122,10 +124,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
         if (message.getAttachments() != null) {
 
 
-
-
-
-
             if (message.getAttachments().size() > 0) {
                 holder.attachmentsStorageListener = new AttachmentsStorageListener() {
                     @Override
@@ -138,8 +136,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                         context.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if(attachment.getFileUrl().equals(message.getAttachments().get(0).getFileUrl()))
-                                {
+                                if (attachment.getFileUrl().equals(message.getAttachments().get(0).getFileUrl())) {
 
                                     File file = AppStorage.getFileFromAttachment(attachment, context, message.getRoomSecret());
 
@@ -155,7 +152,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
 
                     @Override
                     public void onAttachmentDownloadFailed(Attachment attachment) {
-                        if(attachment.getFileUrl().equals(message.getAttachments().get(0).getFileUrl())) {
+                        if (attachment.getFileUrl().equals(message.getAttachments().get(0).getFileUrl())) {
                             System.out.println("failed");
                             context.runOnUiThread(new Runnable() {
                                 @Override
@@ -181,8 +178,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
 
                     updateAttachment(holder, attachment, file);
                 } else {
-
-                    if (attachment.getSize() > CacheUtils.getInstance().getLong(CacheUtils.AUTO_LOAD_SIZE, context)) {
+                    if (attachment.getSize() > cacheUtils.getLong(CacheUtils.AUTO_LOAD_SIZE)) {
                         holder.buttonDownload.setVisibility(View.VISIBLE);
                         holder.sizeContainer.setVisibility(View.VISIBLE);
                         holder.loading.setVisibility(View.GONE);
@@ -192,7 +188,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                             public void onClick(View v) {
 
                                 holder.buttonDownload.setVisibility(View.GONE);
-                             //   holder.sizeContainer.setVisibility(View.GONE);
+                                //   holder.sizeContainer.setVisibility(View.GONE);
                                 holder.loading.setVisibility(View.VISIBLE);
 
                                 // TODO: handle if view changed
@@ -233,11 +229,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                                 thread.start();
                             }
                         });
-                    }
-                    else
-                    {
-                        if(!AttachmentsStorage.isAttachmentSaving(attachment))
-                        {
+                    } else {
+                        if (!AttachmentsStorage.isAttachmentSaving(attachment)) {
                             SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment, message.getRoomSecret());
                             AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask);
                         }
@@ -250,7 +243,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
             }
         }
 
-        boolean isSelfMessage = CacheUtils.getInstance().getString(CacheUtils.ID, context).equals(
+        boolean isSelfMessage = cacheUtils.getString(CacheUtils.ID).equals(
                 messages.get(position).getAuthorId());
 
         if (StringFormatter.isEmoji(message.getText()) && StringFormatter.getEmojiCount(message.getText()) < 3) {
@@ -365,10 +358,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
         });
     }
 
-    public void unregisterListeners()
-    {
-        for(AttachmentsStorageListener attachmentsStorageListener : listeners)
-        {
+    public void unregisterListeners() {
+        for (AttachmentsStorageListener attachmentsStorageListener : listeners) {
             AttachmentsStorage.removeAttachmentsStorageListener(attachmentsStorageListener);
         }
     }

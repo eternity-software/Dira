@@ -2,12 +2,12 @@ package com.diraapp.api.updates;
 
 public class Update {
 
+    private final long updateCreatedTime;
+    private final UpdateType updateType;
     private long originRequestId = -1;
     private long updateId = 0;
     private long updateExpireSec = 8 * 60 * 60;
-    private final long updateCreatedTime;
     private String roomSecret;
-    private final UpdateType updateType;
 
     public Update(long updateId, UpdateType updateType) {
         this.updateId = updateId;

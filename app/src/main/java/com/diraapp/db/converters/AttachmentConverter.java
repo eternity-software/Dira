@@ -2,13 +2,12 @@ package com.diraapp.db.converters;
 
 import androidx.room.TypeConverter;
 
+import com.diraapp.db.entities.Attachment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-
-import com.diraapp.db.entities.Attachment;
 
 public class AttachmentConverter {
     @TypeConverter
@@ -21,12 +20,6 @@ public class AttachmentConverter {
     @TypeConverter
     public static String fromArrayList(ArrayList<Attachment> list) {
         Gson gson = new Gson();
-        String json = gson.toJson(list);
-
-        String wow = "dd";
-
-      
-
-        return json;
+        return gson.toJson(list);
     }
 }

@@ -13,22 +13,18 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.diraapp.R;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import com.diraapp.R;
-
 public class InvitationCodeBottomSheet extends BottomSheetDialogFragment {
-    private BottomSheetListener bottomSheetListener;
-
-    // Присваемывый контент
-    private String code;
-    private String roomName;
-
     // Нажатия на кнопки
     private final View.OnClickListener passiveButtonClick = null;
     private final View.OnClickListener activeButtonClick = null;
-
+    private BottomSheetListener bottomSheetListener;
+    // Присваемывый контент
+    private String code;
+    private String roomName;
     private View view;
 
 

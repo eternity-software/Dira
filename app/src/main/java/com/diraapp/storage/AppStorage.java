@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Base64;
 
+import com.diraapp.db.entities.Attachment;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,16 +22,12 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Random;
 
-import com.diraapp.db.entities.Attachment;
-
 public class AppStorage {
 
     public static final String IMAGE_DIR = "diraFiles";
     public static final String OFFICIAL_DOWNLOAD_STORAGE_ADDRESS = "http://164.132.138.80:4444/download/";
     public static final String OFFICIAL_UPLOAD_STORAGE_ADDRESS = "http://164.132.138.80:4444/upload/";
     public static final long MAX_DEFAULT_ATTACHMENT_AUTOLOAD_SIZE = 1024 * 1024 * 20; // 20 mb
-
-
 
 
     public static String getRealPathFromURI(Context context, Uri contentUri) {
@@ -48,7 +46,6 @@ public class AppStorage {
     }
 
 
-
     public static File getFileFromAttachment(Attachment attachment, Context context, String roomSecret) {
         File localFile = new File(context.getExternalCacheDir(), roomSecret + "_" + attachment.getFileUrl());
 
@@ -60,40 +57,36 @@ public class AppStorage {
 
     public static void downloadFile(String url, File outputFile, DownloadHandler downloadHandler) throws IOException {
 
-            System.out.println(url);
-            URL u = new URL(url);
-            URLConnection conn = u.openConnection();
+        System.out.println(url);
+        URL u = new URL(url);
+        URLConnection conn = u.openConnection();
 
 
+        int fileLength = conn.getContentLength();
+        InputStream input = null;
+        OutputStream output = null;
+        // download the file
+        input = conn.getInputStream();
+        output = new FileOutputStream(outputFile);
 
+        byte[] data = new byte[4096];
+        long total = 0;
+        int count;
+        while ((count = input.read(data)) != -1) {
+            // allow canceling with back button
 
-
-            int fileLength = conn.getContentLength();
-            InputStream input = null;
-            OutputStream output = null;
-            // download the file
-            input = conn.getInputStream();
-            output = new FileOutputStream(outputFile);
-
-            byte data[] = new byte[4096];
-            long total = 0;
-            int count;
-            while ((count = input.read(data)) != -1) {
-                // allow canceling with back button
-
-                total += count;
-                // publishing the progress....
-                if (fileLength > 0) // only if total length is known
-                {
-                    if(downloadHandler != null)
-                    {
-                        downloadHandler.onProgressChanged(((int) (total * 100 / fileLength)));
-                    }
-
+            total += count;
+            // publishing the progress....
+            if (fileLength > 0) // only if total length is known
+            {
+                if (downloadHandler != null) {
+                    downloadHandler.onProgressChanged(((int) (total * 100 / fileLength)));
                 }
 
-                output.write(data, 0, count);
             }
+
+            output.write(data, 0, count);
+        }
 
     }
 
@@ -126,8 +119,6 @@ public class AppStorage {
     }
 
 
-
-
     public static String saveToInternalStorage(Bitmap bitmapImage, String roomSecret, Context context) {
         return saveToInternalStorage(bitmapImage, (new Random()).nextInt(9000) + ".png", roomSecret, context);
     }
@@ -137,12 +128,9 @@ public class AppStorage {
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir(IMAGE_DIR, Context.MODE_PRIVATE);
 
-        if(roomSecret == null)
-        {
+        if (roomSecret == null) {
             directory = cw.getDir(IMAGE_DIR, Context.MODE_PRIVATE);
-        }
-        else
-        {
+        } else {
             File file = new File(directory, roomSecret);
             file.mkdirs();
             directory = file;

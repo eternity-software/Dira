@@ -75,7 +75,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.CreateRoomActivity"
+            android:name=".activities.createroom.CreateRoomActivity"
             android:exported="false"
             android:theme="@style/AppSlideTheme"
             android:windowSoftInputMode="adjustPan">

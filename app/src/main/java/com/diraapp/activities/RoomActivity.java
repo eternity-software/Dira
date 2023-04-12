@@ -13,18 +13,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 import com.diraapp.R;
 import com.diraapp.adapters.RoomMessagesAdapter;
 import com.diraapp.api.requests.SendMessageRequest;
@@ -46,11 +34,24 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
 import com.diraapp.storage.images.FilesUploader;
 import com.diraapp.updates.UpdateProcessor;
+import com.diraapp.updates.listeners.ProcessorListener;
 import com.diraapp.updates.listeners.UpdateListener;
-import com.diraapp.updates.listeners.UpdateProcessorListener;
 import com.diraapp.utils.SliderActivity;
 
-public class RoomActivity extends AppCompatActivity implements UpdateListener, UpdateProcessorListener {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
+public class RoomActivity extends AppCompatActivity implements UpdateListener, ProcessorListener {
 
     public static String pendingRoomName;
     public static String pendingRoomSecret;
@@ -175,7 +176,6 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, U
             }
             final String messageText = data.getStringExtra("text");
             String imageUri = data.getStringExtra("uri");
-
 
 
             try {
@@ -336,8 +336,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, U
                     RecyclerView recyclerView = findViewById(R.id.recycler_view);
                     int lastVisiblePos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
 
-                    if(lastVisiblePos < 3)
-                    {
+                    if (lastVisiblePos < 3) {
                         recyclerView.scrollToPosition(0);
                     }
 
@@ -372,7 +371,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, U
 
                     }
                     imageView.setVisibility(View.VISIBLE);
-                  //  UpdateProcessor.getInstance(getApplicationContext()).reconnectSockets();
+                    //  UpdateProcessor.getInstance(getApplicationContext()).reconnectSockets();
                 } else {
                     findViewById(R.id.status_light).setVisibility(View.GONE);
                 }

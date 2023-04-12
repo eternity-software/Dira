@@ -10,9 +10,6 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.File;
-import java.io.IOException;
-
 import com.diraapp.R;
 import com.diraapp.api.requests.RoomUpdateRequest;
 import com.diraapp.bottomsheet.filepicker.FilePickerBottomSheet;
@@ -25,6 +22,9 @@ import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.updates.UpdateProcessor;
 import com.diraapp.utils.ImageRotationFix;
 import com.diraapp.utils.SliderActivity;
+
+import java.io.File;
+import java.io.IOException;
 
 public class EditRoomActivity extends AppCompatActivity {
 
@@ -66,7 +66,8 @@ public class EditRoomActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 EditText roomName = findViewById(R.id.room_name);
-                RoomUpdateRequest request = new RoomUpdateRequest(AppStorage.getBase64FromBitmap(roomPicture), roomName.getText().toString(), roomSecret);
+                RoomUpdateRequest request = new RoomUpdateRequest(AppStorage.getBase64FromBitmap(roomPicture),
+                        roomName.getText().toString(), roomSecret);
 
                 try {
                     UpdateProcessor.getInstance().sendRequest(request);
