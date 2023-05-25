@@ -176,6 +176,7 @@ public class ImageSendActivity extends AppCompatActivity {
                     showBottomBar();
                     try {
                         videoPlayer.play(imageUri);
+                        videoPlayer.setVolume(1);
                         if (type.startsWith("image")) {
                             final Bitmap fixedBitmap = ImageRotationFix.handleSamplingAndRotationBitmapNoCropping(ImageSendActivity.this, Uri.fromFile(new File(imageUri)));
                             imageView.setImageBitmap(fixedBitmap);
@@ -198,9 +199,10 @@ public class ImageSendActivity extends AppCompatActivity {
                                 }
 
                                 @Override
-                                public void onReady() {
+                                public void onReady(int width, int height) {
                                     try {
                                         videoPlayer.play(imageUri);
+                                        videoPlayer.setVolume(1);
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -343,6 +345,7 @@ public class ImageSendActivity extends AppCompatActivity {
     public void sendButtonClick(View v) {
         EditText editText = findViewById(R.id.message_box);
 
+        videoPlayer.release();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
         Intent intent = new Intent();

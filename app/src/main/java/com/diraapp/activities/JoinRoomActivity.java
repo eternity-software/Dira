@@ -63,9 +63,11 @@ public class JoinRoomActivity extends AppCompatActivity {
                                     @Override
                                     public void run() {
 
-                                        String nickname = CacheUtils.getInstance().getString(CacheUtils.NICKNAME, getApplicationContext());
-                                        String id = CacheUtils.getInstance().getString(CacheUtils.ID, getApplicationContext());
-                                        String picturePath = CacheUtils.getInstance().getString(CacheUtils.PICTURE, getApplicationContext());
+                                        CacheUtils cacheUtils = new CacheUtils(getApplicationContext());
+
+                                        String nickname = cacheUtils.getString(CacheUtils.NICKNAME);
+                                        String id = cacheUtils.getString(CacheUtils.ID);
+                                        String picturePath = cacheUtils.getString(CacheUtils.PICTURE);
 
                                         String base64Pic = null;
 

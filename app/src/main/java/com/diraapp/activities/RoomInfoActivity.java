@@ -8,24 +8,38 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.adapters.MediaGridAdapter;
+import com.diraapp.adapters.MediaGridItemListener;
 import com.diraapp.api.RoomMember;
 import com.diraapp.api.requests.CreateInviteRequest;
 import com.diraapp.api.updates.NewInvitationUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
 import com.diraapp.bottomsheet.InvitationCodeBottomSheet;
+import com.diraapp.bottomsheet.filepicker.FileInfo;
+import com.diraapp.components.DiraPopup;
+import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
+import com.diraapp.db.entities.Attachment;
+import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
+import com.diraapp.db.entities.Message;
 import com.diraapp.db.entities.Room;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
+import com.diraapp.storage.attachments.AttachmentsStorage;
+import com.diraapp.storage.images.ImagesWorker;
+import com.diraapp.storage.images.WaterfallBalancer;
 import com.diraapp.updates.UpdateProcessor;
 import com.diraapp.updates.listeners.UpdateListener;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.SliderActivity;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +50,7 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
     private String roomSecret;
     private Room room;
     private List<Member> members;
+    private MediaGridAdapter mediaGridAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +69,29 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
             }
         });
 
+        findViewById(R.id.leave_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DiraPopup diraPopup = new DiraPopup(RoomInfoActivity.this);
+                diraPopup.show(getString(R.string.delete_room_title),
+                        getString(R.string.delete_room_text),
+                        null,
+                        null, new Runnable() {
+                            @Override
+                            public void run() {
+                                Thread deletionThread = new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        UpdateProcessor.getInstance(getApplicationContext()).deleteRoom(room);
+                                    }
+                                });
+                                deletionThread.start();
+
+                            }
+                        });
+            }
+        });
+
         findViewById(R.id.edit_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,7 +101,7 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
             }
         });
 
-        findViewById(R.id.invite_button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.icon_invite).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -84,9 +122,11 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                             member.getLastTimeUpdated()));
                 }
 
-                roomMembers.add(new RoomMember(CacheUtils.getInstance().getString(CacheUtils.ID, getApplicationContext()),
-                        CacheUtils.getInstance().getString(CacheUtils.NICKNAME, getApplicationContext()),
-                        AppStorage.getBase64FromBitmap(AppStorage.getImage(CacheUtils.getInstance().getString(CacheUtils.PICTURE, getApplicationContext()))),
+                CacheUtils cacheUtils = new CacheUtils(getApplicationContext());
+
+                roomMembers.add(new RoomMember(cacheUtils.getString(CacheUtils.ID),
+                        cacheUtils.getString(CacheUtils.NICKNAME),
+                        AppStorage.getBase64FromBitmap(AppStorage.getImage(cacheUtils.getString(CacheUtils.PICTURE))),
                         room.getSecretName(), System.currentTimeMillis()));
 
                 CreateInviteRequest createInviteRequest = new CreateInviteRequest(room.getName(),
@@ -135,6 +175,9 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
             }
         });
 
+
+
+
         loadData();
         UpdateProcessor.getInstance().addUpdateListener(this);
     }
@@ -152,6 +195,9 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                 RoomInfoActivity.this.room = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getRoomBySecretName(roomSecret);
 
                 members = DiraRoomDatabase.getDatabase(getApplicationContext()).getMemberDao().getMembersByRoomSecret(room.getSecretName());
+
+
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -161,9 +207,76 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                         }
 
                         TextView roomName = findViewById(R.id.room_name);
+                        TextView membersCount = findViewById(R.id.members_count);
+                        ImageView memberImage_1 = findViewById(R.id.icon_user_1);
+                        ImageView memberImage_2 = findViewById(R.id.icon_user_2);
+
+                        if(members.size() == 1)
+                        {
+                            memberImage_2.setVisibility(View.GONE);
+                            memberImage_1.setImageBitmap(AppStorage.getImage(members.get(0).getImagePath()));
+                        }
+                        else if(members.size() > 1)
+                        {
+                            memberImage_2.setImageBitmap(AppStorage.getImage(members.get(1).getImagePath()));
+                        }
+
                         roomName.setText(room.getName());
+                        membersCount.setText(getString(R.string.members_count).replace("%s", String.valueOf(members.size())));
+
+
                     }
                 });
+                ArrayList<FileInfo> attachments = new ArrayList<>();
+
+                for(Message message : DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getAllMessageByUpdatedTime(roomSecret)) {
+                    if (message.getAttachments() != null) {
+                        if (message.getAttachments().size() > 0) {
+                            Attachment attachment = message.getAttachments().get(0);
+                            if (attachment.getAttachmentType() == AttachmentType.IMAGE ||
+                                    attachment.getAttachmentType() == AttachmentType.VIDEO) {
+                                File file = AppStorage.getFileFromAttachment(attachment, getApplicationContext(), message.getRoomSecret());
+
+                                String mimeType = "image";
+
+                                if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
+                                    mimeType = "video";
+                                }
+
+                                if (file != null) {
+                                    attachments.add(new FileInfo(file.getName(), file.getPath(), mimeType));
+                                }
+                            }
+                        }}
+
+                }
+                RecyclerView gallery = findViewById(R.id.gridView);
+                mediaGridAdapter = new MediaGridAdapter(RoomInfoActivity.this, attachments, new MediaGridItemListener() {
+                    @Override
+                    public void onItemClick(int pos, View view) {
+                        FileInfo fileInfo = attachments.get(pos);
+                        Intent intent = new Intent(getApplicationContext(), PreviewActivity.class);
+                        intent.putExtra(PreviewActivity.URI, fileInfo.getFilePath());
+                        intent.putExtra(PreviewActivity.IS_VIDEO, fileInfo.isVideo());
+                        startActivity(intent);
+                    }
+                }, gallery);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                        gallery.setLayoutManager(new GridLayoutManager(RoomInfoActivity.this, 3));
+
+
+
+
+
+                        gallery.setAdapter(mediaGridAdapter);
+                    }
+                });
+
             }
         });
         thread.start();

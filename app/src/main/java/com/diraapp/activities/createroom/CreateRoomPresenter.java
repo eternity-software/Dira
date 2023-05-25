@@ -45,8 +45,8 @@ public class CreateRoomPresenter implements CreateRoomContract.Presenter {
                         AcceptedStatusAnswer acceptedStatusAnswer = (AcceptedStatusAnswer) update;
 
                         if (acceptedStatusAnswer.isAccepted()) {
-                            model.createRoom(roomSecret, roomName, welcomeMessage,
-                                    view.getAuthorName(), view.getAuthorId());
+                            model.createRoom(roomName, roomSecret, welcomeMessage,
+                                    view.getAuthorId(), view.getAuthorName());
                             view.finish();
                         }
                     });

@@ -35,9 +35,6 @@
     <string name="you">Вы</string>
     <string name="type_message_hint">Сообщение</string>
     <string name="members_count">%s участников</string>
-    <string name="edit">Ред.</string>
-    <string name="invite">Доб.</string>
-    <string name="leave">Выйти</string>
     <string name="edit_room">Изменить комнату</string>
     <string name="room_picture">Изображение комнаты</string>
     <string name="edit_room_name">Имя комнаты</string>
@@ -45,4 +42,12 @@
     <string name="edit_room_update_expire">Время просрочки обновлений</string>
     <string name="invitation_code">Код приглашения</string>
     <string name="invitation_code_tip">Этот код приглашения в %s будет действовать не долго.</string>
+    <string name="download">Скачать</string>
+    <string name="attachment_large_title">Этот файл слишком большой</string>
+    <string name="dismiss_button">Отмена</string>
+    <string name="delete_room_title">Удалить эту комнату</string>
+    <string name="delete_room_text">Вы можете удалить эту комнату только на своём устройстве. Для остальных участников ничего не поменяется.</string>
+    <string name="unsupported_api_title">Приложение устарело</string>
+    <string name="unsupported_api_text">Ваша версия клиентского приложения не поддерживает API от одного из серверов. Приложение может работать неправильно. Чтобы исправить проблему, попробуйте обновиться до последней версии Dira.</string>
+    <string name="your_id_hint">Оочень длинный случайный текст</string>
 </resources>

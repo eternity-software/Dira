@@ -45,6 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
+                android:transitionName="icon"
                 android:src="@drawable/placeholder" />
         </androidx.cardview.widget.CardView>
 
@@ -61,6 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:maxLines="1"
+                android:transitionName="name"
 
 
                 android:fontFamily="@font/montserratbold"
@@ -144,6 +146,18 @@
             android:src="@drawable/circle"
        />
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background_pattern_love"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:alpha="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/room_info_pan"
+        app:tint="@color/gray" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"

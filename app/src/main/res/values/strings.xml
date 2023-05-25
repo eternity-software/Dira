@@ -36,7 +36,7 @@
     <string name="your_nickname">Your name</string>
     <string name="your_nickname_hint">dreestoon</string>
     <string name="your_id">Your ID</string>
-    <string name="your_id_hint">88005553636</string>
+    <string name="your_id_hint">Veryyyy long randomized text</string>
     <string name="your_id_tip">With ID Dira can know who is who. Changing ID is like recreating your account in all chats.</string>
     <string name="personality_tip_title">What is personality?</string>
     <string name="personality_tip_text">It’s your default account information applied to new rooms. You can change your name or avatar for specific room.</string>
@@ -51,9 +51,6 @@
     <string name="download">Download</string>
 
     <!-- Room info -->
-    <string name="edit">Edit</string>
-    <string name="invite">Invite</string>
-    <string name="leave">Leave</string>
 
     <!-- Edit room -->
     <string name="edit_room">Edit room</string>
@@ -66,7 +63,17 @@
     <string name="invitation_code">Invitation code</string>
     <string name="invitation_code_tip">This invitation code to %s will expire soon.</string>
 
+
+    <!-- Popup -->
+    <string name="action_button" translatable="false">OK</string>
+    <string name="dismiss_button">Cancel</string>
+
+    <string name="delete_room_title">Delete this room</string>
+    <string name="delete_room_text">You can delete this room locally. It must not affect others members</string>
+
+    <string name="unsupported_api_title">Your app is outdated</string>
+    <string name="unsupported_api_text">Your client app version does not support one of backend server\'s API. App may not work properly. You can try to update to newest version of Dira.</string>
     <!--Transitions -->
-    <string name="transition_image_prepare">img_prepare_transition</string>
+    <string name="transition_image_prepare" translatable="false">img_prepare_transition</string>
 
 </resources>

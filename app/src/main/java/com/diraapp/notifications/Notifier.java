@@ -30,7 +30,7 @@ public class Notifier {
 
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, DIRA_ID)
-                        .setSmallIcon(R.drawable.logo_solid)
+                        .setSmallIcon(R.drawable.notification)
                         .setContentTitle(message.getAuthorNickname())
                         .setContentText(message.getText())
                         .setPriority(NotificationCompat.PRIORITY_HIGH);

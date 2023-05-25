@@ -66,7 +66,7 @@ public class CreateRoomActivity extends AppCompatActivity implements CreateRoomC
 
     @Override
     public void setSecretCodeText(String secretCode) {
-        binding.secretCodeText.setText(secretCode);
+        binding.secretCodeText.setText(secretCode.substring(0, 8) + "***");
     }
 
     @Override

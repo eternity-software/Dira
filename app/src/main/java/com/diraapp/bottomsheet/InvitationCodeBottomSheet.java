@@ -90,6 +90,7 @@ public class InvitationCodeBottomSheet extends BottomSheetDialogFragment {
                 ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("Invitation code", code);
                 clipboard.setPrimaryClip(clip);
+                dismiss();
             }
         });
 

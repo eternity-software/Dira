@@ -1,8 +1,12 @@
 package com.diraapp.activities;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +19,13 @@ import com.diraapp.components.PreviewImageView;
 import com.diraapp.components.VideoPlayer;
 import com.diraapp.exceptions.VideoPlayerException;
 import com.diraapp.storage.AppStorage;
+import com.diraapp.storage.attachments.AttachmentsStorage;
+import com.diraapp.storage.images.ImagesWorker;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 public class PreviewActivity extends AppCompatActivity {
 
@@ -88,7 +99,7 @@ public class PreviewActivity extends AppCompatActivity {
 
 
         if (isVideo) {
-
+            previewImageView.setVisibility(View.GONE);
             videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
                 @Override
                 public void onStarted() {
@@ -106,9 +117,10 @@ public class PreviewActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onReady() {
+                public void onReady(int width, int height) {
                     try {
                         videoPlayer.play(uri);
+                        videoPlayer.setVolume(1);
                     } catch (VideoPlayerException e) {
                         e.printStackTrace();
                     }
@@ -124,25 +136,55 @@ public class PreviewActivity extends AppCompatActivity {
     }
 
     public void addImageToGallery(final String filePath, final Context context) {
-
-        ContentValues values = new ContentValues();
-
-        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-        values.put(MediaStore.MediaColumns.DATA, filePath);
-
-        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        ImagesWorker.saveBitmapToGallery(AppStorage.getImage(filePath), this);
     }
 
     public void addVideoToGallery(final String filePath, final Context context) {
+        String videoFileName = "video_" + System.currentTimeMillis() + ".mp4";
 
-        ContentValues values = new ContentValues();
+        ContentValues valuesvideos;
+        valuesvideos = new ContentValues();
+        valuesvideos.put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/" + "Folder");
+        valuesvideos.put(MediaStore.Video.Media.TITLE, videoFileName);
+        valuesvideos.put(MediaStore.Video.Media.DISPLAY_NAME, videoFileName);
+        valuesvideos.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+        valuesvideos.put(
+                MediaStore.Video.Media.DATE_ADDED,
+                System.currentTimeMillis() / 1000);
+        valuesvideos.put(MediaStore.Video.Media.DATE_TAKEN, System.currentTimeMillis());
+        valuesvideos.put(MediaStore.Video.Media.IS_PENDING, 1);
 
-        values.put(MediaStore.Video.Media.DATE_TAKEN, System.currentTimeMillis());
-        values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-        values.put(MediaStore.MediaColumns.DATA, filePath);
+        ContentResolver resolver = context.getContentResolver();
+        Uri collection =
+                MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+        Uri uriSavedVideo = resolver.insert(collection, valuesvideos);
+        ParcelFileDescriptor pfd;
 
-        context.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+        try {
+            pfd = getContentResolver().openFileDescriptor(uriSavedVideo, "w");
+
+            FileOutputStream out = new FileOutputStream(pfd.getFileDescriptor());
+            // Get the already saved video as fileinputstream from here
+
+            File imageFile = new File(filePath);
+            FileInputStream in = new FileInputStream(imageFile);
+
+            byte[] buf = new byte[8192];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+
+            out.close();
+            in.close();
+            pfd.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        valuesvideos.clear();
+        valuesvideos.put(MediaStore.Video.Media.IS_PENDING, 0);
+        context.getContentResolver().update(uriSavedVideo, valuesvideos, null, null);
     }
 
     @Override

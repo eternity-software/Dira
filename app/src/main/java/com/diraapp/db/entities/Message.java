@@ -44,8 +44,10 @@ public class Message {
     public static Message generateMessage(Context context, String roomSecret) {
         Message message = new Message();
 
-        message.setAuthorId(CacheUtils.getInstance().getString(CacheUtils.ID, context));
-        message.setAuthorNickname(CacheUtils.getInstance().getString(CacheUtils.NICKNAME, context));
+        CacheUtils cacheUtils = new CacheUtils(context);
+
+        message.setAuthorId(cacheUtils.getString(CacheUtils.ID));
+        message.setAuthorNickname(cacheUtils.getString(CacheUtils.NICKNAME));
         message.setId(KeyGenerator.generateId());
         message.setRoomSecret(roomSecret);
         return message;

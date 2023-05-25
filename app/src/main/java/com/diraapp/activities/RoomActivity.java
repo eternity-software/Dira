@@ -1,24 +1,35 @@
 package com.diraapp.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
+import com.abedelazizshe.lightcompressorlibrary.VideoCompressor;
+import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
+import com.abedelazizshe.lightcompressorlibrary.config.AppSpecificStorageConfiguration;
+import com.abedelazizshe.lightcompressorlibrary.config.Configuration;
 import com.diraapp.R;
 import com.diraapp.adapters.RoomMessagesAdapter;
 import com.diraapp.api.requests.SendMessageRequest;
 import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
+import com.diraapp.adapters.MediaGridItemListener;
 import com.diraapp.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.components.FilePreview;
 import com.diraapp.db.DiraMessageDatabase;
@@ -89,6 +100,15 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
             public void onClick(View v) {
                 Intent intent = new Intent(RoomActivity.this, RoomInfoActivity.class);
                 intent.putExtra(RoomInfoActivity.ROOM_SECRET_EXTRA, roomSecret);
+
+
+
+              //  Pair<View, String> p1 = Pair.create(findViewById(R.id.room_picture), "icon");
+                //Pair<View, String> p2 = Pair.create(findViewById(R.id.room_name), "name");
+
+
+               // ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(RoomActivity.this, p1);
+
                 startActivity(intent);
             }
         });
@@ -133,7 +153,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
             public void onClick(View v) {
                 filePickerBottomSheet = new FilePickerBottomSheet();
                 filePickerBottomSheet.show(getSupportFragmentManager(), "blocked");
-                filePickerBottomSheet.setRunnable(new FilePickerBottomSheet.ItemClickListener() {
+                filePickerBottomSheet.setRunnable(new MediaGridItemListener() {
                     @Override
                     public void onItemClick(int pos, final View view) {
                         ImageSendActivity.open(RoomActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(), "",
@@ -151,94 +171,161 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK && resultCode != ImageSendActivity.CODE) {
-            return;
-        }
-        if (requestCode == 2) {
-            final Bundle extras = data.getExtras();
-            if (extras != null) {
+        try {
 
 
+            System.out.println("hello from room activity " + resultCode);
+            super.onActivityResult(requestCode, resultCode, data);
+            if (resultCode != RESULT_OK && resultCode != ImageSendActivity.CODE) {
+                return;
             }
-        }
-        if (resultCode == ImageSendActivity.CODE) {
-            if (filePickerBottomSheet != null) {
+            if (requestCode == 2) {
+                final Bundle extras = data.getExtras();
+                if (extras != null) {
 
-                /**
-                 * Throws an java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
-                 * on some devices (tested on Android 5.1)
-                 */
-                try {
-                    filePickerBottomSheet.dismiss();
-                } catch (Exception ignored) {
+
                 }
             }
-            final String messageText = data.getStringExtra("text");
-            String imageUri = data.getStringExtra("uri");
+            if (resultCode == ImageSendActivity.CODE) {
+                if (filePickerBottomSheet != null) {
 
-
-            try {
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        System.out.println("uploading!");
-                        try {
-                            FilesUploader.uploadFile(imageUri, new Callback() {
-                                @Override
-                                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                                    e.printStackTrace();
-                                    System.out.println(":(");
-                                }
-
-                                @Override
-                                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                                    System.out.println("uploading");
-                                    if (response.isSuccessful()) {
-                                        try {
-                                            String fileTempName = new JSONObject(response.body().string()).getString("message");
-                                            Attachment attachment = new Attachment();
-                                            if (FileClassifier.isImageFile(imageUri)) {
-                                                attachment.setAttachmentType(AttachmentType.IMAGE);
-                                            } else if (FileClassifier.isVideoFile(imageUri)) {
-                                                attachment.setAttachmentType(AttachmentType.VIDEO);
-                                            } else {
-                                                attachment.setAttachmentType(AttachmentType.FILE);
-                                            }
-                                            attachment.setFileCreatedTime(System.currentTimeMillis());
-                                            attachment.setFileName("image");
-                                            attachment.setFileUrl(fileTempName);
-                                            attachment.setSize(new File(imageUri).length());
-
-                                            Message message = Message.generateMessage(getApplicationContext(), roomSecret);
-                                            message.setText(messageText);
-                                            message.getAttachments().add(attachment);
-
-                                            SendMessageRequest sendMessageRequest = new SendMessageRequest(message);
-
-                                            UpdateProcessor.getInstance().sendRequest(sendMessageRequest);
-
-
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        } catch (UnablePerformRequestException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }
-                            }, getApplicationContext());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                    /**
+                     * Throws an java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+                     * on some devices (tested on Android 5.1)
+                     */
+                    try {
+                        filePickerBottomSheet.dismiss();
+                    } catch (Exception ignored) {
                     }
-                });
-                thread.start();
+                }
+                final String messageText = data.getStringExtra("text");
+                String imageUri = data.getStringExtra("uri");
 
-            } catch (Exception e) {
-                e.printStackTrace();
+
+                try {
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            System.out.println("uploading...");
+
+
+
+                            if (FileClassifier.isVideoFile(imageUri)) {
+                                List<Uri> urisToCompress = new ArrayList<>();
+                                urisToCompress.add(Uri.fromFile(new File(imageUri)));
+                                System.out.println("compression started");
+                                VideoCompressor.start(getApplicationContext(), urisToCompress,
+                                        false,
+                                        null,
+                                        new AppSpecificStorageConfiguration(
+                                                new File(imageUri).getName() + "temp_compressed", null), // => required name
+                                        new Configuration(VideoQuality.VERY_LOW,
+                                                false,
+                                                2,
+                                                false,
+                                                false,
+                                                null,
+                                                null), new CompressionListener() {
+                                            @Override
+                                            public void onStart(int i) {
+
+                                            }
+
+                                            @Override
+                                            public void onSuccess(int i, long l, @Nullable String s) {
+                                                if (s != null) {
+                                                    try {
+                                                        FilesUploader.uploadFile(s, createAttachmentCallback(s, messageText, AttachmentType.VIDEO), getApplicationContext(), true);
+                                                    } catch (Exception e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(int i, @NonNull String s) {
+                                                System.out.println("compression fail " + s);
+                                            }
+
+                                            @Override
+                                            public void onProgress(int i, float v) {
+                                                System.out.println("compression progress " + i + "  " + v);
+                                            }
+
+                                            @Override
+                                            public void onCancelled(int i) {
+                                                System.out.println("compression canceled");
+                                            }
+                                        });
+                            }
+                            else
+                            {
+                                try {
+                                    FilesUploader.uploadFile(imageUri, createAttachmentCallback(imageUri, messageText, AttachmentType.IMAGE), getApplicationContext(), false);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                        }
+                    });
+                    thread.start();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
+
+    private Callback createAttachmentCallback(String fileUri, String messageText, AttachmentType attachmentType) throws IOException{
+        return new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+                System.out.println(":(");
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                System.out.println("uploading");
+
+                try {
+                    String fileTempName = new JSONObject(response.body().string()).getString("message");
+                    Attachment attachment = new Attachment();
+
+
+                    attachment.setAttachmentType(attachmentType);
+
+
+                    attachment.setFileCreatedTime(System.currentTimeMillis());
+                    attachment.setFileName("attachment");
+                    System.out.println("uploaded url " + fileTempName);
+                    attachment.setFileUrl(fileTempName);
+                    attachment.setSize(new File(fileUri).length());
+
+                    Message message = Message.generateMessage(getApplicationContext(), roomSecret);
+                    message.setText(messageText);
+                    message.getAttachments().add(attachment);
+
+                    SendMessageRequest sendMessageRequest = new SendMessageRequest(message);
+
+                    UpdateProcessor.getInstance().sendRequest(sendMessageRequest);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+    }
+
 
 
     private void loadMembers() {

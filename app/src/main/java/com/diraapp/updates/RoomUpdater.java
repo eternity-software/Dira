@@ -49,7 +49,7 @@ public class RoomUpdater {
             room.setLastUpdateId(0);
 
             for (RoomMember roomMember : inviteRoom.getMemberList()) {
-
+                System.out.println("Memers invited");
                 Member member = memberDao.getMemberByIdAndRoomSecret(roomMember.getId(), roomMember.getRoomSecret());
 
                 boolean hasMemberInDatabase = true;
@@ -60,9 +60,11 @@ public class RoomUpdater {
                         imagePath = AppStorage.saveToInternalStorage(
                                 AppStorage.getBitmapFromBase64(roomMember.getImageBase64()), room.getSecretName(), context);
                     }
+                    System.out.println("Member: " + roomMember.getNickname() );
                     member = new Member(roomMember.getId(), roomMember.getNickname(),
                             imagePath, roomMember.getRoomSecret(), roomMember.getLastTimeUpdated());
                 }
+
 
                 member.setLastTimeUpdated(roomMember.getLastTimeUpdated());
                 member.setNickname(roomMember.getNickname());
@@ -74,7 +76,7 @@ public class RoomUpdater {
                     member.setImagePath(path);
                 }
 
-                if (hasMemberInDatabase) {
+                if (!hasMemberInDatabase) {
                     memberDao.insertAll(member);
                 } else {
                     memberDao.update(member);

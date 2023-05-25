@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.diraapp.R;
 import com.diraapp.api.requests.RoomUpdateRequest;
+import com.diraapp.adapters.MediaGridItemListener;
 import com.diraapp.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.components.FilePreview;
 import com.diraapp.db.DiraRoomDatabase;
@@ -145,7 +146,7 @@ public class EditRoomActivity extends AppCompatActivity {
         startActivityForResult(intent, 1);*/
         filePickerBottomSheet = new FilePickerBottomSheet();
         filePickerBottomSheet.show(getSupportFragmentManager(), "blocked");
-        filePickerBottomSheet.setRunnable(new FilePickerBottomSheet.ItemClickListener() {
+        filePickerBottomSheet.setRunnable(new MediaGridItemListener() {
             @Override
             public void onItemClick(int pos, final View view) {
                 ImageSendActivity.open(EditRoomActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(), "",

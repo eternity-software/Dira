@@ -55,6 +55,7 @@ import java.util.List;
 public class UpdateProcessor {
 
     public static final String OFFICIAL_ADDRESS = "ws://diraapp.com:8888";
+    public static final String API_VERSION = "0.0.1";
 
     private static UpdateProcessor updateProcessor;
     private final HashMap<String, SocketClient> socketClients = new HashMap<>();
@@ -218,6 +219,15 @@ public class UpdateProcessor {
         } else {
             memberDao.insertAll(member);
         }
+    }
+
+    public void deleteRoom(Room room) {
+       for(Member member : memberDao.getMembersByRoomSecret(room.getSecretName()))
+       {
+           memberDao.delete(member);
+       }
+        roomDao.delete(room);
+
     }
 
     /**

@@ -76,7 +76,8 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
                 if (authorPrefix.length() > 12) {
                     authorPrefix = authorPrefix.substring(0, 11) + "..";
                 }
-                if (CacheUtils.getInstance().getString(CacheUtils.ID, context).equals(message.getAuthorId())) {
+                CacheUtils cacheUtils = new CacheUtils(context);
+                if (cacheUtils.getString(CacheUtils.ID).equals(message.getAuthorId())) {
                     authorPrefix = context.getString(R.string.you);
                 }
                 holder.messageText.setText(message.getText());

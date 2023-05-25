@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.adapters.MediaGridAdapter;
+import com.diraapp.adapters.MediaGridItemListener;
 import com.diraapp.storage.images.WaterfallBalancer;
 import com.diraapp.utils.Numbers;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -29,11 +31,11 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     private final boolean isShown = false;
     private View view;
     private ArrayList<String> images;
-    private FilePickerAdapter filePickerAdapter;
-    private ItemClickListener onItemClickListener;
+    private MediaGridAdapter mediaGridAdapter;
+    private MediaGridItemListener onItemClickListener;
 
     public ArrayList<FileInfo> getMedia() {
-        return filePickerAdapter.getImages();
+        return mediaGridAdapter.getMediaElements();
     }
 
     @Override
@@ -62,7 +64,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         return v;
     }
 
-    public void setRunnable(ItemClickListener onItemClickListener) {
+    public void setRunnable(MediaGridItemListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -122,8 +124,8 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
 
         final TextView debugText = view.findViewById(R.id.debugText);
-        filePickerAdapter = new FilePickerAdapter(getActivity(), onItemClickListener, gallery);
-        filePickerAdapter.setBalancerCallback(new WaterfallBalancer.BalancerCallback() {
+        mediaGridAdapter = new MediaGridAdapter(getActivity(), onItemClickListener, gallery);
+        mediaGridAdapter.setBalancerCallback(new WaterfallBalancer.BalancerCallback() {
             @Override
             public void onActiveWaterfallsCountChange(final int count) {
                 try {
@@ -140,14 +142,12 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
             }
         });
 
-        gallery.setAdapter(filePickerAdapter);
+        gallery.setAdapter(mediaGridAdapter);
 
 
     }
 
-    public interface ItemClickListener {
-        void onItemClick(int pos, View view);
-    }
+
 
 
 }

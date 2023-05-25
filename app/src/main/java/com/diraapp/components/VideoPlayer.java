@@ -163,6 +163,7 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
             mediaPlayer.stop();
             mediaPlayer.setDataSource(filePath);
             mediaPlayer.prepareAsync();
+
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
@@ -224,7 +225,7 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
                         public void run() {
                             try {
                                 mediaPlayer = new MediaPlayer();
-
+                                setVolume(0);
 
                                 mediaPlayer.setSurface(s);
                                 mediaPlayer.setLooping(true);
@@ -238,7 +239,7 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
 //            mediaPlayer.setOnBufferingUpdateListener(this);
 //            mediaPlayer.setOnCompletionListener(this);
 
-                                if (videoPlayerListener != null) videoPlayerListener.onReady();
+                                if (videoPlayerListener != null) videoPlayerListener.onReady(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
                                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -300,6 +301,6 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
 
         void onReleased();
 
-        void onReady();
+        void onReady(int width, int height);
     }
 }

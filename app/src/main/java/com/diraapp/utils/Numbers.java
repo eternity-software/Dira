@@ -25,12 +25,15 @@ public class Numbers {
 
 
     // Получаем локальное время из timestamp
-    public static String getTimeFromTimestamp(long timestamp, Context context) {
+    public static String getTimeFromTimestamp(long timestamp) {
         return DateFormat.format("HH:mm", timestamp).toString();
     }
 
-    public static String getDateFromTimestamp(String timestamp, Context context) {
-        return DateFormat.format("EEEE, d MMMM", Long.parseLong(timestamp)).toString();
+
+    public static String getDateFromTimestamp(long timestamp, boolean hasYear) {
+        String format = "dd MMMM ";
+        if (hasYear) format += "yyy";
+        return DateFormat.format(format, timestamp).toString();
     }
 
     public static boolean getBooleanFromInt(int i) {

@@ -15,7 +15,7 @@ public class FileInfo {
     private final String mimeType;
 
 
-    public FileInfo(String name, String filePath, String mimeType, Context context) {
+    public FileInfo(String name, String filePath, String mimeType) {
         this.name = name;
         this.filePath = filePath;
         this.mimeType = mimeType;

@@ -26,11 +26,10 @@ import okhttp3.Response;
 
 public class FilesUploader {
 
-    public static boolean uploadFile(String sourceFileUri, Callback callback, Context context) throws IOException {
+    public static boolean uploadFile(String sourceFileUri, Callback callback, Context context, boolean deleteAfterUpload) throws IOException {
 
         try {
 
-            boolean isCopied = false;
             if (FileClassifier.isImageFile(sourceFileUri)) {
                 Bitmap bitmap = null;
                 try {
@@ -65,7 +64,7 @@ public class FilesUploader {
 
 
                 }
-                isCopied = true;
+                deleteAfterUpload = true;
 
                 sourceFileUri = AppStorage.saveToInternalStorage(bitmap,
                         null, context);
@@ -83,7 +82,7 @@ public class FilesUploader {
             OkHttpClient client = new OkHttpClient();
 
             String finalSourceFileUri = sourceFileUri;
-            boolean finalIsCopied = isCopied;
+            boolean finalIsCopied = deleteAfterUpload;
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {

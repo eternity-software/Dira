@@ -18,8 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diraapp.R;
 import com.diraapp.adapters.RoomSelectorAdapter;
 import com.diraapp.api.requests.GetUpdatesRequest;
+import com.diraapp.api.updates.ServerSyncUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
+import com.diraapp.components.DiraPopup;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Message;
@@ -222,6 +224,26 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
             updateRooms();
         } else if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
             updateRooms();
+        } else if (update.getUpdateType() == UpdateType.SERVER_SYNC) {
+            if(!((ServerSyncUpdate) update).getSupportedApis().contains(UpdateProcessor.API_VERSION))
+            {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        DiraPopup diraPopup = new DiraPopup(RoomSelectorActivity.this);
+                        diraPopup.setCancellable(false);
+                        diraPopup.show(getString(R.string.unsupported_api_title),
+                                getString(R.string.unsupported_api_text),
+                                null,
+                                null, new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                    }
+                                });
+                    }
+                });
+            }
         }
     }
 }

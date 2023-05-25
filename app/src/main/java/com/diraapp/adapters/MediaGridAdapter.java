@@ -1,4 +1,4 @@
-package com.diraapp.bottomsheet.filepicker;
+package com.diraapp.adapters;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -16,30 +16,57 @@ import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.bottomsheet.filepicker.FileInfo;
 import com.diraapp.components.FilePreview;
 import com.diraapp.storage.images.WaterfallBalancer;
 
 import java.util.ArrayList;
 
 
-public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.ViewHolder> {
+public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.ViewHolder> {
 
 
     private final int threadCount = 0;
     private final LayoutInflater mInflater;
-    private final ArrayList<FileInfo> images;
+    private final ArrayList<FileInfo> mediaElements;
     private final WaterfallBalancer waterfallBalancer;
     private final Activity context;
-    private final FilePickerBottomSheet.ItemClickListener itemClickListener;
+    private final MediaGridItemListener itemClickListener;
     private Runnable transitionReenter;
 
-    public FilePickerAdapter(final Activity context, FilePickerBottomSheet.ItemClickListener itemClickListener, RecyclerView recyclerView) {
+    /**
+     * Constructor for custom files arrays
+     *
+     * @param context
+     * @param itemClickListener
+     * @param recyclerView
+     */
+    public MediaGridAdapter(final Activity context, ArrayList<FileInfo> mediaElements, MediaGridItemListener itemClickListener, RecyclerView recyclerView) {
         this.mInflater = LayoutInflater.from(context);
         this.itemClickListener = itemClickListener;
         this.context = context;
-        images = getAllShownImagesPath();
+
+        this.mediaElements = mediaElements;
         //   Collections.reverse(images);
-        waterfallBalancer = new WaterfallBalancer(context, 10, recyclerView);
+        waterfallBalancer = new WaterfallBalancer(context, 5, recyclerView);
+
+
+    }
+
+    /**
+     * Constructor to get whole device memory
+     *
+     * @param context
+     * @param itemClickListener
+     * @param recyclerView
+     */
+    public MediaGridAdapter(final Activity context, MediaGridItemListener itemClickListener, RecyclerView recyclerView) {
+        this.mInflater = LayoutInflater.from(context);
+        this.itemClickListener = itemClickListener;
+        this.context = context;
+        mediaElements = getAllShownImagesPath();
+        //   Collections.reverse(images);
+        waterfallBalancer = new WaterfallBalancer(context, 5, recyclerView);
 
         registerTransitionListener();
     }
@@ -59,8 +86,8 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         FilePreview picturesView = holder.fileParingImageView;
-        picturesView.setFileInfo(images.get(position));
-        System.out.println(images.get(position).getMimeType());
+        picturesView.setFileInfo(mediaElements.get(position));
+        System.out.println(mediaElements.get(position).getMimeType());
 
         try {
 
@@ -77,16 +104,16 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return images.size();
+        return mediaElements.size();
     }
 
-    public ArrayList<FileInfo> getImages() {
-        return images;
+    public ArrayList<FileInfo> getMediaElements() {
+        return mediaElements;
     }
 
     // Convenience method for getting data at click position
     public FileInfo getItem(int id) {
-        return images.get(id);
+        return mediaElements.get(id);
     }
 
     // Method that executes your code for the action received
@@ -192,7 +219,7 @@ public class FilePickerAdapter extends RecyclerView.Adapter<FilePickerAdapter.Vi
             String title = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.TITLE));
 
             if (mimeType.startsWith("image") || mimeType.startsWith("video")) {
-                listOfAllMedia.add(new FileInfo(title, absolutePathOfImage, mimeType, context));
+                listOfAllMedia.add(new FileInfo(title, absolutePathOfImage, mimeType));
             }
         }
         cursor.close();
