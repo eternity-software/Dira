@@ -222,7 +222,7 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                         }
 
                         roomName.setText(room.getName());
-                        membersCount.setText(getString(R.string.members_count).replace("%s", String.valueOf(members.size())));
+                        membersCount.setText(getString(R.string.members_count).replace("%s", String.valueOf(members.size() + 1)));
 
 
                     }
@@ -250,6 +250,9 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                         }}
 
                 }
+
+
+
                 RecyclerView gallery = findViewById(R.id.gridView);
                 mediaGridAdapter = new MediaGridAdapter(RoomInfoActivity.this, attachments, new MediaGridItemListener() {
                     @Override
@@ -270,10 +273,18 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                         gallery.setLayoutManager(new GridLayoutManager(RoomInfoActivity.this, 3));
 
 
-
+                        findViewById(R.id.members_button).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(getApplicationContext(), MembersActivity.class);
+                                intent.putExtra(MembersActivity.ROOM_SECRET, roomSecret);
+                                startActivity(intent);
+                            }
+                        });
 
 
                         gallery.setAdapter(mediaGridAdapter);
+                        mediaGridAdapter.notifyDataSetChanged();
                     }
                 });
 

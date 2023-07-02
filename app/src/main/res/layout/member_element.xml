@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/card_view"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/dark"
+
+    android:layout_marginHorizontal="24dp"
+    android:layout_marginTop="16dp"
+    app:cardElevation="0dp"
+    app:cardCornerRadius="100dp"
+    android:layout_height="42dp">
+
+    <LinearLayout
+        android:id="@+id/member_container"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/dark"
+        android:layout_height="wrap_content">
+        <androidx.cardview.widget.CardView
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            app:cardCornerRadius="100dp">
+            <ImageView
+                android:id="@+id/member_picture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/placeholder"/>
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/member_name"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/montserratbold"
+                android:text=".."
+                android:textColor="@color/white"
+                android:maxLines="1"
+                android:layout_weight="1"
+
+                android:textSize="16sp" />
+
+
+            <ImageView
+                android:id="@+id/button_delete_member"
+                android:layout_width="32dp"
+                android:layout_height="match_parent"
+                android:padding="6dp"
+                android:background="?actionBarItemBackground"
+                app:tint="@color/white"
+                android:src="@drawable/ic_hide"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.widget.Toast;
 
 import com.diraapp.updates.UpdateProcessor;
 
@@ -31,7 +32,7 @@ public class UpdaterService extends Service {
             public void run() {
                 updateProcessor.reconnectSockets();
 
-                handler.postDelayed(runnable, 10000 * 40);
+                handler.postDelayed(runnable, 10000);
             }
         };
 
@@ -42,11 +43,21 @@ public class UpdaterService extends Service {
     }
 
 
+
+
     @Override
     public void onDestroy() {
         /* IF YOU WANT THIS SERVICE KILLED WITH THE APP THEN UNCOMMENT THE FOLLOWING LINE */
         //handler.removeCallbacks(runnable);
-        //  Toast.makeText(this, "Service stopped", Toast.LENGTH_LONG).show();
+
+        runnable = new Runnable() {
+            public void run() {
+                updateProcessor.reconnectSockets();
+
+                handler.postDelayed(runnable, 10000);
+            }
+        };
+        handler.postDelayed(runnable, 15000);
     }
 
     @Override

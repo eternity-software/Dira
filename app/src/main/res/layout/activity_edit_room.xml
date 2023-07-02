@@ -43,7 +43,7 @@
                 android:fontFamily="@font/montserratbold"
                 android:text="@string/edit_room"
                 android:textColor="@color/white"
-                android:textSize="48sp" />
+                android:textSize="36sp" />
 
             <TextView
 

@@ -5,9 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -34,6 +36,7 @@ public class ImageRotationFix {
             throws IOException {
         return handleSamplingAndRotationBitmap(context, selectedImage, 2500, 2500);
     }
+
 
 
     public static Bitmap handleSamplingAndRotationBitmap(Context context, Uri selectedImage, int height, int width)

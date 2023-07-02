@@ -50,6 +50,7 @@ public class CreateRoomPresenter implements CreateRoomContract.Presenter {
                             view.finish();
                         }
                     });
+
         } catch (WebsocketNotConnectedException e) {
             view.showToast("Not connected");
         } catch (UnablePerformRequestException e) {

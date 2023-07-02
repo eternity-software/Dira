@@ -44,7 +44,7 @@
                 android:fontFamily="@font/montserratbold"
                 android:text="@string/join_room"
                 android:textColor="@color/white"
-                android:textSize="48sp" />
+                android:textSize="36sp" />
 
             <TextView
 

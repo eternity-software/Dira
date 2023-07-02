@@ -52,6 +52,10 @@
 
     <!-- Room info -->
 
+    <!-- Members -->
+
+    <string name="members_title">Members</string>
+
     <!-- Edit room -->
     <string name="edit_room">Edit room</string>
     <string name="room_picture">Room picture</string>
@@ -63,16 +67,32 @@
     <string name="invitation_code">Invitation code</string>
     <string name="invitation_code_tip">This invitation code to %s will expire soon.</string>
 
+    <!-- Memory management -->
+    <string name="memory_management_title">Memory management</string>
+    <string name="memory_management_total_used">%s of storage used by Dira</string>
+    <string name="memory_management_delete_videos">Delete videos</string>
+    <string name="memory_management_delete_images">Delete images</string>
+    <string name="memory_management_delete_messages">Delete messages</string>
+    <string name="memory_management_delete_rooms">Delete all rooms</string>
+    <string name="memory_management_loading">Calculating size...</string>
+]
 
     <!-- Popup -->
     <string name="action_button" translatable="false">OK</string>
     <string name="dismiss_button">Cancel</string>
+
+    <string name="permissions_request_title">Dira needs your attention</string>
+    <string name="permissions_request_text">Background connection and other permissions are required for Dira to work properly.</string>
+
+    <string name="delete_member_title">Forget this member</string>
+    <string name="delete_member_text">You can forget this member locally. If the member is active, he will appear again.</string>
 
     <string name="delete_room_title">Delete this room</string>
     <string name="delete_room_text">You can delete this room locally. It must not affect others members</string>
 
     <string name="unsupported_api_title">Your app is outdated</string>
     <string name="unsupported_api_text">Your client app version does not support one of backend server\'s API. App may not work properly. You can try to update to newest version of Dira.</string>
+
     <!--Transitions -->
     <string name="transition_image_prepare" translatable="false">img_prepare_transition</string>
 

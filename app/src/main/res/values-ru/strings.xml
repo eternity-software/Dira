@@ -50,4 +50,16 @@
     <string name="unsupported_api_title">Приложение устарело</string>
     <string name="unsupported_api_text">Ваша версия клиентского приложения не поддерживает API от одного из серверов. Приложение может работать неправильно. Чтобы исправить проблему, попробуйте обновиться до последней версии Dira.</string>
     <string name="your_id_hint">Оочень длинный случайный текст</string>
+    <string name="permissions_request_title">Dira нуждается во внимании</string>
+    <string name="permissions_request_text">Фоновое подключение и другие разрешения необходимы для правильной работы приложения.</string>
+    <string name="members_title">Участники</string>
+    <string name="delete_member_title">Забыть участника</string>
+    <string name="delete_member_text">Вы можете забыть этого участника локально. Если участник активен, он появится снова.</string>
+    <string name="memory_management_title">Управление памятью</string>
+    <string name="memory_management_total_used">%s памяти использовано Dira</string>
+    <string name="memory_management_delete_videos">Удалить видео</string>
+    <string name="memory_management_delete_images">Удалить изображения</string>
+    <string name="memory_management_delete_messages">Удалить все сообщения</string>
+    <string name="memory_management_delete_rooms">Удалить все комнаты</string>
+    <string name="memory_management_loading">Расчёт размера...</string>
 </resources>

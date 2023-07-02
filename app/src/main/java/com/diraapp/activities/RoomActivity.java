@@ -131,7 +131,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
         Thread loadMessagesHistory = new Thread(new Runnable() {
             @Override
             public void run() {
-                roomMessagesAdapter = new RoomMessagesAdapter(RoomActivity.this);
+                roomMessagesAdapter = new RoomMessagesAdapter(RoomActivity.this, roomSecret);
 
                 messageList = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getAllMessageByUpdatedTime(roomSecret);
                 roomMessagesAdapter.setMessages(messageList);

@@ -35,18 +35,18 @@
         app:layout_constraintTop_toTopOf="@+id/button_back"
         app:tint="@color/white" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:nestedScrollingEnabled="false"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_back">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:nestedScrollingEnabled="true"
             android:layout_marginHorizontal="18dp"
             android:orientation="vertical">
 
@@ -185,22 +185,19 @@
             </LinearLayout>
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="12dp"
                 app:cardBackgroundColor="@color/dark"
                 app:cardCornerRadius="10dp"
-                android:nestedScrollingEnabled="false"
+
                 app:cardElevation="0dp">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/gridView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:gravity="center"
-                    android:nestedScrollingEnabled="false"
-
-
-
+                    android:nestedScrollingEnabled="true"
 
                     android:stretchMode="columnWidth"
 
@@ -209,7 +206,7 @@
             </androidx.cardview.widget.CardView>
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
 

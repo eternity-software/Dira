@@ -11,6 +11,7 @@ import com.diraapp.db.entities.Attachment;
 @Dao
 public interface AttachmentDao {
 
+
     @Insert
     void insertAll(Attachment... attachments);
 

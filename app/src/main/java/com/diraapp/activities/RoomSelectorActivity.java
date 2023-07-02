@@ -1,7 +1,9 @@
 package com.diraapp.activities;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -54,11 +56,6 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        try {
-            // Thread.sleep(800);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         if (getIntent().hasExtra(PENDING_ROOM_SECRET)) {
             if (getIntent().getExtras().getString(PENDING_ROOM_SECRET) != null) {
@@ -104,41 +101,89 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
         UpdateProcessor.getInstance(getApplicationContext()).addUpdateListener(this);
 
         updateRooms();
-        askForPermissions();
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED )
+        {
+            askForPermissions();
+        }
+
 
 
     }
 
 
     private void askForPermissions() {
-        List<String> permissions = new ArrayList<>();
-        if (Build.VERSION.SDK_INT >= 33) {
-            permissions.add(Manifest.permission.ACCESS_NOTIFICATION_POLICY);
-            permissions.add(Manifest.permission.READ_MEDIA_IMAGES);
-            permissions.add(Manifest.permission.READ_MEDIA_VIDEO);
-        }
+        DiraPopup diraPopup = new DiraPopup(RoomSelectorActivity.this);
+        diraPopup.setCancellable(false);
+        diraPopup.show(getString(R.string.permissions_request_title),
+                getString(R.string.permissions_request_text),
+                null,
+                null, new Runnable() {
+                    @Override
+                    public void run() {
+                        List<String> permissions = new ArrayList<>();
+                        if (Build.VERSION.SDK_INT >= 33) {
+                            permissions.add(Manifest.permission.ACCESS_NOTIFICATION_POLICY);
+                            permissions.add(Manifest.permission.READ_MEDIA_IMAGES);
+                            permissions.add(Manifest.permission.READ_MEDIA_VIDEO);
+                        }
 
 
-        permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-        permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            permissions.add(Manifest.permission.ACCESS_MEDIA_LOCATION);
-        }
+                        permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+                        permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            permissions.add(Manifest.permission.ACCESS_MEDIA_LOCATION);
+                        }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Intent intent = new Intent();
-            String packageName = getPackageName();
-            PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                intent.setData(Uri.parse("package:" + packageName));
-                startActivity(intent);
-            }
-        }
-        ActivityCompat.requestPermissions(this, permissions.toArray(new String[permissions.size()]), 3);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+                            Intent intent = new Intent();
+                            String packageName = getPackageName();
+                            PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+                            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                                for(Intent intent2 : POWERMANAGER_INTENTS)
+                                {
+                                    if (getPackageManager().resolveActivity(
+                                            intent,
+                                            PackageManager.MATCH_DEFAULT_ONLY
+                                    ) != null) {
+                                        startActivityForResult(intent2, 1234);
+                                    }
+
+                                }
+                                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                                intent.setData(Uri.parse("package:" + packageName));
+                                startActivity(intent);
+                            }
+
+                        }
+                        ActivityCompat.requestPermissions(RoomSelectorActivity.this, permissions.toArray(new String[permissions.size()]), 3);
+
+                    }
+                });
 
 
     }
+
+    private static final Intent[] POWERMANAGER_INTENTS = {
+            new Intent().setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),
+            new Intent().setComponent(new ComponentName("com.letv.android.letvsafe", "com.letv.android.letvsafe.AutobootManageActivity")),
+            new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity")),
+            new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.appcontrol.activity.StartupAppControlActivity")),
+            new Intent().setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.startupapp.StartupAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.oppo.safe", "com.oppo.safe.permission.startup.StartupAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.AddWhiteListActivity")),
+            new Intent().setComponent(new ComponentName("com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.BgStartUpManager")),
+            new Intent().setComponent(new ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity")),
+            new Intent().setComponent(new ComponentName("com.samsung.android.lool", "com.samsung.android.sm.ui.battery.BatteryActivity")),
+            new Intent().setComponent(new ComponentName("com.htc.pitroad", "com.htc.pitroad.landingpage.activity.LandingPageActivity")),
+            new Intent().setComponent(new ComponentName("com.asus.mobilemanager", "com.asus.mobilemanager.MainActivity"))
+    };
+
+
+
 
     private void updateRooms() {
         if (isRoomsUpdating) return;

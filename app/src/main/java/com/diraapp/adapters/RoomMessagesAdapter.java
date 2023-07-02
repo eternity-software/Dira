@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Numbers;
 import com.diraapp.utils.StringFormatter;
 import com.diraapp.utils.TimeConverter;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,13 +59,17 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
     private List<Message> messages = new ArrayList<>();
 
     private HashMap<View, Integer> pendingAsyncOperations = new HashMap<>();
+    private HashMap<String, Bitmap> loadedBitmaps = new HashMap<>();
     private HashMap<String, Member> members = new HashMap<>();
+
+    private String secretName;
 
     private final CacheUtils cacheUtils;
 
 
-    public RoomMessagesAdapter(Activity context) {
+    public RoomMessagesAdapter(Activity context, String secretName) {
         this.context = context;
+        this.secretName = secretName;
         layoutInflater = LayoutInflater.from(context);
         cacheUtils = new CacheUtils(context);
     }
@@ -168,8 +174,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
             String dateString = Numbers.getDateFromTimestamp(message.getTime(), !isSameYear);
             holder.dateText.setVisibility(View.VISIBLE);
             holder.dateText.setText(dateString);
-
-
         }
 
 
@@ -193,10 +197,16 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                             public void run() {
                                 if (attachment.getFileUrl().equals(message.getAttachments().get(0).getFileUrl())) {
 
+                                    holder.loading.setVisibility(View.GONE);
                                     File file = AppStorage.getFileFromAttachment(attachment, context, message.getRoomSecret());
 
                                     if (file != null) {
                                         updateAttachment(holder, attachment, file);
+                                    } else
+                                    {
+                                        holder.loading.setVisibility(View.VISIBLE);
+                                        SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment, message.getRoomSecret());
+                                        AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask);
                                     }
 
                                 }
@@ -229,7 +239,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                 holder.loading.setVisibility(View.VISIBLE);
                 File file = AppStorage.getFileFromAttachment(attachment, context, message.getRoomSecret());
 
-                if (file != null) {
+                if (file != null && !AttachmentsStorage.isAttachmentSaving(attachment)) {
 
                     updateAttachment(holder, attachment, file);
                 } else {
@@ -323,7 +333,17 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                 holder.nicknameText.setText(member.getNickname());
 
                 if (member.getImagePath() != null) {
-                    holder.profilePicture.setImageBitmap(AppStorage.getImage(member.getImagePath()));
+                    Bitmap bitmap;
+                    if(loadedBitmaps.containsKey(member.getImagePath()))
+                    {
+                        bitmap = loadedBitmaps.get(member.getImagePath());
+                    }
+                    else
+                    {
+                        bitmap = AppStorage.getImage(member.getImagePath());
+                        loadedBitmaps.put(member.getImagePath(), bitmap);
+                    }
+                    holder.profilePicture.setImageBitmap(bitmap);
                 } else {
                     holder.profilePicture.setImageResource(R.drawable.placeholder);
                 }
@@ -347,11 +367,14 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                holder.loading.setVisibility(View.GONE);
+
                 if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
                     holder.imageView.setVisibility(View.VISIBLE);
                     holder.videoPlayer.setVisibility(View.GONE);
-                    holder.imageView.setImageBitmap(AppStorage.getImage(file.getPath()));
+                    Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
+                    Bitmap bmp = Bitmap.createBitmap(300, 300, conf);
+                    holder.imageView.setImageBitmap(bmp);
+                    Picasso.get().load(Uri.fromFile(file)).into(holder.imageView);
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -372,7 +395,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                     try
                     {
                         width = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
-                       height = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+                        height = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
                         rotation = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
 
                         if(rotation != 0) {
@@ -383,7 +406,12 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                     }
                     catch (Exception e)
                     {
+                        e.printStackTrace();
+                        SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, false,
+                                attachment, secretName);
+                        AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask);
                         file.delete();
+                        return;
                     }
 
                     if(height > width * 3){
