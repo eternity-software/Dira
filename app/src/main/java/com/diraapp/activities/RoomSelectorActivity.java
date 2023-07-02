@@ -57,6 +57,7 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
         setContentView(R.layout.activity_main);
 
 
+
         if (getIntent().hasExtra(PENDING_ROOM_SECRET)) {
             if (getIntent().getExtras().getString(PENDING_ROOM_SECRET) != null) {
                 Intent notificationIntent = new Intent(this, RoomSelectorActivity.class);

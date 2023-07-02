@@ -14,6 +14,7 @@ import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
 import com.diraapp.storage.attachments.AttachmentsStorage;
+import com.diraapp.utils.SliderActivity;
 
 import java.io.File;
 
@@ -42,6 +43,9 @@ public class MemoryManagementActivity extends AppCompatActivity {
         binding.buttonDeleteVideos.setOnClickListener((View v) -> {
             delete(AttachmentType.VIDEO, v);
         });
+
+        SliderActivity sliderActivity = new SliderActivity();
+        sliderActivity.attachSlider(this);
 
 
         Thread calculatingThread = new Thread(() -> {

@@ -68,6 +68,7 @@
         <activity
             android:name=".activities.RoomActivity"
             android:exported="false"
+
             android:theme="@style/AppSlideTheme"
             android:windowSoftInputMode="adjustResize">
             <meta-data

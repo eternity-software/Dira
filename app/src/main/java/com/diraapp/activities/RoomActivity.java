@@ -24,6 +24,7 @@ import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
 import com.abedelazizshe.lightcompressorlibrary.config.AppSpecificStorageConfiguration;
 import com.abedelazizshe.lightcompressorlibrary.config.Configuration;
 import com.diraapp.R;
+import com.diraapp.activities.resizer.FluidContentResizer;
 import com.diraapp.adapters.RoomMessagesAdapter;
 import com.diraapp.api.requests.SendMessageRequest;
 import com.diraapp.api.updates.NewMessageUpdate;
@@ -61,6 +62,7 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+
 
 public class RoomActivity extends AppCompatActivity implements UpdateListener, ProcessorListener {
 
@@ -126,6 +128,8 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
 
+
+
         UpdateProcessor.getInstance().addUpdateListener(this);
 
         Thread loadMessagesHistory = new Thread(new Runnable() {
@@ -166,7 +170,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
         });
 
         Notifier.cancelAllNotifications(getApplicationContext());
-
+        FluidContentResizer.INSTANCE.listen(this);
     }
 
     @Override
