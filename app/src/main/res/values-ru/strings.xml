@@ -32,6 +32,7 @@
     <string name="your_id_tip">С помощью ID Dira может определять кто есть кто. Смена ID схожа с пересозданием аккаунта.</string>
     <string name="personality_tip_title">Что такое личность?</string>
     <string name="personality_tip_text">Это Ваша стандартная информация об аккаунте, которая будет отправлена во все новые чаты</string>
+    <string name="personality_settings_button">Настройки и внешний вид</string>
     <string name="you">Вы</string>
     <string name="type_message_hint">Сообщение</string>
     <string name="members_count">%s участников</string>
@@ -44,6 +45,7 @@
     <string name="invitation_code_tip">Этот код приглашения в %s будет действовать не долго.</string>
     <string name="download">Скачать</string>
     <string name="attachment_large_title">Этот файл слишком большой</string>
+    <string name="settings_title">Настройки и внешний вид</string>
     <string name="dismiss_button">Отмена</string>
     <string name="delete_room_title">Удалить эту комнату</string>
     <string name="delete_room_text">Вы можете удалить эту комнату только на своём устройстве. Для остальных участников ничего не поменяется.</string>
@@ -62,4 +64,10 @@
     <string name="memory_management_delete_messages">Удалить все сообщения</string>
     <string name="memory_management_delete_rooms">Удалить все комнаты</string>
     <string name="memory_management_loading">Расчёт размера...</string>
+    <string name="settings_memory_managment">Управление пямятью</string>
+    <string name="settings_room_servers">Сервера комнат</string>
+    <string name="settings_file_servers">Файлы серверов</string>
+    <string name="settings_chats">Чаты</string>
+    <string name="settings_privacy_policy">Политика конфиденциальности</string>
+
 </resources>

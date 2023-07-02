@@ -49,9 +49,6 @@ public class PersonalityActivity extends AppCompatActivity {
         EditText nicknameText = findViewById(R.id.nickname_text);
         EditText idText = findViewById(R.id.id_text);
 
-        TextView versionView = findViewById(R.id.version_view);
-        versionView.setText(BuildConfig.VERSION_NAME + ", code " + BuildConfig.VERSION_CODE);
-
         ImageView imageView = findViewById(R.id.profile_picture);
 
         CacheUtils cacheUtils = new CacheUtils(getApplicationContext());
@@ -113,6 +110,11 @@ public class PersonalityActivity extends AppCompatActivity {
             public void onClick(View v) {
                 pickImage();
             }
+        });
+
+        findViewById(R.id.button_settings).setOnClickListener((View v) -> {
+            Intent intent = new Intent(PersonalityActivity.this, SettingsActivity.class);
+            startActivity(intent);
         });
     }
 
