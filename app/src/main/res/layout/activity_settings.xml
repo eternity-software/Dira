@@ -56,22 +56,22 @@
                 android:layout_marginTop="30dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:paddingVertical="20dp"
-                android:paddingHorizontal="28dp">
+                android:paddingVertical="16dp"
+                android:paddingHorizontal="20dp">
                 
                 <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:src="@drawable/memory_management_icon"/>
 
                 <TextView
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="12dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserratsemibold"
                     android:text="@string/settings_memory_managment"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -79,8 +79,8 @@
                     android:gravity="end">
 
                     <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
                         android:src="@drawable/settings_arrow"/>
 
                 </LinearLayout>
@@ -95,22 +95,22 @@
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:paddingVertical="20dp"
-                android:paddingHorizontal="28dp">
+                android:paddingVertical="16dp"
+                android:paddingHorizontal="20dp">
 
                 <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:src="@drawable/room_servers_icon"/>
 
                 <TextView
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="12dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserratsemibold"
                     android:text="@string/settings_room_servers"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -118,8 +118,8 @@
                     android:gravity="end">
 
                     <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
                         android:src="@drawable/settings_arrow"/>
 
                 </LinearLayout>
@@ -134,31 +134,33 @@
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:paddingVertical="20dp"
-                android:paddingHorizontal="28dp">
+                android:paddingVertical="16dp"
+                android:paddingHorizontal="20dp">
 
                 <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:src="@drawable/file_servers_icon"/>
 
                 <TextView
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="12dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserratsemibold"
                     android:text="@string/settings_file_servers"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:gravity="end">
 
                     <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+
                         android:src="@drawable/settings_arrow"/>
 
                 </LinearLayout>
@@ -173,22 +175,22 @@
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:paddingVertical="20dp"
-                android:paddingHorizontal="28dp">
+                android:paddingVertical="16dp"
+                android:paddingHorizontal="20dp">
 
                 <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:src="@drawable/chats_icon"/>
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/chats_icon" />
 
                 <TextView
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="12dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserratsemibold"
                     android:text="@string/settings_chats"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -196,8 +198,8 @@
                     android:gravity="end">
 
                     <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
                         android:src="@drawable/settings_arrow"/>
 
                 </LinearLayout>

@@ -47,36 +47,42 @@ public class MemoryManagementActivity extends AppCompatActivity {
         SliderActivity sliderActivity = new SliderActivity();
         sliderActivity.attachSlider(this);
 
+        calculateUsedSpace();
 
-        Thread calculatingThread = new Thread(() -> {
-                for(File file :  getExternalCacheDir().listFiles())
-                {
-                    if(file.isFile())
-                    {
 
-                        if(FileClassifier.isImageFile(file.getPath()))
-                        {
-                            imagesSize += file.length();
-                        }
-                        else
-                        {
-                            videosSize += file.length();
-                        }
-                    }
-                }
-
-                runOnUiThread(() -> {
-                    binding.progressCircular.setVisibility(View.GONE);
-
-                    binding.imageSizeText.setText(AppStorage.getStringSize(imagesSize));
-                    binding.videoSizeText.setText(AppStorage.getStringSize(videosSize));
-                    binding.totalUsedText.setText(getString(R.string.memory_management_total_used)
-                            .replace("%s", AppStorage.getStringSize(videosSize + imagesSize)));
-                });
-            });
-        calculatingThread.start();
     }
 
+    private void calculateUsedSpace() {
+        binding.progressCircular.setVisibility(View.VISIBLE);
+        binding.totalUsedText.setText(getString(R.string.memory_management_loading));
+        Thread calculatingThread = new Thread(() -> {
+            for(File file :  getExternalCacheDir().listFiles())
+            {
+                if(file.isFile())
+                {
+
+                    if(FileClassifier.isImageFile(file.getPath()))
+                    {
+                        imagesSize += file.length();
+                    }
+                    else
+                    {
+                        videosSize += file.length();
+                    }
+                }
+            }
+
+            runOnUiThread(() -> {
+                binding.progressCircular.setVisibility(View.GONE);
+
+                binding.imageSizeText.setText(AppStorage.getStringSize(imagesSize));
+                binding.videoSizeText.setText(AppStorage.getStringSize(videosSize));
+                binding.totalUsedText.setText(getString(R.string.memory_management_total_used)
+                        .replace("%s", AppStorage.getStringSize(videosSize + imagesSize)));
+            });
+        });
+        calculatingThread.start();
+    }
     private void delete(AttachmentType attachmentType, View buttonLayout)
     {
         buttonLayout.setEnabled(false);
@@ -108,6 +114,7 @@ public class MemoryManagementActivity extends AppCompatActivity {
             }
 
                 runOnUiThread(() -> {
+                    calculateUsedSpace();
                     buttonLayout.setEnabled(true);
                     buttonLayout.setAlpha(1.0f);
                 });
