@@ -15,7 +15,10 @@
         android:orientation="vertical">
         <TextView
             android:id="@+id/date_view"
-            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="10dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:autoLink="all"
             android:gravity="center"
@@ -23,6 +26,8 @@
             android:textIsSelectable="true"
             android:fontFamily="@font/montserratsemibold"
             android:text="05 december, 2004"
+            android:background="@drawable/gray_rounded"
+            android:backgroundTint="@color/dark"
 
             android:textColor="@color/light_gray"
             android:layout_marginBottom="8dp"
