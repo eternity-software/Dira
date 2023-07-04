@@ -3,6 +3,10 @@ package com.diraapp.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+/**
+ * Simple cache implementation
+ * Stores settings of Dira
+ */
 public class CacheUtils {
 
 
@@ -18,83 +22,78 @@ public class CacheUtils {
 
     private final static String IDENTIFIER = "APP_SETTINGS";
 
-    private static CacheUtils instance;
-
     private final Context context;
 
     public CacheUtils(Context context) {
         this.context = context;
     }
 
+    public SharedPreferences getSharedPreferences()
+    {
+        return context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE);
+    }
 
-    // Запись строки по ключу
-    public void setString(String key, String text) {
-        SharedPreferences.Editor editor = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE).edit();
-        editor.putString(key, text);
+    public SharedPreferences.Editor getEditor()
+    {
+        return getSharedPreferences().edit();
+    }
+
+    public boolean hasKey(String key) {
+        return getSharedPreferences().contains(key);
+    }
+    public void clean() {
+        SharedPreferences.Editor editor = getEditor();
+        editor.clear();
         editor.apply();
     }
 
     public void remove(String key) {
-        SharedPreferences.Editor editor = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getEditor();
         editor.remove(key);
-
         editor.apply();
     }
 
-    public void setLong(String key, long text) {
-        SharedPreferences.Editor editor = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE).edit();
-        editor.putLong(key, text);
+    public void setString(String key, String text) {
+        SharedPreferences.Editor editor = getEditor();
+        editor.putString(key, text);
         editor.apply();
     }
 
-    public void setInt(String key, int i) {
-        SharedPreferences.Editor editor = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE).edit();
-        editor.putInt(key, i);
+    public void setLong(String key, long value) {
+        SharedPreferences.Editor editor = getEditor();
+        editor.putLong(key, value);
         editor.apply();
     }
 
-    public int getInt(String name) {
-        SharedPreferences pref = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE);
-        return pref.getInt(name, -1);
+    public void setInt(String key, int value) {
+        SharedPreferences.Editor editor = getEditor();
+        editor.putInt(key, value);
+        editor.apply();
     }
 
-
-    public boolean hasKey(String key) {
-        SharedPreferences pref = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE);
-        return pref.contains(key);
-    }
-
-    // Получение long по ключу
-    public long getLong(String name) {
-        SharedPreferences pref = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE);
-        return pref.getLong(name, -1);
-    }
-
-    // Получение boolean по ключу
-    public boolean getBoolean(String name) {
-        SharedPreferences pref = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE);
-        return pref.getBoolean(name, false);
-    }
-
-    // Получение строки по ключу
-    public String getString(String name) {
-        SharedPreferences pref = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE);
-        return pref.getString(name, null);
-    }
-
-    // Запись boolean по ключу
     public void setBoolean(String key, Boolean bool) {
-        SharedPreferences.Editor editor = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getEditor();
         editor.putBoolean(key, bool);
         editor.apply();
     }
 
-    // Стереть все сохранённые данные
-    public void clean() {
-        SharedPreferences.Editor editor = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE).edit();
-        editor.clear();
-        editor.apply();
+
+    public int getInt(String key) {
+        return getSharedPreferences().getInt(key, -1);
     }
+
+    public long getLong(String key) {
+        return getSharedPreferences().getLong(key, -1);
+    }
+
+    public boolean getBoolean(String key) {
+        return getSharedPreferences().getBoolean(key, false);
+    }
+
+    public String getString(String key) {
+        return getSharedPreferences().getString(key, null);
+    }
+
 
 
 }
