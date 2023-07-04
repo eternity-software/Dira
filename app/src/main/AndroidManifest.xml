@@ -25,6 +25,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.ChatAppearanceActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.SettingsActivity"
             android:exported="false"
             android:theme="@style/AppSlideTheme" />
@@ -72,7 +75,6 @@
         <activity
             android:name=".activities.RoomActivity"
             android:exported="false"
-
             android:theme="@style/AppSlideTheme"
             android:windowSoftInputMode="adjustResize">
             <meta-data

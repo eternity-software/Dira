@@ -85,6 +85,27 @@
     <string name="settings_chats">Chats</string>
     <string name="settings_privacy_policy">Privacy policy</string>
 
+    <!-- Chat appearance -->
+    <string name="chat_appearance_title">Chats</string>
+    <string name="chat_appearance_example_message">Example message</string>
+    <string name="chat_appearance_color_scheme">Color scheme</string>
+    <string name="chat_appearance_background">Background</string>
+    <string name="chat_appearance_pick_image">Pick image</string>
+
+    <!-- Color themes names -->
+    <string name="theme_main" translatable="false">Dira</string>
+    <string name="theme_kitty" translatable="false">Kitty</string>
+    <string name="theme_blue" translatable="false">Blue</string>
+    <string name="theme_rock" translatable="false">Rock</string>
+    <string name="theme_green" translatable="false">Green</string>
+
+    <!-- Chat backgrounds names -->
+    <string name="background_none" translatable="false">None</string>
+    <string name="background_love" translatable="false">Love</string>
+    <string name="background_pets" translatable="false">Pets</string>
+    <string name="background_education" translatable="false">Education</string>
+    <string name="background_custom" translatable="false">Custom</string>
+
     <!-- Popup -->
     <string name="action_button" translatable="false">OK</string>
     <string name="dismiss_button">Cancel</string>

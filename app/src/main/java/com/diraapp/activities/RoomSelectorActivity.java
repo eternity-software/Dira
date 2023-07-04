@@ -23,6 +23,7 @@ import com.diraapp.api.requests.GetUpdatesRequest;
 import com.diraapp.api.updates.ServerSyncUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
+import com.diraapp.appearance.AppTheme;
 import com.diraapp.components.DiraPopup;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
@@ -56,7 +57,7 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        new AppTheme(getApplicationContext());
 
         if (getIntent().hasExtra(PENDING_ROOM_SECRET)) {
             if (getIntent().getExtras().getString(PENDING_ROOM_SECRET) != null) {

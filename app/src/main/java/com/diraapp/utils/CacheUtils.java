@@ -11,7 +11,13 @@ public class CacheUtils {
     public final static String PICTURE = "picture";
     public final static String AUTO_LOAD_SIZE = "autoload_size";
 
+    public final static String COLOR_THEME_ID = "color_theme_id";
+
+    public final static String BACKGROUND_ID = "background_id";
+    public final static String BACKGROUND_PATH = "background_path";
+
     private final static String IDENTIFIER = "APP_SETTINGS";
+
     private static CacheUtils instance;
 
     private final Context context;
@@ -41,6 +47,17 @@ public class CacheUtils {
         editor.apply();
     }
 
+    public void setInt(String key, int i) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE).edit();
+        editor.putInt(key, i);
+        editor.apply();
+    }
+
+    public int getInt(String name) {
+        SharedPreferences pref = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE);
+        return pref.getInt(name, -1);
+    }
+
 
     public boolean hasKey(String key) {
         SharedPreferences pref = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE);
@@ -50,7 +67,7 @@ public class CacheUtils {
     // Получение long по ключу
     public long getLong(String name) {
         SharedPreferences pref = context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE);
-        return pref.getLong(name, 0);
+        return pref.getLong(name, -1);
     }
 
     // Получение boolean по ключу

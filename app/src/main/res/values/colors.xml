@@ -10,4 +10,16 @@
     <color name="yellow">#FFEB3B</color>
     <color name="red">#FC6240</color>
     <color name="black">#000000</color>
+
+    <color name="kitty_accent">#5A4BB9</color>
+    <color name="kitty_message">#474169</color>
+    
+    <color name="blue_accent">#388BD7</color>
+    <color name="blue_message">#424242</color>
+
+    <color name="rock_accent">#C26734</color>
+    <color name="rock_message">#424242</color>
+
+    <color name="green_accent">#0D4A43</color>
+    <color name="green_message">#1A796E</color>
 </resources>

@@ -46,6 +46,11 @@
     <string name="download">Скачать</string>
     <string name="attachment_large_title">Этот файл слишком большой</string>
     <string name="settings_title">Настройки и внешний вид</string>
+    <string name="chat_appearance_title">Чаты</string>
+    <string name="chat_appearance_example_message">Пример сообщения</string>
+    <string name="chat_appearance_color_scheme">Цветовая тема</string>
+    <string name="chat_appearance_background">Фон</string>
+    <string name="chat_appearance_pick_image">Загрузить изображение</string>
     <string name="dismiss_button">Отмена</string>
     <string name="delete_room_title">Удалить эту комнату</string>
     <string name="delete_room_text">Вы можете удалить эту комнату только на своём устройстве. Для остальных участников ничего не поменяется.</string>
