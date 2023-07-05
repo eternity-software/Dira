@@ -19,6 +19,8 @@ import com.diraapp.api.requests.CreateInviteRequest;
 import com.diraapp.api.updates.NewInvitationUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
+import com.diraapp.appearance.AppTheme;
+import com.diraapp.appearance.ColorTheme;
 import com.diraapp.bottomsheet.InvitationCodeBottomSheet;
 import com.diraapp.bottomsheet.filepicker.FileInfo;
 import com.diraapp.components.DiraPopup;
@@ -59,6 +61,8 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
 
         SliderActivity sliderActivity = new SliderActivity();
         sliderActivity.attachSlider(this);
+
+        applyColorTheme();
 
         findViewById(R.id.button_back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -296,5 +300,12 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
         if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
             loadData();
         }
+    }
+
+    private void applyColorTheme() {
+        ColorTheme theme = AppTheme.getInstance().getColorTheme();
+
+        ImageView button_back = findViewById(R.id.button_back);
+        button_back.setColorFilter(theme.getAccentColor());
     }
 }

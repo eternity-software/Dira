@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 import com.diraapp.activities.PreviewActivity;
+import com.diraapp.appearance.AppTheme;
+import com.diraapp.appearance.ColorTheme;
 import com.diraapp.components.VideoPlayer;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
@@ -132,10 +134,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
             holder.messageText.setVisibility(View.GONE);
         }
         Message previousMessage = null;
-
-
-
-
 
 
         boolean isSameDay = false;
@@ -352,6 +350,18 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                 }
 
             }
+        }
+
+
+        // apply color theme
+        ColorTheme theme = AppTheme.getInstance().getColorTheme();
+
+        if (isSelfMessage) {
+            holder.messageText.setTextColor(theme.getSelfTextColor());
+            holder.messageContainer.getBackground().setTint(theme.getSelfMessageColor());
+        } else {
+            holder.messageText.setTextColor(theme.getTextColor());
+            holder.messageContainer.getBackground().setTint(theme.getMessageColor());
         }
 
 

@@ -5,9 +5,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.diraapp.R;
 import com.diraapp.adapters.MembersAdapter;
+import com.diraapp.appearance.AppTheme;
+import com.diraapp.appearance.ColorTheme;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
@@ -30,6 +33,8 @@ public class MembersActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
 
         String roomSecret = getIntent().getExtras().getString(ROOM_SECRET);
+
+        applyColorTheme();
 
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -57,5 +62,12 @@ public class MembersActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+    }
+
+    private void applyColorTheme() {
+        ColorTheme theme = AppTheme.getInstance().getColorTheme();
+
+        ImageView button_back = findViewById(R.id.button_back);
+        button_back.setColorFilter(theme.getAccentColor());
     }
 }

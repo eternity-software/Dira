@@ -2,9 +2,14 @@ package com.diraapp.appearance;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.widget.ImageView;
+
+import androidx.core.content.ContextCompat;
 import android.graphics.BitmapFactory;
 
 import com.diraapp.R;
+import com.diraapp.activities.ChatAppearanceActivity;
 import com.diraapp.storage.AppStorage;
 
 import java.util.HashMap;
@@ -19,7 +24,7 @@ public class ChatBackground {
 
     private String path;
 
-    private static HashMap<String, ChatBackground> backgrounds = new HashMap<>();
+    private static HashMap<BackgroundType, ChatBackground> backgrounds = new HashMap<>();
 
     public ChatBackground(String name, BackgroundType type) {
         this.name = name;
@@ -45,13 +50,13 @@ public class ChatBackground {
         ChatBackground education = new ChatBackground(context.getResources().
                 getString(R.string.background_education), BackgroundType.EDUCATION);
 
-        backgrounds.put(BackgroundType.NONE.toString(), none);
-        backgrounds.put(BackgroundType.LOVE.toString(), love);
-        backgrounds.put(BackgroundType.PETS.toString(), pets);
-        backgrounds.put(BackgroundType.EDUCATION.toString(), education);
+        backgrounds.put(BackgroundType.NONE, none);
+        backgrounds.put(BackgroundType.LOVE, love);
+        backgrounds.put(BackgroundType.PETS, pets);
+        backgrounds.put(BackgroundType.EDUCATION, education);
     }
 
-    public static HashMap<String, ChatBackground> getBackgrounds() {
+    public static HashMap<BackgroundType, ChatBackground> getBackgrounds() {
         return backgrounds;
     }
 
@@ -71,24 +76,41 @@ public class ChatBackground {
         this.path = path;
     }
 
-    public Bitmap getBitMap(Context context) {
+    public Bitmap getBitmap(Context context) {
         Bitmap bitmap = null;
-        if (this.getName().toUpperCase().equals(BackgroundType.CUSTOM.toString())) {
+        if (this.getBackgroundType().equals(BackgroundType.CUSTOM)) {
             bitmap = AppStorage.getBitmapFromPath(path);
 
             if (bitmap == null) {
-                ChatBackground chatBackground = backgrounds.get(BackgroundType.NONE.toString());
+                ChatBackground chatBackground = backgrounds.get(BackgroundType.NONE);
                 AppTheme.getInstance().setChatBackground(chatBackground, context);
             }
-            return bitmap;
+        }
+        return bitmap;
+    }
+
+    public Drawable getDrawable(Context context) {
+        if (this.backgroundType.equals(BackgroundType.NONE)) {
+            return null;
         }
 
-        String name = BACKGROUND + this.name.toLowerCase();
+        String name = BACKGROUND + this.backgroundType.toString().toLowerCase();
         int id = context.getResources().getIdentifier(name, "drawable",
                 context.getPackageName());
 
-        bitmap = BitmapFactory.decodeResource(context.getResources(), id);
+        Drawable drawable = ContextCompat.getDrawable(context, id);
 
-        return bitmap;
+        return drawable;
     }
+
+    public void applyBackground(ImageView view) {
+        Bitmap bitmap = this.getBitmap(view.getContext());
+
+        if (bitmap != null) {
+            view.setImageBitmap(bitmap);
+        } else {
+            view.setImageDrawable(this.getDrawable(view.getContext()));
+        }
+    }
+
 }

@@ -29,6 +29,8 @@ import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
 import com.diraapp.adapters.MediaGridItemListener;
+import com.diraapp.appearance.AppTheme;
+import com.diraapp.appearance.ColorTheme;
 import com.diraapp.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.components.FilePreview;
 import com.diraapp.db.DiraMessageDatabase;
@@ -87,6 +89,8 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
         nameView.setText(pendingRoomName);
 
         UpdateProcessor.getInstance().addProcessorListener(this);
+
+        applyColorTheme();
 
         findViewById(R.id.button_back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -466,5 +470,19 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                 }
             }
         });
+    }
+
+    private void applyColorTheme() {
+        ColorTheme theme = AppTheme.getInstance().getColorTheme();
+
+        ImageView button_back = findViewById(R.id.button_back);
+        button_back.setColorFilter(theme.getAccentColor());
+
+        ImageView sendButton = findViewById(R.id.send_button);
+        sendButton.getBackground().setTint(theme.getAccentColor());
+        sendButton.setColorFilter(theme.getTextColor());
+
+        ImageView backgroundView = findViewById(R.id.room_background);
+        AppTheme.getInstance().getChatBackground().applyBackground(backgroundView);
     }
 }

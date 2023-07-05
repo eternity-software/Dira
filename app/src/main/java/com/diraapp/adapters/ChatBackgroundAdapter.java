@@ -1,7 +1,6 @@
 package com.diraapp.adapters;
 
 import android.app.Activity;
-import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diraapp.R;
 import com.diraapp.appearance.AppTheme;
 import com.diraapp.appearance.ChatBackground;
-import com.diraapp.appearance.ColorTheme;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +25,13 @@ public class ChatBackgroundAdapter extends RecyclerView.Adapter<ChatBackgroundAd
 
     private List<ChatBackground> list = new ArrayList<>();
 
-    public ChatBackgroundAdapter(Activity context, List<ChatBackground> list) {
+    private SelectorListener listener;
+
+    public ChatBackgroundAdapter(Activity context, List<ChatBackground> list, SelectorListener listener) {
         this.context = context;
         this.list = list;
         this.layoutInflater = LayoutInflater.from(context);
+        this.listener = listener;
     }
 
     @NonNull
@@ -44,27 +45,26 @@ public class ChatBackgroundAdapter extends RecyclerView.Adapter<ChatBackgroundAd
         ChatBackground background = list.get(position);
 
         holder.name.setText(background.getName());
-        holder.imageView.setImageBitmap(background.getBitMap(context));
+        holder.imageView.setImageDrawable(background.getDrawable(context));
 
         if (background.equals(AppTheme.getInstance().getChatBackground())) {
-            GradientDrawable drawable = (GradientDrawable) holder.layout.getBackground();
-            drawable.setStroke(3, AppTheme.getInstance().getColorTheme().getAccentColor());
+            holder.layout.getBackground().setTint(context.getResources().getColor(R.color.accent));
+        } else {
+            holder.layout.getBackground().setTint(context.getResources().getColor(R.color.gray));
         }
 
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (background.equals(AppTheme.getInstance().getChatBackground())) {
-                    AppTheme.getInstance().clearBackground(context);
-                }
-
-                GradientDrawable drawable = (GradientDrawable) holder.layout.getBackground();
-                drawable.setStroke(3, AppTheme.getInstance().getColorTheme().getAccentColor());
+                holder.layout.getBackground().setTint(
+                        context.getResources().getColor(R.color.accent));
 
                 int i = list.indexOf(AppTheme.getInstance().getChatBackground());
                 notifyItemChanged(i);
 
                 AppTheme.getInstance().setChatBackground(background, context);
+
+                listener.onSelectorClicked(background);
             }
         });
     }
@@ -90,4 +90,8 @@ public class ChatBackgroundAdapter extends RecyclerView.Adapter<ChatBackgroundAd
         }
     }
 
+    public interface SelectorListener {
+
+        public void onSelectorClicked(ChatBackground background);
+    }
 }

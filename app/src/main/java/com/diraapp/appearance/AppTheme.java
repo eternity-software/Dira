@@ -16,29 +16,29 @@ public class AppTheme {
     public AppTheme(Context context) {
         ColorTheme.initColorThemes(context);
         // Получить из памяти(если есть) номер темы
-        String colorThemeName;
-        try {
-            CacheUtils cacheUtils = new CacheUtils(context);
-            colorThemeName = cacheUtils.getString(CacheUtils.COLOR_THEME_ID);
-        } catch (Exception e) {
-            colorThemeName = ColorThemeType.DIRA.toString();
-        }
+        ColorThemeType colorThemeType;
 
-        colorTheme = ColorTheme.getColorThemes().get(colorThemeName);
+        CacheUtils cacheUtils = new CacheUtils(context);
+        colorThemeType = ColorThemeType.valueOf(cacheUtils.getString(CacheUtils.COLOR_THEME_ID));
+
+        colorTheme = ColorTheme.getColorThemes().get(colorThemeType);
+
+        if (colorTheme == null) {
+            colorTheme = ColorTheme.getColorThemes().get(ColorThemeType.DIRA);
+        }
 
         ChatBackground.initBackgrounds(context);
         // картинку
-        String backgroundName;
-        try {
-            CacheUtils cacheUtils = new CacheUtils(context);
-            backgroundName = cacheUtils.getString(CacheUtils.BACKGROUND_ID);
-            chatBackground = ChatBackground.getBackgrounds().get(backgroundName);
+        BackgroundType backgroundName;
+        backgroundName = BackgroundType.valueOf(cacheUtils.getString(CacheUtils.BACKGROUND_ID));
+        chatBackground = ChatBackground.getBackgrounds().get(backgroundName);
 
-            if (chatBackground.getName().equalsIgnoreCase(BackgroundType.CUSTOM.toString())) {
+        if (chatBackground != null) {
+            if (chatBackground.getBackgroundType().equals(BackgroundType.CUSTOM)) {
                 chatBackground.setPath(cacheUtils.getString(CacheUtils.BACKGROUND_PATH));
             }
-        } catch (Exception e) {
-            chatBackground = null;
+        } else {
+            chatBackground = ChatBackground.getBackgrounds().get(BackgroundType.NONE);
         }
 
         instance = this;
@@ -52,19 +52,19 @@ public class AppTheme {
         return chatBackground;
     }
 
-    public void setColorTheme(String name, Context context) {
-        ColorTheme colorTheme = ColorTheme.getColorThemes().get(name.toUpperCase());
+    public void setColorTheme(ColorThemeType type, Context context) {
+        ColorTheme colorTheme = ColorTheme.getColorThemes().get(type);
 
         if (colorTheme != null) {
             this.colorTheme = colorTheme;
 
             CacheUtils cacheUtils = new CacheUtils(context);
-            cacheUtils.setString(CacheUtils.COLOR_THEME_ID, name);
+            cacheUtils.setString(CacheUtils.COLOR_THEME_ID, colorTheme.getType().toString());
         } else {
-            this.colorTheme = ColorTheme.getColorThemes().get(ColorThemeType.DIRA.toString());
+            this.colorTheme = ColorTheme.getColorThemes().get(ColorThemeType.DIRA);
 
             CacheUtils cacheUtils = new CacheUtils(context);
-            cacheUtils.setString(CacheUtils.COLOR_THEME_ID, this.colorTheme.getName());
+            cacheUtils.setString(CacheUtils.COLOR_THEME_ID, this.colorTheme.getType().toString());
         }
     }
 
@@ -72,15 +72,15 @@ public class AppTheme {
         colorTheme = theme;
 
         CacheUtils cacheUtils = new CacheUtils(context);
-        cacheUtils.setString(CacheUtils.COLOR_THEME_ID, theme.getName());
+        cacheUtils.setString(CacheUtils.COLOR_THEME_ID, theme.getType().toString());
     }
 
     public void setChatBackground(ChatBackground chatBackground, Context context) {
         CacheUtils cacheUtils = new CacheUtils(context);
 
-        cacheUtils.setString(CacheUtils.BACKGROUND_ID, chatBackground.getName().toUpperCase());
+        cacheUtils.setString(CacheUtils.BACKGROUND_ID, chatBackground.getBackgroundType().toString());
 
-        if (chatBackground.getName().toUpperCase().equals(BackgroundType.CUSTOM.toString())) {
+        if (chatBackground.getBackgroundType().equals(BackgroundType.CUSTOM)) {
             cacheUtils.setString(CacheUtils.BACKGROUND_PATH, chatBackground.getPath());
         } else {
             cacheUtils.remove(CacheUtils.BACKGROUND_PATH);
@@ -90,7 +90,7 @@ public class AppTheme {
 
     public void clearBackground(Context context) {
         CacheUtils cacheUtils = new CacheUtils(context);
-        if (this.chatBackground.getName().toUpperCase().equals(BackgroundType.CUSTOM.toString())) {
+        if (this.chatBackground.getBackgroundType().equals(BackgroundType.CUSTOM)) {
             cacheUtils.remove(CacheUtils.BACKGROUND_PATH);
         }
 
