@@ -21,17 +21,23 @@ public class ColorTheme {
     private int textColor;
     private int sendButtonColor;
     private int previewColor;
+
+    private int roomLickColor;
+
+    private int selfLinkColor;
     private String name;
 
     public static void initColorThemes(Context context) {
         ColorTheme main = new ColorTheme();
         main.previewColor = ContextCompat.getColor(context, R.color.accent);
-        main.selfMessageColor = ContextCompat.getColor(context, R.color.accent);
+        main.selfMessageColor = ContextCompat.getColor(context, R.color.gray);
         main.accentColor = ContextCompat.getColor(context, R.color.accent);
-        main.messageColor = ContextCompat.getColor(context, R.color.gray);
-        main.selfTextColor = ContextCompat.getColor(context, R.color.dark);
-        main.textColor = ContextCompat.getColor(context, R.color.white);
+        main.messageColor = ContextCompat.getColor(context, R.color.accent);
+        main.selfTextColor = ContextCompat.getColor(context, R.color.light_gray);
+        main.textColor = ContextCompat.getColor(context, R.color.dark);
         main.sendButtonColor = ContextCompat.getColor(context, R.color.dark);
+        main.roomLickColor = ContextCompat.getColor(context, R.color.gray);
+        main.selfLinkColor = ContextCompat.getColor(context, R.color.accent_dark);
         main.name = context.getResources().getString(R.string.theme_main);
         main.type = ColorThemeType.DIRA;
 
@@ -43,6 +49,8 @@ public class ColorTheme {
         kitty.selfTextColor = ContextCompat.getColor(context, R.color.white);
         kitty.textColor = ContextCompat.getColor(context, R.color.white);
         kitty.sendButtonColor = ContextCompat.getColor(context, R.color.white);
+        kitty.roomLickColor = ContextCompat.getColor(context, R.color.light_gray);
+        kitty.selfLinkColor = ContextCompat.getColor(context, R.color.light_gray);
         kitty.name = context.getResources().getString(R.string.theme_kitty);
         kitty.type = ColorThemeType.KITTY;
 
@@ -54,6 +62,8 @@ public class ColorTheme {
         blue.selfTextColor = ContextCompat.getColor(context, R.color.white);
         blue.textColor = ContextCompat.getColor(context, R.color.white);
         blue.sendButtonColor = ContextCompat.getColor(context, R.color.white);
+        blue.roomLickColor = ContextCompat.getColor(context, R.color.blue_accent);
+        blue.selfLinkColor = ContextCompat.getColor(context, R.color.light_gray);
         blue.name = context.getResources().getString(R.string.theme_blue);
         blue.type = ColorThemeType.BLUE;
 
@@ -65,6 +75,8 @@ public class ColorTheme {
         rock.selfTextColor = ContextCompat.getColor(context, R.color.white);
         rock.textColor = ContextCompat.getColor(context, R.color.white);
         rock.sendButtonColor = ContextCompat.getColor(context, R.color.white);
+        rock.roomLickColor = ContextCompat.getColor(context, R.color.rock_accent);
+        rock.selfLinkColor = ContextCompat.getColor(context, R.color.light_gray);
         rock.name = context.getResources().getString(R.string.theme_rock);
         rock.type = ColorThemeType.ROCK;
 
@@ -76,6 +88,8 @@ public class ColorTheme {
         green.selfTextColor = ContextCompat.getColor(context, R.color.white);
         green.textColor = ContextCompat.getColor(context, R.color.white);
         green.sendButtonColor = ContextCompat.getColor(context, R.color.dark);
+        green.roomLickColor = ContextCompat.getColor(context, R.color.light_gray);
+        green.selfLinkColor = ContextCompat.getColor(context, R.color.light_gray);
         green.name = context.getResources().getString(R.string.theme_green);
         green.type = ColorThemeType.GREEN;
 
@@ -144,5 +158,13 @@ public class ColorTheme {
 
     public int getPreviewColor() {
         return previewColor;
+    }
+
+    public int getRoomLickColor() {
+        return roomLickColor;
+    }
+
+    public int getSelfLinkColor() {
+        return selfLinkColor;
     }
 }

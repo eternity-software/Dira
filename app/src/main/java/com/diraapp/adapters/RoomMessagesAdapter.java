@@ -351,9 +351,11 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
 
         if (isSelfMessage) {
             holder.messageText.setTextColor(theme.getSelfTextColor());
+            holder.messageText.setLinkTextColor(theme.getSelfLinkColor());
             holder.messageContainer.getBackground().setTint(theme.getSelfMessageColor());
         } else {
             holder.messageText.setTextColor(theme.getTextColor());
+            holder.messageText.setLinkTextColor(theme.getRoomLickColor());
             holder.messageContainer.getBackground().setTint(theme.getMessageColor());
         }
 

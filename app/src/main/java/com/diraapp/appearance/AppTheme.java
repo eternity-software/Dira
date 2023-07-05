@@ -91,6 +91,7 @@ public class AppTheme {
         if (chatBackground.getBackgroundType().equals(BackgroundType.CUSTOM)) {
             cacheUtils.setString(CacheUtils.BACKGROUND_PATH, chatBackground.getPath());
         } else {
+            chatBackground.setPath(null);
             cacheUtils.remove(CacheUtils.BACKGROUND_PATH);
         }
         this.chatBackground = chatBackground;

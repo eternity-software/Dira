@@ -119,13 +119,26 @@ public class ChatBackground {
     }
 
     public void applyBackground(ImageView view) {
-        Bitmap bitmap = this.getBitmap(view.getContext());
+//        Bitmap bitmap = this.getBitmap(view.getContext());
+//
+//        if (bitmap != null) {
+//            view.setImageBitmap(bitmap);
+//        } else {
+//            view.setImageDrawable(this.getDrawable(view.getContext()));
+//        }
 
-        if (bitmap != null) {
-            view.setImageBitmap(bitmap);
-        } else {
-            view.setImageDrawable(this.getDrawable(view.getContext()));
+        if (this.backgroundType.equals(BackgroundType.CUSTOM)) {
+            try {
+                Bitmap bitmap = this.getBitmap(view.getContext());
+                view.setImageBitmap(bitmap);
+            } catch (Exception e) {
+                ChatBackground background = backgrounds.get(BackgroundType.NONE);
+                AppTheme.getInstance().setChatBackground(background, view.getContext());
+            }
+            return;
         }
+
+        view.setImageDrawable(this.getDrawable(view.getContext()));
     }
 
 }
