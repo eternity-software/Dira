@@ -47,7 +47,10 @@
     <string name="attachment_large_title">Этот файл слишком большой</string>
     <string name="settings_title">Настройки и внешний вид</string>
     <string name="chat_appearance_title">Чаты</string>
-    <string name="chat_appearance_example_message">Пример сообщения</string>
+    <string name="chat_appearance_example_message_2">Отец знакомого работает в ФСБ. Сегодня срочно вызвали на совещание.</string>
+    <string name="chat_appearance_example_message_self_2">Вернулся поздно и ничего не объяснил.</string>
+    <string name="chat_appearance_example_message_1">Если муравей подымает в десять раз своего веса,то 50 грамм муравьёв можно послать за бутылкой пива</string>
+    <string name="chat_appearance_example_message_self_1">Ты же понимаешь что ты пишешь прям как школьник и у тебя при этом аниме на аватарке?</string>
     <string name="chat_appearance_color_scheme">Цветовая тема</string>
     <string name="chat_appearance_background">Фон</string>
     <string name="chat_appearance_pick_image">Загрузить изображение</string>

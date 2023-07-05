@@ -19,10 +19,12 @@ import com.diraapp.appearance.ChatBackground;
 import com.diraapp.appearance.ColorTheme;
 import com.diraapp.appearance.ColorThemeType;
 import com.diraapp.db.entities.Message;
+import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ChatAppearanceActivity extends AppCompatActivity {
 
@@ -96,11 +98,16 @@ public class ChatAppearanceActivity extends AppCompatActivity {
         String authorName = cacheUtils.getString(CacheUtils.ID);
 
         Message senderMessage = new Message();
-        senderMessage.setText(this.getResources().getString(R.string.chat_appearance_example_message));
+
+        int rand = new Random().nextInt(2);
+        rand++;
+
+        senderMessage.setText(this.getResources().getString(AppStorage.getResId("chat_appearance_example_message_self_" + rand, R.string.class)));
         senderMessage.setAuthorId(authorName);
 
         Message secondMessage = new Message();
-        secondMessage.setText(this.getResources().getString(R.string.chat_appearance_example_message));
+        secondMessage.setText(this.getResources().getString(AppStorage.getResId("chat_appearance_example_message_" + rand, R.string.class)));
+        secondMessage.setAuthorNickname("Ame");
         secondMessage.setAuthorId("0000");
 
         List<Message> messages = new ArrayList<>();

@@ -42,6 +42,7 @@
             android:theme="@style/AppSlideTheme" />
         <activity
             android:name=".activities.MembersActivity"
+            android:theme="@style/AppSlideTheme"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

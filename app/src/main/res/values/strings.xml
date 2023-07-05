@@ -90,7 +90,10 @@
 
     <!-- Chat appearance -->
     <string name="chat_appearance_title">Chats</string>
-    <string name="chat_appearance_example_message">Example message</string>
+    <string name="chat_appearance_example_message_1">Now we are going somewhere far out of town.</string>
+    <string name="chat_appearance_example_message_self_1">I don\'t know what\'s going on, but I think it\'s started...</string>
+    <string name="chat_appearance_example_message_2">If an ant raises ten times its weight, then 50 grams of ants can be sent for a bottle of beer</string>
+    <string name="chat_appearance_example_message_self_2">You do realize that you write just like a schoolboy and you have an anime on your avatar at the same time?</string>
     <string name="chat_appearance_color_scheme">Color scheme</string>
     <string name="chat_appearance_background">Background</string>
     <string name="chat_appearance_pick_image">Pick image</string>
