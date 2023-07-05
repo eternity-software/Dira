@@ -480,7 +480,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
 
         ImageView sendButton = findViewById(R.id.send_button);
         sendButton.getBackground().setTint(theme.getAccentColor());
-        sendButton.setColorFilter(theme.getTextColor());
+        sendButton.setColorFilter(theme.getSendButtonColor());
 
         ImageView backgroundView = findViewById(R.id.room_background);
         AppTheme.getInstance().getChatBackground().applyBackground(backgroundView);

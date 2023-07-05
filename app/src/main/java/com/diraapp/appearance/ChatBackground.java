@@ -12,7 +12,9 @@ import com.diraapp.R;
 import com.diraapp.activities.ChatAppearanceActivity;
 import com.diraapp.storage.AppStorage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ChatBackground {
 
@@ -56,6 +58,25 @@ public class ChatBackground {
         backgrounds.put(BackgroundType.EDUCATION, education);
     }
 
+    public static List<ChatBackground> getChatBackgrounds() {
+        List<ChatBackground> list = new ArrayList<>();
+
+        list.add(backgrounds.get(BackgroundType.NONE));
+        list.add(backgrounds.get(BackgroundType.LOVE));
+        list.add(backgrounds.get(BackgroundType.PETS));
+        list.add(backgrounds.get(BackgroundType.EDUCATION));
+
+        if (list.size() != backgrounds.size()) {
+            for (ChatBackground background: backgrounds.values()) {
+                if (!list.contains(background)) {
+                    list.add(background);
+                }
+            }
+        }
+
+        return list;
+    }
+
     public static HashMap<BackgroundType, ChatBackground> getBackgrounds() {
         return backgrounds;
     }
@@ -82,7 +103,7 @@ public class ChatBackground {
             bitmap = AppStorage.getBitmapFromPath(path);
 
             if (bitmap == null) {
-                ChatBackground chatBackground = backgrounds.get(BackgroundType.NONE);
+                ChatBackground chatBackground = backgrounds.get(BackgroundType.LOVE);
                 AppTheme.getInstance().setChatBackground(chatBackground, context);
             }
         }

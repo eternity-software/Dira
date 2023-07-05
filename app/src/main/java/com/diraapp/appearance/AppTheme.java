@@ -32,12 +32,18 @@ public class AppTheme {
         if (!cacheUtils.hasKey(CacheUtils.BACKGROUND_ID)) {
             cacheUtils.setString(CacheUtils.BACKGROUND_ID, BackgroundType.LOVE.toString());
         }
-        BackgroundType backgroundName;
-        backgroundName = BackgroundType.valueOf(cacheUtils.getString(CacheUtils.BACKGROUND_ID));
-        chatBackground = ChatBackground.getBackgrounds().get(backgroundName);
+        BackgroundType backgroundType;
+        backgroundType = BackgroundType.valueOf(cacheUtils.getString(CacheUtils.BACKGROUND_ID));
 
-        if (chatBackground.getBackgroundType().equals(BackgroundType.CUSTOM)) {
-            chatBackground.setPath(cacheUtils.getString(CacheUtils.BACKGROUND_PATH));
+        if (backgroundType.equals(BackgroundType.CUSTOM)) {
+            chatBackground = new ChatBackground(backgroundType.toString(),
+                    cacheUtils.getString(CacheUtils.BACKGROUND_PATH), backgroundType);
+        } else {
+            chatBackground = ChatBackground.getBackgrounds().get(backgroundType);
+
+            if (chatBackground == null) {
+                chatBackground = ChatBackground.getBackgrounds().get(BackgroundType.LOVE);
+            }
         }
 
         instance = this;

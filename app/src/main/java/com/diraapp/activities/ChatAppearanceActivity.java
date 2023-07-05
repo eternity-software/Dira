@@ -8,16 +8,19 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.diraapp.R;
 import com.diraapp.adapters.ChatBackgroundAdapter;
 import com.diraapp.adapters.ColorThemeAdapter;
+import com.diraapp.adapters.MediaGridItemListener;
 import com.diraapp.adapters.RoomMessagesAdapter;
 import com.diraapp.appearance.AppTheme;
 import com.diraapp.appearance.BackgroundType;
 import com.diraapp.appearance.ChatBackground;
 import com.diraapp.appearance.ColorTheme;
 import com.diraapp.appearance.ColorThemeType;
+import com.diraapp.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.db.entities.Message;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
@@ -29,7 +32,12 @@ import java.util.Random;
 public class ChatAppearanceActivity extends AppCompatActivity {
 
     private RecyclerView colorRecycler;
+
+    private ColorThemeAdapter colorThemeAdapter;
+
     private RecyclerView backgroundRecycler;
+
+    private ChatBackgroundAdapter chatBackgroundAdapter;
 
     private RoomMessagesAdapter roomMessagesAdapter;
 
@@ -42,6 +50,8 @@ public class ChatAppearanceActivity extends AppCompatActivity {
 
         initSelectors();
         initExample();
+
+        initPickImageButton();
     }
 
     private void initSelectors() {
@@ -62,11 +72,8 @@ public class ChatAppearanceActivity extends AppCompatActivity {
         backgroundRecycler.setLayoutManager(backgroundManager);
         backgroundRecycler.setLayoutManager(backgroundHorizontalLayout);
 
-        List<ColorTheme> colorThemes = new ArrayList<>();
-        for (ColorThemeType key: ColorTheme.getColorThemes().keySet()) {
-            colorThemes.add(ColorTheme.getColorThemes().get(key));
-        }
-        ColorThemeAdapter colorThemeAdapter = new
+        List<ColorTheme> colorThemes = ColorTheme.getColorThemeList();
+        colorThemeAdapter = new
                 ColorThemeAdapter(this, colorThemes);
         colorThemeAdapter.setListener(new ColorThemeAdapter.SelectorListener() {
             @Override
@@ -76,11 +83,8 @@ public class ChatAppearanceActivity extends AppCompatActivity {
         });
         colorRecycler.setAdapter(colorThemeAdapter);
 
-        List<ChatBackground> chatBackgrounds = new ArrayList<>();
-        for (BackgroundType key: ChatBackground.getBackgrounds().keySet()) {
-            chatBackgrounds.add(ChatBackground.getBackgrounds().get(key));
-        }
-        ChatBackgroundAdapter chatBackgroundAdapter = new
+        List<ChatBackground> chatBackgrounds = ChatBackground.getChatBackgrounds();
+        chatBackgroundAdapter = new
                 ChatBackgroundAdapter(this, chatBackgrounds,
                 new ChatBackgroundAdapter.SelectorListener() {
             @Override
@@ -122,6 +126,37 @@ public class ChatAppearanceActivity extends AppCompatActivity {
         AppTheme.getInstance().getChatBackground().applyBackground(backgroundView);
 
         recycler.setAdapter(roomMessagesAdapter);
+    }
+
+    private void initPickImageButton() {
+        LinearLayout pickImage = findViewById(R.id.pick_image_button);
+
+        pickImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FilePickerBottomSheet bottomSheet = new FilePickerBottomSheet();
+                bottomSheet.show(getSupportFragmentManager(), "blocked");
+
+                bottomSheet.setRunnable(new MediaGridItemListener() {
+                    @Override
+                    public void onItemClick(int pos, View view) {
+                        String path = bottomSheet.getMedia().get(pos).getFilePath();
+                        ChatBackground background = new ChatBackground(
+                                BackgroundType.CUSTOM.toString(), path, BackgroundType.CUSTOM);
+
+                        AppTheme.getInstance().setChatBackground
+                                (background, ChatAppearanceActivity.this);
+
+                        chatBackgroundAdapter.notifyDataSetChanged();
+
+                        ImageView backgroundView = findViewById(R.id.example_background);
+                        AppTheme.getInstance().getChatBackground().applyBackground(backgroundView);
+
+                        bottomSheet.dismiss();
+                    }
+                });
+            }
+        });
     }
 
     private void initArrowBack() {

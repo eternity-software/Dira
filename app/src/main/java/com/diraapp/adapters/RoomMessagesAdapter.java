@@ -2,7 +2,9 @@ package com.diraapp.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.ColorFilter;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -364,6 +367,22 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
             holder.messageContainer.getBackground().setTint(theme.getMessageColor());
         }
 
+        if (holder.sizeContainer.getVisibility() == View.VISIBLE) {
+            if (isSelfMessage) {
+                holder.attachmentTooLargeText.setTextColor(theme.getSelfTextColor());
+            } else {
+                holder.attachmentTooLargeText.setTextColor(theme.getMessageColor());
+            }
+
+            holder.buttonDownload.getBackground().setTint(theme.getAccentColor());
+            holder.buttonDownload.setTextColor(theme.getSelfTextColor());
+        }
+
+        if (holder.loading.getVisibility() == View.VISIBLE) {
+            holder.attachmentProgressbar.setIndeterminateTintList(ColorStateList.
+                    valueOf(theme.getSelfTextColor()));
+        }
+
 
         holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime(), context));
     }
@@ -537,7 +556,11 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
         LinearLayout sizeContainer;
         LinearLayout loading;
 
+        TextView attachmentTooLargeText;
+
         AttachmentsStorageListener attachmentsStorageListener;
+
+        ProgressBar attachmentProgressbar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -555,6 +578,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
             profilePicture = itemView.findViewById(R.id.profile_picture);
             pictureContainer = itemView.findViewById(R.id.picture_container);
             messageContainer = itemView.findViewById(R.id.message_container);
+            attachmentTooLargeText = itemView.findViewById(R.id.attachment_too_large_text);
+            attachmentProgressbar = itemView.findViewById(R.id.attachment_progressbar);
         }
     }
 }

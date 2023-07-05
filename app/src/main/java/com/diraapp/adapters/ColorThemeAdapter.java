@@ -48,7 +48,7 @@ public class ColorThemeAdapter extends RecyclerView.Adapter<ColorThemeAdapter.Vi
         ColorTheme theme = list.get(position);
 
         holder.name.setText(theme.getName());
-        holder.imageView.setBackgroundTintList(ColorStateList.valueOf(theme.getAccentColor()));
+        holder.imageView.setBackgroundTintList(ColorStateList.valueOf(theme.getPreviewColor()));
 
         if (theme.equals(AppTheme.getInstance().getColorTheme())) {
             holder.layout.getBackground().setTint(AppTheme.getInstance().
@@ -60,7 +60,7 @@ public class ColorThemeAdapter extends RecyclerView.Adapter<ColorThemeAdapter.Vi
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                holder.layout.setBackgroundTintList(ColorStateList.valueOf(theme.getAccentColor()));
+                holder.layout.setBackgroundTintList(ColorStateList.valueOf(theme.getPreviewColor()));
 
                 int i = list.indexOf(AppTheme.getInstance().getColorTheme());
                 notifyItemChanged(i);
