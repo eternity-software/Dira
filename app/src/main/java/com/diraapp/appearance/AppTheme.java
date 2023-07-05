@@ -19,26 +19,25 @@ public class AppTheme {
         ColorThemeType colorThemeType;
 
         CacheUtils cacheUtils = new CacheUtils(context);
+        if (!cacheUtils.hasKey(CacheUtils.COLOR_THEME_ID)) {
+            cacheUtils.setString(CacheUtils.COLOR_THEME_ID, ColorThemeType.DIRA.toString());
+        }
+
         colorThemeType = ColorThemeType.valueOf(cacheUtils.getString(CacheUtils.COLOR_THEME_ID));
 
         colorTheme = ColorTheme.getColorThemes().get(colorThemeType);
 
-        if (colorTheme == null) {
-            colorTheme = ColorTheme.getColorThemes().get(ColorThemeType.DIRA);
-        }
-
         ChatBackground.initBackgrounds(context);
         // картинку
+        if (!cacheUtils.hasKey(CacheUtils.BACKGROUND_ID)) {
+            cacheUtils.setString(CacheUtils.BACKGROUND_ID, BackgroundType.LOVE.toString());
+        }
         BackgroundType backgroundName;
         backgroundName = BackgroundType.valueOf(cacheUtils.getString(CacheUtils.BACKGROUND_ID));
         chatBackground = ChatBackground.getBackgrounds().get(backgroundName);
 
-        if (chatBackground != null) {
-            if (chatBackground.getBackgroundType().equals(BackgroundType.CUSTOM)) {
-                chatBackground.setPath(cacheUtils.getString(CacheUtils.BACKGROUND_PATH));
-            }
-        } else {
-            chatBackground = ChatBackground.getBackgrounds().get(BackgroundType.NONE);
+        if (chatBackground.getBackgroundType().equals(BackgroundType.CUSTOM)) {
+            chatBackground.setPath(cacheUtils.getString(CacheUtils.BACKGROUND_PATH));
         }
 
         instance = this;
