@@ -22,12 +22,10 @@ import com.diraapp.appearance.ColorTheme;
 import com.diraapp.appearance.ColorThemeType;
 import com.diraapp.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.db.entities.Message;
-import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class ChatAppearanceActivity extends AppCompatActivity {
 
@@ -119,7 +117,7 @@ public class ChatAppearanceActivity extends AppCompatActivity {
         messages.add(senderMessage);
 
         RecyclerView recycler = findViewById(R.id.example_messages);
-        roomMessagesAdapter = new RoomMessagesAdapter(this, "1111");
+        roomMessagesAdapter = new RoomMessagesAdapter(this, "1111", null);
         roomMessagesAdapter.setMessages(messages);
 
         ImageView backgroundView = findViewById(R.id.example_background);

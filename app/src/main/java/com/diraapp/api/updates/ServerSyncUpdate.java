@@ -8,8 +8,18 @@ public class ServerSyncUpdate extends Update {
     private List<String> supportedApis;
     private long timeServerStart;
 
+    private String fileServerUrl;
+
     public ServerSyncUpdate() {
         super(0, UpdateType.SERVER_SYNC);
+    }
+
+    public String getFileServerUrl() {
+        return fileServerUrl;
+    }
+
+    public void setFileServerUrl(String fileServerUrl) {
+        this.fileServerUrl = fileServerUrl;
     }
 
     public long getTimeServerStart() {

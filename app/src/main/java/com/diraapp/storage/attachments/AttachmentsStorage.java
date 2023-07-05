@@ -5,6 +5,7 @@ import android.content.Context;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DownloadHandler;
+import com.diraapp.updates.UpdateProcessor;
 import com.diraapp.utils.CacheUtils;
 
 import java.io.File;
@@ -19,7 +20,7 @@ public class AttachmentsStorage {
     private static final List<AttachmentsStorageListener> attachmentsStorageListeners = new ArrayList<>();
     private static Thread attachmentDownloader;
 
-    public static void saveAttachmentAsync(SaveAttachmentTask saveAttachmentTask) {
+    public static void saveAttachmentAsync(SaveAttachmentTask saveAttachmentTask, String address) {
         if (isAttachmentSaving(saveAttachmentTask.getAttachment())) return;
         if (attachmentDownloader == null) {
             attachmentDownloader = new Thread(new Runnable() {
@@ -40,7 +41,7 @@ public class AttachmentsStorage {
                                     if (saveAttachment(saveAttachmentTask.getContext(),
                                             saveAttachmentTask.getAttachment(),
                                             saveAttachmentTask.getRoomSecret(),
-                                            true) != null) {
+                                            true, address) != null) {
                                         for (AttachmentsStorageListener attachmentsStorageListener : attachmentsStorageListeners) {
                                             try {
                                                 attachmentsStorageListener.onAttachmentDownloaded(saveAttachmentTask.getAttachment());
@@ -111,17 +112,16 @@ public class AttachmentsStorage {
         return false;
     }
 
-    public static File saveAttachment(Context context, Attachment attachment, String roomSecret, boolean autoLoad) throws IOException {
-
-        return saveAttachment(context, attachment, roomSecret, autoLoad, null);
+    public static File saveAttachment(Context context, Attachment attachment, String roomSecret, boolean autoLoad, String address) throws IOException {
+        return saveAttachment(context, attachment, roomSecret, autoLoad, null, address);
     }
 
-    public static File saveAttachment(Context context, Attachment attachment, String roomSecret, boolean autoLoad, DownloadHandler downloadHandler) throws IOException {
+    public static File saveAttachment(Context context, Attachment attachment, String roomSecret, boolean autoLoad, DownloadHandler downloadHandler, String address) throws IOException {
         File localFile = new File(context.getExternalCacheDir(), roomSecret + "_" + attachment.getFileUrl());
         CacheUtils cacheUtils = new CacheUtils(context);
 
         if (!autoLoad | attachment.getSize() < cacheUtils.getLong(CacheUtils.AUTO_LOAD_SIZE)) {
-            AppStorage.downloadFile(AppStorage.OFFICIAL_DOWNLOAD_STORAGE_ADDRESS + attachment.getFileUrl(), localFile, downloadHandler);
+            AppStorage.downloadFile(UpdateProcessor.getInstance(context).getFileServer(address) + "/download/" + attachment.getFileUrl(), localFile, downloadHandler);
             return localFile;
         }
         return null;

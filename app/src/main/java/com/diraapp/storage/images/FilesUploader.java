@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
+import com.diraapp.updates.UpdateProcessor;
 import com.diraapp.utils.ImageRotationFix;
 
 import java.io.File;
@@ -26,7 +27,7 @@ import okhttp3.Response;
 
 public class FilesUploader {
 
-    public static boolean uploadFile(String sourceFileUri, Callback callback, Context context, boolean deleteAfterUpload) throws IOException {
+    public static boolean uploadFile(String sourceFileUri, Callback callback, Context context, boolean deleteAfterUpload, String serverAddress) throws IOException {
 
         try {
 
@@ -75,7 +76,7 @@ public class FilesUploader {
                     .build();
 
             Request request = new Request.Builder()
-                    .url(AppStorage.OFFICIAL_UPLOAD_STORAGE_ADDRESS)
+                    .url(UpdateProcessor.getInstance().getFileServer(serverAddress) + "/upload/")
                     .post(requestBody)
                     .build();
 

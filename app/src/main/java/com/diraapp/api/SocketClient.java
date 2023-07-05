@@ -8,6 +8,7 @@ import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 
 public class SocketClient extends WebSocketClient {
@@ -16,14 +17,10 @@ public class SocketClient extends WebSocketClient {
 
     private SocketListener socketListener;
 
-    public SocketClient(URI serverUri, Draft draft) {
-        super(serverUri, draft);
-        this.address = serverUri.getHost();
-    }
 
-    public SocketClient(URI serverUri) {
-        super(serverUri);
-        this.address = serverUri.getHost();
+    public SocketClient(String address) throws URISyntaxException {
+        super(new URI(address));
+        this.address = address;
     }
 
     public void setSocketListener(SocketListener socketListener) {

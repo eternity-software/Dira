@@ -30,8 +30,8 @@ import java.util.Random;
 public class AppStorage {
 
     public static final String DIRA_FILES_PATH = "diraFiles";
-    public static final String OFFICIAL_DOWNLOAD_STORAGE_ADDRESS = "http://164.132.138.80:4444/download/";
-    public static final String OFFICIAL_UPLOAD_STORAGE_ADDRESS = "http://164.132.138.80:4444/upload/";
+    // public static final String OFFICIAL_DOWNLOAD_STORAGE_ADDRESS = "http://diraapp.com:4444/download/";
+    // public static final String OFFICIAL_UPLOAD_STORAGE_ADDRESS = "http://diraapp.com:4444/upload/";
     public static final long MAX_DEFAULT_ATTACHMENT_AUTOLOAD_SIZE = 1024 * 1024 * 20; // 20 mb
 
 

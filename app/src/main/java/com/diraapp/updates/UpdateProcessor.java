@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * UpdateProcessor is a core Dira class
@@ -56,10 +57,11 @@ import java.util.List;
 public class UpdateProcessor {
 
     public static final String OFFICIAL_ADDRESS = "ws://diraapp.com:8888";
-    public static final String API_VERSION = "0.0.1";
+    public static final String API_VERSION = "0.0.2";
 
     private static UpdateProcessor updateProcessor;
     private final HashMap<String, SocketClient> socketClients = new HashMap<>();
+    private final HashMap<String, String> fileServers = new HashMap<>();
     private final HashMap<Long, UpdateListener> updateReplies = new HashMap<>();
     private final List<UpdateListener> updateListeners = new ArrayList<>();
     private final List<ProcessorListener> processorListeners = new ArrayList<>();
@@ -99,8 +101,13 @@ public class UpdateProcessor {
 
     }
 
+    public String getFileServer(String address){
+        System.out.println("Getting file server  for " + address);
+        return fileServers.get(address);
+    }
+
     private void registerSocket(String address) throws URISyntaxException {
-        socketClient = new SocketClient(new URI(address));
+        socketClient = new SocketClient(address);
         setupSocketClient(socketClient);
         socketClient.connect();
         socketClients.put(address, socketClient);
@@ -143,7 +150,9 @@ public class UpdateProcessor {
 
             if (update.getUpdateType() == UpdateType.SERVER_SYNC) {
                 ServerSyncUpdate serverSyncUpdate = (ServerSyncUpdate) update;
-                 timeServerStartups.put(address, serverSyncUpdate.getTimeServerStart());
+                System.out.println("New file server " + serverSyncUpdate.getFileServerUrl() + " for " + address);
+                fileServers.put(address, serverSyncUpdate.getFileServerUrl());
+                timeServerStartups.put(address, serverSyncUpdate.getTimeServerStart());
             }
             long timeServerStartup = 0;
 
@@ -185,7 +194,7 @@ public class UpdateProcessor {
                     SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment,
                             ((NewMessageUpdate) update).getMessage().getRoomSecret());
 
-                    AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask);
+                    AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, address);
                 }
             } else if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
                 roomUpdater.updateRoom(update);
@@ -325,7 +334,7 @@ public class UpdateProcessor {
                 if (socketClient != null) {
                     if (socketClient.isClosed()) {
                         try {
-                            socketClient = new SocketClient(new URI(address));
+                            socketClient = new SocketClient(address);
                             setupSocketClient(socketClient);
                         } catch (URISyntaxException e) {
                             e.printStackTrace();
@@ -335,7 +344,7 @@ public class UpdateProcessor {
                     }
                 } else {
                     try {
-                        socketClient = new SocketClient(new URI(address));
+                        socketClient = new SocketClient(address);
                         setupSocketClient(socketClient);
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
@@ -466,7 +475,7 @@ public class UpdateProcessor {
     }
 
     public void addCustomServer(String address) throws URISyntaxException {
-        socketClients.put(address, new SocketClient(new URI(address)));
+        socketClients.put(address, new SocketClient(address));
     }
 
     public void removeCustomServer(String address) {

@@ -59,12 +59,6 @@ public class SettingsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        fileServersButton = findViewById(R.id.button_file_servers);
-        fileServersButton.setOnClickListener((View v) -> {
-//            Intent intent = new Intent(SettingsActivity.this, .class);
-//            startActivity(intent);
-        });
-
         chatsButton = findViewById(R.id.button_chats);
         chatsButton.setOnClickListener((View v) -> {
             Intent intent = new Intent(SettingsActivity.this, ChatAppearanceActivity.class);

@@ -25,10 +25,12 @@ import com.diraapp.activities.PreviewActivity;
 import com.diraapp.appearance.AppTheme;
 import com.diraapp.appearance.ColorTheme;
 import com.diraapp.components.VideoPlayer;
+import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Message;
+import com.diraapp.db.entities.Room;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DownloadHandler;
 import com.diraapp.storage.attachments.AttachmentsStorage;
@@ -64,13 +66,15 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
     private HashMap<String, Member> members = new HashMap<>();
 
     private String secretName;
+    private String serverAddress;
 
     private final CacheUtils cacheUtils;
 
 
-    public RoomMessagesAdapter(Activity context, String secretName) {
+    public RoomMessagesAdapter(Activity context, String secretName, String serverAddress) {
         this.context = context;
         this.secretName = secretName;
+        this.serverAddress = serverAddress;
         layoutInflater = LayoutInflater.from(context);
         cacheUtils = new CacheUtils(context);
     }
@@ -203,7 +207,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                                     {
                                         holder.loading.setVisibility(View.VISIBLE);
                                         SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment, message.getRoomSecret());
-                                        AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask);
+                                        AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, serverAddress);
                                     }
 
                                 }
@@ -259,6 +263,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                                     @Override
                                     public void run() {
                                         try {
+
                                             File savedFile = AttachmentsStorage.saveAttachment(context, attachment, message.getRoomSecret(), false, new DownloadHandler() {
                                                 @Override
                                                 public void onProgressChanged(int progress) {
@@ -270,7 +275,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                                                     });
 
                                                 }
-                                            });
+                                            }, serverAddress);
                                             context.runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -294,7 +299,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                     } else {
                         if (!AttachmentsStorage.isAttachmentSaving(attachment)) {
                             SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment, message.getRoomSecret());
-                            AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask);
+                            AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, serverAddress);
                         }
                     }
 
@@ -434,7 +439,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                         e.printStackTrace();
                         SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, false,
                                 attachment, secretName);
-                        AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask);
+                        AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, serverAddress);
                         file.delete();
                         return;
                     }

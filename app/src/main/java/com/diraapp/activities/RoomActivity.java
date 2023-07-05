@@ -137,7 +137,8 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
         Thread loadMessagesHistory = new Thread(new Runnable() {
             @Override
             public void run() {
-                roomMessagesAdapter = new RoomMessagesAdapter(RoomActivity.this, roomSecret);
+                Room room = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getRoomBySecretName(roomSecret);
+                roomMessagesAdapter = new RoomMessagesAdapter(RoomActivity.this, roomSecret, room.getServerAddress());
 
                 messageList = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getAllMessageByUpdatedTime(roomSecret);
                 roomMessagesAdapter.setMessages(messageList);
@@ -241,7 +242,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                                             public void onSuccess(int i, long l, @Nullable String s) {
                                                 if (s != null) {
                                                     try {
-                                                        FilesUploader.uploadFile(s, createAttachmentCallback(s, messageText, AttachmentType.VIDEO), getApplicationContext(), true);
+                                                        FilesUploader.uploadFile(s, createAttachmentCallback(s, messageText, AttachmentType.VIDEO), getApplicationContext(), true, room.getServerAddress());
                                                     } catch (Exception e) {
                                                         e.printStackTrace();
                                                     }
@@ -267,7 +268,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                             else
                             {
                                 try {
-                                    FilesUploader.uploadFile(imageUri, createAttachmentCallback(imageUri, messageText, AttachmentType.IMAGE), getApplicationContext(), false);
+                                    FilesUploader.uploadFile(imageUri, createAttachmentCallback(imageUri, messageText, AttachmentType.IMAGE), getApplicationContext(), false, room.getServerAddress());
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
