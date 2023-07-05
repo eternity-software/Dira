@@ -134,14 +134,16 @@ public class ChatBackground {
                 Bitmap bitmap = this.getBitmap(view.getContext());
                 view.setImageBitmap(bitmap);
             } catch (Exception e) {
-                view.setImageTintList(ColorStateList.valueOf(view.getContext().getResources().getColor(R.color.gray)));
+                view.setImageTintList(ColorStateList.valueOf(view.getContext().
+                        getResources().getColor(R.color.gray)));
                 ChatBackground background = backgrounds.get(BackgroundType.NONE);
                 AppTheme.getInstance().setChatBackground(background, view.getContext());
             }
             return;
         }
 
-        view.setImageTintList(ColorStateList.valueOf(view.getContext().getResources().getColor(R.color.gray)));
+        view.setImageTintList(ColorStateList.valueOf(view.getContext().
+                getResources().getColor(R.color.gray)));
         view.setImageDrawable(this.getDrawable(view.getContext()));
     }
 

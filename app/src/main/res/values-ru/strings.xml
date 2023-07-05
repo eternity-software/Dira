@@ -53,7 +53,7 @@
     <string name="chat_appearance_example_message_self_1">Ты же понимаешь что ты пишешь прям как школьник и у тебя при этом аниме на аватарке?</string>
     <string name="chat_appearance_color_scheme">Цветовая тема</string>
     <string name="chat_appearance_background">Фон</string>
-    <string name="chat_appearance_pick_image">Загрузить изображение</string>
+    <string name="chat_appearance_pick_image">Выбрать</string>
     <string name="dismiss_button">Отмена</string>
     <string name="delete_room_title">Удалить эту комнату</string>
     <string name="delete_room_text">Вы можете удалить эту комнату только на своём устройстве. Для остальных участников ничего не поменяется.</string>
