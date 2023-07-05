@@ -1,5 +1,6 @@
 package com.diraapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,6 +20,7 @@ import com.diraapp.appearance.BackgroundType;
 import com.diraapp.appearance.ChatBackground;
 import com.diraapp.appearance.ColorTheme;
 import com.diraapp.bottomsheet.filepicker.FilePickerBottomSheet;
+import com.diraapp.components.FilePreview;
 import com.diraapp.db.entities.Message;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
@@ -38,6 +40,8 @@ public class ChatAppearanceActivity extends AppCompatActivity {
     private ChatBackgroundAdapter chatBackgroundAdapter;
 
     private RoomMessagesAdapter roomMessagesAdapter;
+
+    private FilePickerBottomSheet bottomSheet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,25 +136,15 @@ public class ChatAppearanceActivity extends AppCompatActivity {
         pickImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FilePickerBottomSheet bottomSheet = new FilePickerBottomSheet();
+                bottomSheet = new FilePickerBottomSheet();
                 bottomSheet.show(getSupportFragmentManager(), "blocked");
 
                 bottomSheet.setRunnable(new MediaGridItemListener() {
                     @Override
                     public void onItemClick(int pos, View view) {
-                        String path = bottomSheet.getMedia().get(pos).getFilePath();
-                        ChatBackground background = new ChatBackground(
-                                BackgroundType.CUSTOM.toString(), path, BackgroundType.CUSTOM);
-
-                        AppTheme.getInstance().setChatBackground
-                                (background, ChatAppearanceActivity.this);
-
-                        chatBackgroundAdapter.notifyDataSetChanged();
-
-                        ImageView backgroundView = findViewById(R.id.example_background);
-                        AppTheme.getInstance().getChatBackground().applyBackground(backgroundView);
-
-                        bottomSheet.dismiss();
+                        ImageSendActivity.open(ChatAppearanceActivity.this,
+                                bottomSheet.getMedia().get(pos).getFilePath(), "",
+                                (FilePreview) view, ImageSendActivity.IMAGE_PURPOSE_SELECT);
                     }
                 });
             }
@@ -160,5 +154,44 @@ public class ChatAppearanceActivity extends AppCompatActivity {
     private void initArrowBack() {
         ImageView arrowBack = findViewById(R.id.button_back);
         arrowBack.setOnClickListener((View v) -> onBackPressed());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode != RESULT_OK && resultCode != ImageSendActivity.CODE) return;
+
+        if (resultCode == ImageSendActivity.CODE) {
+            if (bottomSheet != null) {
+
+                /**
+                 * Throws an java.lang.IllegalStateException: Can not perform this action after onSaveInstanceState
+                 * on some devices (tested on Android 5.1)
+                 */
+                try {
+                    bottomSheet.dismiss();
+                } catch (Exception ignored) {
+                }
+            }
+
+            String path = data.getStringExtra("uri");
+
+            applyCustomBackground(path);
+        }
+    }
+
+    private void applyCustomBackground(String path) {
+        ChatBackground background = new ChatBackground(
+                BackgroundType.CUSTOM.toString(), path, BackgroundType.CUSTOM);
+
+        AppTheme.getInstance().setChatBackground
+                (background, ChatAppearanceActivity.this);
+
+        chatBackgroundAdapter.notifyDataSetChanged();
+
+        System.out.println(path);
+        ImageView backgroundView = findViewById(R.id.example_background);
+        AppTheme.getInstance().getChatBackground().applyBackground(backgroundView);
     }
 }

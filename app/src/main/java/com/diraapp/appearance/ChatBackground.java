@@ -1,6 +1,7 @@
 package com.diraapp.appearance;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
@@ -129,15 +130,18 @@ public class ChatBackground {
 
         if (this.backgroundType.equals(BackgroundType.CUSTOM)) {
             try {
+                view.setImageTintList(null);
                 Bitmap bitmap = this.getBitmap(view.getContext());
                 view.setImageBitmap(bitmap);
             } catch (Exception e) {
+                view.setImageTintList(ColorStateList.valueOf(view.getContext().getResources().getColor(R.color.gray)));
                 ChatBackground background = backgrounds.get(BackgroundType.NONE);
                 AppTheme.getInstance().setChatBackground(background, view.getContext());
             }
             return;
         }
 
+        view.setImageTintList(ColorStateList.valueOf(view.getContext().getResources().getColor(R.color.gray)));
         view.setImageDrawable(this.getDrawable(view.getContext()));
     }
 
