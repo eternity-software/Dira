@@ -68,6 +68,7 @@
                         android:layout_height="0dp"
                         android:layout_alignParentTop="true"
                         android:layout_alignParentBottom="true"
+                        android:alpha="0.4"
 
                         android:adjustViewBounds="true"
                         android:scaleType="centerCrop"
