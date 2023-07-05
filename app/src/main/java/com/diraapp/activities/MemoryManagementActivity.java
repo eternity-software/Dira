@@ -49,6 +49,10 @@ public class MemoryManagementActivity extends AppCompatActivity {
     private void calculateUsedSpace() {
         binding.progressCircular.setVisibility(View.VISIBLE);
         binding.totalUsedText.setText(getString(R.string.memory_management_loading));
+
+        videosSize = 0;
+        imagesSize = 0;
+
         Thread calculatingThread = new Thread(() -> {
             for (File file : getExternalCacheDir().listFiles()) {
                 if (file.isFile()) {
