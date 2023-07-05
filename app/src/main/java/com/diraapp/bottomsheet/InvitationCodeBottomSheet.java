@@ -8,21 +8,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
 import com.diraapp.R;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class InvitationCodeBottomSheet extends BottomSheetDialogFragment {
-    // Нажатия на кнопки
+
     private final View.OnClickListener passiveButtonClick = null;
     private final View.OnClickListener activeButtonClick = null;
     private BottomSheetListener bottomSheetListener;
-    // Присваемывый контент
+
     private String code;
     private String roomName;
     private View view;
@@ -35,25 +33,6 @@ public class InvitationCodeBottomSheet extends BottomSheetDialogFragment {
         // Пустой фон
         setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
     }
-
-
-    @Override
-    public void onActivityCreated(Bundle arg0) {
-        super.onActivityCreated(arg0);
-
-        // Кастомная анимация
-        // getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-        BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
-
-        // Получение поведения
-        final LinearLayout bottomSheet = dialog.findViewById(R.id.bottom_sheet);
-
-        // Ловим COLLAPSED и не даём промежуточному положению существовать, а так же убираем слайд при невозможности отменить
-
-
-    }
-
-
     public String getCode() {
         return code;
     }
@@ -70,11 +49,10 @@ public class InvitationCodeBottomSheet extends BottomSheetDialogFragment {
         this.roomName = roomName;
     }
 
-    // Отрисовка элементов
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.invitation_bottom_sheet, container, true);
+        View v = inflater.inflate(R.layout.bottom_sheet_invitation, container, true);
         view = v;
 
         TextView codeView = v.findViewById(R.id.invitation_code_text);
@@ -109,11 +87,8 @@ public class InvitationCodeBottomSheet extends BottomSheetDialogFragment {
         }
     }
 
-
-
     public interface BottomSheetListener {
     }
-
 
 }
 

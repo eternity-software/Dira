@@ -73,6 +73,20 @@
                 android:textColor="@color/white"
                 android:textColorHint="@color/light_gray" />
 
+
+            <TextView
+                android:id="@+id/button_server_select"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserratsemibold"
+                android:text="@string/room_servers_official"
+                android:background="?selectableItemBackground"
+                android:textColor="@color/accent_dark"
+                android:textSize="12sp" />
+
             <TextView
 
                 android:layout_width="wrap_content"

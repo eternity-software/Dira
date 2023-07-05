@@ -101,7 +101,7 @@
                 <ImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
-                    android:src="@drawable/room_servers_icon"/>
+                    android:src="@drawable/ic_server"/>
 
                 <TextView
                     android:layout_marginStart="12dp"
@@ -140,7 +140,7 @@
                 <ImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
-                    android:src="@drawable/file_servers_icon"/>
+                    android:src="@drawable/ic_file_server"/>
 
                 <TextView
                     android:layout_marginStart="12dp"
@@ -181,7 +181,7 @@
                 <ImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
-                    android:src="@drawable/chats_icon" />
+                    android:src="@drawable/ic_chats" />
 
                 <TextView
                     android:layout_marginStart="12dp"

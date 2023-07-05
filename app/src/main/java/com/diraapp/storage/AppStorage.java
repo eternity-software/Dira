@@ -9,7 +9,9 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Base64;
 
-import com.diraapp.db.entities.Attachment;
+import com.diraapp.updates.UpdateProcessor;
+import com.diraapp.utils.CacheUtils;
+import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -20,6 +22,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class AppStorage {
@@ -29,6 +33,52 @@ public class AppStorage {
     public static final String OFFICIAL_UPLOAD_STORAGE_ADDRESS = "http://164.132.138.80:4444/upload/";
     public static final long MAX_DEFAULT_ATTACHMENT_AUTOLOAD_SIZE = 1024 * 1024 * 20; // 20 mb
 
+
+    /**
+     * Save room servers to cache
+     * @param serverList
+     * @param context
+     */
+    public static void saveServerList(ArrayList<String> serverList, Context context)
+    {
+        Gson gson = new Gson();
+        String json = gson.toJson(serverList).toString();
+        CacheUtils cacheUtils = new CacheUtils(context);
+        cacheUtils.setString(CacheUtils.SERVER_LIST, json);
+    }
+
+    /**
+     * Get room servers
+     */
+    public static ArrayList<String> getServerList(Context context)
+    {
+        Gson gson = new Gson();
+        CacheUtils cacheUtils = new CacheUtils(context);
+        String json = cacheUtils.getString(CacheUtils.SERVER_LIST);
+        ArrayList<String> serverList = new ArrayList<>();
+
+        if(json != null)
+        {
+            serverList = (ArrayList<String>) gson.fromJson(json, ArrayList.class);
+        }
+
+        boolean hasOfficialServer = false;
+
+        for(String server : serverList)
+        {
+            if(server.equals(UpdateProcessor.OFFICIAL_ADDRESS))
+            {
+                hasOfficialServer = true;
+            }
+        }
+        if(!hasOfficialServer)
+        {
+            serverList.add(UpdateProcessor.OFFICIAL_ADDRESS);
+        }
+
+        return serverList;
+
+    }
 
     public static String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
@@ -44,16 +94,6 @@ public class AppStorage {
             }
         }
     }
-
-
-    public static File getFileFromAttachment(Attachment attachment, Context context, String roomSecret) {
-        File localFile = new File(context.getExternalCacheDir(), roomSecret + "_" + attachment.getFileUrl());
-
-        if (!localFile.exists()) return null;
-
-        return localFile;
-    }
-
 
     public static void downloadFile(String url, File outputFile, DownloadHandler downloadHandler) throws IOException {
 
@@ -90,7 +130,7 @@ public class AppStorage {
 
     }
 
-    public static Bitmap getBitmap(String url) {
+    public static Bitmap getBitmapFromUrl(String url) {
         try {
             InputStream is = (InputStream) new URL(url).getContent();
             Bitmap d = BitmapFactory.decodeStream(is);
@@ -157,7 +197,7 @@ public class AppStorage {
         return directory.getAbsolutePath() + "/" + fileName;
     }
 
-    public static Bitmap getImage(String path) {
+    public static Bitmap getBitmapFromPath(String path) {
         try {
             System.out.println(path);
             File f = new File(path);

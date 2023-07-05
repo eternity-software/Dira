@@ -74,5 +74,18 @@
     <string name="settings_file_servers">Файлы серверов</string>
     <string name="settings_chats">Чаты</string>
     <string name="settings_privacy_policy">Политика конфиденциальности</string>
+    <string name="room_servers_title">Сервера комнат</string>
+    <string name="room_servers_official">Официальный сервер Dira</string>
+    <string name="room_servers_add">Добавить пользовательский сервер</string>
+    <string name="room_servers_add_hint">Адрес сервера</string>
+    <string name="room_servers_add_button">Добавить</string>
+    <string name="room_servers_add_tip">Мы настоятельно не рекомендуем использовать огромное количество серверов, потому что каждый сервер - это новое фоновое подключение, которое может повлиять на производительность вашей батареи и трафик.</string>
+    <string name="room_servers_popup_wrong_server_title">Неверный сервер</string>
+    <string name="room_servers_popup_wrong_server_text">Сервер, который вы пытаетесь добавить, не отвечает требованиям безопасности или содержит опечатку в адресе.</string>
+    <string name="room_server_selector_title">Выберите сервер</string>
+    <string name="room_servers_popup_delete_server_title">Удалить сервер</string>
+    <string name="room_servers_popup_delete_server_text">Если вы удалите сервер, все связанные с ним комнаты перестанут получать новые сообщения и обновления</string>
+    <string name="edit_room_server_popup_title">Вы уверены?</string>
+    <string name="edit_room_server_popup_text">Вы продолжите получать сообщения только от тех пользователей, которые тоже сменили сервер на тот же, что и Вы.</string>
 
 </resources>

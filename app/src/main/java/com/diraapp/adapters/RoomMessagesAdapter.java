@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,6 @@ import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -45,7 +42,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapter.ViewHolder> {
 
@@ -198,7 +194,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                                 if (attachment.getFileUrl().equals(message.getAttachments().get(0).getFileUrl())) {
 
                                     holder.loading.setVisibility(View.GONE);
-                                    File file = AppStorage.getFileFromAttachment(attachment, context, message.getRoomSecret());
+                                    File file = AttachmentsStorage.getFileFromAttachment(attachment, context, message.getRoomSecret());
 
                                     if (file != null) {
                                         updateAttachment(holder, attachment, file);
@@ -237,7 +233,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                 Attachment attachment = message.getAttachments().get(0);
 
                 holder.loading.setVisibility(View.VISIBLE);
-                File file = AppStorage.getFileFromAttachment(attachment, context, message.getRoomSecret());
+                File file = AttachmentsStorage.getFileFromAttachment(attachment, context, message.getRoomSecret());
 
                 if (file != null && !AttachmentsStorage.isAttachmentSaving(attachment)) {
 
@@ -340,7 +336,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                     }
                     else
                     {
-                        bitmap = AppStorage.getImage(member.getImagePath());
+                        bitmap = AppStorage.getBitmapFromPath(member.getImagePath());
                         loadedBitmaps.put(member.getImagePath(), bitmap);
                     }
                     holder.profilePicture.setImageBitmap(bitmap);

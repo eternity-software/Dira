@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,6 +14,7 @@ import com.diraapp.api.requests.JoinRoomRequest;
 import com.diraapp.api.requests.UpdateMemberRequest;
 import com.diraapp.api.updates.NewRoomUpdate;
 import com.diraapp.api.updates.Update;
+import com.diraapp.bottomsheet.ServerSelectorBottomSheet;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.updates.UpdateProcessor;
@@ -22,7 +24,9 @@ import com.diraapp.utils.SliderActivity;
 
 import java.util.Arrays;
 
-public class JoinRoomActivity extends AppCompatActivity {
+public class JoinRoomActivity extends AppCompatActivity implements ServerSelectorBottomSheet.BottomSheetListener {
+
+    private String serverAddress = UpdateProcessor.OFFICIAL_ADDRESS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +35,14 @@ public class JoinRoomActivity extends AppCompatActivity {
         SliderActivity sliderActivity = new SliderActivity();
         sliderActivity.attachSlider(this);
 
+        findViewById(R.id.button_server_select).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ServerSelectorBottomSheet serverSelectorBottomSheet = new ServerSelectorBottomSheet();
+
+                serverSelectorBottomSheet.show(getSupportFragmentManager(), "Server selector  bottom sheet");
+            }
+        });
 
         findViewById(R.id.button_back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,14 +84,15 @@ public class JoinRoomActivity extends AppCompatActivity {
                                         String base64Pic = null;
 
                                         if (picturePath != null) {
-                                            base64Pic = AppStorage.getBase64FromBitmap(AppStorage.getImage(picturePath));
+                                            base64Pic = AppStorage.getBase64FromBitmap(AppStorage.getBitmapFromPath(picturePath));
                                         }
 
                                         UpdateMemberRequest updateMemberRequest = new UpdateMemberRequest(nickname, base64Pic,
                                                 Arrays.asList(((NewRoomUpdate) update).getInviteRoom().getSecretName()), id, System.currentTimeMillis());
                                         try {
 
-                                            UpdateProcessor.getInstance().sendRequest(updateMemberRequest);
+
+                                            UpdateProcessor.getInstance().sendRequest(updateMemberRequest, serverAddress);
                                             UpdateProcessor.getInstance().reconnectSockets();
                                             Thread thread = new Thread(new Runnable() {
                                                 @Override
@@ -97,11 +110,18 @@ public class JoinRoomActivity extends AppCompatActivity {
                                 });
                             }
                         }
-                    });
+                    }, serverAddress);
                 } catch (UnablePerformRequestException e) {
                     e.printStackTrace();
                 }
             }
         });
+    }
+
+    @Override
+    public void onServerSelected(String serverAddress) {
+        TextView textView = findViewById(R.id.button_server_select);
+        this.serverAddress = serverAddress;
+        textView.setText(serverAddress);
     }
 }

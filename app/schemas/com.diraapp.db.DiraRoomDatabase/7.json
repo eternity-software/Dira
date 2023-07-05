@@ -1,12 +1,12 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 6,
-    "identityHash": "c08c235a9ac2abdd3c9f91005d64ceb2",
+    "version": 7,
+    "identityHash": "b5a4a46729db04b366d62f4eba02e19d",
     "entities": [
       {
         "tableName": "Room",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`secretName` TEXT NOT NULL, `name` TEXT, `lastMessageId` TEXT, `imagePath` TEXT, `lastUpdatedTime` INTEGER NOT NULL, `updatedRead` INTEGER NOT NULL DEFAULT true, `lastUpdateId` INTEGER NOT NULL, `timeServerStartup` INTEGER NOT NULL, PRIMARY KEY(`secretName`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`secretName` TEXT NOT NULL, `name` TEXT, `lastMessageId` TEXT, `imagePath` TEXT, `serverAddress` TEXT DEFAULT 'ws://diraapp.com:8888', `lastUpdatedTime` INTEGER NOT NULL, `updatedRead` INTEGER NOT NULL DEFAULT true, `lastUpdateId` INTEGER NOT NULL, `timeServerStartup` INTEGER NOT NULL, PRIMARY KEY(`secretName`))",
         "fields": [
           {
             "fieldPath": "secretName",
@@ -31,6 +31,13 @@
             "columnName": "imagePath",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "serverAddress",
+            "columnName": "serverAddress",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "'ws://diraapp.com:8888'"
           },
           {
             "fieldPath": "lastUpdatedTime",
@@ -177,7 +184,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c08c235a9ac2abdd3c9f91005d64ceb2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b5a4a46729db04b366d62f4eba02e19d')"
     ]
   }
 }

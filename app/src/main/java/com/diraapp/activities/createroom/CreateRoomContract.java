@@ -10,6 +10,8 @@ public interface CreateRoomContract {
         void onCreateButtonClick();
 
         void onCopyButtonClick(ClipboardManager clipboardManager);
+
+        void setServer(String serverAddress);
     }
 
     interface View {
@@ -34,7 +36,7 @@ public interface CreateRoomContract {
 
     interface Model {
         void createRoom(String roomName, String secretName, String welcomeMessage,
-                        String authorId, String authorName);
+                        String authorId, String authorName, String serverAddress);
     }
 
 }

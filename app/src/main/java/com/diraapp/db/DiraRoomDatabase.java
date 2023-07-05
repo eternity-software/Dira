@@ -2,6 +2,7 @@ package com.diraapp.db;
 
 import android.content.Context;
 
+import androidx.room.AutoMigration;
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 
@@ -11,7 +12,9 @@ import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Message;
 import com.diraapp.db.entities.Room;
 
-@Database(entities = {Room.class, Message.class, Member.class}, version = 6,
+@Database(entities = {Room.class, Message.class, Member.class},
+        autoMigrations = {@AutoMigration(from=6, to=7)},
+        version = 7,
         exportSchema = true)
 public abstract class DiraRoomDatabase extends RoomDatabase {
 

@@ -126,4 +126,12 @@ public class AttachmentsStorage {
         }
         return null;
     }
+
+    public static File getFileFromAttachment(Attachment attachment, Context context, String roomSecret) {
+        File localFile = new File(context.getExternalCacheDir(), roomSecret + "_" + attachment.getFileUrl());
+
+        if (!localFile.exists()) return null;
+
+        return localFile;
+    }
 }

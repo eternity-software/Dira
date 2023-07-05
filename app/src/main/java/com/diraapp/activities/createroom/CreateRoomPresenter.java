@@ -20,6 +20,7 @@ public class CreateRoomPresenter implements CreateRoomContract.Presenter {
     private final CreateRoomContract.Model model;
 
     private final String roomSecret;
+    private String serverAddress;
 
     public CreateRoomPresenter(CreateRoomContract.View view, CreateRoomContract.Model model) {
         this.view = view;
@@ -46,10 +47,10 @@ public class CreateRoomPresenter implements CreateRoomContract.Presenter {
 
                         if (acceptedStatusAnswer.isAccepted()) {
                             model.createRoom(roomName, roomSecret, welcomeMessage,
-                                    view.getAuthorId(), view.getAuthorName());
+                                    view.getAuthorId(), view.getAuthorName(), serverAddress);
                             view.finish();
                         }
-                    });
+                    }, serverAddress);
 
         } catch (WebsocketNotConnectedException e) {
             view.showToast("Not connected");
@@ -62,6 +63,11 @@ public class CreateRoomPresenter implements CreateRoomContract.Presenter {
     public void onCopyButtonClick(ClipboardManager clipboardManager) {
         ClipData clip = ClipData.newPlainText("Secret key", roomSecret);
         clipboardManager.setPrimaryClip(clip);
+    }
+
+    @Override
+    public void setServer(String serverAddress) {
+        this.serverAddress = serverAddress;
     }
 
 

@@ -5,6 +5,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.diraapp.updates.UpdateProcessor;
+
 import org.jetbrains.annotations.NotNull;
 
 @Entity
@@ -17,6 +19,8 @@ public class Room {
     private String name;
     private String lastMessageId;
     private String imagePath;
+    @ColumnInfo(defaultValue = UpdateProcessor.OFFICIAL_ADDRESS)
+    private String serverAddress;
 
     private long lastUpdatedTime;
 
@@ -29,10 +33,22 @@ public class Room {
     @Ignore
     private Message message;
 
-    public Room(String name, long lastUpdatedTime, String secretName) {
+    public Room(String name, long lastUpdatedTime, String secretName, String serverAddress) {
         this.name = name;
         this.lastUpdatedTime = lastUpdatedTime;
         this.secretName = secretName;
+        this.serverAddress = serverAddress;
+    }
+
+    public String getServerAddress() {
+        if(serverAddress == null) {
+            serverAddress = UpdateProcessor.OFFICIAL_ADDRESS;
+        }
+        return serverAddress;
+    }
+
+    public void setServerAddress(String serverAddress) {
+        this.serverAddress = serverAddress;
     }
 
     public boolean isUpdatedRead() {

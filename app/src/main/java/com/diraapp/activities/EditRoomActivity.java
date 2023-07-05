@@ -7,13 +7,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.diraapp.R;
 import com.diraapp.api.requests.RoomUpdateRequest;
 import com.diraapp.adapters.MediaGridItemListener;
+import com.diraapp.bottomsheet.ServerSelectorBottomSheet;
 import com.diraapp.bottomsheet.filepicker.FilePickerBottomSheet;
+import com.diraapp.components.DiraPopup;
 import com.diraapp.components.FilePreview;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Room;
@@ -27,7 +30,7 @@ import com.diraapp.utils.SliderActivity;
 import java.io.File;
 import java.io.IOException;
 
-public class EditRoomActivity extends AppCompatActivity {
+public class EditRoomActivity extends AppCompatActivity implements ServerSelectorBottomSheet.BottomSheetListener {
 
     public static final String ROOM_SECRET_EXTRA = "roomSecret";
 
@@ -56,6 +59,19 @@ public class EditRoomActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.room_server).setOnClickListener((View v) -> {
+            DiraPopup diraPopup = new DiraPopup(this);
+            diraPopup.show(getString(R.string.edit_room_server_popup_title),
+                    getString(R.string.edit_room_server_popup_text), null,
+                    null, new Runnable() {
+                        @Override
+                        public void run() {
+                            ServerSelectorBottomSheet serverSelectorBottomSheet = new ServerSelectorBottomSheet();
+                            serverSelectorBottomSheet.show(getSupportFragmentManager(), "Server selector  bottom sheet");
+                        }
+                    });
+        });
+
         findViewById(R.id.button_change_picture).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,7 +87,7 @@ public class EditRoomActivity extends AppCompatActivity {
                         roomName.getText().toString(), roomSecret);
 
                 try {
-                    UpdateProcessor.getInstance().sendRequest(request);
+                    UpdateProcessor.getInstance().sendRequest(request, room.getServerAddress());
                 } catch (UnablePerformRequestException e) {
                     e.printStackTrace();
                 }
@@ -116,14 +132,14 @@ public class EditRoomActivity extends AppCompatActivity {
     }
 
     public void updatePicture(String path) {
-        roomPicture = ImagesWorker.getCircleCroppedBitmap(AppStorage.getImage(path), 256, 256);
+        roomPicture = ImagesWorker.getCircleCroppedBitmap(AppStorage.getBitmapFromPath(path), 256, 256);
         roomPicture = ImagesWorker.compressBitmap(roomPicture);
 
 
         try {
             roomPicture = ImageRotationFix.rotateImageIfRequired(getApplicationContext(), roomPicture, Uri.fromFile(new File(path)));
         } catch (IOException e) {
-            roomPicture = AppStorage.getImage(path);
+            roomPicture = AppStorage.getBitmapFromPath(path);
             e.printStackTrace();
         }
 
@@ -168,8 +184,10 @@ public class EditRoomActivity extends AppCompatActivity {
                     public void run() {
                         if (room.getImagePath() != null) {
                             ImageView roomPicture = findViewById(R.id.room_picture);
-                            roomPicture.setImageBitmap(AppStorage.getImage(room.getImagePath()));
+                            roomPicture.setImageBitmap(AppStorage.getBitmapFromPath(room.getImagePath()));
                         }
+                        TextView textView = findViewById(R.id.room_server);
+                        textView.setText(room.getServerAddress());
 
                         EditText roomName = findViewById(R.id.room_name);
                         roomName.setText(room.getName());
@@ -180,4 +198,20 @@ public class EditRoomActivity extends AppCompatActivity {
         thread.start();
     }
 
+    @Override
+    public void onServerSelected(String serverAddress) {
+        TextView textView = findViewById(R.id.room_server);
+        textView.setText(serverAddress);
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                EditRoomActivity.this.room = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getRoomBySecretName(roomSecret);
+                room.setServerAddress(serverAddress);
+                DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().update(room);
+            }
+        });
+        thread.start();
+
+    }
 }

@@ -22,6 +22,7 @@
     <string name="room_name_hint">My roblox friends</string>
     <string name="first_room_message">First message of room</string>
     <string name="first_room_message_hint">how can I get more robux</string>
+    <string name="room_server">Room server</string>
     <string name="updates_expire_time">Updates expire time</string>
     <string name="room_secret">Room secret name</string>
     <string name="host_server">Host server</string>
@@ -63,6 +64,8 @@
     <string name="edit_room_name">Room name</string>
     <string name="edit_room_host">Room host</string>
     <string name="edit_room_update_expire">Update expire</string>
+    <string name="edit_room_server_popup_title">Are you sure?</string>
+    <string name="edit_room_server_popup_text">You will continue to receive messages only from those users who have also changed the server.</string>
 
     <!-- Invitation code -->
     <string name="invitation_code">Invitation code</string>
@@ -91,6 +94,25 @@
     <string name="chat_appearance_color_scheme">Color scheme</string>
     <string name="chat_appearance_background">Background</string>
     <string name="chat_appearance_pick_image">Pick image</string>
+
+    <!-- Room servers -->
+    <string name="room_servers_title">Room servers</string>
+    <string name="room_servers_official">Dira official server</string>
+    <string name="room_servers_add">Add custom server</string>
+    <string name="room_servers_add_hint">Server address</string>
+    <string name="room_servers_add_button">Add</string>
+
+    <string name="room_servers_popup_delete_server_title">Delete server</string>
+    <string name="room_servers_popup_delete_server_text">If you delete the server, all rooms associated with it will stop receiving new messages and updates.</string>
+
+    <string name="room_servers_popup_wrong_server_title">Wrong server</string>
+    <string name="room_servers_popup_wrong_server_text">The server you are trying to add does not meet security requirements or contains a typo in the address.</string>
+
+    <string name="room_servers_add_tip">We strongly don’t recommend to use huge amount of servers, because each server equals new background connection that may affect your battery performance and traffic.</string>
+
+    <!-- Room server selector -->
+    <string name="room_server_selector_title">Select server</string>
+
 
     <!-- Color themes names -->
     <string name="theme_main" translatable="false">Dira</string>

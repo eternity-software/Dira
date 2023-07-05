@@ -19,6 +19,7 @@ public class CacheUtils {
 
     public final static String BACKGROUND_ID = "background_id";
     public final static String BACKGROUND_PATH = "background_path";
+    public final static String SERVER_LIST = "server_list";
 
     private final static String IDENTIFIER = "APP_SETTINGS";
 

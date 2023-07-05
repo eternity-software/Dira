@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.view.MotionEvent;
@@ -19,12 +18,10 @@ import com.diraapp.components.PreviewImageView;
 import com.diraapp.components.VideoPlayer;
 import com.diraapp.exceptions.VideoPlayerException;
 import com.diraapp.storage.AppStorage;
-import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.images.ImagesWorker;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 public class PreviewActivity extends AppCompatActivity {
@@ -130,13 +127,13 @@ public class PreviewActivity extends AppCompatActivity {
 
         } else {
             videoPlayer.setVisibility(View.GONE);
-            previewImageView.setImageBitmap(AppStorage.getImage(uri));
+            previewImageView.setImageBitmap(AppStorage.getBitmapFromPath(uri));
         }
 
     }
 
     public void addImageToGallery(final String filePath, final Context context) {
-        ImagesWorker.saveBitmapToGallery(AppStorage.getImage(filePath), this);
+        ImagesWorker.saveBitmapToGallery(AppStorage.getBitmapFromPath(filePath), this);
     }
 
     public void addVideoToGallery(final String filePath, final Context context) {

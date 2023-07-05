@@ -55,8 +55,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         roomServersButton = findViewById(R.id.button_room_servers);
         roomServersButton.setOnClickListener((View v) -> {
-//            Intent intent = new Intent(SettingsActivity.this, .class);
-//            startActivity(intent);
+            Intent intent = new Intent(SettingsActivity.this, RoomServersActivity.class);
+            startActivity(intent);
         });
 
         fileServersButton = findViewById(R.id.button_file_servers);

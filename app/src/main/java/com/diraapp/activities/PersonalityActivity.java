@@ -9,11 +9,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.diraapp.BuildConfig;
 import com.diraapp.R;
 import com.diraapp.api.requests.UpdateMemberRequest;
 import com.diraapp.adapters.MediaGridItemListener;
@@ -54,7 +52,7 @@ public class PersonalityActivity extends AppCompatActivity {
         CacheUtils cacheUtils = new CacheUtils(getApplicationContext());
 
         String picPath = cacheUtils.getString(CacheUtils.PICTURE);
-        if (picPath != null) imageView.setImageBitmap(AppStorage.getImage(picPath));
+        if (picPath != null) imageView.setImageBitmap(AppStorage.getBitmapFromPath(picPath));
 
         nicknameText.setText(cacheUtils.getString(CacheUtils.NICKNAME));
         idText.setText(cacheUtils.getString(CacheUtils.ID));
@@ -76,15 +74,16 @@ public class PersonalityActivity extends AppCompatActivity {
 
                         for (Room room : DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getAllRoomsByUpdatedTime()) {
                             roomSecrets.add(room.getSecretName());
-                        }
 
-                        UpdateMemberRequest updateMemberRequest = new UpdateMemberRequest(nicknameText.getText().toString(),
-                                AppStorage.getBase64FromBitmap(userPicture), roomSecrets, idText.getText().toString(), System.currentTimeMillis());
 
-                        try {
-                            UpdateProcessor.getInstance().sendRequest(updateMemberRequest);
-                        } catch (UnablePerformRequestException e) {
-                            e.printStackTrace();
+                            UpdateMemberRequest updateMemberRequest = new UpdateMemberRequest(nicknameText.getText().toString(),
+                                    AppStorage.getBase64FromBitmap(userPicture), roomSecrets, idText.getText().toString(), System.currentTimeMillis());
+
+                            try {
+                                UpdateProcessor.getInstance().sendRequest(updateMemberRequest, room.getServerAddress());
+                            } catch (UnablePerformRequestException e) {
+                                e.printStackTrace();
+                            }
                         }
                         runOnUiThread(new Runnable() {
                             @Override
@@ -160,7 +159,7 @@ public class PersonalityActivity extends AppCompatActivity {
 
 
     public void updateProfilePhoto(String path) {
-        userPicture = ImagesWorker.getCircleCroppedBitmap(AppStorage.getImage(path), 256, 256);
+        userPicture = ImagesWorker.getCircleCroppedBitmap(AppStorage.getBitmapFromPath(path), 256, 256);
         userPicture = ImagesWorker.compressBitmap(userPicture);
 
 

@@ -12,9 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -318,7 +316,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
 
                     SendMessageRequest sendMessageRequest = new SendMessageRequest(message);
 
-                    UpdateProcessor.getInstance().sendRequest(sendMessageRequest);
+                    UpdateProcessor.getInstance().sendRequest(sendMessageRequest, room.getServerAddress());
 
 
                 } catch (JSONException e) {
@@ -359,7 +357,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                     public void run() {
                         if (room.getImagePath() != null) {
                             ImageView roomPicture = findViewById(R.id.room_picture);
-                            roomPicture.setImageBitmap(AppStorage.getImage(room.getImagePath()));
+                            roomPicture.setImageBitmap(AppStorage.getBitmapFromPath(room.getImagePath()));
                         }
 
                         TextView roomName = findViewById(R.id.room_name);
@@ -392,7 +390,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
 
             SendMessageRequest sendMessageRequest = new SendMessageRequest(message);
             try {
-                UpdateProcessor.getInstance().sendRequest(sendMessageRequest);
+                UpdateProcessor.getInstance().sendRequest(sendMessageRequest, room.getServerAddress());
             } catch (UnablePerformRequestException e) {
                 e.printStackTrace();
             }

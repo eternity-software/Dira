@@ -48,8 +48,6 @@ public class MemoryManagementActivity extends AppCompatActivity {
         sliderActivity.attachSlider(this);
 
         calculateUsedSpace();
-
-
     }
 
     private void calculateUsedSpace() {

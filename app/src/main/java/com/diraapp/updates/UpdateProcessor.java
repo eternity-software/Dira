@@ -43,6 +43,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -67,11 +68,11 @@ public class UpdateProcessor {
     /**
      * Requests ids counter
      */
-    private long lastRequestId = 0;
+    private HashMap<String, Long> lastRequestIds = new HashMap<>();
     /**
      * Server startup time allows to sync updates ids
      */
-    private long timeServerStartup = 0;
+    private HashMap<String, Long> timeServerStartups = new HashMap<>();
     private RoomDao roomDao;
     private MemberDao memberDao;
     private SocketClient socketClient;
@@ -80,18 +81,31 @@ public class UpdateProcessor {
     public UpdateProcessor(Context context) throws SingletonException {
         if (updateProcessor != null) throw new SingletonException();
         this.context = context;
-        try {
-            socketClient = new SocketClient(new URI(OFFICIAL_ADDRESS));
-            setupSocketClient(socketClient);
-            socketClient.connect();
-            socketClients.put(OFFICIAL_ADDRESS, socketClient);
+
+
+            for(String serverAddress : AppStorage.getServerList(context))
+            {
+                try {
+                    registerSocket(serverAddress);
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
             roomDao = DiraRoomDatabase.getDatabase(context).getRoomDao();
             memberDao = DiraRoomDatabase.getDatabase(context).getMemberDao();
             roomUpdater = new RoomUpdater(roomDao, memberDao, context);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+
     }
+
+    private void registerSocket(String address) throws URISyntaxException {
+        socketClient = new SocketClient(new URI(address));
+        setupSocketClient(socketClient);
+        socketClient.connect();
+        socketClients.put(address, socketClient);
+    }
+
 
     public static UpdateProcessor getInstance() {
         return updateProcessor;
@@ -126,11 +140,17 @@ public class UpdateProcessor {
 
         try {
 
+
             if (update.getUpdateType() == UpdateType.SERVER_SYNC) {
                 ServerSyncUpdate serverSyncUpdate = (ServerSyncUpdate) update;
-                timeServerStartup = serverSyncUpdate.getTimeServerStart();
+                 timeServerStartups.put(address, serverSyncUpdate.getTimeServerStart());
             }
+            long timeServerStartup = 0;
 
+            if(timeServerStartups.containsKey(address))
+            {
+                timeServerStartup = timeServerStartups.get(address);
+            }
             Room roomUpdate = roomDao.getRoomBySecretName(update.getRoomSecret());
             if (roomUpdate != null) {
                 if (roomUpdate.getTimeServerStartup() != timeServerStartup) {
@@ -151,7 +171,7 @@ public class UpdateProcessor {
             }
 
             if (update.getUpdateType() == UpdateType.NEW_ROOM_UPDATE) {
-                roomUpdater.onNewRoom((NewRoomUpdate) update);
+                roomUpdater.onNewRoom((NewRoomUpdate) update, address);
             } else if (update.getUpdateType() == UpdateType.NEW_MESSAGE_UPDATE) {
                 if (DiraApplication.isBackgrounded()) {
                     Notifier.notifyMessage(((NewMessageUpdate) update).getMessage(), context);
@@ -242,6 +262,13 @@ public class UpdateProcessor {
      */
     public Request sendRequest(Request request, UpdateListener callback, String address) throws WebsocketNotConnectedException, UnablePerformRequestException {
         try {
+            long lastRequestId = 0;
+
+            if(lastRequestIds.containsKey(address))
+            {
+                lastRequestId = lastRequestIds.get(address);
+            }
+
             request.setRequestId(lastRequestId);
             SocketClient socketClient = socketClients.get(address);
             if (socketClient != null) {
@@ -250,6 +277,7 @@ public class UpdateProcessor {
                 System.out.println(sent);
                 socketClient.send(sent);
                 if (callback != null) {
+                    long finalLastRequestId = lastRequestId;
                     updateReplies.put(lastRequestId, new UpdateListener() {
                         @Override
                         public void onUpdate(Update update) {
@@ -258,12 +286,14 @@ public class UpdateProcessor {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            updateReplies.remove(lastRequestId);
+                            updateReplies.remove(finalLastRequestId);
                         }
                     });
                 }
             }
+
             lastRequestId++;
+            lastRequestIds.put(address, lastRequestId);
             return request;
         } catch (Exception e) {
             e.printStackTrace();
@@ -272,16 +302,8 @@ public class UpdateProcessor {
 
     }
 
-    public Request sendRequest(Request request) throws UnablePerformRequestException {
-        return sendRequest(request, null, OFFICIAL_ADDRESS);
-    }
-
-    public Request sendRequest(Request request, UpdateListener callback) throws UnablePerformRequestException {
-        return sendRequest(request, callback, OFFICIAL_ADDRESS);
-    }
-
-    public Request sendRequest(Request request, String address) throws UnablePerformRequestException {
-        return sendRequest(request, null, address);
+    public Request sendRequest(Request request, String serverAddress) throws UnablePerformRequestException {
+        return sendRequest(request, null, serverAddress);
     }
 
     public void notifySocketsCountChanged() {
@@ -296,10 +318,22 @@ public class UpdateProcessor {
      */
     public void reconnectSockets() {
         Log.d("UpdateProcessor", "Reconnecting sockets..");
-        for (String address : socketClients.keySet()) {
-            SocketClient socketClient = socketClients.get(address);
-            if (socketClient != null) {
-                if (socketClient.isClosed()) {
+        try
+        {
+            for (String address : new HashSet<>(socketClients.keySet())) {
+                SocketClient socketClient = socketClients.get(address);
+                if (socketClient != null) {
+                    if (socketClient.isClosed()) {
+                        try {
+                            socketClient = new SocketClient(new URI(address));
+                            setupSocketClient(socketClient);
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                        socketClient.connect();
+
+                    }
+                } else {
                     try {
                         socketClient = new SocketClient(new URI(address));
                         setupSocketClient(socketClient);
@@ -307,21 +341,16 @@ public class UpdateProcessor {
                         e.printStackTrace();
                     }
                     socketClient.connect();
+                }
+                socketClients.remove(address);
+                socketClients.put(address, socketClient);
 
-                }
-            } else {
-                try {
-                    socketClient = new SocketClient(new URI(address));
-                    setupSocketClient(socketClient);
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-                socketClient.connect();
             }
-            socketClients.remove(address);
-            socketClients.put(address, socketClient);
-
         }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -358,13 +387,13 @@ public class UpdateProcessor {
 
                                     subscribeRequest.setRoomSecrets(roomSecrets);
                                     try {
-                                        sendRequest(subscribeRequest);
+                                        sendRequest(subscribeRequest, room.getServerAddress());
                                     } catch (UnablePerformRequestException e) {
                                         e.printStackTrace();
                                     }
                                 }
                             }
-                        });
+                        }, room.getServerAddress());
             } catch (Exception ignored) {
                 ignored.printStackTrace();
 
@@ -431,9 +460,9 @@ public class UpdateProcessor {
         return countActive / (float) socketClients.size();
     }
 
-    public long getTimeServerStartup() {
-        // TODO: startup time depend on room server
-        return timeServerStartup;
+    public long getTimeServerStartup(String address) {
+        if(!timeServerStartups.containsKey(address)) return 0;
+        return timeServerStartups.get(address);
     }
 
     public void addCustomServer(String address) throws URISyntaxException {

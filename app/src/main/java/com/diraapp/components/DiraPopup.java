@@ -93,7 +93,10 @@ public class DiraPopup {
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onClick.run();
+                if(onClick != null)
+                {
+                    onClick.run();
+                }
                 alertDialog.dismiss();
             }
         });

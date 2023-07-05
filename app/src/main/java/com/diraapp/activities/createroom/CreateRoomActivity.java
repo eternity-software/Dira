@@ -8,12 +8,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.diraapp.bottomsheet.InvitationCodeBottomSheet;
+import com.diraapp.bottomsheet.ServerSelectorBottomSheet;
 import com.diraapp.databinding.ActivityCreateRoomBinding;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.SliderActivity;
 
-public class CreateRoomActivity extends AppCompatActivity implements CreateRoomContract.View {
+public class CreateRoomActivity extends AppCompatActivity implements CreateRoomContract.View, ServerSelectorBottomSheet.BottomSheetListener {
 
     private ActivityCreateRoomBinding binding;
 
@@ -32,10 +34,13 @@ public class CreateRoomActivity extends AppCompatActivity implements CreateRoomC
         CreateRoomContract.Model model = new CreateRoomModel(DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao());
         presenter = new CreateRoomPresenter(this, model);
         initHandlers();
+        attachSlider();
     }
 
-
     private void initHandlers() {
+        binding.roomServer.setOnClickListener((View v) -> {
+            selectServer();
+        });
         binding.copySecretCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,6 +61,13 @@ public class CreateRoomActivity extends AppCompatActivity implements CreateRoomC
                 onBackPressed();
             }
         });
+    }
+
+    private void selectServer()
+    {
+        ServerSelectorBottomSheet serverSelectorBottomSheet = new ServerSelectorBottomSheet();
+
+        serverSelectorBottomSheet.show(getSupportFragmentManager(), "Server selector  bottom sheet");
     }
 
     @Override
@@ -92,5 +104,11 @@ public class CreateRoomActivity extends AppCompatActivity implements CreateRoomC
     @Override
     public String getAuthorId() {
         return cacheUtils.getString(CacheUtils.ID);
+    }
+
+    @Override
+    public void onServerSelected(String serverAddress) {
+        binding.roomServer.setText(serverAddress);
+        presenter.setServer(serverAddress);
     }
 }

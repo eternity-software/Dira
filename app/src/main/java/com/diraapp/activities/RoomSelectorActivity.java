@@ -201,7 +201,7 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
                     room.setMessage(message);
                     try {
 
-                        UpdateProcessor.getInstance().sendRequest(new GetUpdatesRequest(room.getSecretName(), room.getLastUpdateId()));
+                        UpdateProcessor.getInstance().sendRequest(new GetUpdatesRequest(room.getSecretName(), room.getLastUpdateId()), room.getServerAddress());
                     } catch (Exception ignored) {
                         ignored.printStackTrace();
 
@@ -230,7 +230,7 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
         updateRooms();
         ImageView imageView = findViewById(R.id.profile_picture);
         String picPath = cacheUtils.getString(CacheUtils.PICTURE);
-        if (picPath != null) imageView.setImageBitmap(AppStorage.getImage(picPath));
+        if (picPath != null) imageView.setImageBitmap(AppStorage.getBitmapFromPath(picPath));
 
         Notifier.cancelAllNotifications(getApplicationContext());
     }

@@ -33,7 +33,7 @@ public class FilesUploader {
             if (FileClassifier.isImageFile(sourceFileUri)) {
                 Bitmap bitmap = null;
                 try {
-                    bitmap = ImageRotationFix.rotateImageIfRequired(context, AppStorage.getBitmap(sourceFileUri), Uri.fromFile(new File(sourceFileUri)));
+                    bitmap = ImageRotationFix.rotateImageIfRequired(context, AppStorage.getBitmapFromUrl(sourceFileUri), Uri.fromFile(new File(sourceFileUri)));
                 } catch (IOException e) {
                     Handler mainHandler = new Handler(context.getMainLooper());
 
@@ -48,7 +48,7 @@ public class FilesUploader {
                 }
 
                 if (bitmap == null) {
-                    bitmap = AppStorage.getImage(sourceFileUri);
+                    bitmap = AppStorage.getBitmapFromPath(sourceFileUri);
                 }
 
                 int maxFrameSize = 800;

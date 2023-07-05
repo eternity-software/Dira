@@ -3,15 +3,8 @@ package com.diraapp.appearance;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.net.Uri;
-import android.provider.MediaStore;
-
-import androidx.core.content.ContextCompat;
 
 import com.diraapp.R;
-import com.diraapp.adapters.ChatBackgroundAdapter;
 import com.diraapp.storage.AppStorage;
 
 import java.util.HashMap;
@@ -81,7 +74,7 @@ public class ChatBackground {
     public Bitmap getBitMap(Context context) {
         Bitmap bitmap = null;
         if (this.getName().toUpperCase().equals(BackgroundType.CUSTOM.toString())) {
-            bitmap = AppStorage.getImage(path);
+            bitmap = AppStorage.getBitmapFromPath(path);
 
             if (bitmap == null) {
                 ChatBackground chatBackground = backgrounds.get(BackgroundType.NONE.toString());

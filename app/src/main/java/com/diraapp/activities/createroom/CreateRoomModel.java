@@ -17,9 +17,9 @@ public class CreateRoomModel implements CreateRoomContract.Model {
 
     @Override
     public void createRoom(String roomName, String roomSecret, String welcomeMessage,
-                           String authorId, String authorName) {
+                           String authorId, String authorName, String serverAddress) {
 
-        Room room = new Room(roomName, System.currentTimeMillis(), roomSecret);
+        Room room = new Room(roomName, System.currentTimeMillis(), roomSecret, serverAddress);
 
         roomDao.insertAll(room);
 
@@ -34,7 +34,7 @@ public class CreateRoomModel implements CreateRoomContract.Model {
 
         UpdateProcessor.getInstance().sendSubscribeRequest();
         try {
-            UpdateProcessor.getInstance().sendRequest(sendMessageRequest);
+            UpdateProcessor.getInstance().sendRequest(sendMessageRequest, serverAddress);
         } catch (Exception e) {
             e.printStackTrace();
         }

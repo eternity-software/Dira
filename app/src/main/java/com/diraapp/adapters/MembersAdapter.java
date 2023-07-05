@@ -14,12 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 import com.diraapp.activities.PreviewActivity;
-import com.diraapp.activities.RoomInfoActivity;
-import com.diraapp.activities.RoomSelectorActivity;
 import com.diraapp.components.DiraPopup;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.Room;
 import com.diraapp.storage.AppStorage;
 
 import java.util.ArrayList;
@@ -56,7 +53,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
        Member member = members.get(position);
 
        holder.memberName.setText(member.getNickname());
-       Bitmap pic = AppStorage.getImage(member.getImagePath());
+       Bitmap pic = AppStorage.getBitmapFromPath(member.getImagePath());
 
        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
            @Override

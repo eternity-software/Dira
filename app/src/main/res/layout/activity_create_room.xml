@@ -99,6 +99,7 @@
                 android:maxLines="1"
                 android:paddingHorizontal="8dp"
                 android:textColor="@color/white"
+                android:textSize="18sp"
                 android:textColorHint="@color/light_gray" />
 
             <TextView
@@ -123,9 +124,37 @@
                 android:text="6h"
                 android:inputType="text"
                 android:maxLines="1"
+                android:textSize="18sp"
                 android:paddingHorizontal="8dp"
                 android:textColor="@color/white"
              />
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/montserratsemibold"
+                android:text="@string/room_server"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/room_server"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/dark_rect"
+                android:fontFamily="@font/montserratsemibold"
+                android:gravity="center"
+                android:text="@string/room_servers_official"
+                android:maxLines="1"
+                android:textSize="18sp"
+                android:paddingHorizontal="8dp"
+                android:textColor="@color/white"
+                />
 
             <TextView
 

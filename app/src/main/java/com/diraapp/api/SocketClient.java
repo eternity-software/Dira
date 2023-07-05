@@ -49,7 +49,7 @@ public class SocketClient extends WebSocketClient {
 
     @Override
     public void onMessage(String message) {
-        System.out.println("In ->> " + message);
+        System.out.println( address + " In ->> " + message);
         try {
             UpdateProcessor.getInstance().notifyMessage(message, address);
         } catch (Exception e) {

@@ -32,14 +32,14 @@ public class RoomUpdater {
     }
 
 
-    public void onNewRoom(NewRoomUpdate newRoomUpdate) {
+    public void onNewRoom(NewRoomUpdate newRoomUpdate, String serverAddress) {
 
         InviteRoom inviteRoom = newRoomUpdate.getInviteRoom();
 
         Room oldRoom = roomDao.getRoomBySecretName(newRoomUpdate.getRoomSecret());
         if (oldRoom == null) {
 
-            Room room = new Room(inviteRoom.getName(), System.currentTimeMillis(), inviteRoom.getSecretName());
+            Room room = new Room(inviteRoom.getName(), System.currentTimeMillis(), inviteRoom.getSecretName(), serverAddress);
 
             if (inviteRoom.getBase64pic() != null) {
                 Bitmap bitmap = AppStorage.getBitmapFromBase64(inviteRoom.getBase64pic());
@@ -144,10 +144,9 @@ public class RoomUpdater {
 
     private void compareStartupTimes(Room room) {
 
-        // TODO: startup time depend on room server
-        if (room.getTimeServerStartup() != UpdateProcessor.getInstance().getTimeServerStartup()) {
+        if (room.getTimeServerStartup() != UpdateProcessor.getInstance().getTimeServerStartup(room.getServerAddress())) {
             room.setLastUpdateId(0);
-            room.setTimeServerStartup(UpdateProcessor.getInstance().getTimeServerStartup());
+            room.setTimeServerStartup(UpdateProcessor.getInstance().getTimeServerStartup(room.getServerAddress()));
             roomDao.update(room);
         }
     }

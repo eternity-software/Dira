@@ -85,7 +85,7 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
                 holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime(), context));
             }
             if (room.getImagePath() != null) {
-                holder.roomPicture.setImageBitmap(AppStorage.getImage(room.getImagePath()));
+                holder.roomPicture.setImageBitmap(AppStorage.getBitmapFromPath(room.getImagePath()));
             }
 
         } catch (Exception e) {

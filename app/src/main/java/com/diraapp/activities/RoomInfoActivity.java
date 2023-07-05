@@ -32,8 +32,6 @@ import com.diraapp.db.entities.Room;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentsStorage;
-import com.diraapp.storage.images.ImagesWorker;
-import com.diraapp.storage.images.WaterfallBalancer;
 import com.diraapp.updates.UpdateProcessor;
 import com.diraapp.updates.listeners.UpdateListener;
 import com.diraapp.utils.CacheUtils;
@@ -117,7 +115,7 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
 
                 for (Member member : members) {
                     roomMembers.add(new RoomMember(member.getId(), member.getNickname(),
-                            AppStorage.getBase64FromBitmap(AppStorage.getImage(member.getImagePath())),
+                            AppStorage.getBase64FromBitmap(AppStorage.getBitmapFromPath(member.getImagePath())),
                             member.getRoomSecret(),
                             member.getLastTimeUpdated()));
                 }
@@ -126,12 +124,12 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
 
                 roomMembers.add(new RoomMember(cacheUtils.getString(CacheUtils.ID),
                         cacheUtils.getString(CacheUtils.NICKNAME),
-                        AppStorage.getBase64FromBitmap(AppStorage.getImage(cacheUtils.getString(CacheUtils.PICTURE))),
+                        AppStorage.getBase64FromBitmap(AppStorage.getBitmapFromPath(cacheUtils.getString(CacheUtils.PICTURE))),
                         room.getSecretName(), System.currentTimeMillis()));
 
                 CreateInviteRequest createInviteRequest = new CreateInviteRequest(room.getName(),
                         room.getSecretName(),
-                        AppStorage.getBase64FromBitmap(AppStorage.getImage(room.getImagePath())),
+                        AppStorage.getBase64FromBitmap(AppStorage.getBitmapFromPath(room.getImagePath())),
                         roomMembers);
 
                 try {
@@ -160,7 +158,7 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                                 });
                             }
                         }
-                    });
+                    }, room.getServerAddress());
                 } catch (UnablePerformRequestException e) {
                     e.printStackTrace();
                     runOnUiThread(new Runnable() {
@@ -203,7 +201,7 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                     public void run() {
                         if (room.getImagePath() != null) {
                             ImageView roomPicture = findViewById(R.id.room_picture);
-                            roomPicture.setImageBitmap(AppStorage.getImage(room.getImagePath()));
+                            roomPicture.setImageBitmap(AppStorage.getBitmapFromPath(room.getImagePath()));
                         }
 
                         TextView roomName = findViewById(R.id.room_name);
@@ -214,11 +212,11 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                         if(members.size() == 1)
                         {
                             memberImage_2.setVisibility(View.GONE);
-                            memberImage_1.setImageBitmap(AppStorage.getImage(members.get(0).getImagePath()));
+                            memberImage_1.setImageBitmap(AppStorage.getBitmapFromPath(members.get(0).getImagePath()));
                         }
                         else if(members.size() > 1)
                         {
-                            memberImage_2.setImageBitmap(AppStorage.getImage(members.get(1).getImagePath()));
+                            memberImage_2.setImageBitmap(AppStorage.getBitmapFromPath(members.get(1).getImagePath()));
                         }
 
                         roomName.setText(room.getName());
@@ -235,7 +233,7 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                             Attachment attachment = message.getAttachments().get(0);
                             if (attachment.getAttachmentType() == AttachmentType.IMAGE ||
                                     attachment.getAttachmentType() == AttachmentType.VIDEO) {
-                                File file = AppStorage.getFileFromAttachment(attachment, getApplicationContext(), message.getRoomSecret());
+                                File file = AttachmentsStorage.getFileFromAttachment(attachment, getApplicationContext(), message.getRoomSecret());
 
                                 String mimeType = "image";
 

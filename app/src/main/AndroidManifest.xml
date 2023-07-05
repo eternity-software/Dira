@@ -25,6 +25,11 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.RoomServersActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppSlideTheme"
+            android:exported="false" />
+        <activity
             android:name=".activities.ChatAppearanceActivity"
             android:exported="false" />
         <activity
