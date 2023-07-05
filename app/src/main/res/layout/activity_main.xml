@@ -33,17 +33,16 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:elevation="0dp"
         android:background="@color/dark"
-       >
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:clipChildren="true"
             android:background="@color/dark"
+            android:clipChildren="true"
             app:layout_scrollFlags="scroll|snap"
             app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar">
 
@@ -68,47 +67,48 @@
                         android:gravity="center_vertical"
                         android:text="@string/rooms"
                         android:textColor="@color/white"
-                        android:textSize="24sp"
-                        />
+                        android:textSize="24sp" />
 
                     <ImageView
                         android:id="@+id/status_light"
                         android:layout_width="10dp"
                         android:layout_height="10dp"
-                        android:visibility="gone"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginHorizontal="12dp"
                         android:src="@drawable/circle"
-                        android:layout_marginHorizontal="12dp"/>
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/button_new_room"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_plus"
-                        android:padding="6dp"
                         android:background="@drawable/dark_rect"
+                        android:padding="6dp"
+                        android:src="@drawable/ic_plus"
                         app:tint="@color/accent" />
 
                     <RelativeLayout
                         android:id="@+id/personality_button"
                         android:layout_width="40dp"
-                        android:layout_margin="12dp"
+                        android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
-                        android:background="@drawable/outline_circle"
-                        android:layout_height="40dp">
+                        android:layout_margin="12dp"
+                        android:background="@drawable/outline_circle">
+
                         <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
-                            app:cardCornerRadius="50dp"
+                            android:layout_height="match_parent"
                             android:layout_margin="4dp"
                             app:cardBackgroundColor="@color/accent"
-                            android:layout_height="match_parent">
+                            app:cardCornerRadius="50dp">
+
                             <ImageView
                                 android:id="@+id/profile_picture"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:adjustViewBounds="true"
-                                android:src="@drawable/placeholder"/>
+                                android:src="@drawable/placeholder" />
                         </androidx.cardview.widget.CardView>
 
                     </RelativeLayout>
@@ -122,7 +122,6 @@
 
 
     </com.google.android.material.appbar.AppBarLayout>
-
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

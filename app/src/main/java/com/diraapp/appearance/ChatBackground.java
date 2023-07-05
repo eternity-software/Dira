@@ -6,10 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import androidx.core.content.ContextCompat;
-import android.graphics.BitmapFactory;
 
 import com.diraapp.R;
-import com.diraapp.activities.ChatAppearanceActivity;
 import com.diraapp.storage.AppStorage;
 
 import java.util.ArrayList;
@@ -19,14 +17,10 @@ import java.util.List;
 public class ChatBackground {
 
     private static final String BACKGROUND = "background_";
-
-    private String name;
-
-    private BackgroundType backgroundType;
-
+    private static final HashMap<BackgroundType, ChatBackground> backgrounds = new HashMap<>();
+    private final String name;
+    private final BackgroundType backgroundType;
     private String path;
-
-    private static HashMap<BackgroundType, ChatBackground> backgrounds = new HashMap<>();
 
     public ChatBackground(String name, BackgroundType type) {
         this.name = name;
@@ -67,7 +61,7 @@ public class ChatBackground {
         list.add(backgrounds.get(BackgroundType.EDUCATION));
 
         if (list.size() != backgrounds.size()) {
-            for (ChatBackground background: backgrounds.values()) {
+            for (ChatBackground background : backgrounds.values()) {
                 if (!list.contains(background)) {
                     list.add(background);
                 }

@@ -1,11 +1,10 @@
-package com.diraapp.activities.resizer;
+package com.diraapp.activities.resizer
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.app.Activity
 import android.view.View
 import android.view.animation.DecelerateInterpolator
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 
 
 object FluidContentResizer {
@@ -27,7 +26,7 @@ object FluidContentResizer {
     private fun animateHeight(viewHolder: ActivityViewHolder, event: KeyboardVisibilityChanged) {
         val contentView = viewHolder.contentView
         //contentView.setHeight(event.contentHeightBeforeResize)
-        val startHeight = contentView.height;
+        val startHeight = contentView.height
         heightAnimator.cancel()
 
 

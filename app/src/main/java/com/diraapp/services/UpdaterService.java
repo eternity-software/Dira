@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
-import android.widget.Toast;
 
 import com.diraapp.updates.UpdateProcessor;
 
@@ -41,8 +40,6 @@ public class UpdaterService extends Service {
 
         handler.postDelayed(runnable, 15000);
     }
-
-
 
 
     @Override

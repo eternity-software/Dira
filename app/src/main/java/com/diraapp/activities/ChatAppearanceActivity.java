@@ -1,14 +1,13 @@
 package com.diraapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 import com.diraapp.adapters.ChatBackgroundAdapter;
@@ -19,13 +18,14 @@ import com.diraapp.appearance.AppTheme;
 import com.diraapp.appearance.BackgroundType;
 import com.diraapp.appearance.ChatBackground;
 import com.diraapp.appearance.ColorTheme;
-import com.diraapp.appearance.ColorThemeType;
 import com.diraapp.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.db.entities.Message;
+import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ChatAppearanceActivity extends AppCompatActivity {
 
@@ -85,13 +85,13 @@ public class ChatAppearanceActivity extends AppCompatActivity {
         chatBackgroundAdapter = new
                 ChatBackgroundAdapter(this, chatBackgrounds,
                 new ChatBackgroundAdapter.SelectorListener() {
-            @Override
-            public void onSelectorClicked(ChatBackground background) {
-                ImageView imageView = findViewById(R.id.example_background);
+                    @Override
+                    public void onSelectorClicked(ChatBackground background) {
+                        ImageView imageView = findViewById(R.id.example_background);
 
-                background.applyBackground(imageView);
-            }
-        });
+                        background.applyBackground(imageView);
+                    }
+                });
         backgroundRecycler.setAdapter(chatBackgroundAdapter);
     }
 

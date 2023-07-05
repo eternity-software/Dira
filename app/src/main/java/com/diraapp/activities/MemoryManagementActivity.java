@@ -1,19 +1,15 @@
 package com.diraapp.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.diraapp.R;
-import com.diraapp.databinding.ActivityCreateRoomBinding;
 import com.diraapp.databinding.ActivityMemoryManagementBinding;
-import com.diraapp.db.converters.AttachmentConverter;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
-import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.utils.SliderActivity;
 
 import java.io.File;
@@ -37,7 +33,7 @@ public class MemoryManagementActivity extends AppCompatActivity {
         });
 
         binding.buttonDeleteImages.setOnClickListener((View v) -> {
-           delete(AttachmentType.IMAGE, v);
+            delete(AttachmentType.IMAGE, v);
         });
 
         binding.buttonDeleteVideos.setOnClickListener((View v) -> {
@@ -54,17 +50,12 @@ public class MemoryManagementActivity extends AppCompatActivity {
         binding.progressCircular.setVisibility(View.VISIBLE);
         binding.totalUsedText.setText(getString(R.string.memory_management_loading));
         Thread calculatingThread = new Thread(() -> {
-            for(File file :  getExternalCacheDir().listFiles())
-            {
-                if(file.isFile())
-                {
+            for (File file : getExternalCacheDir().listFiles()) {
+                if (file.isFile()) {
 
-                    if(FileClassifier.isImageFile(file.getPath()))
-                    {
+                    if (FileClassifier.isImageFile(file.getPath())) {
                         imagesSize += file.length();
-                    }
-                    else
-                    {
+                    } else {
                         videosSize += file.length();
                     }
                 }
@@ -81,41 +72,34 @@ public class MemoryManagementActivity extends AppCompatActivity {
         });
         calculatingThread.start();
     }
-    private void delete(AttachmentType attachmentType, View buttonLayout)
-    {
+
+    private void delete(AttachmentType attachmentType, View buttonLayout) {
         buttonLayout.setEnabled(false);
         buttonLayout.setAlpha(0.5f);
 
         Thread deletingThread = new Thread(() -> {
 
-                for(File file :  getExternalCacheDir().listFiles())
-                {
-                    if(file.isFile())
-                    {
+            for (File file : getExternalCacheDir().listFiles()) {
+                if (file.isFile()) {
 
-                        if(FileClassifier.isImageFile(file.getPath()))
-                        {
-                            if(attachmentType == AttachmentType.IMAGE)
-                            {
-                                file.delete();
-                            }
+                    if (FileClassifier.isImageFile(file.getPath())) {
+                        if (attachmentType == AttachmentType.IMAGE) {
+                            file.delete();
                         }
-                        else
-                        {
-                            if(attachmentType == AttachmentType.VIDEO)
-                            {
-                                file.delete();
-                            }
+                    } else {
+                        if (attachmentType == AttachmentType.VIDEO) {
+                            file.delete();
                         }
                     }
+                }
 
             }
 
-                runOnUiThread(() -> {
-                    calculateUsedSpace();
-                    buttonLayout.setEnabled(true);
-                    buttonLayout.setAlpha(1.0f);
-                });
+            runOnUiThread(() -> {
+                calculateUsedSpace();
+                buttonLayout.setEnabled(true);
+                buttonLayout.setAlpha(1.0f);
+            });
         });
 
         deletingThread.start();

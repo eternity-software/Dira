@@ -46,10 +46,24 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
 
     public static final String PENDING_ROOM_SECRET = "pendingRoomSecret";
     public static final String PENDING_ROOM_NAME = "pendingRoomName";
-
+    private static final Intent[] POWERMANAGER_INTENTS = {
+            new Intent().setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),
+            new Intent().setComponent(new ComponentName("com.letv.android.letvsafe", "com.letv.android.letvsafe.AutobootManageActivity")),
+            new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity")),
+            new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.appcontrol.activity.StartupAppControlActivity")),
+            new Intent().setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.startupapp.StartupAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.oppo.safe", "com.oppo.safe.permission.startup.StartupAppListActivity")),
+            new Intent().setComponent(new ComponentName("com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.AddWhiteListActivity")),
+            new Intent().setComponent(new ComponentName("com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.BgStartUpManager")),
+            new Intent().setComponent(new ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity")),
+            new Intent().setComponent(new ComponentName("com.samsung.android.lool", "com.samsung.android.sm.ui.battery.BatteryActivity")),
+            new Intent().setComponent(new ComponentName("com.htc.pitroad", "com.htc.pitroad.landingpage.activity.LandingPageActivity")),
+            new Intent().setComponent(new ComponentName("com.asus.mobilemanager", "com.asus.mobilemanager.MainActivity"))
+    };
     private RoomSelectorAdapter roomSelectorAdapter;
     private boolean isRoomsUpdating = false;
-
     private CacheUtils cacheUtils;
 
     @Override
@@ -103,16 +117,13 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
         UpdateProcessor.getInstance(getApplicationContext()).addUpdateListener(this);
 
         updateRooms();
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED )
-        {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
             askForPermissions();
         }
 
 
-
     }
-
 
     private void askForPermissions() {
         DiraPopup diraPopup = new DiraPopup(RoomSelectorActivity.this);
@@ -143,8 +154,7 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
                             String packageName = getPackageName();
                             PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
                             if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                                for(Intent intent2 : POWERMANAGER_INTENTS)
-                                {
+                                for (Intent intent2 : POWERMANAGER_INTENTS) {
                                     if (getPackageManager().resolveActivity(
                                             intent,
                                             PackageManager.MATCH_DEFAULT_ONLY
@@ -166,26 +176,6 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
 
 
     }
-
-    private static final Intent[] POWERMANAGER_INTENTS = {
-            new Intent().setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),
-            new Intent().setComponent(new ComponentName("com.letv.android.letvsafe", "com.letv.android.letvsafe.AutobootManageActivity")),
-            new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity")),
-            new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity")),
-            new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.appcontrol.activity.StartupAppControlActivity")),
-            new Intent().setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity")),
-            new Intent().setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.startupapp.StartupAppListActivity")),
-            new Intent().setComponent(new ComponentName("com.oppo.safe", "com.oppo.safe.permission.startup.StartupAppListActivity")),
-            new Intent().setComponent(new ComponentName("com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.AddWhiteListActivity")),
-            new Intent().setComponent(new ComponentName("com.iqoo.secure", "com.iqoo.secure.ui.phoneoptimize.BgStartUpManager")),
-            new Intent().setComponent(new ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity")),
-            new Intent().setComponent(new ComponentName("com.samsung.android.lool", "com.samsung.android.sm.ui.battery.BatteryActivity")),
-            new Intent().setComponent(new ComponentName("com.htc.pitroad", "com.htc.pitroad.landingpage.activity.LandingPageActivity")),
-            new Intent().setComponent(new ComponentName("com.asus.mobilemanager", "com.asus.mobilemanager.MainActivity"))
-    };
-
-
-
 
     private void updateRooms() {
         if (isRoomsUpdating) return;
@@ -272,8 +262,7 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
         } else if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
             updateRooms();
         } else if (update.getUpdateType() == UpdateType.SERVER_SYNC) {
-            if(!((ServerSyncUpdate) update).getSupportedApis().contains(UpdateProcessor.API_VERSION))
-            {
+            if (!((ServerSyncUpdate) update).getSupportedApis().contains(UpdateProcessor.API_VERSION)) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

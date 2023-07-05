@@ -22,7 +22,7 @@ import com.diraapp.updates.listeners.UpdateListener;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.SliderActivity;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 public class JoinRoomActivity extends AppCompatActivity implements ServerSelectorBottomSheet.BottomSheetListener {
 
@@ -88,7 +88,7 @@ public class JoinRoomActivity extends AppCompatActivity implements ServerSelecto
                                         }
 
                                         UpdateMemberRequest updateMemberRequest = new UpdateMemberRequest(nickname, base64Pic,
-                                                Arrays.asList(((NewRoomUpdate) update).getInviteRoom().getSecretName()), id, System.currentTimeMillis());
+                                                Collections.singletonList(((NewRoomUpdate) update).getInviteRoom().getSecretName()), id, System.currentTimeMillis());
                                         try {
 
 

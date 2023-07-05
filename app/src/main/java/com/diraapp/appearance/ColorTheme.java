@@ -12,25 +12,16 @@ import java.util.List;
 
 public class ColorTheme {
 
+    private static final HashMap<ColorThemeType, ColorTheme> colorThemes = new HashMap<>();
     private int selfMessageColor;
-
     private int messageColor;
-
     private ColorThemeType type;
-
     private int accentColor;
-
     private int selfTextColor;
-
     private int textColor;
-
     private int sendButtonColor;
-
     private int previewColor;
-
     private String name;
-
-    private static HashMap<ColorThemeType, ColorTheme> colorThemes = new HashMap<>();
 
     public static void initColorThemes(Context context) {
         ColorTheme main = new ColorTheme();
@@ -105,7 +96,7 @@ public class ColorTheme {
         list.add(colorThemes.get(ColorThemeType.GREEN));
 
         if (list.size() != colorThemes.size()) {
-            for (ColorTheme theme: colorThemes.values()) {
+            for (ColorTheme theme : colorThemes.values()) {
                 if (!list.contains(theme)) {
                     list.add(theme);
                 }
@@ -143,7 +134,7 @@ public class ColorTheme {
         return selfTextColor;
     }
 
-    public int getTextColor(){
+    public int getTextColor() {
         return textColor;
     }
 

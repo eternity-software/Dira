@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.diraapp.bottomsheet.InvitationCodeBottomSheet;
 import com.diraapp.bottomsheet.ServerSelectorBottomSheet;
 import com.diraapp.databinding.ActivityCreateRoomBinding;
 import com.diraapp.db.DiraRoomDatabase;
@@ -63,8 +62,7 @@ public class CreateRoomActivity extends AppCompatActivity implements CreateRoomC
         });
     }
 
-    private void selectServer()
-    {
+    private void selectServer() {
         ServerSelectorBottomSheet serverSelectorBottomSheet = new ServerSelectorBottomSheet();
 
         serverSelectorBottomSheet.show(getSupportFragmentManager(), "Server selector  bottom sheet");

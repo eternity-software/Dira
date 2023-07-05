@@ -148,6 +148,4 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     }
 
 
-
-
 }

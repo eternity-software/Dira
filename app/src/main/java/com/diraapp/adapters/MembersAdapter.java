@@ -50,22 +50,22 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MembersAdapter.ViewHolder holder, int position) {
-       Member member = members.get(position);
+        Member member = members.get(position);
 
-       holder.memberName.setText(member.getNickname());
-       Bitmap pic = AppStorage.getBitmapFromPath(member.getImagePath());
+        holder.memberName.setText(member.getNickname());
+        Bitmap pic = AppStorage.getBitmapFromPath(member.getImagePath());
 
-       holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               DiraPopup diraPopup = new DiraPopup(context);
-               diraPopup.setCancellable(true);
-               diraPopup.show(context.getString(R.string.delete_member_title),
-                       context.getString(R.string.delete_member_text),
-                       null,
-                       null, new Runnable() {
-                           @Override
-                           public void run() {
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DiraPopup diraPopup = new DiraPopup(context);
+                diraPopup.setCancellable(true);
+                diraPopup.show(context.getString(R.string.delete_member_title),
+                        context.getString(R.string.delete_member_text),
+                        null,
+                        null, new Runnable() {
+                            @Override
+                            public void run() {
                                 Thread thread = new Thread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -79,23 +79,23 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
 
                                 notifyItemRemoved(index);
 
-                           }
-                       });
-           }
-       });
-       if(pic != null) {
-           holder.memberPicture.setImageBitmap(pic);
-           holder.memberPicture.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                   Intent intent = new Intent(layoutInflater.getContext(), PreviewActivity.class);
-                   intent.putExtra(PreviewActivity.URI, member.getImagePath());
-                   intent.putExtra(PreviewActivity.IS_VIDEO, false);
-                   layoutInflater.getContext().startActivity(intent);
-               }
-           });
+                            }
+                        });
+            }
+        });
+        if (pic != null) {
+            holder.memberPicture.setImageBitmap(pic);
+            holder.memberPicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(layoutInflater.getContext(), PreviewActivity.class);
+                    intent.putExtra(PreviewActivity.URI, member.getImagePath());
+                    intent.putExtra(PreviewActivity.IS_VIDEO, false);
+                    layoutInflater.getContext().startActivity(intent);
+                }
+            });
 
-       }
+        }
     }
 
     @Override
@@ -108,7 +108,6 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
         TextView memberName;
         ImageView memberPicture;
         ImageView deleteButton;
-
 
 
         public ViewHolder(@NonNull View itemView) {

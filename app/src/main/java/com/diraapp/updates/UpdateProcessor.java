@@ -39,13 +39,11 @@ import com.google.gson.Gson;
 
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  * UpdateProcessor is a core Dira class
@@ -66,53 +64,39 @@ public class UpdateProcessor {
     private final List<UpdateListener> updateListeners = new ArrayList<>();
     private final List<ProcessorListener> processorListeners = new ArrayList<>();
     private final Context context;
-    int updatedRoomsCount = 0;
     /**
      * Requests ids counter
      */
-    private HashMap<String, Long> lastRequestIds = new HashMap<>();
+    private final HashMap<String, Long> lastRequestIds = new HashMap<>();
     /**
      * Server startup time allows to sync updates ids
      */
-    private HashMap<String, Long> timeServerStartups = new HashMap<>();
-    private RoomDao roomDao;
-    private MemberDao memberDao;
+    private final HashMap<String, Long> timeServerStartups = new HashMap<>();
+    private final RoomDao roomDao;
+    private final MemberDao memberDao;
+    private final RoomUpdater roomUpdater;
+    int updatedRoomsCount = 0;
     private SocketClient socketClient;
-    private RoomUpdater roomUpdater;
 
     public UpdateProcessor(Context context) throws SingletonException {
         if (updateProcessor != null) throw new SingletonException();
         this.context = context;
 
 
-            for(String serverAddress : AppStorage.getServerList(context))
-            {
-                try {
-                    registerSocket(serverAddress);
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
+        for (String serverAddress : AppStorage.getServerList(context)) {
+            try {
+                registerSocket(serverAddress);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
             }
+        }
 
 
-            roomDao = DiraRoomDatabase.getDatabase(context).getRoomDao();
-            memberDao = DiraRoomDatabase.getDatabase(context).getMemberDao();
-            roomUpdater = new RoomUpdater(roomDao, memberDao, context);
+        roomDao = DiraRoomDatabase.getDatabase(context).getRoomDao();
+        memberDao = DiraRoomDatabase.getDatabase(context).getMemberDao();
+        roomUpdater = new RoomUpdater(roomDao, memberDao, context);
 
     }
-
-    public String getFileServer(String address){
-        System.out.println("Getting file server  for " + address);
-        return fileServers.get(address);
-    }
-
-    private void registerSocket(String address) throws URISyntaxException {
-        socketClient = new SocketClient(address);
-        setupSocketClient(socketClient);
-        socketClient.connect();
-        socketClients.put(address, socketClient);
-    }
-
 
     public static UpdateProcessor getInstance() {
         return updateProcessor;
@@ -127,6 +111,18 @@ public class UpdateProcessor {
             }
         }
         return updateProcessor;
+    }
+
+    public String getFileServer(String address) {
+        System.out.println("Getting file server  for " + address);
+        return fileServers.get(address);
+    }
+
+    private void registerSocket(String address) throws URISyntaxException {
+        socketClient = new SocketClient(address);
+        setupSocketClient(socketClient);
+        socketClient.connect();
+        socketClients.put(address, socketClient);
     }
 
     /**
@@ -156,8 +152,7 @@ public class UpdateProcessor {
             }
             long timeServerStartup = 0;
 
-            if(timeServerStartups.containsKey(address))
-            {
+            if (timeServerStartups.containsKey(address)) {
                 timeServerStartup = timeServerStartups.get(address);
             }
             Room roomUpdate = roomDao.getRoomBySecretName(update.getRoomSecret());
@@ -210,7 +205,6 @@ public class UpdateProcessor {
             }
         } catch (OldUpdateException oldUpdateException) {
             oldUpdateException.printStackTrace();
-            return;
         }
     }
 
@@ -251,10 +245,9 @@ public class UpdateProcessor {
     }
 
     public void deleteRoom(Room room) {
-       for(Member member : memberDao.getMembersByRoomSecret(room.getSecretName()))
-       {
-           memberDao.delete(member);
-       }
+        for (Member member : memberDao.getMembersByRoomSecret(room.getSecretName())) {
+            memberDao.delete(member);
+        }
         roomDao.delete(room);
 
     }
@@ -273,8 +266,7 @@ public class UpdateProcessor {
         try {
             long lastRequestId = 0;
 
-            if(lastRequestIds.containsKey(address))
-            {
+            if (lastRequestIds.containsKey(address)) {
                 lastRequestId = lastRequestIds.get(address);
             }
 
@@ -327,8 +319,7 @@ public class UpdateProcessor {
      */
     public void reconnectSockets() {
         Log.d("UpdateProcessor", "Reconnecting sockets..");
-        try
-        {
+        try {
             for (String address : new HashSet<>(socketClients.keySet())) {
                 SocketClient socketClient = socketClients.get(address);
                 if (socketClient != null) {
@@ -355,8 +346,7 @@ public class UpdateProcessor {
                 socketClients.put(address, socketClient);
 
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -470,21 +460,8 @@ public class UpdateProcessor {
     }
 
     public long getTimeServerStartup(String address) {
-        if(!timeServerStartups.containsKey(address)) return 0;
+        if (!timeServerStartups.containsKey(address)) return 0;
         return timeServerStartups.get(address);
-    }
-
-    public void addCustomServer(String address) throws URISyntaxException {
-        socketClients.put(address, new SocketClient(address));
-    }
-
-    public void removeCustomServer(String address) {
-        try {
-            socketClients.get(address).close();
-            socketClients.remove(address);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public HashMap<String, SocketClient> getSocketClients() {

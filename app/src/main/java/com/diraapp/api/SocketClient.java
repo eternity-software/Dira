@@ -4,7 +4,6 @@ import com.diraapp.updates.UpdateProcessor;
 import com.diraapp.updates.listeners.SocketListener;
 
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
@@ -46,7 +45,7 @@ public class SocketClient extends WebSocketClient {
 
     @Override
     public void onMessage(String message) {
-        System.out.println( address + " In ->> " + message);
+        System.out.println(address + " In ->> " + message);
         try {
             UpdateProcessor.getInstance().notifyMessage(message, address);
         } catch (Exception e) {

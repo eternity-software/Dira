@@ -2,10 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppSlideTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark"
-    style="@style/AppSlideTheme"
     tools:context=".activities.RoomServersActivity">
 
     <ImageView
@@ -128,11 +128,11 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="24dp"
+                android:layout_marginBottom="20dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/montserratsemibold"
                 android:text="@string/room_servers_add_tip"
                 android:textColor="@color/light_gray"
-                android:layout_marginBottom="20dp"
                 android:textSize="14sp" />
         </LinearLayout>
     </ScrollView>

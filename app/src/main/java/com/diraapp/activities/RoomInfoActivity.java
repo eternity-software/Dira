@@ -178,8 +178,6 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
         });
 
 
-
-
         loadData();
         UpdateProcessor.getInstance().addUpdateListener(this);
     }
@@ -199,7 +197,6 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                 members = DiraRoomDatabase.getDatabase(getApplicationContext()).getMemberDao().getMembersByRoomSecret(room.getSecretName());
 
 
-
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -213,13 +210,10 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                         ImageView memberImage_1 = findViewById(R.id.icon_user_1);
                         ImageView memberImage_2 = findViewById(R.id.icon_user_2);
 
-                        if(members.size() == 1)
-                        {
+                        if (members.size() == 1) {
                             memberImage_2.setVisibility(View.GONE);
                             memberImage_1.setImageBitmap(AppStorage.getBitmapFromPath(members.get(0).getImagePath()));
-                        }
-                        else if(members.size() > 1)
-                        {
+                        } else if (members.size() > 1) {
                             memberImage_2.setImageBitmap(AppStorage.getBitmapFromPath(members.get(1).getImagePath()));
                         }
 
@@ -231,7 +225,7 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                 });
                 ArrayList<FileInfo> attachments = new ArrayList<>();
 
-                for(Message message : DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getAllMessageByUpdatedTime(roomSecret)) {
+                for (Message message : DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getAllMessageByUpdatedTime(roomSecret)) {
                     if (message.getAttachments() != null) {
                         if (message.getAttachments().size() > 0) {
                             Attachment attachment = message.getAttachments().get(0);
@@ -249,10 +243,10 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                                     attachments.add(new FileInfo(file.getName(), file.getPath(), mimeType));
                                 }
                             }
-                        }}
+                        }
+                    }
 
                 }
-
 
 
                 RecyclerView gallery = findViewById(R.id.gridView);

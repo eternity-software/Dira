@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.diraapp.R;
-import com.diraapp.api.requests.UpdateMemberRequest;
 import com.diraapp.adapters.MediaGridItemListener;
+import com.diraapp.api.requests.UpdateMemberRequest;
 import com.diraapp.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.components.FilePreview;
 import com.diraapp.db.DiraRoomDatabase;

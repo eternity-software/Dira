@@ -2,38 +2,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginEnd="10dp"
     android:background="@drawable/color_scheme"
     android:backgroundTint="@color/gray"
-    android:padding="1dp"
-    android:layout_marginEnd="10dp"
-    >
+    android:padding="1dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/color_scheme"
-        android:paddingTop="13dp"
-        android:paddingHorizontal="18dp"
-        android:paddingBottom="8dp"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:paddingHorizontal="18dp"
+        android:paddingTop="13dp"
+        android:paddingBottom="8dp">
 
         <ImageView
+            android:id="@+id/appearance_color"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@drawable/color_circle"
-            android:id="@+id/appearance_color"/>
+            android:background="@drawable/color_circle" />
 
         <TextView
-            android:layout_marginTop="10dp"
+            android:id="@+id/appearance_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:fontFamily="@font/montserratbold"
             android:text="Dira"
             android:textColor="@color/white"
-            android:textSize="14sp"
-            android:id="@+id/appearance_name" />
+            android:textSize="14sp" />
 
     </LinearLayout>
 

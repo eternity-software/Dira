@@ -13,7 +13,7 @@ import com.diraapp.db.entities.Message;
 import com.diraapp.db.entities.Room;
 
 @Database(entities = {Room.class, Message.class, Member.class},
-        autoMigrations = {@AutoMigration(from=6, to=7)},
+        autoMigrations = {@AutoMigration(from = 6, to = 7)},
         version = 7,
         exportSchema = true)
 public abstract class DiraRoomDatabase extends RoomDatabase {

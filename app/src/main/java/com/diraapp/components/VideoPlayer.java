@@ -239,7 +239,8 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
 //            mediaPlayer.setOnBufferingUpdateListener(this);
 //            mediaPlayer.setOnCompletionListener(this);
 
-                                if (videoPlayerListener != null) videoPlayerListener.onReady(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
+                                if (videoPlayerListener != null)
+                                    videoPlayerListener.onReady(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
                                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                             } catch (Exception e) {
                                 e.printStackTrace();

@@ -22,10 +22,8 @@ public class ChatBackgroundAdapter extends RecyclerView.Adapter<ChatBackgroundAd
 
     private final LayoutInflater layoutInflater;
     private final Activity context;
-
+    private final SelectorListener listener;
     private List<ChatBackground> list = new ArrayList<>();
-
-    private SelectorListener listener;
 
     public ChatBackgroundAdapter(Activity context, List<ChatBackground> list, SelectorListener listener) {
         this.context = context;
@@ -74,6 +72,11 @@ public class ChatBackgroundAdapter extends RecyclerView.Adapter<ChatBackgroundAd
         return list.size();
     }
 
+    public interface SelectorListener {
+
+        void onSelectorClicked(ChatBackground background);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView name;
@@ -88,10 +91,5 @@ public class ChatBackgroundAdapter extends RecyclerView.Adapter<ChatBackgroundAd
             this.imageView = itemView.findViewById(R.id.appearance_image);
             this.layout = (LinearLayout) itemView;
         }
-    }
-
-    public interface SelectorListener {
-
-        public void onSelectorClicked(ChatBackground background);
     }
 }

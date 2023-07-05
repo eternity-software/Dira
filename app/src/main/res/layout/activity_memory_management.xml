@@ -2,11 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppSlideTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark"
-    style="@style/AppSlideTheme"
     tools:context=".activities.MemoryManagementActivity">
+
     <ImageView
         android:id="@+id/button_back"
         android:layout_width="50dp"
@@ -34,10 +35,10 @@
 
             <TextView
 
-                android:layout_marginTop="24dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
+                android:layout_marginTop="24dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/montserratbold"
                 android:text="@string/memory_management_title"
@@ -46,15 +47,17 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_marginTop="20dp"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
                 <ProgressBar
                     android:id="@+id/progress_circular"
                     android:layout_width="20dp"
-                    android:layout_marginRight="12dp"
+                    android:layout_height="20dp"
                     android:layout_gravity="center_vertical"
-                    android:indeterminateTint="@color/accent"
-                    android:layout_height="20dp"/>
+                    android:layout_marginRight="12dp"
+                    android:indeterminateTint="@color/accent" />
+
                 <TextView
                     android:id="@+id/total_used_text"
                     android:layout_width="wrap_content"
@@ -68,16 +71,15 @@
             </LinearLayout>
 
 
-
             <LinearLayout
                 android:id="@+id/button_delete_images"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/gray_rounded"
                 android:layout_marginTop="20dp"
+                android:background="@drawable/gray_rounded"
                 android:orientation="vertical"
-                android:paddingVertical="14dp"
-                android:paddingHorizontal="18dp">
+                android:paddingHorizontal="18dp"
+                android:paddingVertical="14dp">
 
                 <TextView
 
@@ -104,12 +106,12 @@
             <LinearLayout
                 android:id="@+id/button_delete_videos"
                 android:layout_width="match_parent"
-                android:background="@drawable/gray_rounded"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:background="@drawable/gray_rounded"
                 android:orientation="vertical"
-                android:paddingVertical="14dp"
                 android:paddingHorizontal="18dp"
-                android:layout_height="wrap_content">
+                android:paddingVertical="14dp">
 
                 <TextView
 

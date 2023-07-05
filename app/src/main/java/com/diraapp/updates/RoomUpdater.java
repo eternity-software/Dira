@@ -60,7 +60,7 @@ public class RoomUpdater {
                         imagePath = AppStorage.saveToInternalStorage(
                                 AppStorage.getBitmapFromBase64(roomMember.getImageBase64()), room.getSecretName(), context);
                     }
-                    System.out.println("Member: " + roomMember.getNickname() );
+                    System.out.println("Member: " + roomMember.getNickname());
                     member = new Member(roomMember.getId(), roomMember.getNickname(),
                             imagePath, roomMember.getRoomSecret(), roomMember.getLastTimeUpdated());
                 }

@@ -8,7 +8,6 @@ import com.diraapp.api.updates.AcceptedStatusAnswer;
 import com.diraapp.api.updates.Update;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.updates.UpdateProcessor;
-import com.diraapp.updates.listeners.UpdateListener;
 import com.diraapp.utils.KeyGenerator;
 
 import org.java_websocket.exceptions.WebsocketNotConnectedException;

@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 import com.diraapp.adapters.RoomServerAdapter;
-import com.diraapp.components.DiraPopup;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class ServerSelectorBottomSheet extends BottomSheetDialogFragment {

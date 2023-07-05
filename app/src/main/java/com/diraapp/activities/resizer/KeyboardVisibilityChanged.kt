@@ -1,4 +1,5 @@
-package com.diraapp.activities.resizer;
+package com.diraapp.activities.resizer
+
 data class KeyboardVisibilityChanged(
     val visible: Boolean,
     val contentHeight: Int,

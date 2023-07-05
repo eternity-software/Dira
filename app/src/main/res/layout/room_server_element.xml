@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/button_delete_images"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:background="@drawable/gray_rounded"
+    android:orientation="horizontal"
+    android:paddingHorizontal="24dp"
+    android:paddingVertical="18dp">
+
+    <TextView
+        android:id="@+id/server_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/gray_rounded"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal"
-        android:paddingVertical="18dp"
-        android:paddingHorizontal="24dp">
+        android:layout_weight="1"
+        android:fontFamily="@font/montserratsemibold"
+        android:text="@string/room_servers_official"
+        android:textColor="@color/accent"
+        android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/server_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserratsemibold"
-            android:text="@string/room_servers_official"
-            android:layout_weight="1"
-            android:textColor="@color/accent"
-            android:textSize="18sp" />
-
-        <ImageView
-            android:id="@+id/button_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?actionBarItemBackground"
-            android:src="@drawable/ic_trash"
-            android:textSize="14sp"
-            app:tint="@color/light_gray" />
+    <ImageView
+        android:id="@+id/button_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?actionBarItemBackground"
+        android:src="@drawable/ic_trash"
+        android:textSize="14sp"
+        app:tint="@color/light_gray" />
 
 </LinearLayout>

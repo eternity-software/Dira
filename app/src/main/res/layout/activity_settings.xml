@@ -38,10 +38,10 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_marginTop="24dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
+                android:layout_marginTop="24dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/montserratbold"
                 android:text="@string/settings_title"
@@ -52,22 +52,22 @@
                 android:id="@+id/button_memory_management"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/gray_rounded"
                 android:layout_marginTop="30dp"
-                android:orientation="horizontal"
+                android:background="@drawable/gray_rounded"
                 android:gravity="center_vertical"
-                android:paddingVertical="16dp"
-                android:paddingHorizontal="20dp">
-                
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="16dp">
+
                 <ImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
-                    android:src="@drawable/memory_management_icon"/>
+                    android:src="@drawable/memory_management_icon" />
 
                 <TextView
-                    android:layout_marginStart="12dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
                     android:fontFamily="@font/montserratsemibold"
                     android:text="@string/settings_memory_managment"
                     android:textColor="@color/white"
@@ -81,7 +81,7 @@
                     <ImageView
                         android:layout_width="14dp"
                         android:layout_height="14dp"
-                        android:src="@drawable/settings_arrow"/>
+                        android:src="@drawable/settings_arrow" />
 
                 </LinearLayout>
 
@@ -91,22 +91,22 @@
                 android:id="@+id/button_room_servers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/gray_rounded"
                 android:layout_marginTop="10dp"
-                android:orientation="horizontal"
+                android:background="@drawable/gray_rounded"
                 android:gravity="center_vertical"
-                android:paddingVertical="16dp"
-                android:paddingHorizontal="20dp">
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="16dp">
 
                 <ImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
-                    android:src="@drawable/ic_server"/>
+                    android:src="@drawable/ic_server" />
 
                 <TextView
-                    android:layout_marginStart="12dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
                     android:fontFamily="@font/montserratsemibold"
                     android:text="@string/settings_room_servers"
                     android:textColor="@color/white"
@@ -120,7 +120,7 @@
                     <ImageView
                         android:layout_width="14dp"
                         android:layout_height="14dp"
-                        android:src="@drawable/settings_arrow"/>
+                        android:src="@drawable/settings_arrow" />
 
                 </LinearLayout>
 
@@ -130,12 +130,12 @@
                 android:id="@+id/button_chats"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/gray_rounded"
                 android:layout_marginTop="10dp"
-                android:orientation="horizontal"
+                android:background="@drawable/gray_rounded"
                 android:gravity="center_vertical"
-                android:paddingVertical="16dp"
-                android:paddingHorizontal="20dp">
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="16dp">
 
                 <ImageView
                     android:layout_width="22dp"
@@ -143,9 +143,9 @@
                     android:src="@drawable/ic_chats" />
 
                 <TextView
-                    android:layout_marginStart="12dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
                     android:fontFamily="@font/montserratsemibold"
                     android:text="@string/settings_chats"
                     android:textColor="@color/white"
@@ -159,7 +159,7 @@
                     <ImageView
                         android:layout_width="14dp"
                         android:layout_height="14dp"
-                        android:src="@drawable/settings_arrow"/>
+                        android:src="@drawable/settings_arrow" />
 
                 </LinearLayout>
 
@@ -170,8 +170,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_marginBottom="8dp"
                 android:layout_marginTop="30dp"
+                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/montserratsemibold"
                 android:text="@string/settings_privacy_policy"
@@ -192,11 +192,11 @@
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:adjustViewBounds="true"
                 android:layout_height="48dp"
                 android:layout_marginBottom="32dp"
-                android:src="@drawable/ety_logo"/>
-            
+                android:adjustViewBounds="true"
+                android:src="@drawable/ety_logo" />
+
         </LinearLayout>
 
     </ScrollView>

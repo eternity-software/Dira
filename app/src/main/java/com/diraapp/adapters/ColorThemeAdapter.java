@@ -2,13 +2,11 @@ package com.diraapp.adapters;
 
 import android.app.Activity;
 import android.content.res.ColorStateList;
-import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diraapp.R;
 import com.diraapp.appearance.AppTheme;
 import com.diraapp.appearance.ColorTheme;
-import com.diraapp.utils.Numbers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +31,7 @@ public class ColorThemeAdapter extends RecyclerView.Adapter<ColorThemeAdapter.Vi
     public ColorThemeAdapter(Activity context, List<ColorTheme> list) {
         this.context = context;
         this.list = list;
-        this.layoutInflater = LayoutInflater.from(context);;
+        this.layoutInflater = LayoutInflater.from(context);
     }
 
     @NonNull
@@ -81,6 +78,11 @@ public class ColorThemeAdapter extends RecyclerView.Adapter<ColorThemeAdapter.Vi
         return list.size();
     }
 
+    public interface SelectorListener {
+
+        void onSelectorClicked();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView name;
@@ -95,10 +97,5 @@ public class ColorThemeAdapter extends RecyclerView.Adapter<ColorThemeAdapter.Vi
             this.imageView = itemView.findViewById(R.id.appearance_color);
             this.layout = (LinearLayout) itemView;
         }
-    }
-
-    public interface SelectorListener {
-
-        public void onSelectorClicked();
     }
 }

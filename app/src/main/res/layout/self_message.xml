@@ -1,62 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/messageback"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="0dp"
     android:paddingVertical="6dp"
 
-  >
+    >
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/date_view"
-            android:layout_gravity="center"
-            android:paddingVertical="5dp"
-            android:paddingHorizontal="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
             android:autoLink="all"
-            android:gravity="center"
-
-            android:textIsSelectable="true"
-            android:fontFamily="@font/montserratsemibold"
-            android:text="05 december, 2004"
             android:background="@drawable/gray_rounded"
             android:backgroundTint="@color/dark"
 
-            android:textColor="@color/light_gray"
-            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/montserratsemibold"
+            android:gravity="center"
             android:includeFontPadding="false"
-            android:textSize="13sp"
-            />
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="5dp"
+
+            android:text="05 december, 2004"
+            android:textColor="@color/light_gray"
+            android:textIsSelectable="true"
+            android:textSize="13sp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
-            android:paddingRight="15dp"
+            android:orientation="horizontal"
             android:paddingLeft="60dp"
-            android:orientation="horizontal">
+            android:paddingRight="15dp">
 
             <TextView
                 android:id="@+id/time_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-
                 android:layout_gravity="bottom"
-                android:textColor="@color/light_gray"
+
+                android:layout_marginRight="8dp"
+                android:layout_weight="0"
                 android:background="@drawable/gray_rounded"
                 android:backgroundTint="@color/dark"
                 android:fontFamily="@font/montserratsemibold"
                 android:gravity="bottom"
                 android:padding="5dp"
-                android:layout_marginRight="8dp"
                 android:text="00:00"
+                android:textColor="@color/light_gray"
 
                 android:textSize="12sp" />
 
@@ -66,37 +67,41 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/self_message"
                 android:orientation="vertical">
+
                 <LinearLayout
                     android:id="@+id/loading_attachment_layout"
                     android:layout_width="100dp"
-                    android:visibility="gone"
+                    android:layout_height="100dp"
                     android:gravity="center"
-                    android:layout_height="100dp">
+                    android:visibility="gone">
+
                     <ProgressBar
                         android:id="@+id/attachment_progressbar"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center" />
                 </LinearLayout>
+
                 <androidx.cardview.widget.CardView
                     android:layout_width="wrap_content"
-                    app:cardCornerRadius="14dp"
+                    android:layout_height="wrap_content"
                     app:cardBackgroundColor="@android:color/transparent"
-                    app:cardElevation="0dp"
-                    android:layout_height="wrap_content">
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="0dp">
+
                     <ImageView
                         android:id="@+id/image_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
+                        android:adjustViewBounds="true"
 
-                        android:adjustViewBounds="true"/>
+                        android:visibility="gone" />
 
                     <com.diraapp.components.VideoPlayer
                         android:id="@+id/video_player"
                         android:layout_width="wrap_content"
                         android:layout_height="200dp"
-                        android:adjustViewBounds="true"/>
+                        android:adjustViewBounds="true" />
                 </androidx.cardview.widget.CardView>
 
 
@@ -104,56 +109,54 @@
                     android:id="@+id/message_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:autoLink="all"
                     android:layout_margin="10dp"
+                    android:autoLink="all"
 
-                    android:textIsSelectable="true"
                     android:fontFamily="@font/montserratsemibold"
+                    android:includeFontPadding="false"
                     android:text="самсой"
                     android:textColor="@color/light_gray"
 
-                    android:includeFontPadding="false"
-                    android:textSize="15sp"
-                    />
+                    android:textIsSelectable="true"
+                    android:textSize="15sp" />
 
                 <LinearLayout
                     android:id="@+id/attachment_too_large"
                     android:layout_width="wrap_content"
 
-                    android:orientation="vertical"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/attachment_too_large_text"
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:autoLink="all"
                         android:layout_margin="10dp"
+                        android:autoLink="all"
 
-                        android:textIsSelectable="true"
                         android:fontFamily="@font/montserratsemibold"
+                        android:includeFontPadding="false"
                         android:text="@string/attachment_large_title"
                         android:textColor="@color/white"
 
-                        android:includeFontPadding="false"
-                        android:textSize="15sp"
-                        />
+                        android:textIsSelectable="true"
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/size_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:autoLink="all"
                         android:layout_marginHorizontal="10dp"
+                        android:autoLink="all"
 
-                        android:textIsSelectable="true"
                         android:fontFamily="@font/montserratsemibold"
+                        android:includeFontPadding="false"
                         android:text="3000 mb"
                         android:textColor="@color/light_gray"
 
-                        android:includeFontPadding="false"
-                        android:textSize="13sp"
-                        />
+                        android:textIsSelectable="true"
+                        android:textSize="13sp" />
 
                     <TextView
                         android:id="@+id/download_button"
@@ -162,17 +165,16 @@
 
                         android:layout_marginHorizontal="10dp"
                         android:layout_marginVertical="10dp"
-                        android:gravity="center"
                         android:background="@drawable/accent_rounded"
-
-
                         android:fontFamily="@font/montserratsemibold"
+
+
+                        android:gravity="center"
                         android:text="@string/download"
                         android:textColor="@color/dark"
 
 
-                        android:textSize="13sp"
-                        />
+                        android:textSize="13sp" />
                 </LinearLayout>
 
 
@@ -188,7 +190,6 @@
 
         </LinearLayout>
     </LinearLayout>
-
 
 
 </RelativeLayout>

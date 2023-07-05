@@ -24,7 +24,6 @@ import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class AppStorage {
@@ -37,13 +36,13 @@ public class AppStorage {
 
     /**
      * Save room servers to cache
+     *
      * @param serverList
      * @param context
      */
-    public static void saveServerList(ArrayList<String> serverList, Context context)
-    {
+    public static void saveServerList(ArrayList<String> serverList, Context context) {
         Gson gson = new Gson();
-        String json = gson.toJson(serverList).toString();
+        String json = gson.toJson(serverList);
         CacheUtils cacheUtils = new CacheUtils(context);
         cacheUtils.setString(CacheUtils.SERVER_LIST, json);
     }
@@ -51,29 +50,25 @@ public class AppStorage {
     /**
      * Get room servers
      */
-    public static ArrayList<String> getServerList(Context context)
-    {
+    public static ArrayList<String> getServerList(Context context) {
         Gson gson = new Gson();
         CacheUtils cacheUtils = new CacheUtils(context);
         String json = cacheUtils.getString(CacheUtils.SERVER_LIST);
         ArrayList<String> serverList = new ArrayList<>();
 
-        if(json != null)
-        {
+        if (json != null) {
             serverList = (ArrayList<String>) gson.fromJson(json, ArrayList.class);
         }
 
         boolean hasOfficialServer = false;
 
-        for(String server : serverList)
-        {
-            if(server.equals(UpdateProcessor.OFFICIAL_ADDRESS))
-            {
+        for (String server : serverList) {
+            if (server.equals(UpdateProcessor.OFFICIAL_ADDRESS)) {
                 hasOfficialServer = true;
+                break;
             }
         }
-        if(!hasOfficialServer)
-        {
+        if (!hasOfficialServer) {
             serverList.add(UpdateProcessor.OFFICIAL_ADDRESS);
         }
 
@@ -91,6 +86,7 @@ public class AppStorage {
             return -1;
         }
     }
+
     public static String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {

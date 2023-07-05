@@ -5,54 +5,55 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clipToPadding="false"
-    android:paddingVertical="6dp"
-  >
+    android:paddingVertical="6dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/date_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:autoLink="all"
-            android:gravity="center"
             android:layout_gravity="center"
-            android:paddingVertical="5dp"
-            android:paddingHorizontal="10dp"
+            android:layout_marginBottom="8dp"
+            android:autoLink="all"
             android:background="@drawable/gray_rounded"
             android:backgroundTint="@color/dark"
-
-            android:textIsSelectable="true"
             android:fontFamily="@font/montserratsemibold"
-            android:text="05 december, 2004"
+            android:gravity="center"
 
-            android:textColor="@color/light_gray"
-            android:layout_marginBottom="8dp"
             android:includeFontPadding="false"
-            android:textSize="13sp"
-            />
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="5dp"
+
+            android:text="05 december, 2004"
+            android:textColor="@color/light_gray"
+            android:textIsSelectable="true"
+            android:textSize="13sp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:paddingLeft="8dp"
-            android:paddingRight="60dp"
-            android:orientation="horizontal">
+            android:paddingRight="60dp">
 
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/picture_container"
                 android:layout_width="40dp"
-                app:cardElevation="0dp"
+                android:layout_height="40dp"
                 app:cardCornerRadius="100dp"
-                android:layout_height="40dp">
+                app:cardElevation="0dp">
+
                 <ImageView
                     android:id="@+id/profile_picture"
 
-                    android:src="@drawable/placeholder"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:src="@drawable/placeholder" />
             </androidx.cardview.widget.CardView>
 
 
@@ -74,9 +75,9 @@
                     android:paddingHorizontal="3dp"
                     android:paddingVertical="5dp"
                     android:text="Author"
-                    android:textSize="12sp"
+                    android:textColor="@color/white"
 
-                    android:textColor="@color/white" />
+                    android:textSize="12sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -97,89 +98,89 @@
                         <LinearLayout
                             android:id="@+id/loading_attachment_layout"
                             android:layout_width="100dp"
-                            android:gravity="center"
-                            android:layout_height="100dp">
+                            android:layout_height="100dp"
+                            android:gravity="center">
+
                             <ProgressBar
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:layout_gravity="center"/>
+                                android:layout_gravity="center" />
                         </LinearLayout>
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="wrap_content"
-                            app:cardCornerRadius="14dp"
+                            android:layout_height="wrap_content"
                             app:cardBackgroundColor="@color/accent_dark"
-                            app:cardElevation="0dp"
-                            android:layout_height="wrap_content">
+                            app:cardCornerRadius="14dp"
+                            app:cardElevation="0dp">
+
                             <ImageView
                                 android:id="@+id/image_view"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:adjustViewBounds="true"/>
+                                android:adjustViewBounds="true" />
 
                             <com.diraapp.components.VideoPlayer
                                 android:id="@+id/video_player"
                                 android:layout_width="wrap_content"
-                                android:layout_height="200dp"
-                                />
+                                android:layout_height="200dp" />
                         </androidx.cardview.widget.CardView>
 
                         <com.diraapp.components.TightTextView
                             android:id="@+id/message_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:autoLink="all"
                             android:layout_margin="10dp"
-                            android:visibility="visible"
-                            android:textIsSelectable="true"
+                            android:autoLink="all"
                             android:fontFamily="@font/montserratsemibold"
+                            android:includeFontPadding="false"
                             android:text="самса по 60р с рыбой и капустой vk.com"
                             android:textColor="@color/dark"
-
                             android:textColorLink="@color/gray"
 
+                            android:textIsSelectable="true"
 
-                            android:includeFontPadding="false"
+
                             android:textSize="15sp"
-                            />
+                            android:visibility="visible" />
+
                         <LinearLayout
                             android:id="@+id/attachment_too_large"
                             android:layout_width="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
                             <TextView
 
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:autoLink="all"
                                 android:layout_margin="10dp"
+                                android:autoLink="all"
 
-                                android:textIsSelectable="true"
                                 android:fontFamily="@font/montserratsemibold"
+                                android:includeFontPadding="false"
                                 android:text="@string/attachment_large_title"
                                 android:textColor="@color/dark"
 
-                                android:includeFontPadding="false"
-                                android:textSize="15sp"
-                                />
+                                android:textIsSelectable="true"
+                                android:textSize="15sp" />
 
                             <TextView
                                 android:id="@+id/size_view"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:autoLink="all"
                                 android:layout_marginHorizontal="10dp"
-
-                                android:textIsSelectable="true"
-                                android:fontFamily="@font/montserratsemibold"
-                                android:text="3000 mb"
-                                android:textColor="@color/gray"
-
                                 android:layout_marginBottom="8dp"
 
+                                android:autoLink="all"
+                                android:fontFamily="@font/montserratsemibold"
                                 android:includeFontPadding="false"
-                                android:textSize="13sp"
-                                />
+                                android:text="3000 mb"
+
+                                android:textColor="@color/gray"
+
+                                android:textIsSelectable="true"
+                                android:textSize="13sp" />
 
                             <TextView
                                 android:id="@+id/download_button"
@@ -188,18 +189,17 @@
 
                                 android:layout_marginHorizontal="10dp"
                                 android:layout_marginVertical="10dp"
-                                android:gravity="center"
                                 android:background="@drawable/gray_rounded"
                                 android:backgroundTint="@color/dark"
-
-
                                 android:fontFamily="@font/montserratsemibold"
+
+
+                                android:gravity="center"
                                 android:text="@string/download"
                                 android:textColor="@color/white"
 
 
-                                android:textSize="13sp"
-                                />
+                                android:textSize="13sp" />
                         </LinearLayout>
 
 
@@ -218,18 +218,18 @@
                         android:id="@+id/time_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0"
+                        android:layout_gravity="bottom"
 
+                        android:layout_marginLeft="4dp"
+                        android:layout_weight="0"
+                        android:background="@drawable/gray_rounded"
+                        android:backgroundTint="@color/dark"
                         android:fontFamily="@font/montserratsemibold"
                         android:gravity="bottom"
                         android:padding="5dp"
                         android:paddingBottom="5dp"
                         android:text="00:00"
-                        android:layout_marginLeft="4dp"
-                        android:layout_gravity="bottom"
                         android:textColor="@color/light_gray"
-                        android:background="@drawable/gray_rounded"
-                        android:backgroundTint="@color/dark"
                         android:textSize="12sp" />
                 </LinearLayout>
 

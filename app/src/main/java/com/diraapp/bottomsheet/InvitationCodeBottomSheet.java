@@ -33,6 +33,7 @@ public class InvitationCodeBottomSheet extends BottomSheetDialogFragment {
         // Пустой фон
         setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
     }
+
     public String getCode() {
         return code;
     }

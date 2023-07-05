@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.graphics.ColorFilter;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -25,12 +24,10 @@ import com.diraapp.activities.PreviewActivity;
 import com.diraapp.appearance.AppTheme;
 import com.diraapp.appearance.ColorTheme;
 import com.diraapp.components.VideoPlayer;
-import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Message;
-import com.diraapp.db.entities.Room;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DownloadHandler;
 import com.diraapp.storage.attachments.AttachmentsStorage;
@@ -59,16 +56,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
     private final LayoutInflater layoutInflater;
     private final Activity context;
     private final List<AttachmentsStorageListener> listeners = new ArrayList<>();
-    private List<Message> messages = new ArrayList<>();
-
-    private HashMap<View, Integer> pendingAsyncOperations = new HashMap<>();
-    private HashMap<String, Bitmap> loadedBitmaps = new HashMap<>();
-    private HashMap<String, Member> members = new HashMap<>();
-
-    private String secretName;
-    private String serverAddress;
-
     private final CacheUtils cacheUtils;
+    private final HashMap<View, Integer> pendingAsyncOperations = new HashMap<>();
+    private final HashMap<String, Bitmap> loadedBitmaps = new HashMap<>();
+    private final String secretName;
+    private final String serverAddress;
+    private List<Message> messages = new ArrayList<>();
+    private HashMap<String, Member> members = new HashMap<>();
 
 
     public RoomMessagesAdapter(Activity context, String secretName, String serverAddress) {
@@ -135,7 +129,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
         holder.dateText.setVisibility(View.GONE);
 
 
-
         Message message = messages.get(position);
         if (message.getText().length() == 0) {
             holder.messageText.setVisibility(View.GONE);
@@ -157,26 +150,22 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
             calendar.setTime(date);
             calendarPrev.setTime(datePrev);
 
-            if(calendar.get(Calendar.DAY_OF_YEAR) == calendarPrev.get(Calendar.DAY_OF_YEAR))
-            {
+            if (calendar.get(Calendar.DAY_OF_YEAR) == calendarPrev.get(Calendar.DAY_OF_YEAR)) {
                 isSameDay = true;
             }
-            if(calendar.get(Calendar.YEAR) == calendarPrev.get(Calendar.YEAR))
-            {
+            if (calendar.get(Calendar.YEAR) == calendarPrev.get(Calendar.YEAR)) {
                 isSameYear = true;
             }
 
 
         }
 
-        if(!isSameDay || !isSameYear)
-        {
+        if (!isSameDay || !isSameYear) {
 
             String dateString = Numbers.getDateFromTimestamp(message.getTime(), !isSameYear);
             holder.dateText.setVisibility(View.VISIBLE);
             holder.dateText.setText(dateString);
         }
-
 
 
         holder.videoPlayer.setVolume(0);
@@ -203,8 +192,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
 
                                     if (file != null) {
                                         updateAttachment(holder, attachment, file);
-                                    } else
-                                    {
+                                    } else {
                                         holder.loading.setVisibility(View.VISIBLE);
                                         SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment, message.getRoomSecret());
                                         AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, serverAddress);
@@ -336,12 +324,9 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
 
                 if (member.getImagePath() != null) {
                     Bitmap bitmap;
-                    if(loadedBitmaps.containsKey(member.getImagePath()))
-                    {
+                    if (loadedBitmaps.containsKey(member.getImagePath())) {
                         bitmap = loadedBitmaps.get(member.getImagePath());
-                    }
-                    else
-                    {
+                    } else {
                         bitmap = AppStorage.getBitmapFromPath(member.getImagePath());
                         loadedBitmaps.put(member.getImagePath(), bitmap);
                     }
@@ -422,20 +407,17 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                     int width = 1;
                     int height = 1;
                     int rotation = 0;
-                    try
-                    {
+                    try {
                         width = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
                         height = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
                         rotation = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
 
-                        if(rotation != 0) {
+                        if (rotation != 0) {
                             width = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
                             height = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
                         }
 
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, false,
                                 attachment, secretName);
@@ -444,7 +426,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<RoomMessagesAdapte
                         return;
                     }
 
-                    if(height > width * 3){
+                    if (height > width * 3) {
                         height = width * 2;
                     }
 

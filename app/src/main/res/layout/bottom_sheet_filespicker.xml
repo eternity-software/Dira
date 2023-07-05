@@ -20,8 +20,7 @@
 
         app:cardCornerRadius="20dp"
         app:cardElevation="3dp"
-        app:cardPreventCornerOverlap="true"
-      >
+        app:cardPreventCornerOverlap="true">
 
         <LinearLayout
             android:id="@+id/content"
@@ -84,12 +83,12 @@
                     android:gravity="center"
                     android:nestedScrollingEnabled="true"
 
+                    android:stretchMode="columnWidth"
                     app:fastScrollEnabled="true"
                     app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
                     app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
                     app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
                     app:fastScrollVerticalTrackDrawable="@drawable/line_drawable"
-                    android:stretchMode="columnWidth"
 
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:spanCount="3" />

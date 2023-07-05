@@ -1,7 +1,6 @@
 package com.diraapp.appearance;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 
 import com.diraapp.utils.CacheUtils;
 
@@ -47,6 +46,10 @@ public class AppTheme {
         }
 
         instance = this;
+    }
+
+    public static AppTheme getInstance() {
+        return instance;
     }
 
     public ColorTheme getColorTheme() {
@@ -101,10 +104,6 @@ public class AppTheme {
 
         cacheUtils.remove(CacheUtils.BACKGROUND_ID);
         this.chatBackground = null;
-    }
-
-    public static AppTheme getInstance() {
-        return instance;
     }
 
 }

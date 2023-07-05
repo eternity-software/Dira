@@ -29,19 +29,18 @@ public class CacheUtils {
         this.context = context;
     }
 
-    public SharedPreferences getSharedPreferences()
-    {
+    public SharedPreferences getSharedPreferences() {
         return context.getSharedPreferences(IDENTIFIER, Context.MODE_PRIVATE);
     }
 
-    public SharedPreferences.Editor getEditor()
-    {
+    public SharedPreferences.Editor getEditor() {
         return getSharedPreferences().edit();
     }
 
     public boolean hasKey(String key) {
         return getSharedPreferences().contains(key);
     }
+
     public void clean() {
         SharedPreferences.Editor editor = getEditor();
         editor.clear();
@@ -94,7 +93,6 @@ public class CacheUtils {
     public String getString(String key) {
         return getSharedPreferences().getString(key, null);
     }
-
 
 
 }

@@ -41,7 +41,7 @@ public class Room {
     }
 
     public String getServerAddress() {
-        if(serverAddress == null) {
+        if (serverAddress == null) {
             serverAddress = UpdateProcessor.OFFICIAL_ADDRESS;
         }
         return serverAddress;

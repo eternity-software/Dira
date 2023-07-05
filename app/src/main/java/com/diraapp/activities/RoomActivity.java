@@ -3,7 +3,6 @@ package com.diraapp.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,12 +22,12 @@ import com.abedelazizshe.lightcompressorlibrary.config.AppSpecificStorageConfigu
 import com.abedelazizshe.lightcompressorlibrary.config.Configuration;
 import com.diraapp.R;
 import com.diraapp.activities.resizer.FluidContentResizer;
+import com.diraapp.adapters.MediaGridItemListener;
 import com.diraapp.adapters.RoomMessagesAdapter;
 import com.diraapp.api.requests.SendMessageRequest;
 import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
-import com.diraapp.adapters.MediaGridItemListener;
 import com.diraapp.appearance.AppTheme;
 import com.diraapp.appearance.ColorTheme;
 import com.diraapp.bottomsheet.filepicker.FilePickerBottomSheet;
@@ -106,12 +105,11 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                 intent.putExtra(RoomInfoActivity.ROOM_SECRET_EXTRA, roomSecret);
 
 
-
-              //  Pair<View, String> p1 = Pair.create(findViewById(R.id.room_picture), "icon");
+                //  Pair<View, String> p1 = Pair.create(findViewById(R.id.room_picture), "icon");
                 //Pair<View, String> p2 = Pair.create(findViewById(R.id.room_name), "name");
 
 
-               // ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(RoomActivity.this, p1);
+                // ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(RoomActivity.this, p1);
 
                 startActivity(intent);
             }
@@ -129,7 +127,6 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
         });
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
-
 
 
         UpdateProcessor.getInstance().addUpdateListener(this);
@@ -216,7 +213,6 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                             System.out.println("uploading...");
 
 
-
                             if (FileClassifier.isVideoFile(imageUri)) {
                                 List<Uri> urisToCompress = new ArrayList<>();
                                 urisToCompress.add(Uri.fromFile(new File(imageUri)));
@@ -264,9 +260,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                                                 System.out.println("compression canceled");
                                             }
                                         });
-                            }
-                            else
-                            {
+                            } else {
                                 try {
                                     FilesUploader.uploadFile(imageUri, createAttachmentCallback(imageUri, messageText, AttachmentType.IMAGE), getApplicationContext(), false, room.getServerAddress());
                                 } catch (IOException e) {
@@ -282,14 +276,12 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                     e.printStackTrace();
                 }
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private Callback createAttachmentCallback(String fileUri, String messageText, AttachmentType attachmentType) throws IOException{
+    private Callback createAttachmentCallback(String fileUri, String messageText, AttachmentType attachmentType) throws IOException {
         return new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -332,7 +324,6 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
             }
         };
     }
-
 
 
     private void loadMembers() {

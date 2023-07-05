@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppSlideTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/AppSlideTheme"
     android:background="@color/dark"
     tools:context=".activities.createroom.CreateRoomActivity">
 
@@ -36,10 +36,10 @@
 
             <TextView
 
-                android:layout_marginTop="24dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
+                android:layout_marginTop="24dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/montserratbold"
                 android:text="@string/create_room"
@@ -67,8 +67,8 @@
                 android:fontFamily="@font/montserratsemibold"
                 android:gravity="center"
                 android:hint="@string/room_name_hint"
-                android:maxLength="24"
                 android:inputType="text"
+                android:maxLength="24"
                 android:maxLines="1"
                 android:paddingHorizontal="8dp"
                 android:textColor="@color/white"
@@ -99,8 +99,8 @@
                 android:maxLines="1"
                 android:paddingHorizontal="8dp"
                 android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textColorHint="@color/light_gray" />
+                android:textColorHint="@color/light_gray"
+                android:textSize="18sp" />
 
             <TextView
 
@@ -121,13 +121,12 @@
                 android:background="@drawable/dark_rect"
                 android:fontFamily="@font/montserratsemibold"
                 android:gravity="center"
-                android:text="6h"
                 android:inputType="text"
                 android:maxLines="1"
-                android:textSize="18sp"
                 android:paddingHorizontal="8dp"
+                android:text="6h"
                 android:textColor="@color/white"
-             />
+                android:textSize="18sp" />
 
             <TextView
 
@@ -149,12 +148,11 @@
                 android:background="@drawable/dark_rect"
                 android:fontFamily="@font/montserratsemibold"
                 android:gravity="center"
-                android:text="@string/room_servers_official"
                 android:maxLines="1"
-                android:textSize="18sp"
                 android:paddingHorizontal="8dp"
+                android:text="@string/room_servers_official"
                 android:textColor="@color/white"
-                />
+                android:textSize="18sp" />
 
             <TextView
 
@@ -173,6 +171,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/secret_code_text"
                     android:layout_width="wrap_content"
@@ -190,8 +189,8 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginHorizontal="8dp"
-                    android:src="@drawable/ic_copy"
                     android:background="?actionBarItemBackground"
+                    android:src="@drawable/ic_copy"
                     app:tint="@color/white" />
             </LinearLayout>
 
@@ -214,8 +213,8 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="12dp"
-                android:layout_weight="1"
                 android:layout_marginBottom="20dp"
+                android:layout_weight="1"
                 android:fontFamily="@font/montserratsemibold"
                 android:text="@string/tip_room_text"
                 android:textColor="@color/light_gray"
@@ -251,10 +250,10 @@
         android:id="@+id/imageView2"
         android:layout_width="0dp"
         android:layout_height="50dp"
+        android:scaleY="-1"
         app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        android:scaleY="-1"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/shadow_gradient" />
 

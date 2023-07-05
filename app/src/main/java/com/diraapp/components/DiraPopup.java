@@ -3,7 +3,6 @@ package com.diraapp.components;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.drawable.Drawable;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -55,7 +54,7 @@ public class DiraPopup {
         ImageView imageView = dialoglayout.findViewById(R.id.image);
         input = dialoglayout.findViewById(R.id.edit_text);
 
-        if(!cancellable) dismissButton.setVisibility(View.GONE);
+        if (!cancellable) dismissButton.setVisibility(View.GONE);
 
         if (inputHint != null) {
             input.setHint(inputHint);
@@ -93,8 +92,7 @@ public class DiraPopup {
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(onClick != null)
-                {
+                if (onClick != null) {
                     onClick.run();
                 }
                 alertDialog.dismiss();
@@ -117,8 +115,7 @@ public class DiraPopup {
         titleView.setText(title);
         subtitleView.setText(text);
 
-        if(resId != -1)
-        {
+        if (resId != -1) {
             imageView.setImageResource(resId);
         }
 
