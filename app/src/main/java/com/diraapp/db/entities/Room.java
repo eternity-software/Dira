@@ -5,7 +5,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.diraapp.updates.UpdateProcessor;
+import com.diraapp.api.processors.UpdateProcessor;
 
 import org.jetbrains.annotations.NotNull;
 

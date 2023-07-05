@@ -12,7 +12,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.diraapp.R;
-import com.diraapp.activities.RoomActivity;
+import com.diraapp.ui.activities.RoomActivity;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Message;
 import com.diraapp.db.entities.Room;

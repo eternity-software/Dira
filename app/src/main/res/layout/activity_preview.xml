@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
 
     android:background="#A8000000"
-    tools:context=".activities.PreviewActivity">
+    tools:context=".ui.activities.PreviewActivity">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
-        <com.diraapp.components.PreviewImageView
+        <com.diraapp.ui.components.PreviewImageView
             android:id="@+id/image_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.diraapp.components.VideoPlayer
+        <com.diraapp.ui.components.VideoPlayer
             android:id="@+id/video_player"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

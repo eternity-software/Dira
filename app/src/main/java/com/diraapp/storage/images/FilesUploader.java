@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
-import com.diraapp.updates.UpdateProcessor;
+import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.utils.ImageRotationFix;
 
 import java.io.File;

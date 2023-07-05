@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Base64;
 
-import com.diraapp.updates.UpdateProcessor;
+import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.utils.CacheUtils;
 import com.google.gson.Gson;
 

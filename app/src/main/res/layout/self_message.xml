@@ -97,7 +97,7 @@
 
                         android:visibility="gone" />
 
-                    <com.diraapp.components.VideoPlayer
+                    <com.diraapp.ui.components.VideoPlayer
                         android:id="@+id/video_player"
                         android:layout_width="wrap_content"
                         android:layout_height="200dp"
@@ -105,7 +105,7 @@
                 </androidx.cardview.widget.CardView>
 
 
-                <com.diraapp.components.MessageTextView
+                <com.diraapp.ui.components.MessageTextView
                     android:id="@+id/message_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

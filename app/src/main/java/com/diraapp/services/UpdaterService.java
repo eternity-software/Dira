@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 
-import com.diraapp.updates.UpdateProcessor;
+import com.diraapp.api.processors.UpdateProcessor;
 
 public class UpdaterService extends Service {
 

@@ -10,8 +10,8 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 
-import com.diraapp.bottomsheet.filepicker.FileInfo;
-import com.diraapp.components.FilePreview;
+import com.diraapp.ui.bottomsheet.filepicker.FileInfo;
+import com.diraapp.ui.components.FilePreview;
 import com.diraapp.utils.ImageRotationFix;
 
 import java.io.File;

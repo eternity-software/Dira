@@ -1,6 +1,6 @@
 package com.diraapp.api.updates;
 
-import com.diraapp.api.InviteRoom;
+import com.diraapp.api.views.InviteRoom;
 
 
 public class NewRoomUpdate extends Update {

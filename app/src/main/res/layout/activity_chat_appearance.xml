@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
 
     android:background="@color/dark"
-    tools:context=".activities.ChatAppearanceActivity">
+    tools:context=".ui.activities.ChatAppearanceActivity">
 
     <ImageView
         android:id="@+id/button_back"

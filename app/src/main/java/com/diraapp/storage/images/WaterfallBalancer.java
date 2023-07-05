@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.diraapp.components.FilePreview;
+import com.diraapp.ui.components.FilePreview;
 
 import java.util.ArrayList;
 import java.util.List;

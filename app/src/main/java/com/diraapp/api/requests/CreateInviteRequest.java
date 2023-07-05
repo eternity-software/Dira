@@ -1,7 +1,7 @@
 package com.diraapp.api.requests;
 
 
-import com.diraapp.api.RoomMember;
+import com.diraapp.api.views.RoomMember;
 
 import java.util.List;
 

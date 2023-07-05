@@ -5,7 +5,7 @@ import android.content.Context;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DownloadHandler;
-import com.diraapp.updates.UpdateProcessor;
+import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.utils.CacheUtils;
 
 import java.io.File;

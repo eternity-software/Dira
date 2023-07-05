@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
 
     android:background="@color/dark"
-    tools:context=".activities.PersonalityActivity">
+    tools:context=".ui.activities.PersonalityActivity">
 
     <ImageView
         android:id="@+id/button_back"

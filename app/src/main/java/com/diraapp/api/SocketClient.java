@@ -1,7 +1,7 @@
 package com.diraapp.api;
 
-import com.diraapp.updates.UpdateProcessor;
-import com.diraapp.updates.listeners.SocketListener;
+import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.api.processors.listeners.SocketListener;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;

@@ -15,9 +15,9 @@ public class CacheUtils {
     public final static String PICTURE = "picture";
     public final static String AUTO_LOAD_SIZE = "autoload_size";
 
-    public final static String COLOR_THEME_ID = "color_theme_id";
+    public final static String COLOR_THEME = "color_theme_id";
 
-    public final static String BACKGROUND_ID = "background_id";
+    public final static String BACKGROUND = "background_id";
     public final static String BACKGROUND_PATH = "background_path";
     public final static String SERVER_LIST = "server_list";
 

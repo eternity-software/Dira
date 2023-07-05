@@ -25,23 +25,23 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".activities.RoomServersActivity"
+            android:name=".ui.activities.RoomServersActivity"
             android:exported="false"
             android:theme="@style/AppSlideTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".activities.ChatAppearanceActivity"
+            android:name=".ui.activities.ChatAppearanceActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name=".ui.activities.SettingsActivity"
             android:exported="false"
             android:theme="@style/AppSlideTheme" />
         <activity
-            android:name=".activities.MemoryManagementActivity"
+            android:name=".ui.activities.MemoryManagementActivity"
             android:exported="false"
             android:theme="@style/AppSlideTheme" />
         <activity
-            android:name=".activities.MembersActivity"
+            android:name=".ui.activities.MembersActivity"
             android:exported="false"
             android:theme="@style/AppSlideTheme">
             <meta-data
@@ -49,7 +49,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.PreviewActivity"
+            android:name=".ui.activities.PreviewActivity"
             android:exported="false"
             android:theme="@style/AppSlideTheme">
             <meta-data
@@ -57,12 +57,12 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.ImageSendActivity"
+            android:name=".ui.activities.ImageSendActivity"
             android:exported="false"
             android:theme="@style/AppSlideTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".activities.EditRoomActivity"
+            android:name=".ui.activities.EditRoomActivity"
             android:exported="false"
             android:theme="@style/AppSlideTheme"
             android:windowSoftInputMode="adjustPan">
@@ -71,7 +71,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.RoomInfoActivity"
+            android:name=".ui.activities.RoomInfoActivity"
             android:exported="false"
             android:theme="@style/AppSlideTheme">
             <meta-data
@@ -79,7 +79,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.RoomActivity"
+            android:name=".ui.activities.RoomActivity"
             android:exported="false"
             android:theme="@style/AppSlideTheme"
             android:windowSoftInputMode="adjustResize">
@@ -88,7 +88,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.PersonalityActivity"
+            android:name=".ui.activities.PersonalityActivity"
             android:exported="false"
             android:theme="@style/AppSlideTheme"
             android:windowSoftInputMode="adjustPan">
@@ -97,7 +97,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.createroom.CreateRoomActivity"
+            android:name=".ui.activities.createroom.CreateRoomActivity"
             android:exported="false"
             android:theme="@style/AppSlideTheme"
             android:windowSoftInputMode="adjustPan">
@@ -106,7 +106,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.JoinRoomActivity"
+            android:name=".ui.activities.JoinRoomActivity"
             android:exported="false"
             android:theme="@style/AppSlideTheme">
             <meta-data
@@ -119,7 +119,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".activities.RoomSelectorActivity"
+            android:name=".ui.activities.RoomSelectorActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
