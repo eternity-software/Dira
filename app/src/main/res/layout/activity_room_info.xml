@@ -166,6 +166,38 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/notification_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="54dp"
+                    android:layout_marginHorizontal="4dp"
+                    android:layout_weight="0"
+                    android:background="@drawable/medium_round_square"
+                    android:gravity="center"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp">
+
+                    <ImageView
+                        android:id="@+id/notification_enabled_icon"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_notification_enabled"
+                        android:visibility="visible"
+                        app:tint="@color/white" />
+
+                    <ImageView
+                        android:id="@+id/notification_disabled_icon"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_notification_disabled"
+                        android:visibility="gone"
+                        app:tint="@color/white" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/leave_button"
                     android:layout_width="wrap_content"
                     android:layout_height="54dp"

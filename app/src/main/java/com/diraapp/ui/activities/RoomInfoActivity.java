@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -180,6 +181,7 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
 
         loadData();
         UpdateProcessor.getInstance().addUpdateListener(this);
+
     }
 
     @Override
@@ -200,6 +202,8 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        initNotificationButton();
+
                         if (room.getImagePath() != null) {
                             ImageView roomPicture = findViewById(R.id.room_picture);
                             roomPicture.setImageBitmap(AppStorage.getBitmapFromPath(room.getImagePath()));
@@ -265,7 +269,6 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                     @Override
                     public void run() {
 
-
                         gallery.setLayoutManager(new GridLayoutManager(RoomInfoActivity.this, 3));
 
 
@@ -281,6 +284,8 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
 
                         gallery.setAdapter(mediaGridAdapter);
                         mediaGridAdapter.notifyDataSetChanged();
+
+
                     }
                 });
 
@@ -301,5 +306,46 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
 
         ImageView button_back = findViewById(R.id.button_back);
         button_back.setColorFilter(theme.getAccentColor());
+    }
+
+    private void initNotificationButton() {
+        LinearLayout button = findViewById(R.id.notification_button);
+
+        ImageView bellOn = findViewById(R.id.notification_enabled_icon);
+        ImageView bellOff = findViewById(R.id.notification_disabled_icon);
+
+        if (!room.isNotificationsEnabled()) {
+            bellOn.setVisibility(View.GONE);
+            bellOff.setVisibility(View.VISIBLE);
+
+        } else {
+            bellOn.setVisibility(View.VISIBLE);
+            bellOff.setVisibility(View.GONE);
+
+        }
+
+        button.setOnClickListener((View v) -> {
+            if (room.isNotificationsEnabled()) {
+                bellOn.setVisibility(View.GONE);
+                bellOff.setVisibility(View.VISIBLE);
+
+                room.setNotificationsEnabled(false);
+
+            } else {
+                bellOn.setVisibility(View.VISIBLE);
+                bellOff.setVisibility(View.GONE);
+
+                room.setNotificationsEnabled(true);
+
+            }
+
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().update(room);
+                }
+            });
+            thread.start();
+        });
     }
 }

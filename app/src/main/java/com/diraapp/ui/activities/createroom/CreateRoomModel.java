@@ -19,7 +19,7 @@ public class CreateRoomModel implements CreateRoomContract.Model {
     public void createRoom(String roomName, String roomSecret, String welcomeMessage,
                            String authorId, String authorName, String serverAddress) {
 
-        Room room = new Room(roomName, System.currentTimeMillis(), roomSecret, serverAddress);
+        Room room = new Room(roomName, System.currentTimeMillis(), roomSecret, serverAddress, true);
 
         roomDao.insertAll(room);
 

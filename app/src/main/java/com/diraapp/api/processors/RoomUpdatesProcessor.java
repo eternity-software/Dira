@@ -39,7 +39,7 @@ public class RoomUpdatesProcessor {
         Room oldRoom = roomDao.getRoomBySecretName(newRoomUpdate.getRoomSecret());
         if (oldRoom == null) {
 
-            Room room = new Room(inviteRoom.getName(), System.currentTimeMillis(), inviteRoom.getSecretName(), serverAddress);
+            Room room = new Room(inviteRoom.getName(), System.currentTimeMillis(), inviteRoom.getSecretName(), serverAddress, true);
 
             if (inviteRoom.getBase64pic() != null) {
                 Bitmap bitmap = AppStorage.getBitmapFromBase64(inviteRoom.getBase64pic());

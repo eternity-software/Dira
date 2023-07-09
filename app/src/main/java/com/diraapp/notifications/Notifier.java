@@ -37,6 +37,8 @@ public class Notifier {
 
         Room room = DiraRoomDatabase.getDatabase(context).getRoomDao().getRoomBySecretName(message.getRoomSecret());
         if (room != null) {
+            if (!room.isNotificationsEnabled()) return;
+
             builder.setContentTitle(room.getName());
             Bitmap bitmap = ImagesWorker.getCircleCroppedBitmap(AppStorage.getBitmapFromPath(room.getImagePath()), 256, 256);
             if (bitmap != null) {

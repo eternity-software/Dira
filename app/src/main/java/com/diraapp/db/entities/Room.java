@@ -30,14 +30,19 @@ public class Room {
     private long lastUpdateId;
     private long timeServerStartup;
 
+    @ColumnInfo(defaultValue = "true")
+    private boolean isNotificationsEnabled;
+
     @Ignore
     private Message message;
 
-    public Room(String name, long lastUpdatedTime, String secretName, String serverAddress) {
+    public Room(String name, long lastUpdatedTime, String secretName, String serverAddress,
+                boolean isNotificationsEnabled) {
         this.name = name;
         this.lastUpdatedTime = lastUpdatedTime;
         this.secretName = secretName;
         this.serverAddress = serverAddress;
+        this.isNotificationsEnabled = isNotificationsEnabled;
     }
 
     public String getServerAddress() {
@@ -105,6 +110,14 @@ public class Room {
 
     public void setLastUpdatedTime(long lastUpdatedTime) {
         this.lastUpdatedTime = lastUpdatedTime;
+    }
+
+    public boolean isNotificationsEnabled() {
+        return isNotificationsEnabled;
+    }
+
+    public void setNotificationsEnabled(boolean notificationsEnabled) {
+        isNotificationsEnabled = notificationsEnabled;
     }
 
     public String getName() {

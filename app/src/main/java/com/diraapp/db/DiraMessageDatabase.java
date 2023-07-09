@@ -17,8 +17,8 @@ import com.diraapp.db.entities.Room;
 
 
 @Database(entities = {Message.class, Room.class, Member.class, Attachment.class},
-        autoMigrations = {@AutoMigration(from = 6, to = 7)},
-        version = 7,
+        autoMigrations = {@AutoMigration(from = 6, to = 7), @AutoMigration(from = 7, to = 8)},
+        version = 8,
         exportSchema = true)
 @TypeConverters({AttachmentConverter.class})
 public abstract class DiraMessageDatabase extends RoomDatabase {
