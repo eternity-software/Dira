@@ -1,6 +1,6 @@
 package com.diraapp.api.requests;
 
-import com.diraapp.db.entities.Message;
+import com.diraapp.db.entities.messages.Message;
 
 public class SendMessageRequest extends Request {
 

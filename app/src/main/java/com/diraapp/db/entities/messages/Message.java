@@ -1,13 +1,16 @@
-package com.diraapp.db.entities;
+package com.diraapp.db.entities.messages;
 
 import android.content.Context;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.diraapp.db.converters.AttachmentConverter;
+import com.diraapp.db.converters.CustomClientDataConverter;
+import com.diraapp.db.entities.Attachment;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.KeyGenerator;
 
@@ -16,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 @Entity
-@TypeConverters({AttachmentConverter.class})
+@TypeConverters({AttachmentConverter.class, CustomClientDataConverter.class})
 public class Message {
 
     @PrimaryKey
@@ -28,6 +31,7 @@ public class Message {
     private String authorNickname;
     private long time;
     private ArrayList<Attachment> attachments = new ArrayList<>();
+    private CustomClientData customClientData = null;
 
     @Ignore
     public Message(String authorId, String text, String authorNickname) {
@@ -108,5 +112,13 @@ public class Message {
 
     public void setAuthorNickname(String authorNickname) {
         this.authorNickname = authorNickname;
+    }
+
+    public CustomClientData getCustomClientData() {
+        return customClientData;
+    }
+
+    public void setCustomClientData(CustomClientData customClientData) {
+        this.customClientData = customClientData;
     }
 }

@@ -1,7 +1,7 @@
 package com.diraapp.api.updates;
 
 
-import com.diraapp.db.entities.Message;
+import com.diraapp.db.entities.messages.Message;
 
 public class NewMessageUpdate extends Update {
 

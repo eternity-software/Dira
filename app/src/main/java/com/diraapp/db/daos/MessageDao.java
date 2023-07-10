@@ -5,7 +5,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.diraapp.db.entities.Message;
+import com.diraapp.db.entities.messages.Message;
 
 import java.util.List;
 

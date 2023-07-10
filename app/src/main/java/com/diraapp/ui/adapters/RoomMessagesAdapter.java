@@ -27,7 +27,7 @@ import com.diraapp.ui.components.VideoPlayer;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.Message;
+import com.diraapp.db.entities.messages.Message;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DownloadHandler;
 import com.diraapp.storage.attachments.AttachmentsStorage;

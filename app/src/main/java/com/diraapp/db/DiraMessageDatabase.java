@@ -8,19 +8,24 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 import com.diraapp.db.converters.AttachmentConverter;
+import com.diraapp.db.converters.CustomClientDataConverter;
 import com.diraapp.db.daos.AttachmentDao;
 import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.Message;
+import com.diraapp.db.entities.messages.CustomClientData;
+import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.messages.RoomIconChange;
+import com.diraapp.db.entities.messages.RoomNameChange;
 
 
-@Database(entities = {Message.class, Room.class, Member.class, Attachment.class},
-        autoMigrations = {@AutoMigration(from = 6, to = 7), @AutoMigration(from = 7, to = 8)},
-        version = 8,
+@Database(entities = {Message.class, Room.class, Member.class, Attachment.class, CustomClientData.class},
+        autoMigrations = {@AutoMigration(from = 6, to = 7), @AutoMigration(from = 7, to = 8),
+        @AutoMigration(from = 8, to = 9)},
+        version = 9,
         exportSchema = true)
-@TypeConverters({AttachmentConverter.class})
+@TypeConverters({AttachmentConverter.class, CustomClientDataConverter.class})
 public abstract class DiraMessageDatabase extends RoomDatabase {
 
     public static final String DB_NAME = "messages_db";

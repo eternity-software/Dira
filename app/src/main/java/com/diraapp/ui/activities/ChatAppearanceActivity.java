@@ -21,7 +21,7 @@ import com.diraapp.ui.appearance.ChatBackground;
 import com.diraapp.ui.appearance.ColorTheme;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.FilePreview;
-import com.diraapp.db.entities.Message;
+import com.diraapp.db.entities.messages.Message;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
 

@@ -14,7 +14,7 @@ import androidx.core.app.NotificationManagerCompat;
 import com.diraapp.R;
 import com.diraapp.ui.activities.RoomActivity;
 import com.diraapp.db.DiraRoomDatabase;
-import com.diraapp.db.entities.Message;
+import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.images.ImagesWorker;

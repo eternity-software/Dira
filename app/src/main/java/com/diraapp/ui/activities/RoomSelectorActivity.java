@@ -27,7 +27,7 @@ import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.components.DiraPopup;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
-import com.diraapp.db.entities.Message;
+import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.services.UpdaterService;
