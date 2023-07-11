@@ -14,6 +14,7 @@ import com.diraapp.api.requests.SubscribeRequest;
 import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.NewRoomUpdate;
+import com.diraapp.api.updates.RoomUpdate;
 import com.diraapp.api.updates.ServerSyncUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateDeserializer;
@@ -28,6 +29,8 @@ import com.diraapp.db.entities.messages.CustomClientData;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.NewUserRoomJoining;
+import com.diraapp.db.entities.messages.RoomIconChange;
+import com.diraapp.db.entities.messages.RoomNameChange;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.exceptions.SingletonException;
 import com.diraapp.exceptions.UnablePerformRequestException;
@@ -478,14 +481,23 @@ public class UpdateProcessor {
         }
     }
 
-    private void notifyMemberAdded(MemberUpdate memberUpdate) {
+    public void notifyMemberAdded(MemberUpdate memberUpdate) {
         NewUserRoomJoining joining = new NewUserRoomJoining(memberUpdate.getNickname());
+        notifyRoomChange(memberUpdate.getRoomSecret(), joining);
+    }
 
-        Message message = new Message();
-        message.setTime(System.currentTimeMillis());
-        message.setRoomSecret(memberUpdate.getRoomSecret());
-        message.setCustomClientData(joining);
+    public void notifyRoomNameChange(RoomUpdate roomUpdate, String oldName) {
+        RoomNameChange roomNameChange = new RoomNameChange(roomUpdate.getName(), oldName);
+        notifyRoomChange(roomUpdate.getRoomSecret(), roomNameChange);
+    }
 
+    public void notifyRoomIconChange(Room room) {
+        RoomIconChange roomIconChange = new RoomIconChange(room.getImagePath());
+        notifyRoomChange(room.getSecretName(), roomIconChange);
+    }
+
+    private void notifyRoomChange(String secretName, CustomClientData clientData) {
+        Message message = new Message(secretName, clientData);
         NewMessageUpdate messageUpdate = new NewMessageUpdate(message);
 
         // notifyUpdateListeners(messageUpdate);

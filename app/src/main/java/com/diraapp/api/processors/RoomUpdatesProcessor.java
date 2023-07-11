@@ -121,11 +121,19 @@ public class RoomUpdatesProcessor {
                 }
 
                 if (update instanceof RoomUpdate) {
-                    room.setName(((RoomUpdate) update).getName());
+                    String oldName = room.getName();
+                    String newName = ((RoomUpdate) update).getName();
+
+                    if (!oldName.equals(newName)) {
+                        room.setName(newName);
+                        UpdateProcessor.getInstance().notifyRoomNameChange((RoomUpdate) update, oldName);
+                    }
                     if (((RoomUpdate) update).getBase64Pic() != null) {
                         Bitmap bitmap = AppStorage.getBitmapFromBase64(((RoomUpdate) update).getBase64Pic());
                         String path = AppStorage.saveToInternalStorage(bitmap, room.getSecretName(), room.getSecretName(), context);
                         room.setImagePath(path);
+
+                        UpdateProcessor.getInstance().notifyRoomIconChange(room);
                     }
                 }
 

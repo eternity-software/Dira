@@ -13,6 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.db.entities.messages.NewUserRoomJoining;
+import com.diraapp.db.entities.messages.RoomIconChange;
+import com.diraapp.db.entities.messages.RoomNameChange;
 import com.diraapp.ui.activities.RoomActivity;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
@@ -72,17 +75,25 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
 
         try {
             if (message != null) {
-                String authorPrefix = message.getAuthorNickname();
-                if (authorPrefix.length() > 12) {
-                    authorPrefix = authorPrefix.substring(0, 11) + "..";
+                if (message.getCustomClientData() == null) {
+                    String authorPrefix = message.getAuthorNickname();
+                    if (authorPrefix.length() > 12) {
+                        authorPrefix = authorPrefix.substring(0, 11) + "..";
+                    }
+                    CacheUtils cacheUtils = new CacheUtils(context);
+                    if (cacheUtils.getString(CacheUtils.ID).equals(message.getAuthorId())) {
+                        authorPrefix = context.getString(R.string.you);
+                    }
+                    holder.messageText.setText(message.getText());
+                    holder.authorText.setText(authorPrefix + ": ");
+                    holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime(), context));
+                } else if (message.getCustomClientData() instanceof NewUserRoomJoining) {
+
+                } else if (message.getCustomClientData() instanceof RoomNameChange) {
+
+                } else if (message.getCustomClientData() instanceof RoomIconChange) {
+
                 }
-                CacheUtils cacheUtils = new CacheUtils(context);
-                if (cacheUtils.getString(CacheUtils.ID).equals(message.getAuthorId())) {
-                    authorPrefix = context.getString(R.string.you);
-                }
-                holder.messageText.setText(message.getText());
-                holder.authorText.setText(authorPrefix + ": ");
-                holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime(), context));
             }
             if (room.getImagePath() != null) {
                 holder.roomPicture.setImageBitmap(AppStorage.getBitmapFromPath(room.getImagePath()));

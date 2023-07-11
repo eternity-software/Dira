@@ -41,6 +41,13 @@ public class Message {
         this.authorNickname = authorNickname;
     }
 
+    @Ignore
+    public Message(String roomSecret, CustomClientData clientData) {
+        this.roomSecret = roomSecret;
+        this.customClientData = clientData;
+        this.id = KeyGenerator.generateId();
+    }
+
     public Message() {
 
     }
