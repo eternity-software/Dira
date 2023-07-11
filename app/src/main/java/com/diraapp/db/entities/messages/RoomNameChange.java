@@ -9,6 +9,12 @@ public class RoomNameChange extends CustomClientData {
 
     private String oldName;
 
+    public RoomNameChange(String newName, String oldName) {
+        this.setMessageType(MessageType.ROOM_NAME_CHANGE_MESSAGE);
+        this.newName = newName;
+        this.oldName = oldName;
+    }
+
     public RoomNameChange() {
         super();
     }

@@ -24,8 +24,10 @@ import com.diraapp.db.daos.MemberDao;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
+import com.diraapp.db.entities.messages.CustomClientData;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.messages.NewUserRoomJoining;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.exceptions.SingletonException;
 import com.diraapp.exceptions.UnablePerformRequestException;
@@ -40,6 +42,8 @@ import com.google.gson.Gson;
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 
 import java.net.URISyntaxException;
+import java.sql.Time;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -195,14 +199,7 @@ public class UpdateProcessor {
                 roomUpdatesProcessor.updateRoom(update);
             }
 
-
-            for (UpdateListener updateListener : updateListeners) {
-                try {
-                    updateListener.onUpdate(update);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            notifyUpdateListeners(update);
         } catch (OldUpdateException oldUpdateException) {
             oldUpdateException.printStackTrace();
         }
@@ -225,6 +222,9 @@ public class UpdateProcessor {
             hasMemberInDatabase = false;
             member = new Member(memberUpdate.getId(), memberUpdate.getNickname(),
                     null, memberUpdate.getRoomSecret(), memberUpdate.getUpdateTime());
+
+            // I think there we can observe for new user join room
+            notifyMemberAdded(memberUpdate);
         }
 
         member.setLastTimeUpdated(memberUpdate.getUpdateTime());
@@ -466,6 +466,29 @@ public class UpdateProcessor {
 
     public HashMap<String, SocketClient> getSocketClients() {
         return new HashMap<>(socketClients);
+    }
+
+    private void notifyUpdateListeners(Update update) {
+        for (UpdateListener updateListener : updateListeners) {
+            try {
+                updateListener.onUpdate(update);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void notifyMemberAdded(MemberUpdate memberUpdate) {
+        NewUserRoomJoining joining = new NewUserRoomJoining(memberUpdate.getNickname());
+
+        Message message = new Message();
+        message.setTime(System.currentTimeMillis());
+        message.setRoomSecret(memberUpdate.getRoomSecret());
+        message.setCustomClientData(joining);
+
+        NewMessageUpdate messageUpdate = new NewMessageUpdate(message);
+
+        // notifyUpdateListeners(messageUpdate);
     }
 
 
