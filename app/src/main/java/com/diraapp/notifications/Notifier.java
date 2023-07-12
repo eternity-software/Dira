@@ -28,6 +28,8 @@ public class Notifier {
     public static void notifyMessage(Message message, Context context) {
         createNotificationChannel(context);
 
+        // Need to check if ClientMessage!
+
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, DIRA_ID)
                         .setSmallIcon(R.drawable.notification)

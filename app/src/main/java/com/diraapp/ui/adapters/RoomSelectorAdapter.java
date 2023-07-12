@@ -13,9 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
-import com.diraapp.db.entities.messages.NewUserRoomJoining;
-import com.diraapp.db.entities.messages.RoomIconChange;
-import com.diraapp.db.entities.messages.RoomNameChange;
+import com.diraapp.db.entities.messages.RoomJoinClientData;
+import com.diraapp.db.entities.messages.RoomIconChangeClientData;
+import com.diraapp.db.entities.messages.RoomNameChangeClientData;
 import com.diraapp.ui.activities.RoomActivity;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
@@ -87,11 +87,11 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
                     holder.messageText.setText(message.getText());
                     holder.authorText.setText(authorPrefix + ": ");
                     holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime(), context));
-                } else if (message.getCustomClientData() instanceof NewUserRoomJoining) {
+                } else if (message.getCustomClientData() instanceof RoomJoinClientData) {
 
-                } else if (message.getCustomClientData() instanceof RoomNameChange) {
+                } else if (message.getCustomClientData() instanceof RoomNameChangeClientData) {
 
-                } else if (message.getCustomClientData() instanceof RoomIconChange) {
+                } else if (message.getCustomClientData() instanceof RoomIconChangeClientData) {
 
                 }
             }

@@ -45,6 +45,7 @@ public class Message {
     public Message(String roomSecret, CustomClientData clientData) {
         this.roomSecret = roomSecret;
         this.customClientData = clientData;
+        this.time = System.currentTimeMillis();
         this.id = KeyGenerator.generateId();
     }
 

@@ -28,9 +28,9 @@ import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.CustomClientData;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
-import com.diraapp.db.entities.messages.NewUserRoomJoining;
-import com.diraapp.db.entities.messages.RoomIconChange;
-import com.diraapp.db.entities.messages.RoomNameChange;
+import com.diraapp.db.entities.messages.RoomJoinClientData;
+import com.diraapp.db.entities.messages.RoomIconChangeClientData;
+import com.diraapp.db.entities.messages.RoomNameChangeClientData;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.exceptions.SingletonException;
 import com.diraapp.exceptions.UnablePerformRequestException;
@@ -45,8 +45,6 @@ import com.google.gson.Gson;
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 
 import java.net.URISyntaxException;
-import java.sql.Time;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -76,12 +74,14 @@ public class UpdateProcessor {
      */
     private final HashMap<String, Long> lastRequestIds = new HashMap<>();
     /**
-     * Server startup time allows to sync updates ids
+     * Server startup time allows to sync updates' ids
      */
     private final HashMap<String, Long> timeServerStartups = new HashMap<>();
     private final RoomDao roomDao;
     private final MemberDao memberDao;
     private final RoomUpdatesProcessor roomUpdatesProcessor;
+
+    private final ClientMessageProcessor clientMessageProcessor;
     int updatedRoomsCount = 0;
     private SocketClient socketClient;
 
@@ -102,6 +102,7 @@ public class UpdateProcessor {
         roomDao = DiraRoomDatabase.getDatabase(context).getRoomDao();
         memberDao = DiraRoomDatabase.getDatabase(context).getMemberDao();
         roomUpdatesProcessor = new RoomUpdatesProcessor(roomDao, memberDao, context);
+        clientMessageProcessor = new ClientMessageProcessor(context);
 
     }
 
@@ -227,7 +228,7 @@ public class UpdateProcessor {
                     null, memberUpdate.getRoomSecret(), memberUpdate.getUpdateTime());
 
             // I think there we can observe for new user join room
-            notifyMemberAdded(memberUpdate);
+            clientMessageProcessor.notifyMemberAdded(memberUpdate);
         }
 
         member.setLastTimeUpdated(memberUpdate.getUpdateTime());
@@ -471,7 +472,7 @@ public class UpdateProcessor {
         return new HashMap<>(socketClients);
     }
 
-    private void notifyUpdateListeners(Update update) {
+    public void notifyUpdateListeners(Update update) {
         for (UpdateListener updateListener : updateListeners) {
             try {
                 updateListener.onUpdate(update);
@@ -481,27 +482,7 @@ public class UpdateProcessor {
         }
     }
 
-    public void notifyMemberAdded(MemberUpdate memberUpdate) {
-        NewUserRoomJoining joining = new NewUserRoomJoining(memberUpdate.getNickname());
-        notifyRoomChange(memberUpdate.getRoomSecret(), joining);
+    public ClientMessageProcessor getClientMessageProcessor() {
+        return clientMessageProcessor;
     }
-
-    public void notifyRoomNameChange(RoomUpdate roomUpdate, String oldName) {
-        RoomNameChange roomNameChange = new RoomNameChange(roomUpdate.getName(), oldName);
-        notifyRoomChange(roomUpdate.getRoomSecret(), roomNameChange);
-    }
-
-    public void notifyRoomIconChange(Room room) {
-        RoomIconChange roomIconChange = new RoomIconChange(room.getImagePath());
-        notifyRoomChange(room.getSecretName(), roomIconChange);
-    }
-
-    private void notifyRoomChange(String secretName, CustomClientData clientData) {
-        Message message = new Message(secretName, clientData);
-        NewMessageUpdate messageUpdate = new NewMessageUpdate(message);
-
-        // notifyUpdateListeners(messageUpdate);
-    }
-
-
 }

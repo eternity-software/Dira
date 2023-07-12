@@ -3,6 +3,7 @@ package com.diraapp.api.processors;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.views.InviteRoom;
 import com.diraapp.api.views.RoomMember;
 import com.diraapp.api.updates.NewMessageUpdate;
@@ -114,30 +115,42 @@ public class RoomUpdatesProcessor {
             if (room.getLastUpdateId() < update.getUpdateId()) {
                 room.setLastUpdateId(update.getUpdateId());
 
-                if (newMessage != null) {
-                    room.setLastMessageId(newMessage.getId());
-                    room.setLastUpdatedTime(newMessage.getTime());
-                    room.setUpdatedRead(false);
-                }
-
                 if (update instanceof RoomUpdate) {
                     String oldName = room.getName();
                     String newName = ((RoomUpdate) update).getName();
 
+                    String path = null;
+
                     if (!oldName.equals(newName)) {
                         room.setName(newName);
-                        UpdateProcessor.getInstance().notifyRoomNameChange((RoomUpdate) update, oldName);
                     }
                     if (((RoomUpdate) update).getBase64Pic() != null) {
                         Bitmap bitmap = AppStorage.getBitmapFromBase64(((RoomUpdate) update).getBase64Pic());
-                        String path = AppStorage.saveToInternalStorage(bitmap, room.getSecretName(), room.getSecretName(), context);
+                        path = AppStorage.saveToInternalStorage(bitmap, room.getSecretName(), room.getSecretName(), context);
                         room.setImagePath(path);
+                    }
 
-                        UpdateProcessor.getInstance().notifyRoomIconChange(room);
+                    if (!oldName.equals(newName) && path != null) {
+                        newMessage = UpdateProcessor.getInstance().getClientMessageProcessor().
+                                notifyRoomMessageAndIconChanged((RoomUpdate) update, oldName, path);
+                    } else if (!oldName.equals(newName)) {
+                        newMessage = UpdateProcessor.getInstance().getClientMessageProcessor()
+                                .notifyRoomNameChange((RoomUpdate) update, oldName);
+                    } else if (path != null) {
+                        newMessage = UpdateProcessor.getInstance().getClientMessageProcessor()
+                                .notifyRoomIconChange((RoomUpdate) update, path);
                     }
                 }
 
+                if (update instanceof MemberUpdate) {
+                    newMessage = UpdateProcessor.getInstance().getClientMessageProcessor()
+                            .notifyMemberAdded((MemberUpdate) update);
+                }
+
                 if (newMessage != null) {
+                    room.setLastMessageId(newMessage.getId());
+                    room.setLastUpdatedTime(newMessage.getTime());
+                    room.setUpdatedRead(false);
                     DiraMessageDatabase.getDatabase(context).getMessageDao().insertAll(newMessage);
                 }
                 roomDao.update(room);
@@ -158,6 +171,5 @@ public class RoomUpdatesProcessor {
             roomDao.update(room);
         }
     }
-
 
 }

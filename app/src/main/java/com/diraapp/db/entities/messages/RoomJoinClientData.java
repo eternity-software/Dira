@@ -4,17 +4,17 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 
 @Entity
-public class NewUserRoomJoining extends CustomClientData{
+public class RoomJoinClientData extends CustomClientData{
 
     private String UserNickName;
 
     @Ignore
-    public NewUserRoomJoining(String userNickName) {
+    public RoomJoinClientData(String userNickName) {
         this.setMessageType(MessageType.NEW_USER_ROOM_JOINING);
         this.UserNickName = userNickName;
     }
 
-    public NewUserRoomJoining() {
+    public RoomJoinClientData() {
 
     }
 

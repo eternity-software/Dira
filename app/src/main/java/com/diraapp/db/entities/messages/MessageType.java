@@ -8,5 +8,7 @@ public enum MessageType {
 
     ROOM_NAME_CHANGE_MESSAGE,
 
+    ROOM_NAME_AND_ICON_CHANGE_MESSAGE,
+
     NEW_USER_ROOM_JOINING
 }

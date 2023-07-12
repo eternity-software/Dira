@@ -16,8 +16,6 @@ import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.CustomClientData;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
-import com.diraapp.db.entities.messages.RoomIconChange;
-import com.diraapp.db.entities.messages.RoomNameChange;
 
 
 @Database(entities = {Message.class, Room.class, Member.class, Attachment.class, CustomClientData.class},

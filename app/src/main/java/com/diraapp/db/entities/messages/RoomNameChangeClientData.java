@@ -3,19 +3,19 @@ package com.diraapp.db.entities.messages;
 import androidx.room.Entity;
 
 @Entity
-public class RoomNameChange extends CustomClientData {
+public class RoomNameChangeClientData extends CustomClientData {
 
     private String newName;
 
     private String oldName;
 
-    public RoomNameChange(String newName, String oldName) {
+    public RoomNameChangeClientData(String newName, String oldName) {
         this.setMessageType(MessageType.ROOM_NAME_CHANGE_MESSAGE);
         this.newName = newName;
         this.oldName = oldName;
     }
 
-    public RoomNameChange() {
+    public RoomNameChangeClientData() {
         super();
     }
 
