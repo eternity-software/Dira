@@ -18,6 +18,7 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.storage.AppStorage;
+import com.diraapp.utils.CacheUtils;
 
 public class RoomUpdatesProcessor {
 
@@ -110,7 +111,6 @@ public class RoomUpdatesProcessor {
         Room room = roomDao.getRoomBySecretName(roomSecret);
         if (room != null) {
 
-
             compareStartupTimes(room);
             if (room.getLastUpdateId() < update.getUpdateId()) {
                 room.setLastUpdateId(update.getUpdateId());
@@ -132,19 +132,18 @@ public class RoomUpdatesProcessor {
 
                     if (!oldName.equals(newName) && path != null) {
                         newMessage = UpdateProcessor.getInstance().getClientMessageProcessor().
-                                notifyRoomMessageAndIconChanged((RoomUpdate) update, oldName, path);
+                                notifyRoomMessageAndIconChange((RoomUpdate) update, oldName, path, room);
                     } else if (!oldName.equals(newName)) {
                         newMessage = UpdateProcessor.getInstance().getClientMessageProcessor()
-                                .notifyRoomNameChange((RoomUpdate) update, oldName);
+                                .notifyRoomNameChange((RoomUpdate) update, oldName, room);
                     } else if (path != null) {
                         newMessage = UpdateProcessor.getInstance().getClientMessageProcessor()
-                                .notifyRoomIconChange((RoomUpdate) update, path);
+                                .notifyRoomIconChange((RoomUpdate) update, path, room);
                     }
                 }
 
                 if (update instanceof MemberUpdate) {
-                    newMessage = UpdateProcessor.getInstance().getClientMessageProcessor()
-                            .notifyMemberAdded((MemberUpdate) update);
+                    newMessage = updateMember((MemberUpdate) update);
                 }
 
                 if (newMessage != null) {
@@ -170,6 +169,54 @@ public class RoomUpdatesProcessor {
             room.setTimeServerStartup(UpdateProcessor.getInstance().getTimeServerStartup(room.getServerAddress()));
             roomDao.update(room);
         }
+    }
+
+    /**
+     * Apply changes of room member to local database
+     *
+     * @param memberUpdate
+     */
+    private Message updateMember(MemberUpdate memberUpdate) {
+        if (memberUpdate.getId().equals(new CacheUtils(context).getString(CacheUtils.ID)))
+            return null;
+
+        Member member = memberDao.getMemberByIdAndRoomSecret(memberUpdate.getId(), memberUpdate.getRoomSecret());
+
+        boolean hasMemberInDatabase = true;
+
+        boolean newMember = false;
+
+        if (member == null) {
+            hasMemberInDatabase = false;
+            member = new Member(memberUpdate.getId(), memberUpdate.getNickname(),
+                    null, memberUpdate.getRoomSecret(), memberUpdate.getUpdateTime());
+
+            // I think there we can observe for new user join room
+            newMember = true;
+        }
+
+        member.setLastTimeUpdated(memberUpdate.getUpdateTime());
+        member.setNickname(memberUpdate.getNickname());
+        String path = null;
+
+        if (memberUpdate.getBase64pic() != null) {
+            Bitmap bitmap = AppStorage.getBitmapFromBase64(memberUpdate.getBase64pic());
+            path = AppStorage.saveToInternalStorage(bitmap,
+                    member.getId() + "_" + memberUpdate.getRoomSecret(), memberUpdate.getRoomSecret(), context);
+            member.setImagePath(path);
+        }
+
+        if (hasMemberInDatabase) {
+            memberDao.update(member);
+        } else {
+            memberDao.insertAll(member);
+        }
+
+        if (newMember) {
+            return UpdateProcessor.getInstance().getClientMessageProcessor()
+                    .notifyMemberAdded(memberUpdate, path);
+        }
+        return null;
     }
 
 }

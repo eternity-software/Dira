@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diraapp.R;
 import com.diraapp.db.entities.messages.RoomJoinClientData;
 import com.diraapp.db.entities.messages.RoomIconChangeClientData;
+import com.diraapp.db.entities.messages.RoomNameAndIconChangeClientData;
 import com.diraapp.db.entities.messages.RoomNameChangeClientData;
 import com.diraapp.ui.activities.RoomActivity;
 import com.diraapp.db.entities.messages.Message;
@@ -85,14 +86,26 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
                         authorPrefix = context.getString(R.string.you);
                     }
                     holder.messageText.setText(message.getText());
-                    holder.authorText.setText(authorPrefix + ": ");
+                    holder.accentText.setText(authorPrefix + ": ");
                     holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime(), context));
                 } else if (message.getCustomClientData() instanceof RoomJoinClientData) {
-
+                    holder.accentText.setText(context.getString(R.string.room_update_new_member)
+                            .replace("%s", ((RoomJoinClientData)
+                                    message.getCustomClientData()).getNewNickName()));
                 } else if (message.getCustomClientData() instanceof RoomNameChangeClientData) {
-
+                    holder.accentText.setText(context.getString(R.string.room_update_name_change)
+                            .replace("%s", ((RoomNameChangeClientData)
+                                    message.getCustomClientData()).getOldName())
+                            .replace("%d", ((RoomNameChangeClientData)
+                                    message.getCustomClientData()).getNewName()));
                 } else if (message.getCustomClientData() instanceof RoomIconChangeClientData) {
-
+                    holder.accentText.setText(context.getString(R.string.room_update_picture_change));
+                } else if (message.getCustomClientData() instanceof RoomNameAndIconChangeClientData) {
+                    holder.accentText.setText(context.getString(R.string.room_update_name_and_picture_change)
+                            .replace("%s", ((RoomNameChangeClientData)
+                                    message.getCustomClientData()).getOldName())
+                            .replace("%d", ((RoomNameChangeClientData)
+                                    message.getCustomClientData()).getNewName()));
                 }
             }
             if (room.getImagePath() != null) {
@@ -114,7 +127,7 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
         TextView roomName;
         TextView messageText;
         TextView timeText;
-        TextView authorText;
+        TextView accentText;
         ImageView roomPicture;
         LinearLayout roomContainer;
         View rootView;
@@ -129,7 +142,7 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
             messageText = itemView.findViewById(R.id.message_text);
             roomContainer = itemView.findViewById(R.id.room_container);
             timeText = itemView.findViewById(R.id.time_text);
-            authorText = itemView.findViewById(R.id.author_text);
+            accentText = itemView.findViewById(R.id.author_text);
         }
     }
 }

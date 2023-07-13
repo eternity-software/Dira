@@ -151,35 +151,11 @@ public class UpdateProcessor {
 
         try {
 
-
             if (update.getUpdateType() == UpdateType.SERVER_SYNC) {
                 ServerSyncUpdate serverSyncUpdate = (ServerSyncUpdate) update;
                 System.out.println("New file server " + serverSyncUpdate.getFileServerUrl() + " for " + address);
                 fileServers.put(address, serverSyncUpdate.getFileServerUrl());
                 timeServerStartups.put(address, serverSyncUpdate.getTimeServerStart());
-            }
-            long timeServerStartup = 0;
-
-            if (timeServerStartups.containsKey(address)) {
-                timeServerStartup = timeServerStartups.get(address);
-            }
-            Room roomUpdate = roomDao.getRoomBySecretName(update.getRoomSecret());
-            if (roomUpdate != null) {
-                if (roomUpdate.getTimeServerStartup() != timeServerStartup) {
-                    roomUpdate.setLastUpdateId(0);
-                    roomUpdate.setTimeServerStartup(timeServerStartup);
-                    roomDao.update(roomUpdate);
-                }
-                if (roomUpdate.getLastUpdateId() < update.getUpdateId()) {
-
-                    if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
-                        updateMember(((MemberUpdate) update));
-                        roomUpdate.setLastUpdateId(update.getUpdateId());
-                    }
-
-                }
-                roomDao.update(roomUpdate);
-
             }
 
             if (update.getUpdateType() == UpdateType.NEW_ROOM_UPDATE) {
@@ -201,50 +177,13 @@ public class UpdateProcessor {
                 }
             } else if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
                 roomUpdatesProcessor.updateRoom(update);
+            } else if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
+                roomUpdatesProcessor.updateRoom(update);
             }
 
             notifyUpdateListeners(update);
         } catch (OldUpdateException oldUpdateException) {
             oldUpdateException.printStackTrace();
-        }
-    }
-
-    /**
-     * Apply changes of room member to local database
-     *
-     * @param memberUpdate
-     */
-    public void updateMember(MemberUpdate memberUpdate) {
-        if (memberUpdate.getId().equals(new CacheUtils(context).getString(CacheUtils.ID)))
-            return;
-
-        Member member = memberDao.getMemberByIdAndRoomSecret(memberUpdate.getId(), memberUpdate.getRoomSecret());
-
-        boolean hasMemberInDatabase = true;
-
-        if (member == null) {
-            hasMemberInDatabase = false;
-            member = new Member(memberUpdate.getId(), memberUpdate.getNickname(),
-                    null, memberUpdate.getRoomSecret(), memberUpdate.getUpdateTime());
-
-            // I think there we can observe for new user join room
-            clientMessageProcessor.notifyMemberAdded(memberUpdate);
-        }
-
-        member.setLastTimeUpdated(memberUpdate.getUpdateTime());
-        member.setNickname(memberUpdate.getNickname());
-
-        if (memberUpdate.getBase64pic() != null) {
-            Bitmap bitmap = AppStorage.getBitmapFromBase64(memberUpdate.getBase64pic());
-            String path = AppStorage.saveToInternalStorage(bitmap,
-                    member.getId() + "_" + memberUpdate.getRoomSecret(), memberUpdate.getRoomSecret(), context);
-            member.setImagePath(path);
-        }
-
-        if (hasMemberInDatabase) {
-            memberDao.update(member);
-        } else {
-            memberDao.insertAll(member);
         }
     }
 

@@ -90,5 +90,9 @@
     <string name="room_servers_popup_delete_server_text">Если вы удалите сервер, все связанные с ним комнаты перестанут получать новые сообщения и обновления</string>
     <string name="edit_room_server_popup_title">Вы уверены?</string>
     <string name="edit_room_server_popup_text">Вы продолжите получать сообщения только от тех пользователей, которые тоже сменили сервер на тот же, что и Вы.</string>
+    <string name="room_update_picture_change">Изображение комнаты изменено</string>
+    <string name="room_update_name_change">%s переименована в %d</string>
+    <string name="room_update_name_and_picture_change">%s переименована в % и изображение</string>
+    <string name="room_update_new_member">%s присоеденился к комнате</string>
 
 </resources>

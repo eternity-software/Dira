@@ -14,7 +14,7 @@ import com.diraapp.R;
 import com.diraapp.ui.adapters.ChatBackgroundAdapter;
 import com.diraapp.ui.adapters.ColorThemeAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
-import com.diraapp.ui.adapters.RoomMessagesAdapter;
+import com.diraapp.ui.adapters.messageAdapter.RoomMessagesAdapter;
 import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.appearance.ChatBackground;

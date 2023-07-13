@@ -23,7 +23,7 @@ import com.abedelazizshe.lightcompressorlibrary.config.Configuration;
 import com.diraapp.R;
 import com.diraapp.ui.activities.resizer.FluidContentResizer;
 import com.diraapp.ui.adapters.MediaGridItemListener;
-import com.diraapp.ui.adapters.RoomMessagesAdapter;
+import com.diraapp.ui.adapters.messageAdapter.RoomMessagesAdapter;
 import com.diraapp.api.requests.SendMessageRequest;
 import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.Update;
@@ -137,6 +137,13 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                 Room room = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getRoomBySecretName(roomSecret);
                 roomMessagesAdapter = new RoomMessagesAdapter(RoomActivity.this, roomSecret, room.getServerAddress());
 
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadData();
+                    }
+                });
+
                 messageList = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getAllMessageByUpdatedTime(roomSecret);
                 roomMessagesAdapter.setMessages(messageList);
                 loadMembers();
@@ -150,7 +157,6 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
             }
         });
         loadMessagesHistory.start();
-        loadData();
 
         findViewById(R.id.attach_button).setOnClickListener(new View.OnClickListener() {
             @Override

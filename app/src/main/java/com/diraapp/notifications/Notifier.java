@@ -12,12 +12,17 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.diraapp.R;
+import com.diraapp.db.entities.messages.RoomIconChangeClientData;
+import com.diraapp.db.entities.messages.RoomJoinClientData;
+import com.diraapp.db.entities.messages.RoomNameAndIconChangeClientData;
+import com.diraapp.db.entities.messages.RoomNameChangeClientData;
 import com.diraapp.ui.activities.RoomActivity;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.images.ImagesWorker;
+import com.diraapp.utils.CacheUtils;
 
 public class Notifier {
 
@@ -26,6 +31,12 @@ public class Notifier {
     private static int notificationId = 1;
 
     public static void notifyMessage(Message message, Context context) {
+        Room room = DiraRoomDatabase.getDatabase(context).getRoomDao().
+                getRoomBySecretName(message.getRoomSecret());
+        notifyMessage(message, room, context);
+    }
+
+    public static void notifyMessage(Message message, Room room, Context context) {
         createNotificationChannel(context);
 
         // Need to check if ClientMessage!
@@ -33,11 +44,44 @@ public class Notifier {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, DIRA_ID)
                         .setSmallIcon(R.drawable.notification)
-                        .setContentTitle(message.getAuthorNickname())
-                        .setContentText(message.getText())
                         .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-        Room room = DiraRoomDatabase.getDatabase(context).getRoomDao().getRoomBySecretName(message.getRoomSecret());
+        if (message.getCustomClientData() == null) {
+            CacheUtils cacheUtils = new CacheUtils(context);
+            if (message.getAuthorId().equals(cacheUtils.getString(CacheUtils.ID))) return;
+
+            builder.setContentTitle(message.getAuthorNickname())
+                    .setContentText(message.getText());
+        } else if (message.getCustomClientData() instanceof RoomJoinClientData) {
+            String text = context.getString(R.string.room_update_new_member)
+                            .replace("%s", ((RoomJoinClientData)
+                                    message.getCustomClientData()).getNewNickName());
+            builder.setContentTitle(room.getName())
+                    .setContentText(text);
+
+            // get Image
+        } else if (message.getCustomClientData() instanceof RoomIconChangeClientData) {
+            String text = context.getString(R.string.room_update_picture_change);
+            builder.setContentTitle(room.getName())
+                    .setContentText(text);
+        } else if (message.getCustomClientData() instanceof RoomNameChangeClientData) {
+            String text = context.getString(R.string.room_update_name_change)
+                    .replace("%s", ((RoomNameChangeClientData)
+                            message.getCustomClientData()).getOldName())
+                    .replace("%d", ((RoomNameChangeClientData)
+                            message.getCustomClientData()).getNewName());
+            builder.setContentTitle(room.getName())
+                    .setContentText(text);
+        } else if (message.getCustomClientData() instanceof RoomNameAndIconChangeClientData) {
+            String text = context.getString(R.string.room_update_name_and_picture_change)
+                    .replace("%s", ((RoomNameChangeClientData)
+                            message.getCustomClientData()).getOldName())
+                    .replace("%d", ((RoomNameChangeClientData)
+                            message.getCustomClientData()).getNewName());
+            builder.setContentTitle(room.getName())
+                    .setContentText(text);
+        }
+
         if (room != null) {
             if (!room.isNotificationsEnabled()) return;
 
@@ -46,7 +90,11 @@ public class Notifier {
             if (bitmap != null) {
                 builder.setLargeIcon(bitmap);
             }
-            builder.setContentText(message.getAuthorNickname() + ": " + message.getText());
+
+            if (message.getCustomClientData() == null) {
+                builder.setContentText(message.getAuthorNickname() + ": " + message.getText());
+            }
+
             Intent notificationIntent = new Intent(context, RoomActivity.class);
 
             RoomActivity.pendingRoomSecret = room.getSecretName();
@@ -61,7 +109,6 @@ public class Notifier {
                 intent = PendingIntent.getActivity(context, 0,
                         notificationIntent, 0);
             }
-
 
             builder.setContentIntent(intent);
         }
