@@ -394,6 +394,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void bindRoomUpdateMessage(Message message, ViewHolder holder) {
+        holder.roomUpdatesLayout.setVisibility(View.VISIBLE);
+
         holder.nicknameText.setVisibility(View.GONE);
         holder.pictureContainer.setVisibility(View.GONE);
         holder.emojiText.setVisibility(View.GONE);
