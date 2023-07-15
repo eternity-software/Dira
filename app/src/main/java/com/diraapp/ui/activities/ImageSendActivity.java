@@ -292,7 +292,7 @@ public class ImageSendActivity extends AppCompatActivity {
     }
 
     public void editImageButtonClick(View v) {
-        // ImageEdit.openForResult(Uri.parse(finalImageUri), this);
+        ImageEdit.openForResult(Uri.parse(finalImageUri), this);
     }
 
     @Override
@@ -333,12 +333,12 @@ public class ImageSendActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (data == null) return;
-       /* if(resultCode == ImageEdit.RESULT_CODE)
+        if(resultCode == ImageEdit.RESULT_CODE)
         {
             finalImageUri = getRealPathFromURI(this, Uri.parse(data.getStringExtra("uri")));
             ImageView imageView = findViewById(R.id.fileImageView);
             imageView.setImageURI(Uri.parse(finalImageUri));
-        }*/
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 

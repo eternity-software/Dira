@@ -25,6 +25,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.activities.ImageEdit"
+            android:exported="true" />
+        <activity
             android:name=".ui.activities.RoomServersActivity"
             android:exported="false"
             android:theme="@style/AppSlideTheme"

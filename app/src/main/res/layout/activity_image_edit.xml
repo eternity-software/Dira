@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/mainContainer"
+    android:layout_height="match_parent"
+    android:background="@color/dark"
+    tools:context=".ui.activities.ImageEdit">
+
+    <ImageView
+        android:id="@+id/cropShade"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+
+        android:alpha="0"
+        android:background="@color/white"
+        />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bitmapContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toTopOf="parent">
+
+
+
+
+
+
+        <ImageView
+            android:id="@+id/mainImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/placeholder" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout11"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/mainImageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.diraapp.ui.components.DrawingView
+                android:id="@+id/drawingView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:elevation="10dp"
+            android:gravity="center"
+            android:inputType="textPersonName|textMultiLine"
+            android:maxLength="2000"
+            android:maxLines="4"
+            android:scrollHorizontally="false"
+            android:fontFamily="@font/montserratalternates_medium"
+            android:textColor="@color/white"
+            android:text="  "
+
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/mainImageView" />
+
+
+
+
+
+
+
+
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.diraapp.ui.components.BorderScaleView
+        android:id="@+id/cropGrid"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+
+
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/brushEditor"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:adjustViewBounds="true"
+
+
+        android:background="@drawable/image_edit_buttons_background"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout8"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout8">
+
+        <ImageView
+            android:id="@+id/colorPreview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            app:srcCompat="@drawable/color_circle"
+            app:tint="@color/paintWhite" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout8"
+        android:layout_width="wrap_content"
+        android:layout_height="52dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/image_edit_buttons_background"
+        android:orientation="horizontal"
+        android:paddingHorizontal="14dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="6dp"
+            android:background="?actionBarItemBackground"
+            android:onClick="toggleCrop"
+            app:srcCompat="@drawable/ic_crop" />
+
+        <ImageView
+            android:id="@+id/imageView13"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="6dp"
+            android:layout_weight="1"
+            android:onClick="text"
+            android:background="?actionBarItemBackground"
+            app:srcCompat="@drawable/ic_text" />
+
+        <ImageView
+            android:id="@+id/changeBrushButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="6dp"
+            android:layout_weight="1"
+            android:background="?actionBarItemBackground"
+            android:onClick="changeBrush"
+            app:srcCompat="@drawable/ic_clean" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout9"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/image_edit_buttons_background"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout8">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:onClick="save"
+            app:srcCompat="@drawable/ic_check"
+            app:tint="@color/white" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

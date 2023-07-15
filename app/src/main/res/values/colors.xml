@@ -22,4 +22,16 @@
 
     <color name="green_accent">#0D4A43</color>
     <color name="green_message">#1A796E</color>
+
+    <!-- Paint colors !-->
+    <color name="paintBlack">#131313</color>
+    <color name="paintWhite">#F3F3F3</color>
+    <color name="paintGreen">#84E63D</color>
+    <color name="paintBlue">#3D75E6</color>
+    <color name="paintLightBlue">#6A92E4</color>
+    <color name="paintRed">#CF3441</color>
+    <color name="paintOrange">#CF8434</color>
+    <color name="paintYellow">#F6E055</color>
+    <color name="paintPurple">#962DCD</color>
+
 </resources>
