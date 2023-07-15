@@ -176,7 +176,9 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
         });
 
         Notifier.cancelAllNotifications(getApplicationContext());
-        FluidContentResizer.INSTANCE.listen(this);
+
+        FluidContentResizer fluidContentResizer = new FluidContentResizer();
+        fluidContentResizer.listen(this);
     }
 
     @Override

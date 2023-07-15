@@ -19,7 +19,7 @@ public class CreateRoomPresenter implements CreateRoomContract.Presenter {
     private final CreateRoomContract.Model model;
 
     private final String roomSecret;
-    private String serverAddress;
+    private String serverAddress = UpdateProcessor.OFFICIAL_ADDRESS;
 
     public CreateRoomPresenter(CreateRoomContract.View view, CreateRoomContract.Model model) {
         this.view = view;
