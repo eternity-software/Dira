@@ -102,10 +102,14 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
                     holder.accentText.setText(context.getString(R.string.room_update_picture_change));
                 } else if (message.getCustomClientData() instanceof RoomNameAndIconChangeClientData) {
                     holder.accentText.setText(context.getString(R.string.room_update_name_and_picture_change)
-                            .replace("%s", ((RoomNameChangeClientData)
+                            .replace("%s", ((RoomNameAndIconChangeClientData)
                                     message.getCustomClientData()).getOldName())
-                            .replace("%d", ((RoomNameChangeClientData)
+                            .replace("%d", ((RoomNameAndIconChangeClientData)
                                     message.getCustomClientData()).getNewName()));
+                }
+
+                if (message.getText() == null) {
+                    holder.messageText.setText("");
                 }
             }
             if (room.getImagePath() != null) {
