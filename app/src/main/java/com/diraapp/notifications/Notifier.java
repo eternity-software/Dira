@@ -74,9 +74,9 @@ public class Notifier {
                     .setContentText(text);
         } else if (message.getCustomClientData() instanceof RoomNameAndIconChangeClientData) {
             String text = context.getString(R.string.room_update_name_and_picture_change)
-                    .replace("%s", ((RoomNameChangeClientData)
+                    .replace("%s", ((RoomNameAndIconChangeClientData)
                             message.getCustomClientData()).getOldName())
-                    .replace("%d", ((RoomNameChangeClientData)
+                    .replace("%d", ((RoomNameAndIconChangeClientData)
                             message.getCustomClientData()).getNewName());
             builder.setContentTitle(room.getName())
                     .setContentText(text);
