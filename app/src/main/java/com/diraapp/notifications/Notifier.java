@@ -22,6 +22,7 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.images.ImagesWorker;
+import com.diraapp.ui.activities.RoomSelectorActivity;
 import com.diraapp.utils.CacheUtils;
 
 public class Notifier {
@@ -95,16 +96,14 @@ public class Notifier {
                 builder.setContentText(message.getAuthorNickname() + ": " + message.getText());
             }
 
-            Intent notificationIntent = new Intent(context, RoomActivity.class);
-
-            RoomActivity.pendingRoomSecret = room.getSecretName();
-            RoomActivity.pendingRoomName = room.getName();
+            Intent notificationIntent = new Intent(context, RoomSelectorActivity.class);
+            RoomActivity.putRoomExtrasInIntent(notificationIntent, room.getSecretName(), room.getName());
 
             PendingIntent intent;
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 intent = PendingIntent.getActivity(context, 0,
-                        notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+                        notificationIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
             } else {
                 intent = PendingIntent.getActivity(context, 0,
                         notificationIntent, 0);

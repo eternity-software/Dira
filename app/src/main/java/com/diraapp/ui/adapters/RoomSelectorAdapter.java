@@ -67,9 +67,8 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
         holder.rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RoomActivity.pendingRoomName = room.getName();
-                RoomActivity.pendingRoomSecret = room.getSecretName();
                 Intent intent = new Intent(context, RoomActivity.class);
+                RoomActivity.putRoomExtrasInIntent(intent, room.getSecretName(), room.getName());
                 context.startActivity(intent);
             }
         });

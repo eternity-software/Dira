@@ -64,10 +64,6 @@ import okhttp3.Response;
 
 
 public class RoomActivity extends AppCompatActivity implements UpdateListener, ProcessorListener {
-
-    public static String pendingRoomName;
-    public static String pendingRoomSecret;
-
     private String roomSecret;
     private Room room;
     private RoomMessagesAdapter roomMessagesAdapter;
@@ -82,10 +78,11 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
         SliderActivity sliderActivity = new SliderActivity();
         sliderActivity.attachSlider(this);
 
-        this.roomSecret = pendingRoomSecret;
+        roomSecret = getIntent().getExtras().getString(RoomSelectorActivity.PENDING_ROOM_SECRET);
+        String roomName = getIntent().getExtras().getString(RoomSelectorActivity.PENDING_ROOM_NAME);
 
         TextView nameView = findViewById(R.id.room_name);
-        nameView.setText(pendingRoomName);
+        nameView.setText(roomName);
 
         UpdateProcessor.getInstance().addProcessorListener(this);
 
@@ -484,5 +481,10 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
 
         ImageView backgroundView = findViewById(R.id.room_background);
         AppTheme.getInstance().getChatBackground().applyBackground(backgroundView);
+    }
+
+    public static void putRoomExtrasInIntent(Intent intent, String roomSecret, String roomName) {
+        intent.putExtra(RoomSelectorActivity.PENDING_ROOM_SECRET, roomSecret);
+        intent.putExtra(RoomSelectorActivity.PENDING_ROOM_NAME, roomName);
     }
 }
