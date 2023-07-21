@@ -86,6 +86,15 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                                     @Override
                                     public void run() {
                                         UpdateProcessor.getInstance(getApplicationContext()).deleteRoom(room);
+
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Intent intent = new Intent(RoomInfoActivity.this, RoomSelectorActivity.class);
+                                                intent.putExtra(RoomSelectorActivity.CAN_BE_BACK_PRESSED, false);
+                                                startActivity(intent);
+                                            }
+                                        });
                                     }
                                 });
                                 deletionThread.start();

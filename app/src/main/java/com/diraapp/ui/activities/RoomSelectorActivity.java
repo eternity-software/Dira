@@ -46,6 +46,10 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
 
     public static final String PENDING_ROOM_SECRET = "pendingRoomSecret";
     public static final String PENDING_ROOM_NAME = "pendingRoomName";
+
+    public static final String CAN_BE_BACK_PRESSED = "canBackPressed";
+
+    private boolean canBackPress = true;
     private static final Intent[] POWERMANAGER_INTENTS = {
             new Intent().setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),
             new Intent().setComponent(new ComponentName("com.letv.android.letvsafe", "com.letv.android.letvsafe.AutobootManageActivity")),
@@ -121,6 +125,10 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             askForPermissions();
+        }
+
+        if (getIntent().hasExtra(CAN_BE_BACK_PRESSED)) {
+            canBackPress =  getIntent().getExtras().getBoolean(CAN_BE_BACK_PRESSED);
         }
 
 
@@ -248,6 +256,17 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (canBackPress) {
+            super.onBackPressed();
+        }
+    }
+
+    public void setCanBackPress(boolean canBackPress) {
+        this.canBackPress = canBackPress;
     }
 
     @Override
