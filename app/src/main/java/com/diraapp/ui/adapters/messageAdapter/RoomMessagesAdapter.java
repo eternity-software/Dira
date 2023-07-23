@@ -409,31 +409,47 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
             String path = ((RoomJoinClientData) message.getCustomClientData()).getPath();
             setImageOnRoomUpdateMessage(holder, path);
+
+            holder.roomUpdatesText.setVisibility(View.INVISIBLE);
         } else if (message.getCustomClientData() instanceof RoomNameChangeClientData) {
-            holder.roomUpdatesMainText.setText(context.getString(R.string.room_update_name_change)
-                    .replace("%s", ((RoomNameChangeClientData)
-                            message.getCustomClientData()).getOldName())
-                    .replace("%d", ((RoomNameChangeClientData)
-                            message.getCustomClientData()).getNewName()));
+            holder.roomUpdatesMainText.setText(context.getString(R.string.room_update_name_change));
+
+//            holder.roomUpdatesText.setText(context.getString(R.string.room_update_name)
+//                    .replace("%s", ((RoomNameChangeClientData)
+//                            message.getCustomClientData()).getOldName())
+//                    .replace("%p", ((RoomNameChangeClientData)
+//                            message.getCustomClientData()).getNewName()));
+
+            holder.roomUpdatesText.setText(((RoomNameChangeClientData) message.getCustomClientData()).getOldName());
 
             holder.roomUpdatesIcon.setImageTintList(ColorStateList.valueOf(
                     AppTheme.getInstance().getColorTheme().getTextColor()));
             holder.roomUpdatesIcon.getBackground().setTintList(ColorStateList.valueOf(
                     AppTheme.getInstance().getColorTheme().getMessageColor()));
+
+            holder.roomUpdatesText.setVisibility(View.VISIBLE);
         } else if (message.getCustomClientData() instanceof RoomIconChangeClientData) {
             holder.roomUpdatesMainText.setText(context.getString(R.string.room_update_picture_change));
 
             String path = ((RoomIconChangeClientData) message.getCustomClientData()).getImagePath();
             setImageOnRoomUpdateMessage(holder, path);
+
+            holder.roomUpdatesText.setVisibility(View.GONE);
         } else if (message.getCustomClientData() instanceof RoomNameAndIconChangeClientData) {
-            holder.roomUpdatesMainText.setText(context.getString(R.string.room_update_name_and_picture_change)
-                    .replace("%s", ((RoomNameAndIconChangeClientData)
-                            message.getCustomClientData()).getOldName())
-                    .replace("%d", ((RoomNameAndIconChangeClientData)
-                            message.getCustomClientData()).getNewName()));
+            holder.roomUpdatesMainText.setText(context.getString(R.string.room_update_name_and_picture_change));
+
+//            holder.roomUpdatesText.setText(context.getString(R.string.room_update_name)
+//                    .replace("%s", ((RoomNameAndIconChangeClientData)
+//                            message.getCustomClientData()).getOldName())
+//                    .replace("%p", ((RoomNameAndIconChangeClientData)
+//                            message.getCustomClientData()).getNewName()));
+
+            holder.roomUpdatesText.setText(((RoomNameAndIconChangeClientData) message.getCustomClientData()).getOldName());
 
             String path = ((RoomNameAndIconChangeClientData) message.getCustomClientData()).getPath();
             setImageOnRoomUpdateMessage(holder, path);
+
+            holder.roomUpdatesText.setVisibility(View.VISIBLE);
         }
 
         applyRoomUpdateMessagesColorTheme(holder);
@@ -444,6 +460,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         holder.messageContainer.getBackground().setTint(theme.getMessageColor());
         holder.roomUpdatesMainText.setTextColor(theme.getTextColor());
+        holder.roomUpdatesText.setTextColor(theme.getRoomUpdateMessageColor());
     }
 
     private void setImageOnRoomUpdateMessage(ViewHolder holder, String path) {

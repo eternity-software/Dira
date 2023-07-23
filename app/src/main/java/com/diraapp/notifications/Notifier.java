@@ -66,19 +66,11 @@ public class Notifier {
             builder.setContentTitle(room.getName())
                     .setContentText(text);
         } else if (message.getCustomClientData() instanceof RoomNameChangeClientData) {
-            String text = context.getString(R.string.room_update_name_change)
-                    .replace("%s", ((RoomNameChangeClientData)
-                            message.getCustomClientData()).getOldName())
-                    .replace("%d", ((RoomNameChangeClientData)
-                            message.getCustomClientData()).getNewName());
+            String text = context.getString(R.string.room_update_name_change);
             builder.setContentTitle(room.getName())
                     .setContentText(text);
         } else if (message.getCustomClientData() instanceof RoomNameAndIconChangeClientData) {
-            String text = context.getString(R.string.room_update_name_and_picture_change)
-                    .replace("%s", ((RoomNameAndIconChangeClientData)
-                            message.getCustomClientData()).getOldName())
-                    .replace("%d", ((RoomNameAndIconChangeClientData)
-                            message.getCustomClientData()).getNewName());
+            String text = context.getString(R.string.room_update_name_and_picture_change);
             builder.setContentTitle(room.getName())
                     .setContentText(text);
         }

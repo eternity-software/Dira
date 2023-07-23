@@ -92,19 +92,11 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
                             .replace("%s", ((RoomJoinClientData)
                                     message.getCustomClientData()).getNewNickName()));
                 } else if (message.getCustomClientData() instanceof RoomNameChangeClientData) {
-                    holder.accentText.setText(context.getString(R.string.room_update_name_change)
-                            .replace("%s", ((RoomNameChangeClientData)
-                                    message.getCustomClientData()).getOldName())
-                            .replace("%d", ((RoomNameChangeClientData)
-                                    message.getCustomClientData()).getNewName()));
+                    holder.accentText.setText(context.getString(R.string.room_update_name_change));
                 } else if (message.getCustomClientData() instanceof RoomIconChangeClientData) {
                     holder.accentText.setText(context.getString(R.string.room_update_picture_change));
                 } else if (message.getCustomClientData() instanceof RoomNameAndIconChangeClientData) {
-                    holder.accentText.setText(context.getString(R.string.room_update_name_and_picture_change)
-                            .replace("%s", ((RoomNameAndIconChangeClientData)
-                                    message.getCustomClientData()).getOldName())
-                            .replace("%d", ((RoomNameAndIconChangeClientData)
-                                    message.getCustomClientData()).getNewName()));
+                    holder.accentText.setText(context.getString(R.string.room_update_name_and_picture_change));
                 }
 
                 if (message.getText() == null) {

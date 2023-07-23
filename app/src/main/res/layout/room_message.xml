@@ -211,16 +211,16 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/room_updates_layout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:id="@+id/room_updates_layout">
+                            android:orientation="horizontal">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="10dp"
                                 android:layout_gravity="center_vertical"
+                                android:layout_marginHorizontal="10dp"
                                 android:layout_marginVertical="10dp">
 
                                 <androidx.cardview.widget.CardView
@@ -230,13 +230,12 @@
                                     app:cardElevation="0dp">
 
                                     <ImageView
+                                        android:id="@+id/room_updates_icon"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:background="@color/accent"
                                         android:src="@drawable/ic_room_updates"
-                                        android:layout_gravity="center"
-                                        app:tint="@color/dark"
-                                        android:id="@+id/room_updates_icon"/>
+                                        app:tint="@color/dark" />
 
                                 </androidx.cardview.widget.CardView>
 
@@ -245,10 +244,10 @@
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical"
+                                android:layout_gravity="center_vertical"
                                 android:gravity="center_vertical"
-                                android:paddingVertical="10dp"
-                                android:layout_gravity="center_vertical">
+                                android:orientation="vertical"
+                                android:paddingVertical="10dp">
 
                                 <TextView
                                     android:id="@+id/room_updates_main_text"
@@ -264,15 +263,15 @@
                                     android:textColor="@color/dark"
 
                                     android:textIsSelectable="true"
-                                    android:textSize="15sp" />
+                                    android:textSize="13sp" />
 
                                 <TextView
                                     android:id="@+id/room_updates_text"
 
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginEnd="10dp"
                                     android:layout_marginTop="3dp"
+                                    android:layout_marginEnd="10dp"
                                     android:autoLink="all"
 
                                     android:fontFamily="@font/montserratsemibold"
@@ -281,13 +280,12 @@
                                     android:textColor="@color/gray"
 
                                     android:textIsSelectable="true"
-                                    android:textSize="13sp" />
+                                    android:textSize="11sp" />
 
                             </LinearLayout>
 
 
                         </LinearLayout>
-
 
 
                     </LinearLayout>
