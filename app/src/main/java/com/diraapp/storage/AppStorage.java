@@ -135,6 +135,7 @@ public class AppStorage {
             output.write(data, 0, count);
         }
 
+
     }
 
     public static Bitmap getBitmapFromUrl(String url) {

@@ -85,7 +85,7 @@ public class DiraKeyProtocolProcessor {
                     SubmitKeyRequest submitKeyRequest = new SubmitKeyRequest(room.getSecretName(), baseMember);
                     try {
                         UpdateProcessor.getInstance().sendRequest(submitKeyRequest, room.getServerAddress());
-                        System.out.println("Ready " + dhKey.getG() );
+                        System.out.println("Ready " + dhKey.getG());
                     } catch (UnablePerformRequestException e) {
 
                     }

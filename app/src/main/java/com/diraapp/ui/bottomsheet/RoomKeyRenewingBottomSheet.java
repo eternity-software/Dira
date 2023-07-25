@@ -142,12 +142,13 @@ public class RoomKeyRenewingBottomSheet  extends BottomSheetDialogFragment imple
             CacheUtils cacheUtils = new CacheUtils(getContext());
             String id = cacheUtils.getString(CacheUtils.ID);
             String nickname = cacheUtils.getString(CacheUtils.NICKNAME);
+            String pic = cacheUtils.getString(CacheUtils.PICTURE);
 
 
 
             BaseMember baseMember = new BaseMember(id, nickname);
 
-            Member member = new Member(baseMember.getId(), baseMember.getNickname(), null, room.getSecretName(), System.currentTimeMillis());
+            Member member = new Member(baseMember.getId(), baseMember.getNickname(), pic, room.getSecretName(), System.currentTimeMillis());
             StatusMember statusMember = new StatusMember(member, MemberStatus.WAITING);
 
             statusMembers.add(statusMember);

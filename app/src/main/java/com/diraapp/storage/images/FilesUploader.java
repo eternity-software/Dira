@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
 import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.utils.CryptoUtils;
 import com.diraapp.utils.ImageRotationFix;
 
 import java.io.File;
@@ -27,7 +28,7 @@ import okhttp3.Response;
 
 public class FilesUploader {
 
-    public static boolean uploadFile(String sourceFileUri, Callback callback, Context context, boolean deleteAfterUpload, String serverAddress) throws IOException {
+    public static boolean uploadFile(String sourceFileUri, Callback callback, Context context, boolean deleteAfterUpload, String serverAddress, String encryptionKey) throws IOException {
 
         try {
 
@@ -70,6 +71,18 @@ public class FilesUploader {
                 sourceFileUri = AppStorage.saveToInternalStorage(bitmap,
                         null, context);
             }
+
+            if(!encryptionKey.equals(""))
+            {
+                File rawFile = new File(sourceFileUri);
+                File outputFile = new File(rawFile.getPath() + "enctypted_" + rawFile.getName());
+                CryptoUtils.encrypt(encryptionKey, rawFile, outputFile);
+                sourceFileUri = outputFile.getAbsolutePath();
+                System.out.println("encrypted " + sourceFileUri);
+                deleteAfterUpload = true;
+            }
+
+
             RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
                     .addFormDataPart("file", "file", RequestBody.create(new File(sourceFileUri),
                             MultipartBody.FORM))

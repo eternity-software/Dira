@@ -49,6 +49,7 @@ import com.diraapp.storage.images.FilesUploader;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.ProcessorListener;
 import com.diraapp.api.processors.listeners.UpdateListener;
+import com.diraapp.utils.EncryptionUtil;
 import com.diraapp.utils.SliderActivity;
 
 import org.json.JSONException;
@@ -125,37 +126,12 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
             }
         });
 
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+
 
 
         UpdateProcessor.getInstance().addUpdateListener(this);
 
-        Thread loadMessagesHistory = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Room room = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getRoomBySecretName(roomSecret);
-                roomMessagesAdapter = new RoomMessagesAdapter(RoomActivity.this, roomSecret, room.getServerAddress());
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadData();
-                    }
-                });
-
-                messageList = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getAllMessageByUpdatedTime(roomSecret);
-                roomMessagesAdapter.setMessages(messageList);
-                loadMembers();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        recyclerView.setAdapter(roomMessagesAdapter);
-                        roomMessagesAdapter.notifyDataSetChanged();
-                    }
-                });
-            }
-        });
-        loadMessagesHistory.start();
 
         findViewById(R.id.attach_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -245,7 +221,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                                             public void onSuccess(int i, long l, @Nullable String s) {
                                                 if (s != null) {
                                                     try {
-                                                        FilesUploader.uploadFile(s, createAttachmentCallback(s, messageText, AttachmentType.VIDEO), getApplicationContext(), true, room.getServerAddress());
+                                                        FilesUploader.uploadFile(s, createAttachmentCallback(s, messageText, AttachmentType.VIDEO), getApplicationContext(), true, room.getServerAddress(), room.getEncryptionKey());
                                                     } catch (Exception e) {
                                                         e.printStackTrace();
                                                     }
@@ -269,7 +245,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                                         });
                             } else {
                                 try {
-                                    FilesUploader.uploadFile(imageUri, createAttachmentCallback(imageUri, messageText, AttachmentType.IMAGE), getApplicationContext(), false, room.getServerAddress());
+                                    FilesUploader.uploadFile(imageUri, createAttachmentCallback(imageUri, messageText, AttachmentType.IMAGE), getApplicationContext(), false, room.getServerAddress(), room.getEncryptionKey());
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -315,7 +291,18 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                     attachment.setSize(new File(fileUri).length());
 
                     Message message = Message.generateMessage(getApplicationContext(), roomSecret);
-                    message.setText(messageText);
+
+                    message.setLastTimeEncryptionKeyUpdated(room.getTimeEncryptionKeyUpdated());
+
+                    if(room.getEncryptionKey().equals(""))
+                    {
+                        message.setText(messageText);
+                    }
+                    else
+                    {
+                        message.setText("e" + EncryptionUtil.encrypt(messageText, room.getEncryptionKey()));
+                    }
+
                     message.getAttachments().add(attachment);
 
                     SendMessageRequest sendMessageRequest = new SendMessageRequest(message);
@@ -389,7 +376,16 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
 
         if (text.replace(" ", "").replace("\n", "").length() != 0) {
             Message message = Message.generateMessage(getApplicationContext(), roomSecret);
-            message.setText(text);
+            message.setLastTimeEncryptionKeyUpdated(room.getTimeEncryptionKeyUpdated());
+
+            if(room.getEncryptionKey().equals(""))
+            {
+                message.setText(text);
+            }
+            else
+            {
+                message.setText(EncryptionUtil.encrypt(text, room.getEncryptionKey()));
+            }
 
             SendMessageRequest sendMessageRequest = new SendMessageRequest(message);
             try {
@@ -498,6 +494,38 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        Thread loadMessagesHistory = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Room room = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getRoomBySecretName(roomSecret);
+                roomMessagesAdapter = new RoomMessagesAdapter(RoomActivity.this, roomSecret, room.getServerAddress(), room);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadData();
+                    }
+                });
+
+                messageList = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getAllMessageByUpdatedTime(roomSecret);
+                roomMessagesAdapter.setMessages(messageList);
+                loadMembers();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        recyclerView.setAdapter(roomMessagesAdapter);
+                        roomMessagesAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        });
+        loadMessagesHistory.start();
     }
 
     private void applyColorTheme() {

@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
@@ -57,6 +58,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private final String selfId;
     private final Activity context;
+    private final Room room;
     private final List<AttachmentsStorageListener> listeners = new ArrayList<>();
     private final CacheUtils cacheUtils;
     private final HashMap<View, Integer> pendingAsyncOperations = new HashMap<>();
@@ -67,12 +69,14 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private HashMap<String, Member> members = new HashMap<>();
 
 
-    public RoomMessagesAdapter(Activity context, String secretName, String serverAddress) {
+    public RoomMessagesAdapter(Activity context, String secretName, String serverAddress, Room room) {
         this.context = context;
         this.secretName = secretName;
         this.serverAddress = serverAddress;
+        this.room = room;
         layoutInflater = LayoutInflater.from(context);
         cacheUtils = new CacheUtils(context);
+
         selfId = cacheUtils.getString(CacheUtils.ID);
     }
 
@@ -510,6 +514,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 
     private void loadMessageAttachment(Message message, ViewHolder holder) {
+        String encryptionKey = "";
+
+        if(message.getLastTimeEncryptionKeyUpdated() == room.getTimeEncryptionKeyUpdated())
+        {
+            encryptionKey = room.getEncryptionKey();
+        }
+
         if (message.getAttachments() != null) {
             if (message.getAttachments().size() > 0) {
                 holder.attachmentsStorageListener = new AttachmentsStorageListener() {
@@ -575,6 +586,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                         holder.sizeContainer.setVisibility(View.VISIBLE);
                         holder.loading.setVisibility(View.GONE);
                         holder.sizeText.setText(AppStorage.getStringSize(attachment.getSize()));
+                        String finalEncryptionKey = encryptionKey;
                         holder.buttonDownload.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -601,7 +613,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                                     });
 
                                                 }
-                                            }, serverAddress);
+                                            }, serverAddress, finalEncryptionKey);
                                             context.runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {

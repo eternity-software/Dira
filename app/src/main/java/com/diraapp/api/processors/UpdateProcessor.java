@@ -41,6 +41,7 @@ import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.DiraApplication;
+import com.diraapp.utils.EncryptionUtil;
 import com.google.gson.Gson;
 
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
@@ -115,6 +116,11 @@ public class UpdateProcessor {
         return instance;
     }
 
+    public Room getRoom(String roomSecret)
+    {
+        return roomDao.getRoomBySecretName(roomSecret);
+    }
+
     public static UpdateProcessor getInstance(Context context) {
         if (instance == null) {
             try {
@@ -164,10 +170,25 @@ public class UpdateProcessor {
             } else if (update.getUpdateType() == UpdateType.NEW_ROOM_UPDATE) {
                 roomUpdatesProcessor.onNewRoom((NewRoomUpdate) update, address);
             } else if (update.getUpdateType() == UpdateType.NEW_MESSAGE_UPDATE) {
+                NewMessageUpdate newMessageUpdate = ((NewMessageUpdate) update);
+
+                Room room = roomDao.getRoomBySecretName(newMessageUpdate.getMessage().getRoomSecret());
+                if(room.getTimeEncryptionKeyUpdated() == newMessageUpdate.getMessage().getLastTimeEncryptionKeyUpdated())
+                {
+                    if(!room.getEncryptionKey().equals(""))
+                    {
+                        String rawText = newMessageUpdate.getMessage().getText();
+                        newMessageUpdate.getMessage().setText(EncryptionUtil.decrypt(rawText,
+                                room.getEncryptionKey()));
+                    }
+                }
+
+
                 if (DiraApplication.isBackgrounded()) {
-                    Notifier.notifyMessage(((NewMessageUpdate) update).getMessage(), context);
+                    Notifier.notifyMessage(newMessageUpdate.getMessage(), context);
                 }
                 roomUpdatesProcessor.updateRoom(update);
+
 
                 /*
                  * Save attachments

@@ -16,8 +16,8 @@ android {
         applicationId 'com.diraapp'
         minSdk 21
         targetSdk 31
-        versionCode 7
-        versionName '0.5.0-SNAPSHOT'
+        versionCode 8
+        versionName '0.5.0'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -61,6 +61,7 @@ android {
 
 dependencies {
 
+    implementation 'com.github.simbiose:Encryption:2.0.1'
     implementation 'androidx.lifecycle:lifecycle-process:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
     implementation 'androidx.activity:activity-compose:1.5.1'

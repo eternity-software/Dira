@@ -122,6 +122,7 @@ public class Message {
     }
 
     public String getText() {
+        if (text == null) { text = "";}
         return text;
     }
 

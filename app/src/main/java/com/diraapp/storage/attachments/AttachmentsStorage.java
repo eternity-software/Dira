@@ -3,10 +3,12 @@ package com.diraapp.storage.attachments;
 import android.content.Context;
 
 import com.diraapp.db.entities.Attachment;
+import com.diraapp.db.entities.Room;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DownloadHandler;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.CryptoUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,7 +43,7 @@ public class AttachmentsStorage {
                                     if (saveAttachment(saveAttachmentTask.getContext(),
                                             saveAttachmentTask.getAttachment(),
                                             saveAttachmentTask.getRoomSecret(),
-                                            true, address) != null) {
+                                            true, address, UpdateProcessor.getInstance().getRoom(saveAttachmentTask.getRoomSecret()).getEncryptionKey()) != null) {
                                         for (AttachmentsStorageListener attachmentsStorageListener : attachmentsStorageListeners) {
                                             try {
                                                 attachmentsStorageListener.onAttachmentDownloaded(saveAttachmentTask.getAttachment());
@@ -112,16 +114,26 @@ public class AttachmentsStorage {
         return false;
     }
 
-    public static File saveAttachment(Context context, Attachment attachment, String roomSecret, boolean autoLoad, String address) throws IOException {
-        return saveAttachment(context, attachment, roomSecret, autoLoad, null, address);
+    public static File saveAttachment(Context context, Attachment attachment, String roomSecret, boolean autoLoad, String address, String encryptionKey) throws IOException {
+        return saveAttachment(context, attachment, roomSecret, autoLoad, null, address, encryptionKey);
     }
 
-    public static File saveAttachment(Context context, Attachment attachment, String roomSecret, boolean autoLoad, DownloadHandler downloadHandler, String address) throws IOException {
+    public static File saveAttachment(Context context, Attachment attachment, String roomSecret, boolean autoLoad, DownloadHandler downloadHandler, String address, String encryptionKey) throws IOException {
         File localFile = new File(context.getExternalCacheDir(), roomSecret + "_" + attachment.getFileUrl());
         CacheUtils cacheUtils = new CacheUtils(context);
 
         if (!autoLoad | attachment.getSize() < cacheUtils.getLong(CacheUtils.AUTO_LOAD_SIZE)) {
             AppStorage.downloadFile(UpdateProcessor.getInstance(context).getFileServer(address) + "/download/" + attachment.getFileUrl(), localFile, downloadHandler);
+
+
+            if(!encryptionKey.equals(""))
+            {
+                File decrypted = new File(context.getExternalCacheDir(), roomSecret + "_" + attachment.getFileUrl());
+                CryptoUtils.decrypt(encryptionKey, localFile, decrypted);
+                localFile = decrypted;
+            }
+
+
             return localFile;
         }
         return null;
