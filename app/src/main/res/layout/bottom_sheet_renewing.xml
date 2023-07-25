@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/top_rounded_back"
     android:orientation="vertical"
+
     android:padding="22dp">
 
     <TextView
@@ -18,16 +19,31 @@
         android:textColor="@color/white"
         android:textSize="22sp" />
 
-    <TextView
-        android:id="@+id/members_waiting_text"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:fontFamily="@font/montserratsemibold"
-        android:text="@string/room_encryption_renewing_waiting"
-        android:textColor="@color/white"
-        android:layout_marginVertical="12dp"
-        android:textSize="16sp" />
+        android:orientation="horizontal">
+        <ProgressBar
+            android:id="@+id/progress_circular"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginRight="12dp"
+            android:visibility="gone"
+            android:layout_gravity="center_vertical"
+            android:indeterminateTint="@color/accent"
+            />
+        <TextView
+            android:id="@+id/status_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="@font/montserratsemibold"
+            android:text="@string/room_encryption_renewing_waiting"
+            android:textColor="@color/white"
+            android:layout_marginVertical="12dp"
+            android:textSize="16sp" />
+
+    </LinearLayout>
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -50,7 +66,7 @@
 
 
     <TextView
-        android:id="@+id/button_change_picture"
+        android:id="@+id/button_start_renewing"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="right"

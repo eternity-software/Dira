@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 11,
-    "identityHash": "fbb7f9b4173cd587f125ef6aa28c48de",
+    "version": 12,
+    "identityHash": "078155faaeff0a6ffadb1f693cb12333",
     "entities": [
       {
         "tableName": "Message",
@@ -296,12 +296,38 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "MessageReading",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` TEXT NOT NULL, `readTime` INTEGER NOT NULL, PRIMARY KEY(`userId`))",
+        "fields": [
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "readTime",
+            "columnName": "readTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "userId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fbb7f9b4173cd587f125ef6aa28c48de')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '078155faaeff0a6ffadb1f693cb12333')"
     ]
   }
 }

@@ -11,9 +11,13 @@ import com.diraapp.api.requests.GetUpdatesRequest;
 import com.diraapp.api.requests.PingReactRequest;
 import com.diraapp.api.requests.Request;
 import com.diraapp.api.requests.SubscribeRequest;
+import com.diraapp.api.updates.DhInitUpdate;
+import com.diraapp.api.updates.KeyReceivedUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.NewRoomUpdate;
 import com.diraapp.api.updates.PingUpdate;
+import com.diraapp.api.updates.RenewingCancelUpdate;
+import com.diraapp.api.updates.RenewingConfirmUpdate;
 import com.diraapp.api.updates.ServerSyncUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateDeserializer;
@@ -76,6 +80,7 @@ public class UpdateProcessor {
     private final RoomDao roomDao;
     private final MemberDao memberDao;
     private final RoomUpdatesProcessor roomUpdatesProcessor;
+    private final DiraKeyProtocolProcessor diraKeyProtocol;
 
     private final ClientMessageProcessor clientMessageProcessor;
     int updatedRoomsCount = 0;
@@ -98,6 +103,7 @@ public class UpdateProcessor {
         roomDao = DiraRoomDatabase.getDatabase(context).getRoomDao();
         memberDao = DiraRoomDatabase.getDatabase(context).getMemberDao();
         roomUpdatesProcessor = new RoomUpdatesProcessor(roomDao, memberDao, context);
+        diraKeyProtocol = new DiraKeyProtocolProcessor(roomDao, new CacheUtils(context));
         clientMessageProcessor = new ClientMessageProcessor(context);
 
     }
@@ -175,6 +181,18 @@ public class UpdateProcessor {
                 roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
                 roomUpdatesProcessor.updateRoom(update);
+            }
+            else if (update.getUpdateType() == UpdateType.DIFFIE_HELLMAN_INIT_UPDATE) {
+                diraKeyProtocol.onDiffieHellmanInit((DhInitUpdate) update);
+            }
+            else if (update.getUpdateType() == UpdateType.KEY_RECEIVED_UPDATE) {
+                diraKeyProtocol.onIntermediateKey((KeyReceivedUpdate) update);
+            }
+            else if (update.getUpdateType() == UpdateType.RENEWING_CANCEL) {
+                diraKeyProtocol.onKeyCancel((RenewingCancelUpdate) update);
+            }
+            else if (update.getUpdateType() == UpdateType.RENEWING_CONFIRMED) {
+                diraKeyProtocol.onKeyConfirmed((RenewingConfirmUpdate) update);
             }
             else if (update.getUpdateType() == UpdateType.PING_UPDATE) {
                 PingUpdate pingUpdate = (PingUpdate) update;

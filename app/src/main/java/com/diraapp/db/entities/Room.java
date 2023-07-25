@@ -56,10 +56,6 @@ public class Room {
     }
 
     public String getClientSecret() {
-        if(clientSecret.equals("0"))
-        {
-            clientSecret = BigInteger.probablePrime(2048, new SecureRandom()).toString();
-        }
         return clientSecret;
     }
 
@@ -83,6 +79,7 @@ public class Room {
     }
 
     public String getEncryptionKey() {
+        if(encryptionKey == null) encryptionKey = "";
         return encryptionKey;
     }
 

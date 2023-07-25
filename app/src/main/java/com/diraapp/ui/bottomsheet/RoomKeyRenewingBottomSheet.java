@@ -17,6 +17,8 @@ import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.PingMembersRequest;
+import com.diraapp.api.requests.encryption.KeyRenewRequest;
+import com.diraapp.api.updates.AcceptedStatusAnswer;
 import com.diraapp.api.updates.BaseMemberUpdate;
 import com.diraapp.api.updates.PingUpdate;
 import com.diraapp.api.updates.Update;
@@ -42,6 +44,7 @@ public class RoomKeyRenewingBottomSheet  extends BottomSheetDialogFragment imple
 
     private View v;
     private int readyCount = 0;
+    private int renewingMembersCount = 0;
     private List<StatusMember> statusMembers = new ArrayList<>();
 
     private StatusMemberAdapter statusMemberAdapter;
@@ -65,7 +68,68 @@ public class RoomKeyRenewingBottomSheet  extends BottomSheetDialogFragment imple
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.v = inflater.inflate(R.layout.bottom_sheet_renewing, container, true);
 
+        v.findViewById(R.id.button_start_renewing).setOnClickListener((view) -> {
 
+
+
+            view.setVisibility(View.GONE);
+            v.findViewById(R.id.progress_circular).setVisibility(View.VISIBLE);
+            v.findViewById(R.id.recycler_view).setVisibility(View.GONE);
+            TextView status = v.findViewById(R.id.status_text);
+            status.setText(String.format(getString(R.string.room_encryption_renewing_generating), readyCount, 30));
+            renewingMembersCount = readyCount;
+            Thread countdown = new Thread(() -> {
+
+                try {
+                    UpdateProcessor.getInstance(getContext()).sendRequest(new KeyRenewRequest(room.getSecretName()), new UpdateListener() {
+                        @Override
+                        public void onUpdate(Update update) {
+                            AcceptedStatusAnswer acceptedStatusAnswer = (AcceptedStatusAnswer) update;
+
+                            if(!acceptedStatusAnswer.isAccepted())
+                            {
+
+                                if(getActivity() != null)
+                                {
+                                    getActivity().runOnUiThread(() ->  dismiss());
+                                }
+                            }
+                        }
+                    }, room.getServerAddress());
+                } catch (UnablePerformRequestException e) {
+
+                }
+
+                int sec = 30;
+                while (!isDetached()){
+                    try {
+                        Thread.sleep(1000);
+
+                        int finalSec = sec;
+
+
+                        getActivity().runOnUiThread(() -> {
+                            try {
+                                status.setText(String.format(getString(R.string.room_encryption_renewing_generating), renewingMembersCount, finalSec));
+                            }
+                            catch (Exception e)
+                            {
+
+                            }
+                        });
+                        if(sec == 0)
+                        {
+                            break;
+                        }
+                        sec -= 1;
+                    } catch (Exception e) {
+                        break;
+                    }
+               }
+            });
+
+            countdown.start();
+        });
         UpdateProcessor.getInstance().addUpdateListener(this);
         Thread thread = new Thread(() -> {
             List<Member> memberList = DiraRoomDatabase.getDatabase(getContext()).getMemberDao().getMembersByRoomSecret(room.getSecretName());
@@ -123,8 +187,22 @@ public class RoomKeyRenewingBottomSheet  extends BottomSheetDialogFragment imple
 
     private void updateWaitingInfo()
     {
-        TextView membersReadyText = v.findViewById(R.id.members_waiting_text);
-        membersReadyText.setText(String.format(getString(R.string.room_encryption_renewing_waiting), readyCount, statusMembers.size()));
+        try {
+            TextView membersReadyText = v.findViewById(R.id.status_text);
+            membersReadyText.setText(String.format(getString(R.string.room_encryption_renewing_waiting), readyCount, statusMembers.size()));
+
+            if(readyCount >= statusMembers.size())
+            {
+                TextView button =  v.findViewById(R.id.button_start_renewing);
+                button.setBackground(getContext().getResources().getDrawable(R.drawable.accent_rounded));
+                button.setTextColor(getContext().getResources().getColor(R.color.dark));
+
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
     @Override
     public void onUpdate(Update update) {
@@ -172,6 +250,28 @@ public class RoomKeyRenewingBottomSheet  extends BottomSheetDialogFragment imple
 
             }
 
+        }
+        else if(update.getUpdateType() == UpdateType.RENEWING_CONFIRMED)
+        {
+            if(getActivity() == null) return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    dismiss();
+                    Toast.makeText(getActivity(), "Key updated", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        else if(update.getUpdateType() == UpdateType.RENEWING_CANCEL)
+        {
+            if(getActivity() == null) return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                        dismiss();
+                    Toast.makeText(getActivity(), "Key update failed", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 }

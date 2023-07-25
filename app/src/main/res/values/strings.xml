@@ -130,7 +130,7 @@
     <string name="room_encryption_renewing_status_ready">Ready</string>
     <string name="room_encryption_renewing_status_waiting">Waiting</string>
     <string name="room_encryption_renewing_start">Start renewing</string>
-    <string name="room_encryption_renewing_generating">Generating key with %s members...</string>
+    <string name="room_encryption_renewing_generating">Generating key with %d members... (%d sec)</string>
     <string name="room_encryption_success">Key has been renewed</string>
     <string name="room_encryption_cancel">Renewing has been cancelled</string>
 
