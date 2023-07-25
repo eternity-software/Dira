@@ -6,6 +6,8 @@ public class MessageReadUpdate extends Update {
 
     private long readTime;
 
+    private String MessageId;
+
     public MessageReadUpdate(String userId, long readTime) {
         super(0, UpdateType.READ_UPDATE);
         this.userId = userId;
@@ -26,5 +28,13 @@ public class MessageReadUpdate extends Update {
 
     public void setReadTime(long readTime) {
         this.readTime = readTime;
+    }
+
+    public String getMessageId() {
+        return MessageId;
+    }
+
+    public void setMessageId(String messageId) {
+        MessageId = messageId;
     }
 }

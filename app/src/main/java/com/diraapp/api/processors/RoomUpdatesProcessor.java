@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.diraapp.api.updates.MemberUpdate;
+import com.diraapp.api.updates.MessageReadUpdate;
 import com.diraapp.api.views.InviteRoom;
 import com.diraapp.api.views.RoomMember;
 import com.diraapp.api.updates.NewMessageUpdate;
@@ -12,10 +13,12 @@ import com.diraapp.api.updates.RoomUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.daos.MemberDao;
+import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
@@ -25,11 +28,13 @@ public class RoomUpdatesProcessor {
 
     private final RoomDao roomDao;
     private final MemberDao memberDao;
+    private final MessageDao messageDao;
     private final Context context;
 
-    public RoomUpdatesProcessor(RoomDao roomDao, MemberDao memberDao, Context context) {
+    public RoomUpdatesProcessor(RoomDao roomDao, MemberDao memberDao, MessageDao messageDao, Context context) {
         this.roomDao = roomDao;
         this.memberDao = memberDao;
+        this.messageDao = messageDao;
         this.context = context;
     }
 
@@ -140,17 +145,17 @@ public class RoomUpdatesProcessor {
                         newMessage = UpdateProcessor.getInstance().getClientMessageProcessor()
                                 .notifyRoomIconChange((RoomUpdate) update, path, room);
                     }
-                }
-
-                if (update instanceof MemberUpdate) {
+                } else if (update instanceof MemberUpdate) {
                     newMessage = updateMember((MemberUpdate) update);
+                } else if (update instanceof MessageReadUpdate) {
+                    updateMessageReading((MessageReadUpdate) update);
                 }
 
                 if (newMessage != null) {
                     room.setLastMessageId(newMessage.getId());
                     room.setLastUpdatedTime(newMessage.getTime());
                     room.setUpdatedRead(false);
-                    DiraMessageDatabase.getDatabase(context).getMessageDao().insertAll(newMessage);
+                    messageDao.insertAll(newMessage);
                 }
                 roomDao.update(room);
             } else {
@@ -217,6 +222,21 @@ public class RoomUpdatesProcessor {
                     .notifyMemberAdded(memberUpdate, path);
         }
         return null;
+    }
+
+    private void updateMessageReading(MessageReadUpdate update) {
+        if (update.getUserId().equals(new CacheUtils(context).getString(CacheUtils.ID))) return;
+
+        Message message = messageDao.getMessageById(update.getMessageId());
+
+        MessageReading messageReading = new MessageReading(update.getUserId(), update.getReadTime());
+
+        if (message.getMessageReadingList().contains(messageReading)) return;
+
+        UpdateProcessor.getInstance().notifyUpdateListeners(update);
+
+        message.getMessageReadingList().add(messageReading);
+        messageDao.update(message);
     }
 
 }

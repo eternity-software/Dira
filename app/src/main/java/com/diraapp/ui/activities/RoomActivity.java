@@ -21,6 +21,8 @@ import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
 import com.abedelazizshe.lightcompressorlibrary.config.AppSpecificStorageConfiguration;
 import com.abedelazizshe.lightcompressorlibrary.config.Configuration;
 import com.diraapp.R;
+import com.diraapp.api.updates.MessageReadUpdate;
+import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.ui.activities.resizer.FluidContentResizer;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.adapters.messages.RoomMessagesAdapter;
@@ -444,6 +446,35 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                 }
             });
             thread.start();
+        } else if (update.getUpdateType() == UpdateType.READ_UPDATE) {
+            if (!update.getRoomSecret().equals(roomSecret)) return;
+
+            MessageReadUpdate readUpdate = (MessageReadUpdate) update;
+            Message thisMessage = null;
+            int index = 0;
+
+            for (int i = 0; i < messageList.size(); i++) {
+                Message message = messageList.get(i);
+                if (message.getId().equals(readUpdate.getMessageId())) {
+                    thisMessage = message;
+                    index = i;
+                    break;
+                }
+            }
+            if (thisMessage == null) return;
+
+            thisMessage.getMessageReadingList().add(new MessageReading(readUpdate.getMessageId(),
+                    readUpdate.getReadTime()));
+
+
+            int finalIndex = index;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    roomMessagesAdapter.notifyItemChanged(finalIndex);
+                }
+            });
+
         }
     }
 
