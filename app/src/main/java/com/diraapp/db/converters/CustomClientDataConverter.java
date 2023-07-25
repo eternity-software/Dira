@@ -2,12 +2,12 @@ package com.diraapp.db.converters;
 
 import androidx.room.TypeConverter;
 
-import com.diraapp.db.entities.messages.CustomClientData;
+import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
 import com.diraapp.db.entities.messages.MessageType;
-import com.diraapp.db.entities.messages.RoomJoinClientData;
-import com.diraapp.db.entities.messages.RoomIconChangeClientData;
-import com.diraapp.db.entities.messages.RoomNameAndIconChangeClientData;
-import com.diraapp.db.entities.messages.RoomNameChangeClientData;
+import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
+import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientData;
+import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
+import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
 import com.google.gson.Gson;
 
 public class CustomClientDataConverter {

@@ -1,7 +1,6 @@
 package com.diraapp.api.processors;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.diraapp.api.SocketClient;
@@ -11,10 +10,8 @@ import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.GetUpdatesRequest;
 import com.diraapp.api.requests.Request;
 import com.diraapp.api.requests.SubscribeRequest;
-import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.NewRoomUpdate;
-import com.diraapp.api.updates.RoomUpdate;
 import com.diraapp.api.updates.ServerSyncUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateDeserializer;
@@ -25,12 +22,8 @@ import com.diraapp.db.daos.MemberDao;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.messages.CustomClientData;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
-import com.diraapp.db.entities.messages.RoomJoinClientData;
-import com.diraapp.db.entities.messages.RoomIconChangeClientData;
-import com.diraapp.db.entities.messages.RoomNameChangeClientData;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.exceptions.SingletonException;
 import com.diraapp.exceptions.UnablePerformRequestException;
@@ -38,7 +31,6 @@ import com.diraapp.notifications.Notifier;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
-import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.DiraApplication;
 import com.google.gson.Gson;
 

@@ -13,10 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
-import com.diraapp.db.entities.messages.RoomJoinClientData;
-import com.diraapp.db.entities.messages.RoomIconChangeClientData;
-import com.diraapp.db.entities.messages.RoomNameAndIconChangeClientData;
-import com.diraapp.db.entities.messages.RoomNameChangeClientData;
+import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
+import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientData;
+import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
+import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
 import com.diraapp.ui.activities.RoomActivity;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;

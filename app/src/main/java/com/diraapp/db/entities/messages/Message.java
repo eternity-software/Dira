@@ -2,7 +2,6 @@ package com.diraapp.db.entities.messages;
 
 import android.content.Context;
 
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -11,6 +10,7 @@ import androidx.room.TypeConverters;
 import com.diraapp.db.converters.AttachmentConverter;
 import com.diraapp.db.converters.CustomClientDataConverter;
 import com.diraapp.db.entities.Attachment;
+import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.KeyGenerator;
 

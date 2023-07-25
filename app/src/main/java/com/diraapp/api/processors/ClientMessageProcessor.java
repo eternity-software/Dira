@@ -8,12 +8,12 @@ import com.diraapp.api.updates.RoomUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Room;
-import com.diraapp.db.entities.messages.CustomClientData;
+import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.db.entities.messages.RoomIconChangeClientData;
-import com.diraapp.db.entities.messages.RoomJoinClientData;
-import com.diraapp.db.entities.messages.RoomNameAndIconChangeClientData;
-import com.diraapp.db.entities.messages.RoomNameChangeClientData;
+import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientData;
+import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
+import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
+import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.utils.DiraApplication;
 
