@@ -1,14 +1,9 @@
-package com.diraapp.db.entities.messages;
-
-import android.content.Context;
+package com.diraapp.db.entities.messages.customclientdata;
 
 import androidx.room.Entity;
 import androidx.room.Ignore;
 
-import com.diraapp.api.processors.UpdateProcessor;
-import com.diraapp.db.DiraMessageDatabase;
-import com.diraapp.db.DiraRoomDatabase;
-import com.diraapp.db.entities.Member;
+import com.diraapp.db.entities.messages.MessageType;
 
 @Entity
 public class RoomJoinClientData extends CustomClientData{

@@ -1,7 +1,9 @@
-package com.diraapp.db.entities.messages;
+package com.diraapp.db.entities.messages.customclientdata;
 
 import androidx.room.Entity;
 import androidx.room.Ignore;
+
+import com.diraapp.db.entities.messages.MessageType;
 
 @Entity
 public class RoomIconChangeClientData extends CustomClientData {

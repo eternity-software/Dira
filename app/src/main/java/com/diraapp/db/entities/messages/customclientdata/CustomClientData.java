@@ -1,7 +1,9 @@
-package com.diraapp.db.entities.messages;
+package com.diraapp.db.entities.messages.customclientdata;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import com.diraapp.db.entities.messages.MessageType;
 
 import org.jetbrains.annotations.NotNull;
 
