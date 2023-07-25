@@ -54,7 +54,6 @@ public class DiraKeyProtocolProcessor {
             }
 
             DhKey dhKey = new DhKey(dhInfo.getG(), 1, getNextToId(dhInfo.getMemberList(), cacheUtils.getString(CacheUtils.ID)).getId());
-            dhKey.setG(G.modPow(clientSecret, P).toString());
             sendToNextUser(dhKey, room.getSecretName(), room.getServerAddress());
 
         }
@@ -74,6 +73,11 @@ public class DiraKeyProtocolProcessor {
 
 
                 System.out.println("key received n=" + dhKey.getN());
+                BigInteger G = new BigInteger(dhKey.getG());
+                BigInteger P = new BigInteger(dhInfo.getP());
+                BigInteger clientSecret = new BigInteger(room.getClientSecret());
+
+                dhKey.setG(G.modPow(clientSecret, P).toString());
                 if(dhKey.getN() == dhInfo.getMemberList().size())
                 {
                     tempGeneratedKeys.put(room.getSecretName(), dhKey.getG());
@@ -81,7 +85,7 @@ public class DiraKeyProtocolProcessor {
                     SubmitKeyRequest submitKeyRequest = new SubmitKeyRequest(room.getSecretName(), baseMember);
                     try {
                         UpdateProcessor.getInstance().sendRequest(submitKeyRequest, room.getServerAddress());
-                        System.out.println("Ready" );
+                        System.out.println("Ready " + dhKey.getG() );
                     } catch (UnablePerformRequestException e) {
 
                     }
@@ -90,12 +94,8 @@ public class DiraKeyProtocolProcessor {
                 else if(dhKey.getN() > dhInfo.getMemberList().size()) {
                     return;
                 }
-                BigInteger G = new BigInteger(dhInfo.getG());
-                BigInteger P = new BigInteger(dhInfo.getP());
-                BigInteger clientSecret = new BigInteger(room.getClientSecret());
 
 
-                dhKey.setG(G.modPow(clientSecret, P).toString());
 
                 dhKey.setN(dhKey.getN() + 1);
                 dhKey.setRecipientMemberId(getNextToId(dhInfo.getMemberList(), dhKey.getRecipientMemberId()).getId());

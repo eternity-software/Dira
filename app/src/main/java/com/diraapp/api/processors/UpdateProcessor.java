@@ -103,7 +103,7 @@ public class UpdateProcessor {
 
         roomDao = DiraRoomDatabase.getDatabase(context).getRoomDao();
         memberDao = DiraRoomDatabase.getDatabase(context).getMemberDao();
-     
+
         diraKeyProtocol = new DiraKeyProtocolProcessor(roomDao, new CacheUtils(context));
         MessageDao messageDao = DiraMessageDatabase.getDatabase(context).getMessageDao();
         roomUpdatesProcessor = new RoomUpdatesProcessor(roomDao, memberDao, messageDao, context);
