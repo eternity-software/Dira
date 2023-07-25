@@ -22,6 +22,7 @@ import com.diraapp.api.views.BaseMember;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.daos.MemberDao;
+import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
@@ -97,7 +98,8 @@ public class UpdateProcessor {
 
         roomDao = DiraRoomDatabase.getDatabase(context).getRoomDao();
         memberDao = DiraRoomDatabase.getDatabase(context).getMemberDao();
-        roomUpdatesProcessor = new RoomUpdatesProcessor(roomDao, memberDao, context);
+        MessageDao messageDao = DiraMessageDatabase.getDatabase(context).getMessageDao();
+        roomUpdatesProcessor = new RoomUpdatesProcessor(roomDao, memberDao, messageDao, context);
         clientMessageProcessor = new ClientMessageProcessor(context);
 
     }
@@ -152,9 +154,7 @@ public class UpdateProcessor {
                 System.out.println("New file server " + serverSyncUpdate.getFileServerUrl() + " for " + address);
                 fileServers.put(address, serverSyncUpdate.getFileServerUrl());
                 timeServerStartups.put(address, serverSyncUpdate.getTimeServerStart());
-            }
-
-            if (update.getUpdateType() == UpdateType.NEW_ROOM_UPDATE) {
+            } else if (update.getUpdateType() == UpdateType.NEW_ROOM_UPDATE) {
                 roomUpdatesProcessor.onNewRoom((NewRoomUpdate) update, address);
             } else if (update.getUpdateType() == UpdateType.NEW_MESSAGE_UPDATE) {
                 if (DiraApplication.isBackgrounded()) {
@@ -175,8 +175,7 @@ public class UpdateProcessor {
                 roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
                 roomUpdatesProcessor.updateRoom(update);
-            }
-            else if (update.getUpdateType() == UpdateType.PING_UPDATE) {
+            } else if (update.getUpdateType() == UpdateType.PING_UPDATE) {
                 PingUpdate pingUpdate = (PingUpdate) update;
                 String roomSecret = pingUpdate.getRoomSecret();
 
@@ -187,6 +186,8 @@ public class UpdateProcessor {
                 BaseMember baseMember = new BaseMember(id, nickname);
                 PingReactRequest request = new PingReactRequest(roomSecret, baseMember);
                 sendRequest(request, address);
+            } else if (update.getUpdateType() == UpdateType.READ_UPDATE) {
+                roomUpdatesProcessor.updateRoom(update);
             }
 
             notifyUpdateListeners(update);
