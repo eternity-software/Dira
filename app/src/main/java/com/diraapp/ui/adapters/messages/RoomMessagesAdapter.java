@@ -1,4 +1,4 @@
-package com.diraapp.ui.adapters.messageAdapter;
+package com.diraapp.ui.adapters.messages;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

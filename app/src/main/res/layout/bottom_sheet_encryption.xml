@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:fontFamily="@font/montserratbold"
-        android:text="@string/invitation_code"
+        android:text="@string/room_encryption_title"
         android:textColor="@color/white"
         android:textSize="22sp" />
 
@@ -24,19 +24,19 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/invitation_code_text"
+            android:id="@+id/encryption_key_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginVertical="12dp"
             android:layout_weight="1"
             android:fontFamily="@font/montserratbold"
-            android:text="Code error occured"
+            android:text="@string/room_encryption_no_key"
             android:textColor="@color/accent"
             android:textSize="28sp" />
 
         <ImageView
-            android:id="@+id/copy_invitation_code"
+            android:id="@+id/copy_encryption_code"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
@@ -58,7 +58,21 @@
         android:layout_marginBottom="20dp"
         android:layout_weight="1"
         android:fontFamily="@font/montserratsemibold"
-        android:text="@string/invitation_code_tip"
+        android:text="@string/room_encryption_tip"
         android:textColor="@color/light_gray"
         android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/button_update_key"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="right"
+        android:background="@drawable/dark_rect"
+        android:fontFamily="@font/montserratsemibold"
+        android:gravity="center"
+        android:paddingHorizontal="18dp"
+        android:src="@drawable/ic_next"
+        android:text="@string/room_encryption_renew"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
 </LinearLayout>

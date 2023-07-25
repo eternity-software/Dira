@@ -23,7 +23,7 @@ import com.abedelazizshe.lightcompressorlibrary.config.Configuration;
 import com.diraapp.R;
 import com.diraapp.ui.activities.resizer.FluidContentResizer;
 import com.diraapp.ui.adapters.MediaGridItemListener;
-import com.diraapp.ui.adapters.messageAdapter.RoomMessagesAdapter;
+import com.diraapp.ui.adapters.messages.RoomMessagesAdapter;
 import com.diraapp.api.requests.SendMessageRequest;
 import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.Update;

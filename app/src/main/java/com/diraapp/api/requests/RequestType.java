@@ -20,5 +20,15 @@ public enum RequestType {
     @SerializedName("7")
     CREATE_INVITE,
     @SerializedName("8")
-    ACCEPT_INVITE
+    ACCEPT_INVITE,
+    @SerializedName("9")
+    PING_MEMBERS,
+    @SerializedName("10")
+    PING_REACT,
+    @SerializedName("11")
+    KEY_RENEW_REQUEST,
+    @SerializedName("12")
+    SEND_INTERMEDIATE_KEY,
+    @SerializedName("13")
+    SUBMIT_KEY
 }

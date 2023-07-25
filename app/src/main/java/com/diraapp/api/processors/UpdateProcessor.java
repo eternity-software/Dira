@@ -1,7 +1,6 @@
 package com.diraapp.api.processors;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.diraapp.api.SocketClient;
@@ -9,28 +8,25 @@ import com.diraapp.api.processors.listeners.ProcessorListener;
 import com.diraapp.api.processors.listeners.SocketListener;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.GetUpdatesRequest;
+import com.diraapp.api.requests.PingReactRequest;
 import com.diraapp.api.requests.Request;
 import com.diraapp.api.requests.SubscribeRequest;
-import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.NewRoomUpdate;
-import com.diraapp.api.updates.RoomUpdate;
+import com.diraapp.api.updates.PingUpdate;
 import com.diraapp.api.updates.ServerSyncUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateDeserializer;
 import com.diraapp.api.updates.UpdateType;
+import com.diraapp.api.views.BaseMember;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.daos.MemberDao;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.messages.CustomClientData;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
-import com.diraapp.db.entities.messages.RoomJoinClientData;
-import com.diraapp.db.entities.messages.RoomIconChangeClientData;
-import com.diraapp.db.entities.messages.RoomNameChangeClientData;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.exceptions.SingletonException;
 import com.diraapp.exceptions.UnablePerformRequestException;
@@ -51,7 +47,7 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * UpdateProcessor is a core Dira class
+ * UpdateProcessor is a Dira core class
  * <p>
  * It receives and sends all changes to be synced with other users
  *
@@ -60,9 +56,9 @@ import java.util.List;
 public class UpdateProcessor {
 
     public static final String OFFICIAL_ADDRESS = "ws://diraapp.com:8888";
-    public static final String API_VERSION = "0.0.2";
+    public static final String API_VERSION = "0.0.3";
 
-    private static UpdateProcessor updateProcessor;
+    private static UpdateProcessor instance;
     private final HashMap<String, SocketClient> socketClients = new HashMap<>();
     private final HashMap<String, String> fileServers = new HashMap<>();
     private final HashMap<Long, UpdateListener> updateReplies = new HashMap<>();
@@ -86,7 +82,7 @@ public class UpdateProcessor {
     private SocketClient socketClient;
 
     public UpdateProcessor(Context context) throws SingletonException {
-        if (updateProcessor != null) throw new SingletonException();
+        if (instance != null) throw new SingletonException();
         this.context = context;
 
 
@@ -107,18 +103,18 @@ public class UpdateProcessor {
     }
 
     public static UpdateProcessor getInstance() {
-        return updateProcessor;
+        return instance;
     }
 
     public static UpdateProcessor getInstance(Context context) {
-        if (updateProcessor == null) {
+        if (instance == null) {
             try {
-                updateProcessor = new UpdateProcessor(context);
+                instance = new UpdateProcessor(context);
             } catch (SingletonException e) {
                 e.printStackTrace();
             }
         }
-        return updateProcessor;
+        return instance;
     }
 
     public String getFileServer(String address) {
@@ -180,10 +176,24 @@ public class UpdateProcessor {
             } else if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
                 roomUpdatesProcessor.updateRoom(update);
             }
+            else if (update.getUpdateType() == UpdateType.PING_UPDATE) {
+                PingUpdate pingUpdate = (PingUpdate) update;
+                String roomSecret = pingUpdate.getRoomSecret();
+
+                CacheUtils cacheUtils = new CacheUtils(context);
+                String id = cacheUtils.getString(CacheUtils.ID);
+                String nickname = cacheUtils.getString(CacheUtils.NICKNAME);
+
+                BaseMember baseMember = new BaseMember(id, nickname);
+                PingReactRequest request = new PingReactRequest(roomSecret, baseMember);
+                sendRequest(request, address);
+            }
 
             notifyUpdateListeners(update);
         } catch (OldUpdateException oldUpdateException) {
             oldUpdateException.printStackTrace();
+        } catch (UnablePerformRequestException e) {
+            e.printStackTrace();
         }
     }
 

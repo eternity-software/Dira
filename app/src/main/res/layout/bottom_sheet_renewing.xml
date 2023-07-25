@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/top_rounded_back"
+    android:orientation="vertical"
+    android:padding="22dp">
+
+    <TextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:fontFamily="@font/montserratbold"
+        android:text="@string/room_encryption_renewing_title"
+        android:textColor="@color/white"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/members_waiting_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:fontFamily="@font/montserratsemibold"
+        android:text="@string/room_encryption_renewing_waiting"
+        android:textColor="@color/white"
+        android:layout_marginVertical="12dp"
+        android:textSize="16sp" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/button_change_picture"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="right"
+        android:background="@drawable/dark_rect"
+        android:fontFamily="@font/montserratsemibold"
+        android:gravity="center"
+        android:layout_marginTop="24dp"
+        android:paddingHorizontal="18dp"
+        android:src="@drawable/ic_next"
+        android:text="@string/room_encryption_renewing_start"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+</LinearLayout>

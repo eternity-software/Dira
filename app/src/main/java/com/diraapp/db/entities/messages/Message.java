@@ -32,6 +32,8 @@ public class Message {
     private long time;
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private CustomClientData customClientData = null;
+    @ColumnInfo(defaultValue = "0")
+    private long lastTimeEncryptionKeyUpdated;
 
     @Ignore
     public Message(String authorId, String text, String authorNickname) {
@@ -64,6 +66,14 @@ public class Message {
         message.setRoomSecret(roomSecret);
         return message;
 
+    }
+
+    public long getLastTimeEncryptionKeyUpdated() {
+        return lastTimeEncryptionKeyUpdated;
+    }
+
+    public void setLastTimeEncryptionKeyUpdated(long lastTimeEncryptionKeyUpdated) {
+        this.lastTimeEncryptionKeyUpdated = lastTimeEncryptionKeyUpdated;
     }
 
     public ArrayList<Attachment> getAttachments() {

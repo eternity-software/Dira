@@ -1,4 +1,4 @@
-package com.diraapp.ui.adapters.messageAdapter;
+package com.diraapp.ui.adapters.messages;
 
 import android.view.View;
 import android.widget.ImageView;

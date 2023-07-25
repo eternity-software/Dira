@@ -18,6 +18,18 @@ public enum UpdateType {
     @SerializedName("6")
     ROOM_CREATE_INVITATION,
     @SerializedName("7")
-    NEW_ROOM_UPDATE
+    NEW_ROOM_UPDATE,
+    @SerializedName("8")
+    PING_UPDATE,
+    @SerializedName("9")
+    BASE_MEMBER_UPDATE,
+    @SerializedName("10")
+    DIFFIE_HELLMAN_INIT_UPDATE,
+    @SerializedName("11")
+    KEY_RECEIVED_UPDATE,
+    @SerializedName("12")
+    RENEWING_CONFIRMED,
+    @SerializedName("13")
+    RENEWING_CANCEL
 }
 

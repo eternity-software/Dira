@@ -17,6 +17,7 @@
     <string name="room_name_hint">Мои друзья из копателя</string>
     <string name="first_room_message">Первое сообщение в комнате</string>
     <string name="first_room_message_hint">вещь или бан</string>
+    <string name="room_server">Сервер комнаты</string>
     <string name="updates_expire_time">Время просрочки обновлений</string>
     <string name="room_secret">Секретное имя комнаты</string>
     <string name="host_server">Хост-сервер</string>
@@ -42,7 +43,7 @@
     <string name="edit_room_host">Хост комнаты</string>
     <string name="edit_room_update_expire">Время просрочки обновлений</string>
     <string name="invitation_code">Код приглашения</string>
-    <string name="invitation_code_tip">Этот код приглашения в %s будет действовать не долго.</string>
+    <string name="invitation_code_tip">Этот код приглашения в %s будет действовать недолго.</string>
     <string name="download">Скачать</string>
     <string name="attachment_large_title">Этот файл слишком большой</string>
     <string name="settings_title">Настройки и внешний вид</string>
@@ -90,5 +91,19 @@
     <string name="room_servers_popup_delete_server_text">Если вы удалите сервер, все связанные с ним комнаты перестанут получать новые сообщения и обновления</string>
     <string name="edit_room_server_popup_title">Вы уверены?</string>
     <string name="edit_room_server_popup_text">Вы продолжите получать сообщения только от тех пользователей, которые тоже сменили сервер на тот же, что и Вы.</string>
+    <string name="room_encryption_title">Шифрование комнаты</string>
+    <string name="room_encryption_key">Ключ шифрования</string>
+    <string name="room_encryption_no_key">Нет ключа</string>
+    <string name="room_encryption_tip">Dira использует сквозное шифрования для сообщений и медиа. Протокол Dira не поддерживает авторизацию ключей.</string>
+    <string name="room_encryption_renewing_title">Обновление ключа</string>
+    <string name="room_encryption_renewing_waiting">Ожидание участников (%d%d)</string>
+    <string name="room_encryption_renewing_status_unknown">Готов (Неизвестный пользователь)</string>
+    <string name="room_encryption_renewing_status_ready">Готов</string>
+    <string name="room_encryption_renewing_status_waiting">Ожидание</string>
+    <string name="room_encryption_renew">Обновить ключ</string>
+    <string name="room_encryption_renewing_start">Начать обновление</string>
+    <string name="room_encryption_renewing_generating">Генерация ключа с %s участинками...</string>
+    <string name="room_encryption_success">Ключ был обновлён</string>
+    <string name="room_encryption_cancel">Обновление ключа было отменено</string>
 
 </resources>

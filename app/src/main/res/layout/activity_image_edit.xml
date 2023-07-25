@@ -184,6 +184,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:onClick="save"
+            android:background="?actionBarItemBackground"
             app:srcCompat="@drawable/ic_check"
             app:tint="@color/white" />
     </LinearLayout>

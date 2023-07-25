@@ -115,7 +115,27 @@
 
     <!-- Room server selector -->
     <string name="room_server_selector_title">Select server</string>
-    
+
+    <!-- Room encryption bottom sheet -->
+    <string name="room_encryption_title">Room encryption</string>
+    <string name="room_encryption_key">Encryption key</string>
+    <string name="room_encryption_no_key">No key</string>
+    <string name="room_encryption_tip">Dira uses end-to-end encryption for messages and media files. Dira Protocol does not support key authorization.</string>
+    <string name="room_encryption_renew">Renew key</string>
+
+    <!-- Room encryption renewing bottom sheet -->
+    <string name="room_encryption_renewing_title">Renewing key</string>
+    <string name="room_encryption_renewing_waiting">Waiting for members (%d/%d)</string>
+    <string name="room_encryption_renewing_status_unknown">Ready (Unknown user)</string>
+    <string name="room_encryption_renewing_status_ready">Ready</string>
+    <string name="room_encryption_renewing_status_waiting">Waiting</string>
+    <string name="room_encryption_renewing_start">Start renewing</string>
+    <string name="room_encryption_renewing_generating">Generating key with %s members...</string>
+    <string name="room_encryption_success">Key has been renewed</string>
+    <string name="room_encryption_cancel">Renewing has been cancelled</string>
+
+
+
     <!-- Room updates -->
     <string name="room_update_picture_change" translatable="false">Room picture changed</string>
     <string name="room_update_name_change" translatable="false">Room name changed</string>

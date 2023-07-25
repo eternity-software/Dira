@@ -84,9 +84,9 @@
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
                         android:background="@drawable/dark_rect"
-                        android:padding="6dp"
+                        android:padding="8dp"
                         android:src="@drawable/ic_plus"
-                        app:tint="@color/accent" />
+                        app:tint="@color/white" />
 
                     <RelativeLayout
                         android:id="@+id/personality_button"

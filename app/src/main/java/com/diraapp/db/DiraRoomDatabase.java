@@ -4,6 +4,7 @@ import android.content.Context;
 
 import androidx.room.AutoMigration;
 import androidx.room.Database;
+import androidx.room.DeleteColumn;
 import androidx.room.RoomDatabase;
 
 import com.diraapp.db.daos.MemberDao;
@@ -14,9 +15,12 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
 
 @Database(entities = {Room.class, Message.class, Member.class},
-        autoMigrations = {@AutoMigration(from = 6, to = 7), @AutoMigration(from = 7, to = 8),
-                @AutoMigration(from = 8, to = 9)},
-        version = 9,
+        autoMigrations = {@AutoMigration(from = 6, to = 7),
+                @AutoMigration(from = 7, to = 8),
+                @AutoMigration(from = 8, to = 9),
+                @AutoMigration(from = 9, to = 10),
+                @AutoMigration(from = 10, to = 11)},
+        version = 11,
         exportSchema = true)
 public abstract class DiraRoomDatabase extends RoomDatabase {
 

@@ -20,21 +20,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/encryption_button"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/dark_rect"
+        android:padding="8dp"
+        android:src="@drawable/ic_encryption"
+        app:layout_constraintBottom_toBottomOf="@+id/button_back"
+        app:layout_constraintEnd_toStartOf="@+id/edit_button"
+
+        app:layout_constraintTop_toTopOf="@+id/button_back"
+        app:tint="@color/white" />
 
     <ImageView
         android:id="@+id/edit_button"
-        android:layout_width="50dp"
-        android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:layout_marginEnd="12dp"
-        android:background="?actionBarItemBackground"
-
-        android:padding="10dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="18dp"
+        android:background="@drawable/dark_rect"
+        android:padding="8dp"
         android:src="@drawable/ic_edit"
         app:layout_constraintBottom_toBottomOf="@+id/button_back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/button_back"
         app:tint="@color/white" />
+
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView2"
@@ -141,7 +155,7 @@
                         android:paddingHorizontal="8dp"
                         android:text="@string/members_count"
                         android:textColor="@color/white"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:transitionName="name" />
 
                     <ImageView

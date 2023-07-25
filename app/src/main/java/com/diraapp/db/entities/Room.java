@@ -10,6 +10,9 @@ import com.diraapp.db.entities.messages.Message;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
 @Entity
 public class Room {
 
@@ -30,6 +33,12 @@ public class Room {
 
     private long lastUpdateId;
     private long timeServerStartup;
+    @ColumnInfo(defaultValue = "0")
+    private long timeEncryptionKeyUpdated;
+    @ColumnInfo(defaultValue = "")
+    private String encryptionKey;
+    @ColumnInfo(defaultValue = "0")
+    private String clientSecret;
 
     @ColumnInfo(defaultValue = "true")
     private boolean isNotificationsEnabled;
@@ -46,11 +55,39 @@ public class Room {
         this.isNotificationsEnabled = isNotificationsEnabled;
     }
 
+    public String getClientSecret() {
+        if(clientSecret.equals("0"))
+        {
+            clientSecret = BigInteger.probablePrime(2048, new SecureRandom()).toString();
+        }
+        return clientSecret;
+    }
+
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
+    }
+
     public String getServerAddress() {
         if (serverAddress == null) {
             serverAddress = UpdateProcessor.OFFICIAL_ADDRESS;
         }
         return serverAddress;
+    }
+
+    public long getTimeEncryptionKeyUpdated() {
+        return timeEncryptionKeyUpdated;
+    }
+
+    public void setTimeEncryptionKeyUpdated(long timeEncryptionKeyUpdated) {
+        this.timeEncryptionKeyUpdated = timeEncryptionKeyUpdated;
+    }
+
+    public String getEncryptionKey() {
+        return encryptionKey;
+    }
+
+    public void setEncryptionKey(String encryptionKey) {
+        this.encryptionKey = encryptionKey;
     }
 
     public void setServerAddress(String serverAddress) {

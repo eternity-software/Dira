@@ -23,6 +23,7 @@ import com.diraapp.api.updates.UpdateType;
 import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.appearance.ColorTheme;
 import com.diraapp.ui.bottomsheet.InvitationCodeBottomSheet;
+import com.diraapp.ui.bottomsheet.RoomEncryptionBottomSheet;
 import com.diraapp.ui.bottomsheet.filepicker.FileInfo;
 import com.diraapp.ui.components.DiraPopup;
 import com.diraapp.db.DiraMessageDatabase;
@@ -113,6 +114,15 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
             }
         });
 
+
+        findViewById(R.id.encryption_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(room == null) return;
+                RoomEncryptionBottomSheet roomEncryptionBottomSheet = new RoomEncryptionBottomSheet(room);
+                roomEncryptionBottomSheet.show(getSupportFragmentManager(), "");
+            }
+        });
         findViewById(R.id.icon_invite).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
