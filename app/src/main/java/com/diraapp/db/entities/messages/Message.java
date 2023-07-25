@@ -2,6 +2,7 @@ package com.diraapp.db.entities.messages;
 
 import android.content.Context;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -9,6 +10,7 @@ import androidx.room.TypeConverters;
 
 import com.diraapp.db.converters.AttachmentConverter;
 import com.diraapp.db.converters.CustomClientDataConverter;
+import com.diraapp.db.converters.MessageReadingConverter;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
 import com.diraapp.utils.CacheUtils;
@@ -19,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 @Entity
-@TypeConverters({AttachmentConverter.class, CustomClientDataConverter.class})
+@TypeConverters({AttachmentConverter.class, CustomClientDataConverter.class, MessageReadingConverter.class})
 public class Message {
 
     @PrimaryKey
@@ -32,8 +34,11 @@ public class Message {
     private long time;
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private CustomClientData customClientData = null;
+
     @ColumnInfo(defaultValue = "0")
     private long lastTimeEncryptionKeyUpdated;
+
+    private ArrayList<MessageReading> messageReadingList = new ArrayList<>();
 
     @Ignore
     public Message(String authorId, String text, String authorNickname) {
@@ -138,5 +143,13 @@ public class Message {
 
     public void setCustomClientData(CustomClientData customClientData) {
         this.customClientData = customClientData;
+    }
+
+    public ArrayList<MessageReading> getMessageReadingList() {
+        return messageReadingList;
+    }
+
+    public void setMessageReadingList(ArrayList<MessageReading> messageReadingList) {
+        this.messageReadingList = messageReadingList;
     }
 }
