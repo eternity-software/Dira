@@ -494,6 +494,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
 
         if (holder.sizeContainer.getVisibility() == View.VISIBLE) {
+            holder.sizeText.setTextColor(theme.getRoomLickColor());
             if (isSelfMessage) {
                 holder.attachmentTooLargeText.setTextColor(theme.getSelfTextColor());
                 holder.buttonDownload.getBackground().setTint(theme.getAccentColor());
