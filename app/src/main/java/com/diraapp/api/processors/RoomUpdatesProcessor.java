@@ -155,6 +155,7 @@ public class RoomUpdatesProcessor {
                     room.setLastMessageId(newMessage.getId());
                     room.setLastUpdatedTime(newMessage.getTime());
                     room.setUpdatedRead(false);
+                    newMessage.setRead(false);
                     messageDao.insertAll(newMessage);
                 }
                 roomDao.update(room);

@@ -145,6 +145,15 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 
         Message message = messages.get(position);
+
+        if (!message.isRead()) {
+            // send ReadRequest
+
+            message.setRead(true);
+
+            // update message in database
+        }
+
         if (message.getText() == null) {
             holder.messageText.setVisibility(View.GONE);
         } else if (message.getText().length() == 0) {

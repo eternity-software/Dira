@@ -35,6 +35,9 @@ public class Message {
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private CustomClientData customClientData = null;
 
+    @ColumnInfo(defaultValue = "true")
+    private boolean isRead = true;
+
     @ColumnInfo(defaultValue = "0")
     private long lastTimeEncryptionKeyUpdated;
 
@@ -54,6 +57,8 @@ public class Message {
         this.customClientData = clientData;
         this.time = System.currentTimeMillis();
         this.id = KeyGenerator.generateId();
+
+        this.isRead = false;
     }
 
     public Message() {
@@ -69,6 +74,8 @@ public class Message {
         message.setAuthorNickname(cacheUtils.getString(CacheUtils.NICKNAME));
         message.setId(KeyGenerator.generateId());
         message.setRoomSecret(roomSecret);
+
+        message.isRead = true;
         return message;
 
     }
@@ -152,5 +159,13 @@ public class Message {
 
     public void setMessageReadingList(ArrayList<MessageReading> messageReadingList) {
         this.messageReadingList = messageReadingList;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
     }
 }
