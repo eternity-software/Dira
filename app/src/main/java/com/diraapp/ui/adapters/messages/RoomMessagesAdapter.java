@@ -59,6 +59,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final String selfId;
     private final Activity context;
     private final Room room;
+
+    private final ColorTheme theme;
     private final List<AttachmentsStorageListener> listeners = new ArrayList<>();
     private final CacheUtils cacheUtils;
     private final HashMap<View, Integer> pendingAsyncOperations = new HashMap<>();
@@ -81,6 +83,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         selfId = cacheUtils.getString(CacheUtils.ID);
         maxAutoLoadSize = cacheUtils.getLong(CacheUtils.AUTO_LOAD_SIZE);
+        theme = AppTheme.getInstance().getColorTheme();
     }
 
     public void setMessages(List<Message> messages) {
@@ -463,8 +466,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     private void applyRoomUpdateMessagesColorTheme(ViewHolder holder) {
-        ColorTheme theme = AppTheme.getInstance().getColorTheme();
-
         holder.messageContainer.getBackground().setTint(theme.getMessageColor());
         holder.roomUpdatesMainText.setTextColor(theme.getTextColor());
         holder.roomUpdatesText.setTextColor(theme.getRoomUpdateMessageColor());
@@ -484,8 +485,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     private void applyUserMessageColorTheme(ViewHolder holder, boolean isSelfMessage) {
-        ColorTheme theme = AppTheme.getInstance().getColorTheme();
-
         if (isSelfMessage) {
             holder.messageText.setTextColor(theme.getSelfTextColor());
             holder.messageText.setLinkTextColor(theme.getSelfLinkColor());
