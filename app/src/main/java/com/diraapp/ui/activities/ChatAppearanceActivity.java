@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.db.entities.Room;
 import com.diraapp.ui.adapters.ChatBackgroundAdapter;
 import com.diraapp.ui.adapters.ColorThemeAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
@@ -103,6 +104,12 @@ public class ChatAppearanceActivity extends AppCompatActivity {
         CacheUtils cacheUtils = new CacheUtils(this);
         String authorName = cacheUtils.getString(CacheUtils.ID);
 
+        long keyTime = 1;
+
+        String secretName = "1111";
+        Room room = new Room(null, keyTime, secretName, null, false);
+        room.setTimeEncryptionKeyUpdated(keyTime);
+
         Message senderMessage = new Message();
 
         int rand = new Random().nextInt(2);
@@ -110,18 +117,20 @@ public class ChatAppearanceActivity extends AppCompatActivity {
 
         senderMessage.setText(this.getResources().getString(AppStorage.getResId("chat_appearance_example_message_self_" + rand, R.string.class)));
         senderMessage.setAuthorId(authorName);
+        senderMessage.setLastTimeEncryptionKeyUpdated(keyTime);
 
         Message secondMessage = new Message();
         secondMessage.setText(this.getResources().getString(AppStorage.getResId("chat_appearance_example_message_" + rand, R.string.class)));
         secondMessage.setAuthorNickname("Ame");
         secondMessage.setAuthorId("0000");
+        secondMessage.setLastTimeEncryptionKeyUpdated(keyTime);
 
         List<Message> messages = new ArrayList<>();
         messages.add(secondMessage);
         messages.add(senderMessage);
 
         RecyclerView recycler = findViewById(R.id.example_messages);
-        roomMessagesAdapter = new RoomMessagesAdapter(this, "1111", null, null);
+        roomMessagesAdapter = new RoomMessagesAdapter(this, secretName, null, room);
         roomMessagesAdapter.setMessages(messages);
 
         ImageView backgroundView = findViewById(R.id.example_background);
