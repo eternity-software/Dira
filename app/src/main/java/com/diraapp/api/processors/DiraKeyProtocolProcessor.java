@@ -38,9 +38,6 @@ public class DiraKeyProtocolProcessor {
             DhInfo dhInfo = new DhInfo(dhInitUpdate.getMemberList(), dhInitUpdate.getG(), dhInitUpdate.getP());
 
             roomMembers.put(dhInitUpdate.getRoomSecret(), dhInfo);
-            BigInteger G = new BigInteger(dhInfo.getG());
-            BigInteger P = new BigInteger(dhInfo.getP());
-            BigInteger clientSecret = new BigInteger(room.getClientSecret());
 
             System.out.println("dh init");
 

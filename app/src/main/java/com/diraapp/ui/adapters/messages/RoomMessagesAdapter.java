@@ -59,6 +59,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final String selfId;
     private final Activity context;
     private final Room room;
+
+    private final ColorTheme theme;
     private final List<AttachmentsStorageListener> listeners = new ArrayList<>();
     private final CacheUtils cacheUtils;
     private final HashMap<View, Integer> pendingAsyncOperations = new HashMap<>();
@@ -67,6 +69,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final String serverAddress;
     private List<Message> messages = new ArrayList<>();
     private HashMap<String, Member> members = new HashMap<>();
+
+    private final long maxAutoLoadSize;
 
 
     public RoomMessagesAdapter(Activity context, String secretName, String serverAddress, Room room) {
@@ -78,6 +82,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         cacheUtils = new CacheUtils(context);
 
         selfId = cacheUtils.getString(CacheUtils.ID);
+        maxAutoLoadSize = cacheUtils.getLong(CacheUtils.AUTO_LOAD_SIZE);
+        theme = AppTheme.getInstance().getColorTheme();
     }
 
     public void setMessages(List<Message> messages) {
@@ -139,6 +145,15 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 
         Message message = messages.get(position);
+
+        if (!message.isRead()) {
+            // send ReadRequest
+
+            message.setRead(true);
+
+            // update message in database
+        }
+
         if (message.getText() == null) {
             holder.messageText.setVisibility(View.GONE);
         } else if (message.getText().length() == 0) {
@@ -343,7 +358,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         loadMessageAttachment(message, holder);
 
-        boolean isSelfMessage = cacheUtils.getString(CacheUtils.ID).equals(
+        boolean isSelfMessage = selfId.equals(
                 message.getAuthorId());
 
         if (StringFormatter.isEmoji(message.getText()) && StringFormatter.getEmojiCount(message.getText()) < 3) {
@@ -460,8 +475,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     private void applyRoomUpdateMessagesColorTheme(ViewHolder holder) {
-        ColorTheme theme = AppTheme.getInstance().getColorTheme();
-
         holder.messageContainer.getBackground().setTint(theme.getMessageColor());
         holder.roomUpdatesMainText.setTextColor(theme.getTextColor());
         holder.roomUpdatesText.setTextColor(theme.getRoomUpdateMessageColor());
@@ -481,8 +494,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     private void applyUserMessageColorTheme(ViewHolder holder, boolean isSelfMessage) {
-        ColorTheme theme = AppTheme.getInstance().getColorTheme();
-
         if (isSelfMessage) {
             holder.messageText.setTextColor(theme.getSelfTextColor());
             holder.messageText.setLinkTextColor(theme.getSelfLinkColor());
@@ -494,6 +505,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
 
         if (holder.sizeContainer.getVisibility() == View.VISIBLE) {
+            holder.sizeText.setTextColor(theme.getRoomLickColor());
             if (isSelfMessage) {
                 holder.attachmentTooLargeText.setTextColor(theme.getSelfTextColor());
                 holder.buttonDownload.getBackground().setTint(theme.getAccentColor());
@@ -584,11 +596,12 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
                     updateAttachment(holder, attachment, file);
                 } else {
-                    if (attachment.getSize() > cacheUtils.getLong(CacheUtils.AUTO_LOAD_SIZE)) {
+                    long attachmentSize = attachment.getSize();
+                    if (attachmentSize > maxAutoLoadSize) {
                         holder.buttonDownload.setVisibility(View.VISIBLE);
                         holder.sizeContainer.setVisibility(View.VISIBLE);
                         holder.loading.setVisibility(View.GONE);
-                        holder.sizeText.setText(AppStorage.getStringSize(attachment.getSize()));
+                        holder.sizeText.setText(AppStorage.getStringSize(attachmentSize));
                         String finalEncryptionKey = encryptionKey;
                         holder.buttonDownload.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -611,7 +624,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                                     context.runOnUiThread(new Runnable() {
                                                         @Override
                                                         public void run() {
-                                                            holder.sizeText.setText(AppStorage.getStringSize(attachment.getSize()) + " (" + progress + "%)");
+                                                            holder.sizeText.setText(AppStorage.getStringSize(attachmentSize) + " (" + progress + "%)");
                                                         }
                                                     });
 
