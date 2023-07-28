@@ -60,7 +60,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final Activity context;
     private final Room room;
 
-    private final ColorTheme theme;
+    private ColorTheme theme;
     private final List<AttachmentsStorageListener> listeners = new ArrayList<>();
     private final CacheUtils cacheUtils;
     private final HashMap<View, Integer> pendingAsyncOperations = new HashMap<>();
@@ -150,8 +150,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             // send ReadRequest
 
             message.setRead(true);
-
-            // update message in database
         }
 
         if (message.getText() == null) {
@@ -662,5 +660,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-
+    public void setTheme(ColorTheme theme) {
+        this.theme = theme;
+    }
 }

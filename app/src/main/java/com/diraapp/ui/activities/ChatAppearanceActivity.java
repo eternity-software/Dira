@@ -84,6 +84,7 @@ public class ChatAppearanceActivity extends AppCompatActivity {
         colorThemeAdapter.setListener(new ColorThemeAdapter.SelectorListener() {
             @Override
             public void onSelectorClicked() {
+                roomMessagesAdapter.setTheme(AppTheme.getInstance().getColorTheme());
                 roomMessagesAdapter.notifyDataSetChanged();
             }
         });

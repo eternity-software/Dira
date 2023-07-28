@@ -141,6 +141,10 @@
     <string name="room_update_name_change" translatable="false">Room name changed</string>
     <string name="room_update_name_and_picture_change" translatable="false">Room name and picture changed</string>
     <string name="room_update_new_member" translatable="false">%s joins room</string>
+    <string name="key_generate_start" translatable="false">Encryption key started generate</string>
+    <string name="key_generate_success" translatable="false">Encryption key has been renewed</string>
+    <string name="key_generate_time_error" translatable="false">Encryption key generation time error</string>
+    <string name="key_generate_user_disconnected" translatable="false">Encryption key generation user disconnect</string>
 
     <!-- Color themes names -->
     <string name="theme_main" translatable="false">Dira</string>

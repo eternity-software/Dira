@@ -154,7 +154,6 @@ public class RoomUpdatesProcessor {
                     room.setLastMessageId(newMessage.getId());
                     room.setLastUpdatedTime(newMessage.getTime());
                     room.setUpdatedRead(false);
-                    newMessage.setRead(false);
                     messageDao.insertAll(newMessage);
                 }
                 roomDao.update(room);
@@ -225,7 +224,6 @@ public class RoomUpdatesProcessor {
     }
 
     private void updateMessageReading(MessageReadUpdate update) {
-        if (update.getUserId().equals(new CacheUtils(context).getString(CacheUtils.ID))) return;
 
         Message message = messageDao.getMessageById(update.getMessageId());
 
@@ -233,9 +231,13 @@ public class RoomUpdatesProcessor {
 
         if (message.getMessageReadingList().contains(messageReading)) return;
 
-        UpdateProcessor.getInstance().notifyUpdateListeners(update);
+        if (update.getUserId().equals(new CacheUtils(context).getString(CacheUtils.ID))) {
+            message.setRead(true);
+        } else {
+            UpdateProcessor.getInstance().notifyUpdateListeners(update);
+            message.getMessageReadingList().add(messageReading);
+        }
 
-        message.getMessageReadingList().add(messageReading);
         messageDao.update(message);
     }
 

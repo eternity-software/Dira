@@ -4,6 +4,8 @@ import androidx.room.TypeConverter;
 
 import com.diraapp.db.entities.messages.MessageType;
 import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
+import com.diraapp.db.entities.messages.customclientdata.KeyGenerateStartClientData;
+import com.diraapp.db.entities.messages.customclientdata.KeyGeneratedClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
@@ -28,6 +30,10 @@ public class CustomClientDataConverter {
             return gson.fromJson(string, RoomJoinClientData.class);
         } else if (clientData.getMessageType().equals(MessageType.ROOM_NAME_AND_ICON_CHANGE_MESSAGE)) {
             return gson.fromJson(string, RoomNameAndIconChangeClientData.class);
+        } else if (clientData.getMessageType().equals(MessageType.KEY_GENERATE_START)) {
+            return gson.fromJson(string, KeyGenerateStartClientData.class);
+        } else if (clientData.getMessageType().equals(MessageType.KEY_GENERATED)) {
+            return gson.fromJson(string, KeyGeneratedClientData.class);
         }
         return null;
     }
@@ -37,13 +43,7 @@ public class CustomClientDataConverter {
         Gson gson = new Gson();
         String json = null;
 
-        if (clientData instanceof RoomNameChangeClientData) {
-            json = gson.toJson(clientData);
-        } else if (clientData instanceof RoomIconChangeClientData) {
-            json = gson.toJson(clientData);
-        } else if (clientData instanceof RoomJoinClientData) {
-            json = gson.toJson(clientData);
-        } else if (clientData instanceof RoomNameAndIconChangeClientData) {
+        if (clientData != null) {
             json = gson.toJson(clientData);
         }
 

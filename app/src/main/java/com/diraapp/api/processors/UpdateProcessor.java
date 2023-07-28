@@ -179,6 +179,7 @@ public class UpdateProcessor {
                                 room.getEncryptionKey()));
                     }
                 }
+                ((NewMessageUpdate) update).getMessage().setRead(false);
 
 
                 if (DiraApplication.isBackgrounded()) {
