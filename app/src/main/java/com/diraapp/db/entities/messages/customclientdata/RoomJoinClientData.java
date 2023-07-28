@@ -6,7 +6,7 @@ import androidx.room.Ignore;
 import com.diraapp.db.entities.messages.MessageType;
 
 @Entity
-public class RoomJoinClientData extends CustomClientData{
+public class RoomJoinClientData extends CustomClientData {
 
     private String newNickName;
 

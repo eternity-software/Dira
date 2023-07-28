@@ -13,31 +13,31 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
-import com.diraapp.ui.adapters.MediaGridAdapter;
-import com.diraapp.ui.adapters.MediaGridItemListener;
-import com.diraapp.api.views.RoomMember;
+import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.CreateInviteRequest;
 import com.diraapp.api.updates.NewInvitationUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
+import com.diraapp.api.views.RoomMember;
+import com.diraapp.db.DiraMessageDatabase;
+import com.diraapp.db.DiraRoomDatabase;
+import com.diraapp.db.entities.Attachment;
+import com.diraapp.db.entities.AttachmentType;
+import com.diraapp.db.entities.Member;
+import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.messages.Message;
+import com.diraapp.exceptions.UnablePerformRequestException;
+import com.diraapp.storage.AppStorage;
+import com.diraapp.storage.attachments.AttachmentsStorage;
+import com.diraapp.ui.adapters.MediaGridAdapter;
+import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.appearance.ColorTheme;
 import com.diraapp.ui.bottomsheet.InvitationCodeBottomSheet;
 import com.diraapp.ui.bottomsheet.RoomEncryptionBottomSheet;
 import com.diraapp.ui.bottomsheet.filepicker.FileInfo;
 import com.diraapp.ui.components.DiraPopup;
-import com.diraapp.db.DiraMessageDatabase;
-import com.diraapp.db.DiraRoomDatabase;
-import com.diraapp.db.entities.Attachment;
-import com.diraapp.db.entities.AttachmentType;
-import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.messages.Message;
-import com.diraapp.db.entities.Room;
-import com.diraapp.exceptions.UnablePerformRequestException;
-import com.diraapp.storage.AppStorage;
-import com.diraapp.storage.attachments.AttachmentsStorage;
-import com.diraapp.api.processors.UpdateProcessor;
-import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.SliderActivity;
 
@@ -118,7 +118,7 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
         findViewById(R.id.encryption_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(room == null) return;
+                if (room == null) return;
                 RoomEncryptionBottomSheet roomEncryptionBottomSheet = new RoomEncryptionBottomSheet(room);
                 roomEncryptionBottomSheet.show(getSupportFragmentManager(), "");
             }
@@ -366,5 +366,11 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
             });
             thread.start();
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadData();
     }
 }

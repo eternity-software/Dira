@@ -102,7 +102,7 @@
     <string name="room_encryption_renewing_status_waiting">Ожидание</string>
     <string name="room_encryption_renew">Обновить ключ</string>
     <string name="room_encryption_renewing_start">Начать обновление</string>
-    <string name="room_encryption_renewing_generating">Генерация ключа с %d участинками...</string>
+    <string name="room_encryption_renewing_generating">Генерация ключа с %d участинками... (%d sec)</string>
     <string name="room_encryption_success">Ключ был обновлён</string>
     <string name="room_encryption_cancel">Обновление ключа было отменено</string>
 

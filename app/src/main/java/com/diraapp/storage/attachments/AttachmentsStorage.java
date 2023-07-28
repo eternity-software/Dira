@@ -2,11 +2,10 @@ package com.diraapp.storage.attachments;
 
 import android.content.Context;
 
+import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.db.entities.Attachment;
-import com.diraapp.db.entities.Room;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DownloadHandler;
-import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.CryptoUtils;
 
@@ -126,8 +125,7 @@ public class AttachmentsStorage {
             AppStorage.downloadFile(UpdateProcessor.getInstance(context).getFileServer(address) + "/download/" + attachment.getFileUrl(), localFile, downloadHandler);
 
 
-            if(!encryptionKey.equals(""))
-            {
+            if (!encryptionKey.equals("")) {
                 File decrypted = new File(context.getExternalCacheDir(), roomSecret + "_" + attachment.getFileUrl());
                 CryptoUtils.decrypt(encryptionKey, localFile, decrypted);
                 localFile = decrypted;

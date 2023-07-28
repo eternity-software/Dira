@@ -21,34 +21,34 @@ import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
 import com.abedelazizshe.lightcompressorlibrary.config.AppSpecificStorageConfiguration;
 import com.abedelazizshe.lightcompressorlibrary.config.Configuration;
 import com.diraapp.R;
-import com.diraapp.api.updates.MessageReadUpdate;
-import com.diraapp.db.entities.messages.MessageReading;
-import com.diraapp.ui.activities.resizer.FluidContentResizer;
-import com.diraapp.ui.adapters.MediaGridItemListener;
-import com.diraapp.ui.adapters.messages.RoomMessagesAdapter;
+import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.api.processors.listeners.ProcessorListener;
+import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.SendMessageRequest;
+import com.diraapp.api.updates.MessageReadUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
-import com.diraapp.ui.appearance.AppTheme;
-import com.diraapp.ui.appearance.ColorTheme;
-import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
-import com.diraapp.ui.components.FilePreview;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
 import com.diraapp.storage.images.FilesUploader;
-import com.diraapp.api.processors.UpdateProcessor;
-import com.diraapp.api.processors.listeners.ProcessorListener;
-import com.diraapp.api.processors.listeners.UpdateListener;
+import com.diraapp.ui.activities.resizer.FluidContentResizer;
+import com.diraapp.ui.adapters.MediaGridItemListener;
+import com.diraapp.ui.adapters.messages.RoomMessagesAdapter;
+import com.diraapp.ui.appearance.AppTheme;
+import com.diraapp.ui.appearance.ColorTheme;
+import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
+import com.diraapp.ui.components.FilePreview;
 import com.diraapp.utils.EncryptionUtil;
 import com.diraapp.utils.SliderActivity;
 
@@ -72,6 +72,11 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
     private RoomMessagesAdapter roomMessagesAdapter;
     private List<Message> messageList = new ArrayList<>();
     private FilePickerBottomSheet filePickerBottomSheet;
+
+    public static void putRoomExtrasInIntent(Intent intent, String roomSecret, String roomName) {
+        intent.putExtra(RoomSelectorActivity.PENDING_ROOM_SECRET, roomSecret);
+        intent.putExtra(RoomSelectorActivity.PENDING_ROOM_NAME, roomName);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,10 +132,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
         });
 
 
-
-
         UpdateProcessor.getInstance().addUpdateListener(this);
-
 
 
         findViewById(R.id.attach_button).setOnClickListener(new View.OnClickListener() {
@@ -294,12 +296,9 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
 
                     message.setLastTimeEncryptionKeyUpdated(room.getTimeEncryptionKeyUpdated());
 
-                    if(room.getEncryptionKey().equals(""))
-                    {
+                    if (room.getEncryptionKey().equals("")) {
                         message.setText(messageText);
-                    }
-                    else
-                    {
+                    } else {
                         message.setText("e" + EncryptionUtil.encrypt(messageText, room.getEncryptionKey()));
                     }
 
@@ -318,7 +317,6 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
             }
         };
     }
-
 
     private void loadMembers() {
         List<Member> memberList = DiraRoomDatabase.getDatabase(getApplicationContext()).getMemberDao().getMembersByRoomSecret(roomSecret);
@@ -363,7 +361,6 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
         thread.start();
     }
 
-
     public boolean sendTextMessage(String text) {
 
         while (text.contains("   ")) {
@@ -378,12 +375,9 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
             Message message = Message.generateMessage(getApplicationContext(), roomSecret);
             message.setLastTimeEncryptionKeyUpdated(room.getTimeEncryptionKeyUpdated());
 
-            if(room.getEncryptionKey().equals(""))
-            {
+            if (room.getEncryptionKey().equals("")) {
                 message.setText(text);
-            }
-            else
-            {
+            } else {
                 message.setText(EncryptionUtil.encrypt(text, room.getEncryptionKey()));
             }
 
@@ -540,10 +534,5 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
 
         ImageView backgroundView = findViewById(R.id.room_background);
         AppTheme.getInstance().getChatBackground().applyBackground(backgroundView);
-    }
-
-    public static void putRoomExtrasInIntent(Intent intent, String roomSecret, String roomName) {
-        intent.putExtra(RoomSelectorActivity.PENDING_ROOM_SECRET, roomSecret);
-        intent.putExtra(RoomSelectorActivity.PENDING_ROOM_NAME, roomName);
     }
 }

@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.db.entities.messages.Message;
+import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.adapters.ChatBackgroundAdapter;
 import com.diraapp.ui.adapters.ColorThemeAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
@@ -21,8 +23,6 @@ import com.diraapp.ui.appearance.ChatBackground;
 import com.diraapp.ui.appearance.ColorTheme;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.FilePreview;
-import com.diraapp.db.entities.messages.Message;
-import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
 
 import java.util.ArrayList;

@@ -1,12 +1,13 @@
 package com.diraapp.api.updates;
 
 import com.diraapp.api.views.BaseMember;
+
 import java.util.List;
 
 /**
  * Initialize Diffie-Hellman protocol
  */
-public class DhInitUpdate extends Update{
+public class DhInitUpdate extends Update {
 
     private List<BaseMember> memberList;
 

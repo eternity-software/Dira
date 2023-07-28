@@ -2,7 +2,6 @@ package com.diraapp.db.converters;
 
 import androidx.room.TypeConverter;
 
-import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.MessageReading;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

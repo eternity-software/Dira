@@ -14,19 +14,19 @@ import com.diraapp.db.daos.AttachmentDao;
 import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
+import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
-import com.diraapp.db.entities.messages.Message;
-import com.diraapp.db.entities.Room;
 
 
 @Database(entities = {Message.class, Room.class, Member.class, Attachment.class, CustomClientData.class, MessageReading.class},
         autoMigrations = {@AutoMigration(from = 6, to = 7), @AutoMigration(from = 7, to = 8),
-        @AutoMigration(from = 8, to = 9),
-        @AutoMigration(from = 9, to = 10),
-        @AutoMigration(from = 10, to = 11),
-        @AutoMigration(from = 11, to = 12),
-        @AutoMigration(from = 12, to = 13)},
+                @AutoMigration(from = 8, to = 9),
+                @AutoMigration(from = 9, to = 10),
+                @AutoMigration(from = 10, to = 11),
+                @AutoMigration(from = 11, to = 12),
+                @AutoMigration(from = 12, to = 13)},
         version = 13,
         exportSchema = true)
 @TypeConverters({AttachmentConverter.class, CustomClientDataConverter.class, MessageReadingConverter.class})

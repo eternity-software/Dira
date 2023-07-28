@@ -1,10 +1,10 @@
 package com.diraapp.ui.activities.createroom;
 
+import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.requests.SendMessageRequest;
 import com.diraapp.db.daos.RoomDao;
-import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
-import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.db.entities.messages.Message;
 import com.diraapp.utils.KeyGenerator;
 
 public class CreateRoomModel implements CreateRoomContract.Model {

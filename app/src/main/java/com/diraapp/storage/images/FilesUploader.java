@@ -9,9 +9,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
-import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.utils.CryptoUtils;
 import com.diraapp.utils.ImageRotationFix;
 
@@ -72,8 +72,7 @@ public class FilesUploader {
                         null, context);
             }
 
-            if(!encryptionKey.equals(""))
-            {
+            if (!encryptionKey.equals("")) {
                 File rawFile = new File(sourceFileUri);
                 File outputFile = new File(rawFile.getPath() + "enctypted_" + rawFile.getName());
                 CryptoUtils.encrypt(encryptionKey, rawFile, outputFile);

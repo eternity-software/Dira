@@ -12,16 +12,16 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.diraapp.R;
+import com.diraapp.db.DiraRoomDatabase;
+import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
-import com.diraapp.ui.activities.RoomActivity;
-import com.diraapp.db.DiraRoomDatabase;
-import com.diraapp.db.entities.messages.Message;
-import com.diraapp.db.entities.Room;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.images.ImagesWorker;
+import com.diraapp.ui.activities.RoomActivity;
 import com.diraapp.ui.activities.RoomSelectorActivity;
 import com.diraapp.utils.CacheUtils;
 
@@ -55,8 +55,8 @@ public class Notifier {
                     .setContentText(message.getText());
         } else if (message.getCustomClientData() instanceof RoomJoinClientData) {
             String text = context.getString(R.string.room_update_new_member)
-                            .replace("%s", ((RoomJoinClientData)
-                                    message.getCustomClientData()).getNewNickName());
+                    .replace("%s", ((RoomJoinClientData)
+                            message.getCustomClientData()).getNewNickName());
             builder.setContentTitle(room.getName())
                     .setContentText(text);
 

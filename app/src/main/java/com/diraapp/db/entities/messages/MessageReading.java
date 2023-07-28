@@ -23,12 +23,12 @@ public class MessageReading {
         return userId;
     }
 
-    public long getReadTime() {
-        return readTime;
-    }
-
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public long getReadTime() {
+        return readTime;
     }
 
     public void setReadTime(long readTime) {

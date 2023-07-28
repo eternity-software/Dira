@@ -12,9 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
-import com.diraapp.ui.components.DiraPopup;
-import com.diraapp.storage.AppStorage;
 import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.storage.AppStorage;
+import com.diraapp.ui.components.DiraPopup;
 
 import java.util.ArrayList;
 

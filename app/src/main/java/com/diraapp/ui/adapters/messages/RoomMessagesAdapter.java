@@ -16,24 +16,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.db.entities.Attachment;
+import com.diraapp.db.entities.AttachmentType;
+import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
-import com.diraapp.ui.activities.PreviewActivity;
-import com.diraapp.ui.appearance.AppTheme;
-import com.diraapp.ui.appearance.ColorTheme;
-import com.diraapp.ui.components.VideoPlayer;
-import com.diraapp.db.entities.Attachment;
-import com.diraapp.db.entities.AttachmentType;
-import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.messages.Message;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DownloadHandler;
 import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
+import com.diraapp.ui.activities.PreviewActivity;
+import com.diraapp.ui.appearance.AppTheme;
+import com.diraapp.ui.appearance.ColorTheme;
+import com.diraapp.ui.components.VideoPlayer;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Numbers;
 import com.diraapp.utils.StringFormatter;
@@ -515,11 +515,14 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private void loadMessageAttachment(Message message, ViewHolder holder) {
         String encryptionKey = "";
-
-        if(message.getLastTimeEncryptionKeyUpdated() == room.getTimeEncryptionKeyUpdated())
+        if(room != null)
         {
-            encryptionKey = room.getEncryptionKey();
+            if (message.getLastTimeEncryptionKeyUpdated() == room.getTimeEncryptionKeyUpdated()) {
+                encryptionKey = room.getEncryptionKey();
+            }
         }
+
+
 
         if (message.getAttachments() != null) {
             if (message.getAttachments().size() > 0) {

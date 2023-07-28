@@ -7,11 +7,11 @@ import com.diraapp.db.entities.messages.MessageType;
 @Entity
 public class RoomNameAndIconChangeClientData extends CustomClientData {
 
-    private String newName;
+    private final String newName;
 
-    private String oldName;
+    private final String oldName;
 
-    private String path;
+    private final String path;
 
     public RoomNameAndIconChangeClientData(String newName, String oldName, String path) {
         this.setMessageType(MessageType.ROOM_NAME_AND_ICON_CHANGE_MESSAGE);

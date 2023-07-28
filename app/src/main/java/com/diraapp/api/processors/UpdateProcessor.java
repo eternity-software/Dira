@@ -30,8 +30,8 @@ import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.exceptions.SingletonException;
 import com.diraapp.exceptions.UnablePerformRequestException;
@@ -116,11 +116,6 @@ public class UpdateProcessor {
         return instance;
     }
 
-    public Room getRoom(String roomSecret)
-    {
-        return roomDao.getRoomBySecretName(roomSecret);
-    }
-
     public static UpdateProcessor getInstance(Context context) {
         if (instance == null) {
             try {
@@ -130,6 +125,10 @@ public class UpdateProcessor {
             }
         }
         return instance;
+    }
+
+    public Room getRoom(String roomSecret) {
+        return roomDao.getRoomBySecretName(roomSecret);
     }
 
     public String getFileServer(String address) {
@@ -173,10 +172,8 @@ public class UpdateProcessor {
                 NewMessageUpdate newMessageUpdate = ((NewMessageUpdate) update);
 
                 Room room = roomDao.getRoomBySecretName(newMessageUpdate.getMessage().getRoomSecret());
-                if(room.getTimeEncryptionKeyUpdated() == newMessageUpdate.getMessage().getLastTimeEncryptionKeyUpdated())
-                {
-                    if(!room.getEncryptionKey().equals(""))
-                    {
+                if (room.getTimeEncryptionKeyUpdated() == newMessageUpdate.getMessage().getLastTimeEncryptionKeyUpdated()) {
+                    if (!room.getEncryptionKey().equals("")) {
                         String rawText = newMessageUpdate.getMessage().getText();
                         newMessageUpdate.getMessage().setText(EncryptionUtil.decrypt(rawText,
                                 room.getEncryptionKey()));
@@ -203,20 +200,15 @@ public class UpdateProcessor {
                 roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
                 roomUpdatesProcessor.updateRoom(update);
-            }
-            else if (update.getUpdateType() == UpdateType.DIFFIE_HELLMAN_INIT_UPDATE) {
+            } else if (update.getUpdateType() == UpdateType.DIFFIE_HELLMAN_INIT_UPDATE) {
                 diraKeyProtocol.onDiffieHellmanInit((DhInitUpdate) update);
-            }
-            else if (update.getUpdateType() == UpdateType.KEY_RECEIVED_UPDATE) {
+            } else if (update.getUpdateType() == UpdateType.KEY_RECEIVED_UPDATE) {
                 diraKeyProtocol.onIntermediateKey((KeyReceivedUpdate) update);
-            }
-            else if (update.getUpdateType() == UpdateType.RENEWING_CANCEL) {
+            } else if (update.getUpdateType() == UpdateType.RENEWING_CANCEL) {
                 diraKeyProtocol.onKeyCancel((RenewingCancelUpdate) update);
-            }
-            else if (update.getUpdateType() == UpdateType.RENEWING_CONFIRMED) {
+            } else if (update.getUpdateType() == UpdateType.RENEWING_CONFIRMED) {
                 diraKeyProtocol.onKeyConfirmed((RenewingConfirmUpdate) update);
-            }
-            else if (update.getUpdateType() == UpdateType.PING_UPDATE) {
+            } else if (update.getUpdateType() == UpdateType.PING_UPDATE) {
                 PingUpdate pingUpdate = (PingUpdate) update;
                 String roomSecret = pingUpdate.getRoomSecret();
 

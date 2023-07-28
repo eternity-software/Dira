@@ -13,11 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
-import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Member;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.PreviewActivity;
-import com.diraapp.ui.components.DiraPopup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +28,7 @@ public class StatusMemberAdapter extends RecyclerView.Adapter<StatusMemberAdapte
     private List<StatusMember> members = new ArrayList<>();
 
 
-    public StatusMemberAdapter(Activity context,  List<StatusMember> members) {
+    public StatusMemberAdapter(Activity context, List<StatusMember> members) {
         this.context = context;
         layoutInflater = LayoutInflater.from(context);
         this.members = members;
@@ -54,22 +52,16 @@ public class StatusMemberAdapter extends RecyclerView.Adapter<StatusMemberAdapte
         holder.memberName.setText(member.getNickname());
         Bitmap pic = AppStorage.getBitmapFromPath(member.getImagePath());
 
-        if(members.get(position).getStatus() == MemberStatus.UNKNOWN)
-        {
+        if (members.get(position).getStatus() == MemberStatus.UNKNOWN) {
             holder.memberStatus.setTextColor(context.getResources().getColor(R.color.red));
             holder.memberStatus.setText(context.getString(R.string.room_encryption_renewing_status_unknown));
-        }
-        else if(members.get(position).getStatus() == MemberStatus.READY)
-        {
+        } else if (members.get(position).getStatus() == MemberStatus.READY) {
             holder.memberStatus.setTextColor(context.getResources().getColor(R.color.accent));
             holder.memberStatus.setText(context.getString(R.string.room_encryption_renewing_status_ready));
-        }
-        else if(members.get(position).getStatus() == MemberStatus.WAITING)
-        {
+        } else if (members.get(position).getStatus() == MemberStatus.WAITING) {
             holder.memberStatus.setTextColor(context.getResources().getColor(R.color.light_gray));
             holder.memberStatus.setText(context.getString(R.string.room_encryption_renewing_status_waiting));
         }
-
 
 
         if (pic != null) {

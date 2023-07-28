@@ -7,21 +7,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
 import com.diraapp.R;
-import com.diraapp.api.processors.UpdateProcessor;
-import com.diraapp.api.requests.PingMembersRequest;
 import com.diraapp.db.entities.Room;
-import com.diraapp.exceptions.UnablePerformRequestException;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class RoomEncryptionBottomSheet extends BottomSheetDialogFragment {
 
-    private Room room;
+    private final Room room;
 
     public RoomEncryptionBottomSheet(Room room) {
         this.room = room;
@@ -36,7 +32,6 @@ public class RoomEncryptionBottomSheet extends BottomSheetDialogFragment {
     }
 
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,18 +42,16 @@ public class RoomEncryptionBottomSheet extends BottomSheetDialogFragment {
 
         String key = room.getEncryptionKey();
 
-        if(!key.equals(""))
-        {
+        if (!key.equals("")) {
             keyView.setText("..********" + key.substring(key.length() - 4));
         }
 
         v.findViewById(R.id.button_update_key).setOnClickListener((v2) -> {
 
 
-
-
             RoomKeyRenewingBottomSheet roomKeyRenewingBottomSheet = new RoomKeyRenewingBottomSheet(room);
             roomKeyRenewingBottomSheet.show(getParentFragmentManager(), "");
+            dismiss();
 
         });
 

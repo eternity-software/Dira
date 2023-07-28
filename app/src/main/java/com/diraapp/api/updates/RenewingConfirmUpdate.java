@@ -1,6 +1,6 @@
 package com.diraapp.api.updates;
 
-public class RenewingConfirmUpdate extends Update{
+public class RenewingConfirmUpdate extends Update {
 
     private long timeKeyConfirmed;
 

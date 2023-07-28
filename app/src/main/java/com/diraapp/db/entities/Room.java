@@ -10,9 +10,6 @@ import com.diraapp.db.entities.messages.Message;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-
 @Entity
 public class Room {
 
@@ -70,6 +67,10 @@ public class Room {
         return serverAddress;
     }
 
+    public void setServerAddress(String serverAddress) {
+        this.serverAddress = serverAddress;
+    }
+
     public long getTimeEncryptionKeyUpdated() {
         return timeEncryptionKeyUpdated;
     }
@@ -79,16 +80,12 @@ public class Room {
     }
 
     public String getEncryptionKey() {
-        if(encryptionKey == null) encryptionKey = "";
+        if (encryptionKey == null) encryptionKey = "";
         return encryptionKey;
     }
 
     public void setEncryptionKey(String encryptionKey) {
         this.encryptionKey = encryptionKey;
-    }
-
-    public void setServerAddress(String serverAddress) {
-        this.serverAddress = serverAddress;
     }
 
     public boolean isUpdatedRead() {

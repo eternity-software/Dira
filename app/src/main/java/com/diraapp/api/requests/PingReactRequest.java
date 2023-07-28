@@ -6,7 +6,7 @@ import com.diraapp.api.views.BaseMember;
 /**
  * Member reaction for PingUpdate
  */
-public class PingReactRequest extends Request{
+public class PingReactRequest extends Request {
 
     private String roomSecret;
     private BaseMember baseMember;

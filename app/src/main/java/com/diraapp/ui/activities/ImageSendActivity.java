@@ -27,10 +27,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.SharedElementCallback;
 
 import com.diraapp.R;
+import com.diraapp.transition.Transitions;
 import com.diraapp.ui.components.FilePreview;
 import com.diraapp.ui.components.PreviewImageView;
 import com.diraapp.ui.components.VideoPlayer;
-import com.diraapp.transition.Transitions;
 import com.diraapp.utils.ImageRotationFix;
 
 import java.io.File;
@@ -333,8 +333,7 @@ public class ImageSendActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (data == null) return;
-        if(resultCode == ImageEdit.RESULT_CODE)
-        {
+        if (resultCode == ImageEdit.RESULT_CODE) {
             finalImageUri = getRealPathFromURI(this, Uri.parse(data.getStringExtra("uri")));
             ImageView imageView = findViewById(R.id.fileImageView);
             imageView.setImageURI(Uri.parse(finalImageUri));

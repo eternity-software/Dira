@@ -14,11 +14,11 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.diraapp.R;
-import com.diraapp.ui.components.PreviewImageView;
-import com.diraapp.ui.components.VideoPlayer;
 import com.diraapp.exceptions.VideoPlayerException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.images.ImagesWorker;
+import com.diraapp.ui.components.PreviewImageView;
+import com.diraapp.ui.components.VideoPlayer;
 
 import java.io.File;
 import java.io.FileInputStream;

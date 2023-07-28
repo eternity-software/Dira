@@ -2,10 +2,10 @@ package com.diraapp.db.converters;
 
 import androidx.room.TypeConverter;
 
-import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
 import com.diraapp.db.entities.messages.MessageType;
-import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
+import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientData;
+import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
 import com.google.gson.Gson;
@@ -22,7 +22,7 @@ public class CustomClientDataConverter {
 
         if (clientData.getMessageType().equals(MessageType.ROOM_NAME_CHANGE_MESSAGE)) {
             return gson.fromJson(string, RoomNameChangeClientData.class);
-        } else if (clientData.getMessageType().equals(MessageType.ROOM_ICON_CHANGE_MESSAGE)){
+        } else if (clientData.getMessageType().equals(MessageType.ROOM_ICON_CHANGE_MESSAGE)) {
             return gson.fromJson(string, RoomIconChangeClientData.class);
         } else if (clientData.getMessageType().equals(MessageType.NEW_USER_ROOM_JOINING)) {
             return gson.fromJson(string, RoomJoinClientData.class);
@@ -38,13 +38,13 @@ public class CustomClientDataConverter {
         String json = null;
 
         if (clientData instanceof RoomNameChangeClientData) {
-            json = gson.toJson((RoomNameChangeClientData) clientData);
+            json = gson.toJson(clientData);
         } else if (clientData instanceof RoomIconChangeClientData) {
-            json = gson.toJson((RoomIconChangeClientData) clientData);
+            json = gson.toJson(clientData);
         } else if (clientData instanceof RoomJoinClientData) {
-            json = gson.toJson((RoomJoinClientData) clientData);
+            json = gson.toJson(clientData);
         } else if (clientData instanceof RoomNameAndIconChangeClientData) {
-            json = gson.toJson((RoomNameAndIconChangeClientData) clientData);
+            json = gson.toJson(clientData);
         }
 
         return json;

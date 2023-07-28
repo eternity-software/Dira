@@ -16,9 +16,9 @@ import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.storage.images.WaterfallBalancer;
 import com.diraapp.ui.bottomsheet.filepicker.FileInfo;
 import com.diraapp.ui.components.FilePreview;
-import com.diraapp.storage.images.WaterfallBalancer;
 
 import java.util.ArrayList;
 

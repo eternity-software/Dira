@@ -1,21 +1,14 @@
 package com.diraapp.utils;
 
-import android.media.MediaCodec;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -25,15 +18,14 @@ public class CryptoUtils {
     private static final String ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES";
 
-    public static void encrypt(String key, File inputFile, File outputFile)
-    {
+    public static void encrypt(String key, File inputFile, File outputFile) {
         doCrypto(Cipher.ENCRYPT_MODE, key, inputFile, outputFile);
     }
 
-    public static void decrypt(String key, File inputFile, File outputFile)
-            {
+    public static void decrypt(String key, File inputFile, File outputFile) {
         doCrypto(Cipher.DECRYPT_MODE, key, inputFile, outputFile);
     }
+
     public static SecretKey generateKey(String key)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
@@ -41,8 +33,9 @@ public class CryptoUtils {
         SecretKey originalKey = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
         return originalKey;
     }
+
     private static void doCrypto(int cipherMode, String key, File inputFile,
-                                 File outputFile)  {
+                                 File outputFile) {
         try {
             Key secretKey = generateKey(key);
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);

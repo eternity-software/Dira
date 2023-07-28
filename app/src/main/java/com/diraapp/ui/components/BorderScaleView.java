@@ -22,48 +22,24 @@ public class BorderScaleView extends RelativeLayout {
     public final int TOP_BORDER = 2;
     public final int BOTTOM_BORDER = 3;
 
-    private int borderDp = 20;
+    private final int borderDp = 20;
     private int borderPx;
     private int containerWidth = -1;
     private int containerHeight = -1;
     private View rootView;
     private View container;
-    private String TAG = "BorderScaleView";
+    private final String TAG = "BorderScaleView";
     private BorderScaleViewListener borderScaleViewListener;
-
-    public void setBorderScaleViewListener(BorderScaleViewListener borderScaleViewListener) {
-        this.borderScaleViewListener = borderScaleViewListener;
-    }
-
-    public void setContainer(View container) {
-        this.container = container;
-    }
-
-
-    public float getRawContainerX() {
-        return getX() - container.getX();
-    }
-
-    public float getRawContainerY() {
-        return getY() - container.getY();
-    }
-
-    public interface BorderScaleViewListener {
-
-        void onCordsChanged(float x, float y);
-
-        void onSizeChanged(int width, int height);
-
-        void onTouchUp(MotionEvent event);
-    }
-
-    public void setContainerWidth(int containerWidth) {
-        this.containerWidth = containerWidth;
-    }
-
-    public void setContainerHeight(int containerHeight) {
-        this.containerHeight = containerHeight;
-    }
+    private float downX;
+    private float downY;
+    private float downRawX;
+    private float downRawY;
+    private int startHeight;
+    private int startWidth;
+    private float startX;
+    private float startY;
+    private boolean isBorderTouch;
+    private final List<Integer> borderTouchType = new ArrayList<>();
 
     public BorderScaleView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -73,6 +49,30 @@ public class BorderScaleView extends RelativeLayout {
     public BorderScaleView(Context context) {
         super(context);
         init();
+    }
+
+    public void setBorderScaleViewListener(BorderScaleViewListener borderScaleViewListener) {
+        this.borderScaleViewListener = borderScaleViewListener;
+    }
+
+    public void setContainer(View container) {
+        this.container = container;
+    }
+
+    public float getRawContainerX() {
+        return getX() - container.getX();
+    }
+
+    public float getRawContainerY() {
+        return getY() - container.getY();
+    }
+
+    public void setContainerWidth(int containerWidth) {
+        this.containerWidth = containerWidth;
+    }
+
+    public void setContainerHeight(int containerHeight) {
+        this.containerHeight = containerHeight;
     }
 
     @Override
@@ -104,18 +104,6 @@ public class BorderScaleView extends RelativeLayout {
             }
         });
     }
-
-    private float downX;
-    private float downY;
-    private float downRawX;
-    private float downRawY;
-    private int startHeight;
-    private int startWidth;
-    private float startX;
-    private float startY;
-    private boolean isBorderTouch;
-    private List<Integer> borderTouchType = new ArrayList<>();
-
 
     @Override
     public void requestLayout() {
@@ -162,7 +150,6 @@ public class BorderScaleView extends RelativeLayout {
 
     }
 
-
     public void center() {
         if (containerHeight > 0 && containerWidth > 0) {
             setX(containerWidth / 2f - getWidth() / 2f);
@@ -171,7 +158,6 @@ public class BorderScaleView extends RelativeLayout {
             setHeight(container.getHeight() / 2);
         }
     }
-
 
     private void onTouchDown(MotionEvent event) {
         downX = event.getX();
@@ -261,6 +247,15 @@ public class BorderScaleView extends RelativeLayout {
     private void onTouchUp(MotionEvent event) {
 
         if (borderScaleViewListener != null) borderScaleViewListener.onTouchUp(event);
+    }
+
+    public interface BorderScaleViewListener {
+
+        void onCordsChanged(float x, float y);
+
+        void onSizeChanged(int width, int height);
+
+        void onTouchUp(MotionEvent event);
     }
 
 

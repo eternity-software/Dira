@@ -18,23 +18,23 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
-import com.diraapp.ui.adapters.RoomSelectorAdapter;
+import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.api.processors.listeners.ProcessorListener;
+import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.GetUpdatesRequest;
 import com.diraapp.api.updates.ServerSyncUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
-import com.diraapp.ui.appearance.AppTheme;
-import com.diraapp.ui.components.DiraPopup;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
-import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.messages.Message;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.services.UpdaterService;
 import com.diraapp.storage.AppStorage;
-import com.diraapp.api.processors.UpdateProcessor;
-import com.diraapp.api.processors.listeners.ProcessorListener;
-import com.diraapp.api.processors.listeners.UpdateListener;
+import com.diraapp.ui.adapters.RoomSelectorAdapter;
+import com.diraapp.ui.appearance.AppTheme;
+import com.diraapp.ui.components.DiraPopup;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.KeyGenerator;
 
@@ -48,8 +48,6 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
     public static final String PENDING_ROOM_NAME = "pendingRoomName";
 
     public static final String CAN_BE_BACK_PRESSED = "canBackPressed";
-
-    private boolean canBackPress = true;
     private static final Intent[] POWERMANAGER_INTENTS = {
             new Intent().setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),
             new Intent().setComponent(new ComponentName("com.letv.android.letvsafe", "com.letv.android.letvsafe.AutobootManageActivity")),
@@ -66,6 +64,7 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
             new Intent().setComponent(new ComponentName("com.htc.pitroad", "com.htc.pitroad.landingpage.activity.LandingPageActivity")),
             new Intent().setComponent(new ComponentName("com.asus.mobilemanager", "com.asus.mobilemanager.MainActivity"))
     };
+    private boolean canBackPress = true;
     private RoomSelectorAdapter roomSelectorAdapter;
     private boolean isRoomsUpdating = false;
     private CacheUtils cacheUtils;
@@ -128,7 +127,7 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
         }
 
         if (getIntent().hasExtra(CAN_BE_BACK_PRESSED)) {
-            canBackPress =  getIntent().getExtras().getBoolean(CAN_BE_BACK_PRESSED);
+            canBackPress = getIntent().getExtras().getBoolean(CAN_BE_BACK_PRESSED);
         }
 
 
