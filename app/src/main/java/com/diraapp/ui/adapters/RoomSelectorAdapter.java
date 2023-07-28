@@ -75,6 +75,8 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
 
         try {
             if (message != null) {
+                boolean hasMessageText = false;
+
                 if (message.getCustomClientData() == null) {
                     String authorPrefix = message.getAuthorNickname();
                     if (authorPrefix.length() > 12) {
@@ -87,6 +89,8 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
                     holder.messageText.setText(message.getText());
                     holder.accentText.setText(authorPrefix + ": ");
                     holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime(), context));
+
+                    hasMessageText = true;
                 } else if (message.getCustomClientData() instanceof RoomJoinClientData) {
                     holder.accentText.setText(context.getString(R.string.room_update_new_member)
                             .replace("%s", ((RoomJoinClientData)
@@ -99,7 +103,7 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
                     holder.accentText.setText(context.getString(R.string.room_update_name_and_picture_change));
                 }
 
-                if (message.getText() == null) {
+                if (!hasMessageText) {
                     holder.messageText.setText("");
                 }
             }
