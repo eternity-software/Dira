@@ -5,7 +5,10 @@ import android.content.Context;
 import androidx.room.AutoMigration;
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverter;
+import androidx.room.TypeConverters;
 
+import com.diraapp.db.converters.UnreadIdsConverter;
 import com.diraapp.db.daos.MemberDao;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Member;
@@ -20,9 +23,11 @@ import com.diraapp.db.entities.messages.Message;
                 @AutoMigration(from = 10, to = 11),
                 @AutoMigration(from = 11, to = 12),
                 @AutoMigration(from = 12, to = 13),
-                @AutoMigration(from = 13, to = 14)},
-        version = 14,
+                @AutoMigration(from = 13, to = 14),
+                @AutoMigration(from = 14, to = 15)},
+        version = 15,
         exportSchema = true)
+@TypeConverters({UnreadIdsConverter.class})
 public abstract class DiraRoomDatabase extends RoomDatabase {
 
     public static final String DB_NAME = "rooms_db";

@@ -27,8 +27,9 @@ import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
         @AutoMigration(from = 10, to = 11),
         @AutoMigration(from = 11, to = 12),
         @AutoMigration(from = 12, to = 13),
-        @AutoMigration(from = 13, to = 14)},
-        version = 14,
+        @AutoMigration(from = 13, to = 14),
+        @AutoMigration(from = 14, to = 15)},
+        version = 15,
         exportSchema = true)
 @TypeConverters({AttachmentConverter.class, CustomClientDataConverter.class, MessageReadingConverter.class})
 public abstract class DiraMessageDatabase extends RoomDatabase {
