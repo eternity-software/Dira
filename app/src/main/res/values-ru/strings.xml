@@ -83,7 +83,7 @@
     <string name="room_servers_add">Добавить пользовательский сервер</string>
     <string name="room_servers_add_hint">Адрес сервера</string>
     <string name="room_servers_add_button">Добавить</string>
-    <string name="room_servers_add_tip">Мы настоятельно не рекомендуем использовать огромное количество серверов, потому что каждый сервер - это новое фоновое подключение, которое может повлиять на производительность вашей батареи и трафик.</string>
+    <string name="room_servers_add_tip">Мы настоятельно не рекомендуем использовать больше количество серверов, потому что каждый сервер - это новое фоновое подключение, которое может повлиять на срок службы вашей батареи и трафик.</string>
     <string name="room_servers_popup_wrong_server_title">Неверный сервер</string>
     <string name="room_servers_popup_wrong_server_text">Сервер, который вы пытаетесь добавить, не отвечает требованиям безопасности или содержит опечатку в адресе.</string>
     <string name="room_server_selector_title">Выберите сервер</string>
@@ -96,7 +96,7 @@
     <string name="room_encryption_no_key">Нет ключа</string>
     <string name="room_encryption_tip">Dira использует сквозное шифрования для сообщений и медиа. Протокол Dira не поддерживает авторизацию ключей.</string>
     <string name="room_encryption_renewing_title">Обновление ключа</string>
-    <string name="room_encryption_renewing_waiting">Ожидание участников (%d%d)</string>
+    <string name="room_encryption_renewing_waiting">Ожидание участников (%d/%d)</string>
     <string name="room_encryption_renewing_status_unknown">Готов (Неизвестный пользователь)</string>
     <string name="room_encryption_renewing_status_ready">Готов</string>
     <string name="room_encryption_renewing_status_waiting">Ожидание</string>
@@ -105,5 +105,7 @@
     <string name="room_encryption_renewing_generating">Генерация ключа с %d участинками... (%d sec)</string>
     <string name="room_encryption_success">Ключ был обновлён</string>
     <string name="room_encryption_cancel">Обновление ключа было отменено</string>
+    <string name="notifications_enabled">Уведомления включены</string>
+    <string name="notifications_disabled">Уведомления отключны</string>
 
 </resources>

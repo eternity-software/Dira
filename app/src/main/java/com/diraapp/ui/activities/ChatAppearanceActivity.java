@@ -134,7 +134,12 @@ public class ChatAppearanceActivity extends AppCompatActivity {
         messages.add(senderMessage);
 
         RecyclerView recycler = findViewById(R.id.example_messages);
-        roomMessagesAdapter = new RoomMessagesAdapter(this, secretName, null, room);
+        roomMessagesAdapter = new RoomMessagesAdapter(this, secretName, null, room, new RoomMessagesAdapter.MessageAdapterListener() {
+            @Override
+            public void onFirstItemScrolled(Message message, int index) {
+
+            }
+        });
         roomMessagesAdapter.setMessages(messages);
 
         ImageView backgroundView = findViewById(R.id.example_background);

@@ -57,6 +57,8 @@
     <!-- Members -->
 
     <string name="members_title">Members</string>
+    <string name="notifications_enabled">Notifications has been enabled</string>
+    <string name="notifications_disabled">Notifications has been disabled</string>
 
     <!-- Edit room -->
     <string name="edit_room">Edit room</string>

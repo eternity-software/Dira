@@ -8,6 +8,50 @@
     android:background="@color/dark"
     tools:context=".ui.activities.RoomActivity">
 
+    <ImageView
+        android:id="@+id/room_background"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="-20dp"
+        android:alpha="0.4"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background_pattern_love"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/room_info_pan"
+        app:tint="@color/gray" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+
+        android:animateLayoutChanges="false"
+        android:clipToPadding="true"
+
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/room_info_pan"
+        app:reverseLayout="true"
+        app:stackFromEnd="false">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toBottomOf="@+id/room_info_pan"
+        app:srcCompat="@drawable/shadow_gradient" />
+
     <LinearLayout
 
         android:id="@+id/room_info_pan"
@@ -148,50 +192,5 @@
             android:src="@drawable/circle"
             android:visibility="gone" />
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/room_background"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:alpha="0.4"
-        android:scaleType="centerCrop"
-        android:src="@drawable/background_pattern_love"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/room_info_pan"
-        app:tint="@color/gray" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-
-
-        android:animateLayoutChanges="false"
-
-
-        android:clipToPadding="true"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/room_info_pan"
-        app:reverseLayout="true"
-        app:stackFromEnd="false">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-
-        app:layout_constraintTop_toBottomOf="@+id/room_info_pan"
-        app:srcCompat="@drawable/shadow_gradient" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

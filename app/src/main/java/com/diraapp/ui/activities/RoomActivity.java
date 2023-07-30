@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +32,7 @@ import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
+import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
@@ -72,6 +74,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
     private RoomMessagesAdapter roomMessagesAdapter;
     private List<Message> messageList = new ArrayList<>();
     private FilePickerBottomSheet filePickerBottomSheet;
+    private boolean isUpdating = false;
 
     public static void putRoomExtrasInIntent(Intent intent, String roomSecret, String roomName) {
         intent.putExtra(RoomSelectorActivity.PENDING_ROOM_SECRET, roomSecret);
@@ -156,14 +159,78 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
 
         FluidContentResizer fluidContentResizer = new FluidContentResizer();
         fluidContentResizer.listen(this);
+
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+
+
+        Thread loadMessagesHistory = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Room room = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getRoomBySecretName(roomSecret);
+                roomMessagesAdapter = new RoomMessagesAdapter(RoomActivity.this, roomSecret, room.getServerAddress(), room, new RoomMessagesAdapter.MessageAdapterListener() {
+                    @Override
+                    public void onFirstItemScrolled(Message message, int index) {
+                        Thread loadPreviousMessages = new Thread(() -> {
+
+                            try {
+                                MessageDao messageDao = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao();
+                                System.out.println("Time from " + message.getTime());
+                                List<Message> oldMessages = messageDao.getAllMessageByUpdatedTimeBeforeTime(roomSecret, message.getTime());
+                                int oldSize = messageList.size();
+                                messageList.addAll(oldMessages);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        recyclerView.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                roomMessagesAdapter.notifyDataSetChanged();
+                                            }
+                                        });
+
+                                    }
+                                });
+                            }
+                            catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+
+                        });
+                        loadPreviousMessages.start();
+                    }
+                });
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadData();
+                    }
+                });
+
+                messageList = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getAllMessageByUpdatedTime(roomSecret);
+                roomMessagesAdapter.setMessages(messageList);
+                loadMembers();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        recyclerView.setAdapter(roomMessagesAdapter);
+                        roomMessagesAdapter.notifyDataSetChanged();
+
+                    }
+                });
+            }
+        });
+        loadMessagesHistory.start();
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
 
-
-            System.out.println("hello from room activity " + resultCode);
             super.onActivityResult(requestCode, resultCode, data);
             if (resultCode != RESULT_OK && resultCode != ImageSendActivity.CODE) {
                 return;
@@ -299,7 +366,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                     if (room.getEncryptionKey().equals("")) {
                         message.setText(messageText);
                     } else {
-                        message.setText("e" + EncryptionUtil.encrypt(messageText, room.getEncryptionKey()));
+                        message.setText(EncryptionUtil.encrypt(messageText, room.getEncryptionKey()));
                     }
 
                     message.getAttachments().add(attachment);
@@ -410,25 +477,29 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
             room.setUpdatedRead(true);
             DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().update(room);
 
-            messageList.add(0, newMessageUpdate.getMessage());
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    roomMessagesAdapter.notifyItemInserted(0);
                     RecyclerView recyclerView = findViewById(R.id.recycler_view);
-                    int lastVisiblePos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
 
-                    if (lastVisiblePos < 3) {
-                        recyclerView.scrollToPosition(0);
-                    }
+                    recyclerView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            messageList.add(0, newMessageUpdate.getMessage());
+                            roomMessagesAdapter.notifyItemInserted(0);
+                            int lastVisiblePos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
 
-
+                            if (lastVisiblePos < 3) {
+                                recyclerView.scrollToPosition(0);
+                            }
+                        }
+                    });
                 }
             });
         } else if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
             loadData();
         } else if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
-
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -493,33 +564,23 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
     @Override
     protected void onResume() {
         super.onResume();
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        Thread loadMessagesHistory = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Room room = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getRoomBySecretName(roomSecret);
-                roomMessagesAdapter = new RoomMessagesAdapter(RoomActivity.this, roomSecret, room.getServerAddress(), room);
+       Thread updateRoom = new Thread(() -> {
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadData();
-                    }
-                });
+                   Room room = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getRoomBySecretName(roomSecret);
+                   if(roomMessagesAdapter == null) return;
+                   roomMessagesAdapter.setRoom(room);
 
-                messageList = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getAllMessageByUpdatedTime(roomSecret);
-                roomMessagesAdapter.setMessages(messageList);
-                loadMembers();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        recyclerView.setAdapter(roomMessagesAdapter);
-                        roomMessagesAdapter.notifyDataSetChanged();
-                    }
-                });
-            }
-        });
-        loadMessagesHistory.start();
+                   runOnUiThread(new Runnable() {
+                       @Override
+                       public void run() {
+                           loadData();
+                       }
+                   });
+
+                   loadMembers();
+       });
+       updateRoom.start();
+
     }
 
     private void applyColorTheme() {

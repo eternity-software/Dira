@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -330,33 +331,22 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
     private void initNotificationButton() {
         LinearLayout button = findViewById(R.id.notification_button);
 
-        ImageView bellOn = findViewById(R.id.notification_enabled_icon);
-        ImageView bellOff = findViewById(R.id.notification_disabled_icon);
 
-        if (!room.isNotificationsEnabled()) {
-            bellOn.setVisibility(View.GONE);
-            bellOff.setVisibility(View.VISIBLE);
-
-        } else {
-            bellOn.setVisibility(View.VISIBLE);
-            bellOff.setVisibility(View.GONE);
-
-        }
+        updateNotification();
 
         button.setOnClickListener((View v) -> {
             if (room.isNotificationsEnabled()) {
-                bellOn.setVisibility(View.GONE);
-                bellOff.setVisibility(View.VISIBLE);
-
                 room.setNotificationsEnabled(false);
+                Toast.makeText(getApplicationContext(), getString(R.string.notifications_disabled),
+                        Toast.LENGTH_SHORT).show();
 
             } else {
-                bellOn.setVisibility(View.VISIBLE);
-                bellOff.setVisibility(View.GONE);
-
                 room.setNotificationsEnabled(true);
-
+                Toast.makeText(getApplicationContext(), getString(R.string.notifications_enabled),
+                        Toast.LENGTH_SHORT).show();
             }
+
+            updateNotification();
 
             Thread thread = new Thread(new Runnable() {
                 @Override
@@ -366,6 +356,22 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
             });
             thread.start();
         });
+    }
+
+    private void updateNotification()
+    {
+
+        ImageView bellOn = findViewById(R.id.notification_enabled_icon);
+        ImageView bellOff = findViewById(R.id.notification_disabled_icon);
+        if (!room.isNotificationsEnabled()) {
+            bellOn.setVisibility(View.VISIBLE);
+            bellOff.setVisibility(View.GONE);
+
+        } else {
+            bellOn.setVisibility(View.GONE);
+            bellOff.setVisibility(View.VISIBLE);
+
+        }
     }
 
     @Override

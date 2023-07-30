@@ -11,11 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.db.DiraMessageDatabase;
+import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
@@ -58,7 +62,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private final String selfId;
     private final Activity context;
-    private final Room room;
+    private Room room;
 
     private ColorTheme theme;
     private final List<AttachmentsStorageListener> listeners = new ArrayList<>();
@@ -72,11 +76,18 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private final long maxAutoLoadSize;
 
+    private MessageAdapterListener messageAdapterListener;
 
-    public RoomMessagesAdapter(Activity context, String secretName, String serverAddress, Room room) {
+
+    public interface MessageAdapterListener {
+        void onFirstItemScrolled(Message message, int index);
+    }
+
+    public RoomMessagesAdapter(Activity context, String secretName, String serverAddress, Room room, MessageAdapterListener messageAdapterListener) {
         this.context = context;
         this.secretName = secretName;
         this.serverAddress = serverAddress;
+        this.messageAdapterListener = messageAdapterListener;
         this.room = room;
         layoutInflater = LayoutInflater.from(context);
         cacheUtils = new CacheUtils(context);
@@ -84,6 +95,14 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         selfId = cacheUtils.getString(CacheUtils.ID);
         maxAutoLoadSize = cacheUtils.getLong(CacheUtils.AUTO_LOAD_SIZE);
         theme = AppTheme.getInstance().getColorTheme();
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
     public void setMessages(List<Message> messages) {
@@ -128,6 +147,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
+
         if (holder.attachmentsStorageListener != null) {
             AttachmentsStorage.removeAttachmentsStorageListener(holder.attachmentsStorageListener);
             listeners.remove(holder.attachmentsStorageListener);
@@ -145,6 +165,11 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 
         Message message = messages.get(position);
+
+        if(position == messages.size() - 1)
+        {
+            messageAdapterListener.onFirstItemScrolled(message, position);
+        }
 
         if (!message.isRead()) {
             // send ReadRequest
@@ -223,11 +248,12 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
                     holder.imageView.setVisibility(View.VISIBLE);
                     MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                    retriever.setDataSource(file.getPath());
+
                     int width = 1;
                     int height = 1;
                     int rotation = 0;
                     try {
+                        retriever.setDataSource(file.getPath());
                         width = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
                         height = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
                         rotation = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));

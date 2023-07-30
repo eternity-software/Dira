@@ -22,8 +22,11 @@ public interface MessageDao {
     @Delete
     void delete(Message message);
 
-    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret ORDER BY time DESC")
+    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret ORDER BY time DESC LIMIT 100")
     List<Message> getAllMessageByUpdatedTime(String roomSecret);
+
+    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret AND time < :beforeTime ORDER BY time DESC LIMIT 100")
+    List<Message> getAllMessageByUpdatedTimeBeforeTime(String roomSecret, Long beforeTime);
 
     @Query("SELECT * FROM message WHERE id = :messageId")
     Message getMessageById(String messageId);

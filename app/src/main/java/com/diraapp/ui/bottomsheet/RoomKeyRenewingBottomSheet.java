@@ -63,6 +63,7 @@ public class RoomKeyRenewingBottomSheet extends BottomSheetDialogFragment implem
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.v = inflater.inflate(R.layout.bottom_sheet_renewing, container, true);
 
+        readyCount = 0;
         v.findViewById(R.id.button_start_renewing).setOnClickListener((view) -> {
 
 
@@ -164,7 +165,9 @@ public class RoomKeyRenewingBottomSheet extends BottomSheetDialogFragment implem
     public void onAttach(Context context) {
         super.onAttach(context);
 
+
     }
+
 
     @Override
     public void onDetach() {
@@ -201,6 +204,10 @@ public class RoomKeyRenewingBottomSheet extends BottomSheetDialogFragment implem
                 boolean foundMember = false;
                 for (StatusMember statusMember : statusMembers) {
                     if (baseMember.getId().equals(statusMember.getMember().getId())) {
+                        if(statusMember.getStatus() == MemberStatus.READY)
+                        {
+                            readyCount--;
+                        }
                         statusMember.setStatus(MemberStatus.READY);
                         getActivity().runOnUiThread(new Runnable() {
                             @Override

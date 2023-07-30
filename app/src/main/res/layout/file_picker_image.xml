@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="120dp"
     android:layout_gravity="center"
-    android:layout_margin="2dp"
+
     android:layout_weight="1"
     android:scaleType="centerCrop"
     android:transitionName="@string/transition_image_prepare"

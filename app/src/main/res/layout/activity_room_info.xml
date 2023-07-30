@@ -61,15 +61,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="18dp"
+
             android:nestedScrollingEnabled="true"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginHorizontal="18dp">
+
 
             <androidx.cardview.widget.CardView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="20dp"
                 app:cardBackgroundColor="@color/dark"
+
                 app:cardCornerRadius="120dp"
                 app:cardElevation="0dp">
 
@@ -232,22 +240,22 @@
 
                 </LinearLayout>
             </LinearLayout>
-
+            </LinearLayout>
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 app:cardBackgroundColor="@color/dark"
-                app:cardCornerRadius="10dp"
 
+                app:cardCornerRadius="18dp"
                 app:cardElevation="0dp">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/gridView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="600dp"
                     android:gravity="center"
-                    android:nestedScrollingEnabled="true"
+
 
                     android:stretchMode="columnWidth"
 
