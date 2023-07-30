@@ -96,6 +96,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
             waterfallBalancer.add(picturesView);
 
+            if(position == mediaElements.size() - 1) {
+                itemClickListener.onLastItemLoaded(position, holder.fileParingImageView);
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();

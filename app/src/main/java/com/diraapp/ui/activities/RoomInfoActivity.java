@@ -244,12 +244,11 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                         roomName.setText(room.getName());
                         membersCount.setText(getString(R.string.members_count).replace("%s", String.valueOf(members.size() + 1)));
 
-
                     }
                 });
                 ArrayList<FileInfo> attachments = new ArrayList<>();
 
-                for (Message message : DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getAllMessageByUpdatedTime(roomSecret)) {
+                for (Message message : DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getAllMessages(roomSecret)) {
                     if (message.getAttachments() != null) {
                         if (message.getAttachments().size() > 0) {
                             Attachment attachment = message.getAttachments().get(0);
@@ -283,13 +282,18 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
                         intent.putExtra(PreviewActivity.IS_VIDEO, fileInfo.isVideo());
                         startActivity(intent);
                     }
+
+                    @Override
+                    public void onLastItemLoaded(int pos, View view) {
+
+                    }
                 }, gallery);
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
 
-                        gallery.setLayoutManager(new GridLayoutManager(RoomInfoActivity.this, 3));
+                        gallery.setLayoutManager(new GridLayoutManager(RoomInfoActivity.this, 4));
 
 
                         findViewById(R.id.members_button).setOnClickListener(new View.OnClickListener() {

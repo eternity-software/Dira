@@ -106,6 +106,6 @@
     <string name="room_encryption_success">Ключ был обновлён</string>
     <string name="room_encryption_cancel">Обновление ключа было отменено</string>
     <string name="notifications_enabled">Уведомления включены</string>
-    <string name="notifications_disabled">Уведомления отключны</string>
+    <string name="notifications_disabled">Уведомления отключены</string>
 
 </resources>

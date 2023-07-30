@@ -195,6 +195,11 @@ public class PersonalityActivity extends AppCompatActivity {
 
 
             }
+
+            @Override
+            public void onLastItemLoaded(int pos, View view) {
+
+            }
         });
 
     }

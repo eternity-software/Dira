@@ -169,6 +169,11 @@ public class EditRoomActivity extends AppCompatActivity implements ServerSelecto
                         (FilePreview) view, ImageSendActivity.IMAGE_PURPOSE_SELECT);
 
             }
+
+            @Override
+            public void onLastItemLoaded(int pos, View view) {
+
+            }
         });
 
     }

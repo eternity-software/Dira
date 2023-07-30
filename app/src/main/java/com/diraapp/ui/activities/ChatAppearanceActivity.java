@@ -164,6 +164,11 @@ public class ChatAppearanceActivity extends AppCompatActivity {
                                 bottomSheet.getMedia().get(pos).getFilePath(), "",
                                 (FilePreview) view, ImageSendActivity.IMAGE_PURPOSE_SELECT);
                     }
+
+                    @Override
+                    public void onLastItemLoaded(int pos, View view) {
+
+                    }
                 });
             }
         });

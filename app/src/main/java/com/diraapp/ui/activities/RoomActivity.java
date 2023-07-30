@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -151,6 +150,11 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
 
 
                     }
+
+                    @Override
+                    public void onLastItemLoaded(int pos, View view) {
+
+                    }
                 });
             }
         });
@@ -175,7 +179,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                             try {
                                 MessageDao messageDao = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao();
                                 System.out.println("Time from " + message.getTime());
-                                List<Message> oldMessages = messageDao.getAllMessageByUpdatedTimeBeforeTime(roomSecret, message.getTime());
+                                List<Message> oldMessages = messageDao.getLastMessagesInRoom(roomSecret, message.getTime());
                                 int oldSize = messageList.size();
                                 messageList.addAll(oldMessages);
                                 runOnUiThread(new Runnable() {
@@ -209,7 +213,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                     }
                 });
 
-                messageList = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getAllMessageByUpdatedTime(roomSecret);
+                messageList = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getLastMessagesInRoom(roomSecret);
                 roomMessagesAdapter.setMessages(messageList);
                 loadMembers();
                 runOnUiThread(new Runnable() {

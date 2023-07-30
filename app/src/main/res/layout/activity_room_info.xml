@@ -255,12 +255,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="600dp"
                     android:gravity="center"
-
+                    app:layout_scrollFlags="scroll|enterAlways"
 
                     android:stretchMode="columnWidth"
 
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:spanCount="3" />
+                    app:spanCount="4" />
             </androidx.cardview.widget.CardView>
 
         </LinearLayout>
