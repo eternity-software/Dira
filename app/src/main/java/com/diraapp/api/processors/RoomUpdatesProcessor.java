@@ -3,10 +3,13 @@ package com.diraapp.api.processors;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.diraapp.api.updates.DhInitUpdate;
 import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.updates.MessageReadUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.NewRoomUpdate;
+import com.diraapp.api.updates.RenewingCancelUpdate;
+import com.diraapp.api.updates.RenewingConfirmUpdate;
 import com.diraapp.api.updates.RoomUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.views.InviteRoom;
@@ -148,6 +151,15 @@ public class RoomUpdatesProcessor {
                     newMessage = updateMember((MemberUpdate) update);
                 } else if (update instanceof MessageReadUpdate) {
                     updateMessageReading((MessageReadUpdate) update);
+                } else if (update instanceof DhInitUpdate) {
+                    newMessage = UpdateProcessor.getInstance().getClientMessageProcessor().
+                            notifyRoomKeyGenerationStart((DhInitUpdate) update, room);
+                } else if (update instanceof RenewingCancelUpdate) {
+                    newMessage = UpdateProcessor.getInstance().getClientMessageProcessor().
+                            notifyRoomKeyGenerationStop(update, room);
+                } else if (update instanceof RenewingConfirmUpdate) {
+                    newMessage = UpdateProcessor.getInstance().getClientMessageProcessor().
+                            notifyRoomKeyGenerationStop(update, room);
                 }
 
                 if (newMessage != null) {

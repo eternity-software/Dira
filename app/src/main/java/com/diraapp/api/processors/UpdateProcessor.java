@@ -203,12 +203,16 @@ public class UpdateProcessor {
                 roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.DIFFIE_HELLMAN_INIT_UPDATE) {
                 diraKeyProtocol.onDiffieHellmanInit((DhInitUpdate) update);
+                roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.KEY_RECEIVED_UPDATE) {
                 diraKeyProtocol.onIntermediateKey((KeyReceivedUpdate) update);
+                roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.RENEWING_CANCEL) {
                 diraKeyProtocol.onKeyCancel((RenewingCancelUpdate) update);
+                roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.RENEWING_CONFIRMED) {
                 diraKeyProtocol.onKeyConfirmed((RenewingConfirmUpdate) update);
+                roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.PING_UPDATE) {
                 PingUpdate pingUpdate = (PingUpdate) update;
                 String roomSecret = pingUpdate.getRoomSecret();

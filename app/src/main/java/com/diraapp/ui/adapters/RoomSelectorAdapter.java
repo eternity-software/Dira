@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diraapp.R;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.messages.customclientdata.KeyGenerateStartClientData;
+import com.diraapp.db.entities.messages.customclientdata.KeyGeneratedClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
@@ -101,6 +103,11 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
                     holder.accentText.setText(context.getString(R.string.room_update_picture_change));
                 } else if (message.getCustomClientData() instanceof RoomNameAndIconChangeClientData) {
                     holder.accentText.setText(context.getString(R.string.room_update_name_and_picture_change));
+                } else if (message.getCustomClientData() instanceof KeyGenerateStartClientData) {
+                    holder.accentText.setText(context.getString(R.string.key_generate_start));
+                } else if (message.getCustomClientData() instanceof KeyGeneratedClientData) {
+                    holder.accentText.setText(((KeyGeneratedClientData) message.
+                            getCustomClientData()).getClientDataText(context));
                 }
 
                 if (!hasMessageText) {

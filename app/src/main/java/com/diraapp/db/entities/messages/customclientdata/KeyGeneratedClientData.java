@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.core.content.ContextCompat;
 
 import com.diraapp.R;
+import com.diraapp.db.entities.messages.MessageType;
 
 import java.util.Objects;
 
@@ -17,6 +18,7 @@ public class KeyGeneratedClientData extends CustomClientData {
     private final Short result;
 
     public KeyGeneratedClientData(Short result) {
+        this.setMessageType(MessageType.KEY_GENERATED);
         this.result = result;
     }
 
