@@ -25,6 +25,8 @@ import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.messages.customclientdata.KeyGenerateStartClientData;
+import com.diraapp.db.entities.messages.customclientdata.KeyGeneratedClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
@@ -465,10 +467,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
             holder.roomUpdatesText.setText(((RoomNameChangeClientData) message.getCustomClientData()).getOldName());
 
-            holder.roomUpdatesIcon.setImageTintList(ColorStateList.valueOf(
-                    AppTheme.getInstance().getColorTheme().getTextColor()));
-            holder.roomUpdatesIcon.getBackground().setTintList(ColorStateList.valueOf(
-                    AppTheme.getInstance().getColorTheme().getMessageColor()));
+            applyDefaultIconOnUpdateMessage(holder);
 
             holder.roomUpdatesText.setVisibility(View.VISIBLE);
         } else if (message.getCustomClientData() instanceof RoomIconChangeClientData) {
@@ -493,6 +492,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             setImageOnRoomUpdateMessage(holder, path);
 
             holder.roomUpdatesText.setVisibility(View.VISIBLE);
+        } else if (message.getCustomClientData() instanceof KeyGenerateStartClientData) {
+            holder.roomUpdatesMainText.setText(context.getString(R.string.key_generate_start));
+            applyDefaultIconOnUpdateMessage(holder);
+        } else if (message.getCustomClientData() instanceof KeyGeneratedClientData) {
+            holder.roomUpdatesMainText.setText(((KeyGeneratedClientData) message.
+                    getCustomClientData()).getClientDataText(context));
+            applyDefaultIconOnUpdateMessage(holder);
         }
 
         applyRoomUpdateMessagesColorTheme(holder);
@@ -515,6 +521,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder.roomUpdatesIcon.setImageBitmap(bitmap);
             holder.roomUpdatesIcon.setImageTintList(null);
         }
+    }
+
+    private void applyDefaultIconOnUpdateMessage(ViewHolder holder) {
+        holder.roomUpdatesIcon.setImageTintList(ColorStateList.valueOf(
+                AppTheme.getInstance().getColorTheme().getTextColor()));
+        holder.roomUpdatesIcon.getBackground().setTintList(ColorStateList.valueOf(
+                AppTheme.getInstance().getColorTheme().getMessageColor()));
     }
 
     private void applyUserMessageColorTheme(ViewHolder holder, boolean isSelfMessage) {

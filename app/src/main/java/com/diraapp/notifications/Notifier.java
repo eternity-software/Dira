@@ -15,6 +15,8 @@ import com.diraapp.R;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.messages.customclientdata.KeyGenerateStartClientData;
+import com.diraapp.db.entities.messages.customclientdata.KeyGeneratedClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
@@ -24,6 +26,8 @@ import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.ui.activities.RoomActivity;
 import com.diraapp.ui.activities.RoomSelectorActivity;
 import com.diraapp.utils.CacheUtils;
+
+import kotlin._Assertions;
 
 public class Notifier {
 
@@ -47,32 +51,39 @@ public class Notifier {
                         .setSmallIcon(R.drawable.notification)
                         .setPriority(NotificationCompat.PRIORITY_HIGH);
 
+        String contentTitle = "";
+        String text = "";
+
         if (message.getCustomClientData() == null) {
             CacheUtils cacheUtils = new CacheUtils(context);
             if (message.getAuthorId().equals(cacheUtils.getString(CacheUtils.ID))) return;
 
-            builder.setContentTitle(message.getAuthorNickname())
-                    .setContentText(message.getText());
-        } else if (message.getCustomClientData() instanceof RoomJoinClientData) {
-            String text = context.getString(R.string.room_update_new_member)
-                    .replace("%s", ((RoomJoinClientData)
-                            message.getCustomClientData()).getNewNickName());
-            builder.setContentTitle(room.getName())
-                    .setContentText(text);
+            contentTitle = message.getAuthorNickname();
+            text = message.getText();
 
-            // get Image
+        } else if (message.getCustomClientData() instanceof RoomJoinClientData) {
+            text = context.getString(R.string.room_update_new_member).replace("%s", ((RoomJoinClientData)
+                            message.getCustomClientData()).getNewNickName());
         } else if (message.getCustomClientData() instanceof RoomIconChangeClientData) {
-            String text = context.getString(R.string.room_update_picture_change);
-            builder.setContentTitle(room.getName())
-                    .setContentText(text);
+            text = context.getString(R.string.room_update_picture_change);
         } else if (message.getCustomClientData() instanceof RoomNameChangeClientData) {
-            String text = context.getString(R.string.room_update_name_change);
-            builder.setContentTitle(room.getName())
-                    .setContentText(text);
+            text = context.getString(R.string.room_update_name_change);
         } else if (message.getCustomClientData() instanceof RoomNameAndIconChangeClientData) {
-            String text = context.getString(R.string.room_update_name_and_picture_change);
-            builder.setContentTitle(room.getName())
-                    .setContentText(text);
+            text = context.getString(R.string.room_update_name_and_picture_change);
+        } else if (message.getCustomClientData() instanceof KeyGenerateStartClientData) {
+            text = context.getString(R.string.key_generate_start);
+        } else if (message.getCustomClientData() instanceof KeyGeneratedClientData) {
+            text = ((KeyGeneratedClientData) message.getCustomClientData()).getClientDataText(context);
+        }
+
+        if (!text.equals("")) {
+            builder.setContentText(text);
+
+            if (contentTitle.equals("")) {
+                builder.setContentTitle(room.getName());
+            } else {
+                builder.setContentTitle(contentTitle);
+            }
         }
 
         if (room != null) {
