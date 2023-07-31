@@ -24,7 +24,8 @@ import com.diraapp.db.entities.messages.Message;
                 @AutoMigration(from = 11, to = 12),
                 @AutoMigration(from = 12, to = 13),
                 @AutoMigration(from = 13, to = 14),
-                @AutoMigration(from = 14, to = 15)},
+                @AutoMigration(from = 14, to = 15)
+        },
         version = 15,
         exportSchema = true)
 @TypeConverters({UnreadIdsConverter.class})
