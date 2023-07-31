@@ -6,12 +6,13 @@ public class MessageReadUpdate extends Update {
 
     private long readTime;
 
-    private String MessageId;
+    private String messageId;
 
-    public MessageReadUpdate(String userId, long readTime) {
+    public MessageReadUpdate(String userId, long readTime, String messageId) {
         super(0, UpdateType.READ_UPDATE);
         this.userId = userId;
         this.readTime = readTime;
+        this.messageId = messageId;
     }
 
     public String getUserId() {
@@ -31,10 +32,10 @@ public class MessageReadUpdate extends Update {
     }
 
     public String getMessageId() {
-        return MessageId;
+        return messageId;
     }
 
     public void setMessageId(String messageId) {
-        MessageId = messageId;
+        this.messageId = messageId;
     }
 }
