@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 14,
-    "identityHash": "598640944ae3a954acae9643a83bcb30",
+    "identityHash": "dd7b95701f933a25cc03e571c7b9ed7e",
     "entities": [
       {
         "tableName": "Message",
@@ -88,7 +88,7 @@
       },
       {
         "tableName": "Room",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`secretName` TEXT NOT NULL, `name` TEXT, `lastMessageId` TEXT, `imagePath` TEXT, `serverAddress` TEXT DEFAULT 'ws://diraapp.com:8888', `lastUpdatedTime` INTEGER NOT NULL, `updatedRead` INTEGER NOT NULL DEFAULT true, `lastUpdateId` INTEGER NOT NULL, `timeServerStartup` INTEGER NOT NULL, `timeEncryptionKeyUpdated` INTEGER NOT NULL DEFAULT 0, `encryptionKey` TEXT DEFAULT '', `clientSecret` TEXT DEFAULT '0', `isNotificationsEnabled` INTEGER NOT NULL DEFAULT true, PRIMARY KEY(`secretName`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`secretName` TEXT NOT NULL, `name` TEXT, `lastMessageId` TEXT, `imagePath` TEXT, `serverAddress` TEXT DEFAULT 'ws://diraapp.com:8888', `lastUpdatedTime` INTEGER NOT NULL, `updatedRead` INTEGER NOT NULL DEFAULT true, `lastUpdateId` INTEGER NOT NULL, `timeServerStartup` INTEGER NOT NULL, `timeEncryptionKeyUpdated` INTEGER NOT NULL DEFAULT 0, `encryptionKey` TEXT DEFAULT '', `clientSecret` TEXT DEFAULT '0', `isNotificationsEnabled` INTEGER NOT NULL DEFAULT true, `unreadMessagesIds` TEXT, PRIMARY KEY(`secretName`))",
         "fields": [
           {
             "fieldPath": "secretName",
@@ -173,6 +173,12 @@
             "affinity": "INTEGER",
             "notNull": true,
             "defaultValue": "true"
+          },
+          {
+            "fieldPath": "unreadMessagesIds",
+            "columnName": "unreadMessagesIds",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -340,7 +346,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '598640944ae3a954acae9643a83bcb30')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dd7b95701f933a25cc03e571c7b9ed7e')"
     ]
   }
 }

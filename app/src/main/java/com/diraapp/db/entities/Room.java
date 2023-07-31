@@ -4,13 +4,18 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.db.converters.UnreadIdsConverter;
 import com.diraapp.db.entities.messages.Message;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+
 @Entity
+@TypeConverters({UnreadIdsConverter.class})
 public class Room {
 
     @PrimaryKey
@@ -39,6 +44,8 @@ public class Room {
 
     @ColumnInfo(defaultValue = "true")
     private boolean isNotificationsEnabled;
+
+    private ArrayList<String> unreadMessagesIds;
 
     @Ignore
     private Message message;
@@ -166,5 +173,17 @@ public class Room {
 
     public void setSecretName(String secretName) {
         this.secretName = secretName;
+    }
+
+    public ArrayList<String> getUnreadMessagesIds() {
+        return unreadMessagesIds;
+    }
+
+    public void setUnreadMessagesIds(ArrayList<String> unreadMessagesIds) {
+        this.unreadMessagesIds = unreadMessagesIds;
+    }
+
+    public void addNewUnreadMessageId(String id) {
+        unreadMessagesIds.add(id);
     }
 }
