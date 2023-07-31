@@ -58,7 +58,7 @@ public class Message {
         this.time = System.currentTimeMillis();
         this.id = KeyGenerator.generateId();
 
-        this.isRead = false;
+        this.isRead = true;
     }
 
     public Message() {
