@@ -11,15 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
-import com.diraapp.api.processors.UpdateProcessor;
-import com.diraapp.db.DiraMessageDatabase;
-import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
@@ -53,6 +49,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
@@ -454,7 +451,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
             String path = ((RoomJoinClientData) message.getCustomClientData()).getPath();
             setImageOnRoomUpdateMessage(holder, path);
-
+            holder.roomUpdatesIcon.setImageDrawable(context.getDrawable(R.drawable.ic_room_updates));
             holder.roomUpdatesText.setVisibility(View.INVISIBLE);
         } else if (message.getCustomClientData() instanceof RoomNameChangeClientData) {
             holder.roomUpdatesMainText.setText(context.getString(R.string.room_update_name_change));
@@ -464,7 +461,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 //                            message.getCustomClientData()).getOldName())
 //                    .replace("%p", ((RoomNameChangeClientData)
 //                            message.getCustomClientData()).getNewName()));
-
+            holder.roomUpdatesIcon.setImageDrawable(context.getDrawable(R.drawable.ic_room_updates));
             holder.roomUpdatesText.setText(((RoomNameChangeClientData) message.getCustomClientData()).getOldName());
 
             applyDefaultIconOnUpdateMessage(holder);
@@ -494,10 +491,21 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder.roomUpdatesText.setVisibility(View.VISIBLE);
         } else if (message.getCustomClientData() instanceof KeyGenerateStartClientData) {
             holder.roomUpdatesMainText.setText(context.getString(R.string.key_generate_start));
+            holder.roomUpdatesIcon.setImageDrawable(context.getDrawable(R.drawable.ic_encryption));
             applyDefaultIconOnUpdateMessage(holder);
         } else if (message.getCustomClientData() instanceof KeyGeneratedClientData) {
             holder.roomUpdatesMainText.setText(((KeyGeneratedClientData) message.
                     getCustomClientData()).getClientDataText(context));
+
+            if(Objects.equals(((KeyGeneratedClientData) message.
+                    getCustomClientData()).getResult(), KeyGeneratedClientData.RESULT_CANCELLED))
+            {
+                holder.roomUpdatesIcon.setImageDrawable(context.getDrawable(R.drawable.ic_encryption_disabled));
+            }
+            else
+            {
+                holder.roomUpdatesIcon.setImageDrawable(context.getDrawable(R.drawable.ic_encryption));
+            }
             applyDefaultIconOnUpdateMessage(holder);
         }
 

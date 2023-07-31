@@ -67,7 +67,7 @@ public class ClientMessageProcessor {
         if (update instanceof RenewingConfirmUpdate) {
             code = KeyGeneratedClientData.RESULT_SUCCESS;
         } else {
-            code = KeyGeneratedClientData.RESULT_TIME_ERROR;
+            code = KeyGeneratedClientData.RESULT_CANCELLED;
         }
 
         clientData = new KeyGeneratedClientData(code);

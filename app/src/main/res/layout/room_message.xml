@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clipToPadding="false"
-    android:paddingVertical="6dp">
+    android:paddingVertical="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,10 +17,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             android:autoLink="all"
             android:background="@drawable/gray_rounded"
-            android:backgroundTint="@color/dark"
+            android:backgroundTint="@color/gray_trans"
             android:fontFamily="@font/montserratsemibold"
             android:gravity="center"
 
@@ -29,9 +29,9 @@
             android:paddingVertical="5dp"
 
             android:text="05 december, 2004"
-            android:textColor="@color/light_gray"
+            android:textColor="@color/white"
             android:textIsSelectable="true"
-            android:textSize="13sp" />
+            android:textSize="11sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -137,7 +137,7 @@
                             android:id="@+id/message_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="6dp"
+                            android:layout_margin="8dp"
                             android:autoLink="all"
                             android:fontFamily="@font/montserratsemibold"
                             android:includeFontPadding="false"
@@ -220,13 +220,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
-                                android:layout_marginHorizontal="10dp"
-                                android:layout_marginVertical="10dp">
+                                android:layout_marginHorizontal="8dp"
+                                android:layout_marginVertical="8dp">
 
                                 <androidx.cardview.widget.CardView
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
                                     app:cardCornerRadius="100dp"
+                                    app:cardBackgroundColor="@android:color/transparent"
                                     app:cardElevation="0dp">
 
                                     <ImageView
@@ -234,6 +235,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:background="@color/accent"
+                                        android:padding="6dp"
                                         android:src="@drawable/ic_room_updates"
                                         app:tint="@color/dark" />
 
@@ -247,7 +249,7 @@
                                 android:layout_gravity="center_vertical"
                                 android:gravity="center_vertical"
                                 android:orientation="vertical"
-                                android:paddingVertical="10dp">
+                                android:paddingVertical="8dp">
 
                                 <TextView
                                     android:id="@+id/room_updates_main_text"
@@ -263,7 +265,7 @@
                                     android:textColor="@color/dark"
 
                                     android:textIsSelectable="true"
-                                    android:textSize="15sp" />
+                                    android:textSize="14sp" />
 
                                 <TextView
                                     android:id="@+id/room_updates_text"
@@ -280,7 +282,7 @@
                                     android:textColor="@color/gray"
 
                                     android:textIsSelectable="true"
-                                    android:textSize="14sp" />
+                                    android:textSize="13sp" />
 
                             </LinearLayout>
 
@@ -311,14 +313,14 @@
                         android:layout_marginLeft="4dp"
                         android:layout_weight="0"
                         android:background="@drawable/gray_rounded"
-                        android:backgroundTint="@color/dark"
+                        android:backgroundTint="@color/gray_trans"
                         android:fontFamily="@font/montserratsemibold"
                         android:gravity="bottom"
                         android:padding="5dp"
                         android:paddingBottom="5dp"
                         android:text="00:00"
-                        android:textColor="@color/light_gray"
-                        android:textSize="12sp" />
+                        android:textColor="@color/white"
+                        android:textSize="11sp" />
                 </LinearLayout>
 
             </LinearLayout>
