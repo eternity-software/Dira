@@ -107,5 +107,12 @@
     <string name="room_encryption_cancel">Обновление ключа было отменено</string>
     <string name="notifications_enabled">Уведомления включены</string>
     <string name="notifications_disabled">Уведомления отключены</string>
-
+    <string name="room_update_picture_change">Изображение комнаты изменено</string>
+    <string name="room_update_name_change">Название комнаты изменено</string>
+    <string name="room_update_name_and_picture_change">Данные комнаты были изменены</string>
+    <string name="room_update_new_member">%s вступил(а) в комнату</string>
+    <string name="key_generate_start">Обновление ключа запущено...</string>
+    <string name="key_generate_success">Ключ шифрования был обновлён</string>
+    <string name="key_generate_time_error">Обновление ключа было отменено</string>
+    <string name="key_generate_user_disconnected">Обновление ключа было прервано</string>
 </resources>
