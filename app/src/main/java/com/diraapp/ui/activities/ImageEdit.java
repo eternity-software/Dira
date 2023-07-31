@@ -331,6 +331,7 @@ public class ImageEdit extends AppCompatActivity {
     }
 
     public void crop() {
+
         ImageView mainImageView = findViewById(R.id.mainImageView);
         ImageView shadedView = findViewById(R.id.cropShade);
         DrawingView drawingView = findViewById(R.id.drawingView);
@@ -394,10 +395,11 @@ public class ImageEdit extends AppCompatActivity {
         BorderScaleView borderScaleView = findViewById(R.id.cropGrid);
         final ConstraintLayout bitmapContainer = findViewById(R.id.bitmapContainer);
         final ConstraintLayout mainContainer = findViewById(R.id.mainContainer);
-
+        LinearLayout applyButton = findViewById(R.id.linearLayout9);
         if (isCropping) {
             bitmapContainer.animate().alpha(1f).setDuration(300).start();
             borderScaleView.setEnabled(false);
+            applyButton.setVisibility(View.VISIBLE);
             borderScaleView.animate().alpha(0f).setListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
@@ -427,7 +429,7 @@ public class ImageEdit extends AppCompatActivity {
             crop();
         } else {
 
-
+            applyButton.setVisibility(View.GONE);
             bitmapContainerX = bitmapContainer.getX();
             bitmapContainerY = bitmapContainer.getY();
             borderScaleView.setContainerHeight(mainContainer.getHeight());

@@ -134,19 +134,20 @@
                 android:paddingTop="20dp">
 
                 <HorizontalScrollView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scrollbars="none">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
                         <LinearLayout
                             android:id="@+id/pick_image_button"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="24dp"
+                            android:layout_marginLeft="14dp"
+
                             android:gravity="center_horizontal"
                             android:orientation="vertical">
 
@@ -170,13 +171,13 @@
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/background_recycler"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:clipToPadding="false"
                             android:nestedScrollingEnabled="true"
                             android:orientation="horizontal"
-                            android:paddingEnd="14dp" />
+                            android:paddingEnd="22dp" />
 
                     </LinearLayout>
 

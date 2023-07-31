@@ -135,7 +135,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/message_input"
         android:orientation="horizontal"
-        android:paddingHorizontal="12dp"
+        android:paddingHorizontal="8dp"
 
         android:paddingVertical="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -168,7 +168,7 @@
             android:paddingVertical="12dp"
             android:textColor="@color/white"
             android:textColorHint="@color/light_gray"
-            android:textSize="16sp" />
+            android:textSize="15sp" />
 
         <ImageView
             android:id="@+id/send_button"
