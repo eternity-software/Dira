@@ -29,6 +29,8 @@ import com.diraapp.api.updates.MessageReadUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
+import com.diraapp.api.updates.userstatus.Status;
+import com.diraapp.api.updates.userstatus.UserStatusUpdate;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.daos.MessageDao;
@@ -50,6 +52,7 @@ import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.appearance.ColorTheme;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.FilePreview;
+import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.EncryptionUtil;
 import com.diraapp.utils.SliderActivity;
 
@@ -74,6 +77,8 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
     private List<Message> messageList = new ArrayList<>();
     private FilePickerBottomSheet filePickerBottomSheet;
     private boolean isUpdating = false;
+
+    private ArrayList<Status> userStatusList = new ArrayList<>();
 
     public static void putRoomExtrasInIntent(Intent intent, String roomSecret, String roomName) {
         intent.putExtra(RoomSelectorActivity.PENDING_ROOM_SECRET, roomSecret);
@@ -228,6 +233,8 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
             }
         });
         loadMessagesHistory.start();
+
+        startUserStatusThread();
     }
 
 
@@ -540,6 +547,17 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                 }
             });
 
+        } else if (update.getUpdateType() == UpdateType.USER_STATUS_UPDATE) {
+            // shit code
+            if (!update.getRoomSecret().equals(roomSecret)) return;
+
+            Status status = ((UserStatusUpdate) update).getStatus();
+
+            if (status.getUserId().equals(
+                    new CacheUtils(this).getString(CacheUtils.ID))) return;
+
+            status.setTime(System.currentTimeMillis() + Status.VISIBLE_TIME_MILLIS);
+            userStatusList.add(status);
         }
     }
 
@@ -585,6 +603,54 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
        });
        updateRoom.start();
 
+    }
+
+    private void startUserStatusThread() {
+        Thread userStatusThread = new Thread(() -> {
+            while (true) {
+                if (userStatusList.size() == 0) {
+                    try {
+                        Thread.sleep(100);
+                        continue;
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                ArrayList<Status> listToDelete = new ArrayList<>();
+                long minTime = userStatusList.get(0).getTime();
+                listToDelete.add(userStatusList.get(0));
+                for (Status status: userStatusList) {
+                    if (status.getTime() < minTime) {
+                        listToDelete.clear();
+                        minTime = status.getTime();
+                        listToDelete.add(status);
+                    } else if (status.getTime() == minTime) {
+                        listToDelete.add(status);
+                    }
+                }
+
+                long current = System.currentTimeMillis();
+                if (minTime < current) continue;
+                try {
+                    Thread.sleep(minTime - current);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+                for (Status status: listToDelete) {
+                    userStatusList.remove(status);
+                }
+
+                runOnUiThread(this::updateUserStatusTextView);
+
+            }
+        });
+        userStatusThread.start();
+    }
+
+    private void updateUserStatusTextView() {
+        //
     }
 
     private void applyColorTheme() {

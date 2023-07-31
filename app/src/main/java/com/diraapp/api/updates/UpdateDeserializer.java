@@ -1,5 +1,6 @@
 package com.diraapp.api.updates;
 
+import com.diraapp.api.updates.userstatus.UserStatusUpdate;
 import com.google.gson.Gson;
 
 public class UpdateDeserializer {
@@ -38,6 +39,10 @@ public class UpdateDeserializer {
                 return new Gson().fromJson(message, RenewingConfirmUpdate.class);
             case RENEWING_CANCEL:
                 return new Gson().fromJson(message, RenewingCancelUpdate.class);
+            case READ_UPDATE:
+                return new Gson().fromJson(message, MessageReadUpdate.class);
+            case USER_STATUS_UPDATE:
+                return new Gson().fromJson(message, UserStatusUpdate.class);
         }
         return rawUpdate;
     }

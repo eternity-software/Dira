@@ -8,11 +8,14 @@ public class MessageReadRequest extends Request {
 
     private String messageId;
 
-    public MessageReadRequest(String userId, long readTime, String messageId) {
+    private String roomSecret;
+
+    public MessageReadRequest(String userId, long readTime, String messageId, String roomSecret) {
         super(0, RequestType.MESSAGE_READ);
         this.userId = userId;
         this.readTime = readTime;
         this.messageId = messageId;
+        this.roomSecret = roomSecret;
     }
 
     public String getUserId() {

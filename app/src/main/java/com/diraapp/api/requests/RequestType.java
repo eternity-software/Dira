@@ -33,5 +33,8 @@ public enum RequestType {
     SUBMIT_KEY,
 
     @SerializedName("14")
-    MESSAGE_READ
+    MESSAGE_READ,
+
+    @SerializedName("15")
+    USER_STATUS_REQUEST
 }

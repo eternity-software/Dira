@@ -8,11 +8,12 @@ public class MessageReadUpdate extends Update {
 
     private String messageId;
 
-    public MessageReadUpdate(String userId, long readTime, String messageId) {
+    public MessageReadUpdate(String userId, long readTime, String messageId, String roomSecret) {
         super(0, UpdateType.READ_UPDATE);
         this.userId = userId;
         this.readTime = readTime;
         this.messageId = messageId;
+        this.setRoomSecret(roomSecret);
     }
 
     public String getUserId() {

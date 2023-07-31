@@ -179,7 +179,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
             Thread readRequestThread = new Thread(() -> {
                 MessageReadRequest request =
-                        new MessageReadRequest(selfId, System.currentTimeMillis(), message.getId());
+                        new MessageReadRequest(selfId, System.currentTimeMillis(),
+                                message.getId(),message.getRoomSecret());
                 try {
                     UpdateProcessor.getInstance().sendRequest(request, room.getServerAddress());
                 } catch (UnablePerformRequestException e) {
