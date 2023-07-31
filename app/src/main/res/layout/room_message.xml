@@ -137,7 +137,7 @@
                             android:id="@+id/message_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
+                            android:layout_margin="6dp"
                             android:autoLink="all"
                             android:fontFamily="@font/montserratsemibold"
                             android:includeFontPadding="false"
