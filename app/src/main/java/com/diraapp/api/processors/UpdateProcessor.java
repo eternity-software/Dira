@@ -211,7 +211,7 @@ public class UpdateProcessor {
                 roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.KEY_RECEIVED_UPDATE) {
                 diraKeyProtocol.onIntermediateKey((KeyReceivedUpdate) update);
-                roomUpdatesProcessor.updateRoom(update);
+                // roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.RENEWING_CANCEL) {
                 diraKeyProtocol.onKeyCancel((RenewingCancelUpdate) update);
                 roomUpdatesProcessor.updateRoom(update);

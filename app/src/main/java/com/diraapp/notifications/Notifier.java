@@ -1,13 +1,16 @@
 package com.diraapp.notifications;
 
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Build;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -51,19 +54,17 @@ public class Notifier {
                         .setSmallIcon(R.drawable.notification)
                         .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-        String contentTitle = "";
         String text = "";
 
         if (message.getCustomClientData() == null) {
             CacheUtils cacheUtils = new CacheUtils(context);
             if (message.getAuthorId().equals(cacheUtils.getString(CacheUtils.ID))) return;
 
-            contentTitle = message.getAuthorNickname();
-            text = message.getText();
+            text = message.getAuthorNickname() + ": " + message.getText();
 
         } else if (message.getCustomClientData() instanceof RoomJoinClientData) {
             text = context.getString(R.string.room_update_new_member).replace("%s", ((RoomJoinClientData)
-                            message.getCustomClientData()).getNewNickName());
+                    message.getCustomClientData()).getNewNickName());
         } else if (message.getCustomClientData() instanceof RoomIconChangeClientData) {
             text = context.getString(R.string.room_update_picture_change);
         } else if (message.getCustomClientData() instanceof RoomNameChangeClientData) {
@@ -79,24 +80,15 @@ public class Notifier {
         if (!text.equals("")) {
             builder.setContentText(text);
 
-            if (contentTitle.equals("")) {
-                builder.setContentTitle(room.getName());
-            } else {
-                builder.setContentTitle(contentTitle);
-            }
+            builder.setContentTitle(room.getName());
         }
 
         if (room != null) {
             if (!room.isNotificationsEnabled()) return;
 
-            builder.setContentTitle(room.getName());
             Bitmap bitmap = ImagesWorker.getCircleCroppedBitmap(AppStorage.getBitmapFromPath(room.getImagePath()), 256, 256);
             if (bitmap != null) {
                 builder.setLargeIcon(bitmap);
-            }
-
-            if (message.getCustomClientData() == null) {
-                builder.setContentText(message.getAuthorNickname() + ": " + message.getText());
             }
 
             Intent notificationIntent = new Intent(context, RoomSelectorActivity.class);
@@ -117,6 +109,17 @@ public class Notifier {
 
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(context);
+
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         notificationManager.notify(notificationId, builder.build());
         notificationId++;
     }
