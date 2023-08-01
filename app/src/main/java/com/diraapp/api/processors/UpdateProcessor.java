@@ -8,6 +8,7 @@ import com.diraapp.api.processors.listeners.ProcessorListener;
 import com.diraapp.api.processors.listeners.SocketListener;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.GetUpdatesRequest;
+import com.diraapp.api.requests.MessageReadRequest;
 import com.diraapp.api.requests.PingReactRequest;
 import com.diraapp.api.requests.Request;
 import com.diraapp.api.requests.SubscribeRequest;
@@ -473,6 +474,10 @@ public class UpdateProcessor {
                 e.printStackTrace();
             }
         }
+    }
+
+    public RoomUpdatesProcessor getRoomUpdatesProcessor() {
+        return roomUpdatesProcessor;
     }
 
     public ClientMessageProcessor getClientMessageProcessor() {

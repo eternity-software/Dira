@@ -3,6 +3,7 @@ package com.diraapp.api.processors;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.diraapp.api.requests.MessageReadRequest;
 import com.diraapp.api.updates.DhInitUpdate;
 import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.updates.MessageReadUpdate;
@@ -22,11 +23,19 @@ import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.exceptions.OldUpdateException;
+import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class RoomUpdatesProcessor {
 
+    private static final long READ_REQUEST_DELAY = 100;
+
+    private HashMap<MessageReadRequest, String> retMessages = new HashMap<>(30);
 
     private final RoomDao roomDao;
     private final MemberDao memberDao;
@@ -38,6 +47,8 @@ public class RoomUpdatesProcessor {
         this.memberDao = memberDao;
         this.messageDao = messageDao;
         this.context = context;
+
+        initReadRequestThread();
     }
 
 
@@ -251,6 +262,35 @@ public class RoomUpdatesProcessor {
         }
 
         messageDao.update(message);
+    }
+
+    public void addMessageToRequestList(MessageReadRequest request, String address) {
+        retMessages.put(request, address);
+    }
+
+    private void initReadRequestThread() {
+        Thread thread = new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(READ_REQUEST_DELAY);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (retMessages.size() == 0) continue;
+
+                HashMap<MessageReadRequest, String> map = new HashMap<>(retMessages);
+
+                for (Map.Entry<MessageReadRequest, String> entry: map.entrySet()) {
+                    try {
+                        UpdateProcessor.getInstance().sendRequest(entry.getKey(), entry.getValue());
+                    } catch (UnablePerformRequestException e) {
+                        e.printStackTrace();
+                    }
+                    retMessages.remove(entry.getKey());
+                }
+            }
+        });
+        thread.start();
     }
 
 }

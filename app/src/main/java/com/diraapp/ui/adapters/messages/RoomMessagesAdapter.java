@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 
+import com.diraapp.api.processors.RoomUpdatesProcessor;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.requests.MessageReadRequest;
 import com.diraapp.db.DiraMessageDatabase;
@@ -178,21 +179,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
 
         if (!message.isRead()) {
-
-            Thread readRequestThread = new Thread(() -> {
-                MessageReadRequest request =
-                        new MessageReadRequest(selfId, System.currentTimeMillis(),
-                                message.getId(),message.getRoomSecret());
-                try {
-                    UpdateProcessor.getInstance().sendRequest(request, room.getServerAddress());
-                } catch (UnablePerformRequestException e) {
-                    e.printStackTrace();
-                }
-            });
-            readRequestThread.start();
-            // send ReadRequest
-
             message.setRead(true);
+
+            // send ReadRequest
+            MessageReadRequest request = new MessageReadRequest(selfId, System.currentTimeMillis(),
+                    message.getId(), secretName);
+            UpdateProcessor.getInstance().getRoomUpdatesProcessor().
+                    addMessageToRequestList(request, serverAddress);
         }
 
         if (message.getText() == null) {
