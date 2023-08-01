@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 public enum UserStatus {
 
     @SerializedName("0")
-    TypingUpdate,
+    TYPING,
 
     @SerializedName("1")
     CHOOSING_IMAGE,
