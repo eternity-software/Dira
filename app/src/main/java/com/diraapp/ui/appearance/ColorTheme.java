@@ -92,7 +92,7 @@ public class ColorTheme {
         rock.roomLickColor = ContextCompat.getColor(context, R.color.rock_accent);
         rock.selfLinkColor = ContextCompat.getColor(context, R.color.light_gray);
         rock.downloadButtonTextColor = ContextCompat.getColor(context, R.color.white);
-        rock.downloadButtonColor = ContextCompat.getColor(context, R.color.rock_accent);
+        rock.downloadButtonColor = ContextCompat.getColor(context, R.color.dark);
         rock.roomUpdateMessageColor = ContextCompat.getColor(context, R.color.light_gray);
         rock.name = context.getResources().getString(R.string.theme_rock);
         rock.type = ColorThemeType.ROCK;

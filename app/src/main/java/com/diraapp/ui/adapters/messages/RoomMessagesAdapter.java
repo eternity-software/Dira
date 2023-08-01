@@ -569,13 +569,14 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
 
         if (holder.sizeContainer.getVisibility() == View.VISIBLE) {
-            holder.sizeText.setTextColor(theme.getRoomLickColor());
             if (isSelfMessage) {
+                holder.sizeText.setTextColor(theme.getSelfLinkColor());
                 holder.attachmentTooLargeText.setTextColor(theme.getSelfTextColor());
-                holder.buttonDownload.getBackground().setTint(theme.getAccentColor());
+                holder.buttonDownload.getBackground().setTint(theme.getDownloadButtonColor());
                 holder.buttonDownload.setTextColor(theme.getDownloadButtonColor());
             } else {
-                holder.attachmentTooLargeText.setTextColor(theme.getMessageColor());
+                holder.sizeText.setTextColor(theme.getRoomLickColor());
+                holder.attachmentTooLargeText.setTextColor(theme.getTextColor());
                 holder.buttonDownload.getBackground().setTint(theme.getDownloadButtonColor());
                 holder.buttonDownload.setTextColor(theme.getDownloadButtonTextColor());
             }
