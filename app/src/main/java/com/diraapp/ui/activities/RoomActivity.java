@@ -535,6 +535,8 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
             if (!update.getRoomSecret().equals(roomSecret)) return;
 
             MessageReadUpdate readUpdate = (MessageReadUpdate) update;
+
+            if (((MessageReadUpdate) update).getUserId().equals(selfId)) return;
             Message thisMessage = null;
             int index = 0;
 
@@ -564,12 +566,18 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
             // shit code
             if (!update.getRoomSecret().equals(roomSecret)) return;
 
-            Status status = ((UserStatusUpdate) update).getStatus();
+            Status newStatus = ((UserStatusUpdate) update).getStatus();
 
-            if (status.getUserId().equals(selfId)) return;
+            if (newStatus.getUserId().equals(selfId)) return;
 
-            status.setTime(System.currentTimeMillis() + Status.VISIBLE_TIME_MILLIS);
-            userStatusList.add(status);
+            newStatus.setTime(System.currentTimeMillis() + Status.VISIBLE_TIME_MILLIS);
+            for (Status status: userStatusList) {
+                if (status.getUserStatus().equals(newStatus.getUserStatus())) {
+                    userStatusList.remove(status);
+                }
+            }
+            userStatusList.add(newStatus);
+            updateUserStatusTextView();
         }
     }
 
