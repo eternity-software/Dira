@@ -27,7 +27,6 @@ import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -176,7 +175,9 @@ public class RoomUpdatesProcessor {
                 if (newMessage != null) {
                     room.setLastMessageId(newMessage.getId());
                     room.setLastUpdatedTime(newMessage.getTime());
-                    room.setUpdatedRead(false);
+                    if (!newMessage.isRead()) {
+                        room.addNewUnreadMessageId(newMessage.getId());
+                    }
                     messageDao.insertAll(newMessage);
                 }
                 roomDao.update(room);
@@ -253,15 +254,30 @@ public class RoomUpdatesProcessor {
         MessageReading messageReading = new MessageReading(update.getUserId(), update.getReadTime());
 
         if (message.getMessageReadingList().contains(messageReading)) return;
+        if (message.getAuthorId().equals(update.getUserId())) return;
 
-        if (update.getUserId().equals(new CacheUtils(context).getString(CacheUtils.ID))) {
+        String selfId = new CacheUtils(context).getString(CacheUtils.ID);
+        if (update.getUserId().equals(selfId)) {
+            if (message.getAuthorId().equals(selfId)) return;
+
             message.setRead(true);
+
+            Room room = roomDao.getRoomBySecretName(update.getRoomSecret());
+            int index = room.getUnreadMessagesIds().indexOf(message.getId());
+
+            if (index != -1) {
+                for (int i = 0; i <= index; i++) {
+                    room.getUnreadMessagesIds().remove(i);
+                }
+                roomDao.update(room);
+            }
+
         } else {
-            UpdateProcessor.getInstance().notifyUpdateListeners(update);
             message.getMessageReadingList().add(messageReading);
         }
-
         messageDao.update(message);
+
+        UpdateProcessor.getInstance().notifyUpdateListeners(update);
     }
 
     public void addMessageToRequestList(MessageReadRequest request, String address) {
@@ -271,12 +287,14 @@ public class RoomUpdatesProcessor {
     private void initReadRequestThread() {
         Thread thread = new Thread(() -> {
             while (true) {
-                try {
-                    Thread.sleep(READ_REQUEST_DELAY);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if (retMessages.size() == 0) {
+                    try {
+                        Thread.sleep(READ_REQUEST_DELAY);
+                        continue;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-                if (retMessages.size() == 0) continue;
 
                 HashMap<MessageReadRequest, String> map = new HashMap<>(retMessages);
 

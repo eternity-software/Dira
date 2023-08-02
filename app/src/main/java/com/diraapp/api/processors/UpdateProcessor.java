@@ -182,7 +182,9 @@ public class UpdateProcessor {
                         isDecrypted = true;
                     }
                 }
-                ((NewMessageUpdate) update).getMessage().setRead(false);
+
+                ((NewMessageUpdate) update).getMessage().setRead(newMessageUpdate.getMessage().
+                        getAuthorId().equals(new CacheUtils(context).getString(CacheUtils.ID)));
 
                 if (!isDecrypted) {
                     // here you can write your shit code

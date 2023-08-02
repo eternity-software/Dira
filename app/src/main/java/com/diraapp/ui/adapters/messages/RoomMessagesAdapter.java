@@ -17,12 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 
-import com.diraapp.api.processors.RoomUpdatesProcessor;
 import com.diraapp.api.processors.UpdateProcessor;
-import com.diraapp.api.requests.MessageReadRequest;
-import com.diraapp.db.DiraMessageDatabase;
-import com.diraapp.db.daos.MessageDao;
 
+import com.diraapp.api.requests.MessageReadRequest;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
@@ -34,7 +31,6 @@ import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientDat
 import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
-import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DownloadHandler;
 import com.diraapp.storage.attachments.AttachmentsStorage;
@@ -181,9 +177,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         if (!message.isRead()) {
             message.setRead(true);
 
-            // send ReadRequest
             MessageReadRequest request = new MessageReadRequest(selfId, System.currentTimeMillis(),
-                    message.getId(), secretName);
+                    message.getId(), message.getRoomSecret());
             UpdateProcessor.getInstance().getRoomUpdatesProcessor().
                     addMessageToRequestList(request, serverAddress);
         }
