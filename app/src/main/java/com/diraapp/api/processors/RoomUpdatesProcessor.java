@@ -107,6 +107,10 @@ public class RoomUpdatesProcessor {
         }
     }
 
+    public void updateRoom(Update update) throws OldUpdateException {
+        updateRoom(update, false);
+    }
+
     /**
      * Apply changes of room to local database
      * <p>
@@ -115,7 +119,7 @@ public class RoomUpdatesProcessor {
      *
      * @param update
      */
-    public void updateRoom(Update update) throws OldUpdateException {
+    public void updateRoom(Update update, boolean ignoreUpdateId) throws OldUpdateException {
         Message newMessage = null;
 
         String roomSecret = update.getRoomSecret();
@@ -129,8 +133,10 @@ public class RoomUpdatesProcessor {
         if (room != null) {
 
             compareStartupTimes(room);
-            if (room.getLastUpdateId() < update.getUpdateId()) {
-                room.setLastUpdateId(update.getUpdateId());
+            if (room.getLastUpdateId() < update.getUpdateId() || ignoreUpdateId) {
+                if (!ignoreUpdateId) {
+                    room.setLastUpdateId(update.getUpdateId());
+                }
 
                 if (update instanceof RoomUpdate) {
                     String oldName = room.getName();
@@ -175,6 +181,7 @@ public class RoomUpdatesProcessor {
                 if (newMessage != null) {
                     room.setLastMessageId(newMessage.getId());
                     room.setLastUpdatedTime(newMessage.getTime());
+                    room.setUpdatedRead(false);
                     if (!newMessage.isRead()) {
                         room.addNewUnreadMessageId(newMessage.getId());
                     }
