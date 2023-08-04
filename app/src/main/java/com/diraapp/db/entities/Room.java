@@ -45,7 +45,7 @@ public class Room {
     @ColumnInfo(defaultValue = "true")
     private boolean isNotificationsEnabled;
 
-    private ArrayList<String> unreadMessagesIds;
+    private ArrayList<String> unreadMessagesIds = new ArrayList<>();
 
     @Ignore
     private Message message;
@@ -184,6 +184,9 @@ public class Room {
     }
 
     public void addNewUnreadMessageId(String id) {
+        if (unreadMessagesIds == null) {
+            unreadMessagesIds = new ArrayList<>();
+        }
         unreadMessagesIds.add(id);
     }
 }

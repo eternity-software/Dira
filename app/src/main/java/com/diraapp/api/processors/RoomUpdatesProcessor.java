@@ -3,6 +3,7 @@ package com.diraapp.api.processors;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.diraapp.api.requests.MessageReadRequest;
 import com.diraapp.api.updates.DhInitUpdate;
 import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.updates.MessageReadUpdate;
@@ -22,11 +23,18 @@ import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.exceptions.OldUpdateException;
+import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RoomUpdatesProcessor {
 
+    private static final long READ_REQUEST_DELAY = 100;
+
+    private HashMap<MessageReadRequest, String> retMessages = new HashMap<>(30);
 
     private final RoomDao roomDao;
     private final MemberDao memberDao;
@@ -38,6 +46,8 @@ public class RoomUpdatesProcessor {
         this.memberDao = memberDao;
         this.messageDao = messageDao;
         this.context = context;
+
+        initReadRequestThread();
     }
 
 
@@ -122,6 +132,7 @@ public class RoomUpdatesProcessor {
             if (room.getLastUpdateId() < update.getUpdateId()) {
                 room.setLastUpdateId(update.getUpdateId());
 
+
                 if (update instanceof RoomUpdate) {
                     String oldName = room.getName();
                     String newName = ((RoomUpdate) update).getName();
@@ -166,6 +177,9 @@ public class RoomUpdatesProcessor {
                     room.setLastMessageId(newMessage.getId());
                     room.setLastUpdatedTime(newMessage.getTime());
                     room.setUpdatedRead(false);
+                    if (!newMessage.isRead()) {
+                        room.addNewUnreadMessageId(newMessage.getId());
+                    }
                     messageDao.insertAll(newMessage);
                 }
                 roomDao.update(room);
@@ -242,15 +256,61 @@ public class RoomUpdatesProcessor {
         MessageReading messageReading = new MessageReading(update.getUserId(), update.getReadTime());
 
         if (message.getMessageReadingList().contains(messageReading)) return;
+        if (message.getAuthorId().equals(update.getUserId())) return;
 
-        if (update.getUserId().equals(new CacheUtils(context).getString(CacheUtils.ID))) {
+        String selfId = new CacheUtils(context).getString(CacheUtils.ID);
+        if (update.getUserId().equals(selfId)) {
+            if (message.getAuthorId().equals(selfId)) return;
+
             message.setRead(true);
+
+            Room room = roomDao.getRoomBySecretName(update.getRoomSecret());
+            int index = room.getUnreadMessagesIds().indexOf(message.getId());
+
+            if (index != -1) {
+                for (int i = 0; i <= index; i++) {
+                    room.getUnreadMessagesIds().remove(i);
+                }
+                roomDao.update(room);
+            }
+
         } else {
-            UpdateProcessor.getInstance().notifyUpdateListeners(update);
             message.getMessageReadingList().add(messageReading);
         }
-
         messageDao.update(message);
+
+        UpdateProcessor.getInstance().notifyUpdateListeners(update);
+    }
+
+    public void addMessageToRequestList(MessageReadRequest request, String address) {
+        retMessages.put(request, address);
+    }
+
+    private void initReadRequestThread() {
+        Thread thread = new Thread(() -> {
+            while (true) {
+                if (retMessages.size() == 0) {
+                    try {
+                        Thread.sleep(READ_REQUEST_DELAY);
+                        continue;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                HashMap<MessageReadRequest, String> map = new HashMap<>(retMessages);
+
+                for (Map.Entry<MessageReadRequest, String> entry: map.entrySet()) {
+                    try {
+                        UpdateProcessor.getInstance().sendRequest(entry.getKey(), entry.getValue());
+                    } catch (UnablePerformRequestException e) {
+                        e.printStackTrace();
+                    }
+                    retMessages.remove(entry.getKey());
+                }
+            }
+        });
+        thread.start();
     }
 
 }

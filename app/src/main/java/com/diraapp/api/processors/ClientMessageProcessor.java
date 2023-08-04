@@ -80,7 +80,7 @@ public class ClientMessageProcessor {
         NewMessageUpdate messageUpdate = new NewMessageUpdate(message);
 
         if (DiraApplication.isBackgrounded()) {
-            Notifier.notifyMessage(((NewMessageUpdate) update).getMessage(), room, context);
+            Notifier.notifyMessage(message, room, context);
         }
         UpdateProcessor.getInstance().notifyUpdateListeners(messageUpdate);
 

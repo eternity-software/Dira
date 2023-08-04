@@ -8,6 +8,7 @@ import com.diraapp.api.processors.listeners.ProcessorListener;
 import com.diraapp.api.processors.listeners.SocketListener;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.GetUpdatesRequest;
+import com.diraapp.api.requests.MessageReadRequest;
 import com.diraapp.api.requests.PingReactRequest;
 import com.diraapp.api.requests.Request;
 import com.diraapp.api.requests.SubscribeRequest;
@@ -181,7 +182,9 @@ public class UpdateProcessor {
                         isDecrypted = true;
                     }
                 }
-                ((NewMessageUpdate) update).getMessage().setRead(false);
+
+                ((NewMessageUpdate) update).getMessage().setRead(newMessageUpdate.getMessage().
+                        getAuthorId().equals(new CacheUtils(context).getString(CacheUtils.ID)));
 
                 if (!isDecrypted) {
                     // here you can write your shit code
@@ -208,7 +211,7 @@ public class UpdateProcessor {
                 roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.DIFFIE_HELLMAN_INIT_UPDATE) {
                 diraKeyProtocol.onDiffieHellmanInit((DhInitUpdate) update);
-             //   roomUpdatesProcessor.updateRoom(update);
+            //   roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.KEY_RECEIVED_UPDATE) {
                 diraKeyProtocol.onIntermediateKey((KeyReceivedUpdate) update);
                 //  roomUpdatesProcessor.updateRoom(update);
@@ -217,7 +220,25 @@ public class UpdateProcessor {
              //   roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.RENEWING_CONFIRMED) {
                 diraKeyProtocol.onKeyConfirmed((RenewingConfirmUpdate) update);
-              //  roomUpdatesProcessor.updateRoom(update);
+
+                System.out.println("Dhinit update - " + message);
+
+                // Exactly this thing breaks key generation
+                // Don't know why
+
+                //roomUpdatesProcessor.updateRoom(update, true);
+            } else if (update.getUpdateType() == UpdateType.KEY_RECEIVED_UPDATE) {
+                diraKeyProtocol.onIntermediateKey((KeyReceivedUpdate) update);
+                System.out.println("KeyReceived update - " + message);
+                // roomUpdatesProcessor.updateRoom(update);
+            } else if (update.getUpdateType() == UpdateType.RENEWING_CANCEL) {
+                diraKeyProtocol.onKeyCancel((RenewingCancelUpdate) update);
+                System.out.println("Cancel update - " + message);
+                roomUpdatesProcessor.updateRoom(update);
+            } else if (update.getUpdateType() == UpdateType.RENEWING_CONFIRMED) {
+                diraKeyProtocol.onKeyConfirmed((RenewingConfirmUpdate) update);
+                System.out.println("Confirmed update - " + message);
+                roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.PING_UPDATE) {
                 PingUpdate pingUpdate = (PingUpdate) update;
                 String roomSecret = pingUpdate.getRoomSecret();
@@ -473,6 +494,10 @@ public class UpdateProcessor {
                 e.printStackTrace();
             }
         }
+    }
+
+    public RoomUpdatesProcessor getRoomUpdatesProcessor() {
+        return roomUpdatesProcessor;
     }
 
     public ClientMessageProcessor getClientMessageProcessor() {

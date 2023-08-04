@@ -3,6 +3,8 @@ package com.diraapp.ui.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,14 +27,15 @@ import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.ProcessorListener;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.SendMessageRequest;
+import com.diraapp.api.requests.SendUserStatusRequest;
 import com.diraapp.api.updates.MessageReadUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
 import com.diraapp.api.updates.userstatus.Status;
 import com.diraapp.api.updates.userstatus.UserStatusUpdate;
-import com.diraapp.databinding.ActivityCreateRoomBinding;
 import com.diraapp.databinding.ActivityRoomBinding;
+import com.diraapp.api.views.UserStatus;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.daos.MessageDao;
@@ -80,6 +83,14 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
     private FilePickerBottomSheet filePickerBottomSheet;
     private ActivityRoomBinding binding;
 
+
+    private String selfId;
+
+    private Status userStatus;
+    private boolean isUpdating = false;
+
+    private boolean keepThread = true;
+
     private ArrayList<Status> userStatusList = new ArrayList<>();
 
     public static void putRoomExtrasInIntent(Intent intent, String roomSecret, String roomName) {
@@ -97,6 +108,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
 
         roomSecret = getIntent().getExtras().getString(RoomSelectorActivity.PENDING_ROOM_SECRET);
         String roomName = getIntent().getExtras().getString(RoomSelectorActivity.PENDING_ROOM_NAME);
+        selfId = new CacheUtils(this).getString(CacheUtils.ID);
 
         TextView nameView = findViewById(R.id.room_name);
         nameView.setText(roomName);
@@ -130,6 +142,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
         });
 
 
+        setupMessageTextInputListener();
         findViewById(R.id.send_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -475,6 +488,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        keepThread = false;
         roomMessagesAdapter.unregisterListeners();
         UpdateProcessor.getInstance().removeUpdateListener(this);
         UpdateProcessor.getInstance().removeProcessorListener(this);
@@ -524,6 +538,8 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
             if (!update.getRoomSecret().equals(roomSecret)) return;
 
             MessageReadUpdate readUpdate = (MessageReadUpdate) update;
+
+            if (((MessageReadUpdate) update).getUserId().equals(selfId)) return;
             Message thisMessage = null;
             int index = 0;
 
@@ -553,13 +569,18 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
             // shit code
             if (!update.getRoomSecret().equals(roomSecret)) return;
 
-            Status status = ((UserStatusUpdate) update).getStatus();
+            Status newStatus = ((UserStatusUpdate) update).getStatus();
 
-            if (status.getUserId().equals(
-                    new CacheUtils(this).getString(CacheUtils.ID))) return;
+            if (newStatus.getUserId().equals(selfId)) return;
 
-            status.setTime(System.currentTimeMillis() + Status.VISIBLE_TIME_MILLIS);
-            userStatusList.add(status);
+            newStatus.setTime(System.currentTimeMillis() + Status.VISIBLE_TIME_MILLIS);
+            for (Status status: userStatusList) {
+                if (status.getUserStatus().equals(newStatus.getUserStatus())) {
+                    userStatusList.remove(status);
+                }
+            }
+            userStatusList.add(newStatus);
+            updateUserStatusTextView();
         }
     }
 
@@ -607,9 +628,48 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
 
     }
 
+    private void setupMessageTextInputListener() {
+        EditText editText = findViewById(R.id.message_text_input);
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (userStatus == null) {
+                    sendStatusRequest();
+                } else if (userStatus.getUserStatus() != UserStatus.TYPING) {
+                    sendStatusRequest();
+                } else if (userStatus.getTime() - System.currentTimeMillis() > Status.REQUEST_DELAY) {
+                    sendStatusRequest();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    private void sendStatusRequest() {
+        Thread statusRequestThread = new Thread(() -> {
+            SendUserStatusRequest request = new SendUserStatusRequest(selfId, UserStatus.TYPING);
+            try {
+                UpdateProcessor.getInstance().sendRequest(request, roomSecret);
+            } catch (UnablePerformRequestException e) {
+                e.printStackTrace();
+            }
+        });
+        statusRequestThread.start();
+    }
+
     private void startUserStatusThread() {
         Thread userStatusThread = new Thread(() -> {
-            while (true) {
+            while (keepThread) {
                 if (userStatusList.size() == 0) {
                     try {
                         Thread.sleep(100);

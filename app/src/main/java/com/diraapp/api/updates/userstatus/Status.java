@@ -6,6 +6,8 @@ public class Status {
 
     public static final long VISIBLE_TIME_MILLIS = 500;
 
+    public static final long REQUEST_DELAY = 300;
+
     private final UserStatus userStatus;
 
     private final String userId;

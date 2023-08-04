@@ -67,6 +67,8 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
     private boolean canBackPress = true;
     private RoomSelectorAdapter roomSelectorAdapter;
     private boolean isRoomsUpdating = false;
+
+    private List<Room> roomList = new ArrayList<>();
     private CacheUtils cacheUtils;
 
     @Override
@@ -190,9 +192,9 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
         Thread loadDataThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                List<Room> rooms = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getAllRoomsByUpdatedTime();
+                roomList = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getAllRoomsByUpdatedTime();
                 roomSelectorAdapter = new RoomSelectorAdapter(RoomSelectorActivity.this);
-                for (Room room : new ArrayList<>(rooms)) {
+                for (Room room : new ArrayList<>(roomList)) {
                     Message message = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getMessageById(room.getLastMessageId());
                     room.setMessage(message);
                     try {
@@ -207,7 +209,7 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
                     @Override
                     public void run() {
 
-                        roomSelectorAdapter.setRoomList(rooms);
+                        roomSelectorAdapter.setRoomList(roomList);
                         roomSelectorAdapter.notifyDataSetChanged();
                         recyclerView.setAdapter(roomSelectorAdapter);
                         isRoomsUpdating = false;
@@ -297,6 +299,25 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
                     }
                 });
             }
+        } else if (update.getUpdateType() == UpdateType.READ_UPDATE) {
+            Room updatedRoom = DiraRoomDatabase.getDatabase(this).getRoomDao().
+                    getRoomBySecretName(update.getRoomSecret());
+
+            int index = -1;
+
+            for (Room room: roomList) {
+                if (room.getSecretName().equals(update.getRoomSecret())) {
+                    index = roomList.indexOf(room);
+                    roomList.remove(index);
+                }
+            }
+
+            if (index == -1) return;
+
+            roomList.add(index, updatedRoom);
+            roomSelectorAdapter.notifyItemChanged(index);
+        } else if (update.getUpdateType() == UpdateType.USER_STATUS_UPDATE) {
+            //
         }
     }
 }

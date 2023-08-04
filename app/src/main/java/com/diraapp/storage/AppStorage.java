@@ -212,6 +212,7 @@ public class AppStorage {
             return BitmapFactory.decodeStream(new FileInputStream(f));
 
         } catch (Exception e) {
+            if (e instanceof NullPointerException) return null;
             e.printStackTrace();
             return null;
         }
