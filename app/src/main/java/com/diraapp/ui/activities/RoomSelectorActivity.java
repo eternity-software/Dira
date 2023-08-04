@@ -78,7 +78,6 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
 
         if (getIntent().hasExtra(PENDING_ROOM_SECRET)) {
             if (getIntent().getExtras().getString(PENDING_ROOM_SECRET) != null) {
-                System.out.println("Huesos");
                 Intent notificationIntent = new Intent(this, RoomActivity.class);
                 RoomActivity.putRoomExtrasInIntent(notificationIntent, getIntent().getExtras().
                         getString(PENDING_ROOM_SECRET), getIntent().getExtras().getString(PENDING_ROOM_NAME));
@@ -181,7 +180,6 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
 
                     }
                 });
-
 
     }
 

@@ -31,6 +31,8 @@ import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
 import com.diraapp.api.updates.userstatus.Status;
 import com.diraapp.api.updates.userstatus.UserStatusUpdate;
+import com.diraapp.databinding.ActivityCreateRoomBinding;
+import com.diraapp.databinding.ActivityRoomBinding;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.daos.MessageDao;
@@ -76,7 +78,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
     private RoomMessagesAdapter roomMessagesAdapter;
     private List<Message> messageList = new ArrayList<>();
     private FilePickerBottomSheet filePickerBottomSheet;
-    private boolean isUpdating = false;
+    private ActivityRoomBinding binding;
 
     private ArrayList<Status> userStatusList = new ArrayList<>();
 
@@ -88,7 +90,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_room);
+        binding = ActivityRoomBinding.inflate(getLayoutInflater());
 
         SliderActivity sliderActivity = new SliderActivity();
         sliderActivity.attachSlider(this);
