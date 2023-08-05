@@ -34,6 +34,7 @@ import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
 import com.diraapp.userstatus.Status;
 import com.diraapp.api.updates.UserStatusUpdate;
+import com.diraapp.databinding.ActivityRoomBinding;
 import com.diraapp.api.views.UserStatus;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
@@ -53,6 +54,7 @@ import com.diraapp.ui.activities.resizer.FluidContentResizer;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.adapters.messages.RoomMessagesAdapter;
 import com.diraapp.ui.appearance.AppTheme;
+import com.diraapp.ui.appearance.ColorTheme;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.FilePreview;
 import com.diraapp.userstatus.UserStatusHandler;
@@ -82,6 +84,8 @@ public class RoomActivity extends AppCompatActivity
     private RoomMessagesAdapter roomMessagesAdapter;
     private List<Message> messageList = new ArrayList<>();
     private FilePickerBottomSheet filePickerBottomSheet;
+    private ActivityRoomBinding binding;
+
 
     private String selfId;
 
@@ -100,7 +104,7 @@ public class RoomActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_room);
+        binding = ActivityRoomBinding.inflate(getLayoutInflater());
 
         SliderActivity sliderActivity = new SliderActivity();
         sliderActivity.attachSlider(this);

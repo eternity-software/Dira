@@ -211,9 +211,19 @@ public class UpdateProcessor {
                 roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.DIFFIE_HELLMAN_INIT_UPDATE) {
                 diraKeyProtocol.onDiffieHellmanInit((DhInitUpdate) update);
+            //   roomUpdatesProcessor.updateRoom(update);
+            } else if (update.getUpdateType() == UpdateType.KEY_RECEIVED_UPDATE) {
+                diraKeyProtocol.onIntermediateKey((KeyReceivedUpdate) update);
+                //  roomUpdatesProcessor.updateRoom(update);
+            } else if (update.getUpdateType() == UpdateType.RENEWING_CANCEL) {
+                diraKeyProtocol.onKeyCancel((RenewingCancelUpdate) update);
+             //   roomUpdatesProcessor.updateRoom(update);
+            } else if (update.getUpdateType() == UpdateType.RENEWING_CONFIRMED) {
+                diraKeyProtocol.onKeyConfirmed((RenewingConfirmUpdate) update);
+
                 System.out.println("Dhinit update - " + message);
 
-                // Exactly this shit brakes key generation
+                // Exactly this thing breaks key generation
                 // Don't know why
 
                 //roomUpdatesProcessor.updateRoom(update, true);
