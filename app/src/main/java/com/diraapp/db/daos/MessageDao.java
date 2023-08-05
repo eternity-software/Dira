@@ -25,10 +25,10 @@ public interface MessageDao {
     @Query("SELECT * FROM message WHERE roomSecret = :roomSecret ORDER BY time DESC")
     List<Message> getAllMessages(String roomSecret);
 
-    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret ORDER BY time DESC LIMIT 100")
+    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret ORDER BY time DESC LIMIT 50")
     List<Message> getLastMessagesInRoom(String roomSecret);
 
-    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret AND time < :beforeTime ORDER BY time DESC LIMIT 100")
+    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret AND time < :beforeTime ORDER BY time DESC LIMIT 50")
     List<Message> getLastMessagesInRoom(String roomSecret, Long beforeTime);
 
     @Query("SELECT * FROM message WHERE id = :messageId")

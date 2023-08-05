@@ -101,6 +101,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_room);
         binding = ActivityRoomBinding.inflate(getLayoutInflater());
 
         SliderActivity sliderActivity = new SliderActivity();
@@ -226,16 +227,10 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                     }
                 });
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadData();
-                    }
-                });
 
                 messageList = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getLastMessagesInRoom(roomSecret);
                 roomMessagesAdapter.setMessages(messageList);
-                loadMembers();
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -510,6 +505,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                 public void run() {
                     RecyclerView recyclerView = findViewById(R.id.recycler_view);
 
+                    recyclerView.setHasFixedSize(true);
                     recyclerView.post(new Runnable() {
                         @Override
                         public void run() {
@@ -612,8 +608,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
        Thread updateRoom = new Thread(() -> {
 
                    Room room = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getRoomBySecretName(roomSecret);
-                   if(roomMessagesAdapter == null) return;
-                   roomMessagesAdapter.setRoom(room);
+
 
                    runOnUiThread(new Runnable() {
                        @Override
@@ -623,6 +618,8 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                    });
 
                    loadMembers();
+           if(roomMessagesAdapter == null) return;
+           roomMessagesAdapter.setRoom(room);
        });
        updateRoom.start();
 

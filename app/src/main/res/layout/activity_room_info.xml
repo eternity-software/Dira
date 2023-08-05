@@ -156,12 +156,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
-
+                        android:singleLine="true"
                         android:layout_weight="1"
                         android:fontFamily="@font/montserratbold"
                         android:gravity="center_vertical"
                         android:paddingHorizontal="8dp"
                         android:text="@string/members_count"
+                        android:ellipsize="marquee"
                         android:textColor="@color/white"
                         android:textSize="14sp"
                         android:transitionName="name" />

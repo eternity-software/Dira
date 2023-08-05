@@ -71,6 +71,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final List<AttachmentsStorageListener> listeners = new ArrayList<>();
     private final CacheUtils cacheUtils;
     private final HashMap<View, Integer> pendingAsyncOperations = new HashMap<>();
+
     private final HashMap<String, Bitmap> loadedBitmaps = new HashMap<>();
     private final String secretName;
     private final String serverAddress;
@@ -380,16 +381,15 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private void bindUserMessage(Message message, Message previousMessage,
                                  boolean isSameDay, boolean isSameYear, ViewHolder holder) {
+        boolean isSelfMessage = selfId.equals(
+                message.getAuthorId());
         if (holder.roomUpdatesLayout != null) {
             holder.roomUpdatesLayout.setVisibility(View.GONE);
         }
 
-        holder.videoPlayer.setVolume(0);
 
         loadMessageAttachment(message, holder);
 
-        boolean isSelfMessage = selfId.equals(
-                message.getAuthorId());
 
         if (StringFormatter.isEmoji(message.getText()) && StringFormatter.getEmojiCount(message.getText()) < 3) {
             holder.messageContainer.setVisibility(View.GONE);

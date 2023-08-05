@@ -118,6 +118,9 @@ public class AppStorage {
 
         byte[] data = new byte[4096];
         long total = 0;
+
+        long lastTimeProgressNotified = 0;
+
         int count;
         while ((count = input.read(data)) != -1) {
             // allow canceling with back button
@@ -127,7 +130,12 @@ public class AppStorage {
             if (fileLength > 0) // only if total length is known
             {
                 if (downloadHandler != null) {
-                    downloadHandler.onProgressChanged(((int) (total * 100 / fileLength)));
+                    if(System.currentTimeMillis() - lastTimeProgressNotified > 500)
+                    {
+                        lastTimeProgressNotified = System.currentTimeMillis();
+                        downloadHandler.onProgressChanged(((int) (total * 100 / fileLength)));
+                    }
+
                 }
 
             }
@@ -206,6 +214,7 @@ public class AppStorage {
     }
 
     public static Bitmap getBitmapFromPath(String path) {
+
         try {
             System.out.println(path);
             File f = new File(path);
