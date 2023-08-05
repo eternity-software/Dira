@@ -279,7 +279,6 @@ public class RoomSelectorActivity extends AppCompatActivity
         UpdateProcessor.getInstance().removeUpdateListener(this);
 
         UserStatusHandler.getInstance().removeListener(this);
-        UserStatusHandler.getInstance().killThread();
     }
 
     @Override

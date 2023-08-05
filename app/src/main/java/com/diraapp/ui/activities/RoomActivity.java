@@ -90,9 +90,6 @@ public class RoomActivity extends AppCompatActivity
     private String selfId;
 
     private Status userStatus;
-    private boolean isUpdating = false;
-
-    private boolean keepThread = true;
 
     private AppTheme theme;
 
@@ -104,6 +101,7 @@ public class RoomActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_room);
         binding = ActivityRoomBinding.inflate(getLayoutInflater());
 
         SliderActivity sliderActivity = new SliderActivity();
@@ -491,7 +489,6 @@ public class RoomActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        keepThread = false;
         roomMessagesAdapter.unregisterListeners();
         UpdateProcessor.getInstance().removeUpdateListener(this);
         UpdateProcessor.getInstance().removeProcessorListener(this);
@@ -643,16 +640,11 @@ public class RoomActivity extends AppCompatActivity
     }
 
     private void sendStatusRequest() {
-        Thread statusRequestThread = new Thread(() -> {
-            SendUserStatusRequest request = new SendUserStatusRequest(
-                    new Status(UserStatus.TYPING, selfId, roomSecret));
-            try {
-                UpdateProcessor.getInstance().sendRequest(request, roomSecret);
-            } catch (UnablePerformRequestException e) {
-                e.printStackTrace();
-            }
-        });
-        statusRequestThread.start();
+        SendUserStatusRequest request = new SendUserStatusRequest(
+                new Status(UserStatus.TYPING, selfId, roomSecret));
+
+        UpdateProcessor.getInstance().getRoomUpdatesProcessor().addMessageToRequestList
+                (request, room.getServerAddress());
     }
 
     public void updateUserStatus(String roomSecret, ArrayList<Status> usersStatusList) {

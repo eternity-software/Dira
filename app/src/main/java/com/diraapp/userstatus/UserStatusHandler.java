@@ -1,7 +1,5 @@
 package com.diraapp.userstatus;
 
-import android.content.Context;
-
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.updates.Update;
@@ -10,15 +8,9 @@ import com.diraapp.api.updates.UserStatusUpdate;
 import com.diraapp.exceptions.SingletonException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class UserStatusHandler implements UpdateListener {
-
-    private static final long TIME_TO_SLEEP = 10;
-
     private static UserStatusHandler instance;
-
-    private boolean keepThread = true;
 
     private ArrayList<Status> userStatuses = new ArrayList<>();
 
@@ -56,14 +48,13 @@ public class UserStatusHandler implements UpdateListener {
     }
 
     public void startThread() {
-        if (statusThread != null) {
-            if (statusThread.isAlive()) return;
+        if (statusThread == null) {
+            initUserStatusThread();
+            statusThread.start();
+        } else if (!statusThread.isAlive()) {
+            initUserStatusThread();
+            statusThread.start();
         }
-        startUserStatusThread();
-    }
-
-    public void killThread() {
-        keepThread = false;
     }
 
     public void addListener(UserStatusListener listener) {
@@ -80,22 +71,15 @@ public class UserStatusHandler implements UpdateListener {
         }
     }
 
-    private void startUserStatusThread() {
-
+    private void initUserStatusThread() {
         statusThread = new Thread(() -> {
             ArrayList<Status> listToDelete = new ArrayList<>();
             long minTime = -1;
-            while (keepThread) {
-
+            while (true) {
                 ArrayList<Status> userStatusList = new ArrayList<>(userStatuses);
                 int size = userStatusList.size();
                 if (size == 0) {
-                    try {
-                        Thread.sleep(TIME_TO_SLEEP);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    continue;
+                    break;
                 }
 
                 for (Status status: userStatusList) {
@@ -126,7 +110,6 @@ public class UserStatusHandler implements UpdateListener {
                 }
             }
         });
-        statusThread.start();
     }
 
     @Override
@@ -135,6 +118,7 @@ public class UserStatusHandler implements UpdateListener {
             Status status = ((UserStatusUpdate) update).getStatus();
             userStatuses.add(status);
             notifyListeners(status.getSecretName());
+            startThread();
         }
     }
 }
