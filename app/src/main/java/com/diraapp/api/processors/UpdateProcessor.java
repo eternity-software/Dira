@@ -224,11 +224,11 @@ public class UpdateProcessor {
             } else if (update.getUpdateType() == UpdateType.RENEWING_CANCEL) {
                 diraKeyProtocol.onKeyCancel((RenewingCancelUpdate) update);
                 System.out.println("Cancel update - " + message);
-                roomUpdatesProcessor.updateRoom(update);
+                //roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.RENEWING_CONFIRMED) {
                 diraKeyProtocol.onKeyConfirmed((RenewingConfirmUpdate) update);
                 System.out.println("Confirmed update - " + message);
-                roomUpdatesProcessor.updateRoom(update);
+                //roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.PING_UPDATE) {
                 PingUpdate pingUpdate = (PingUpdate) update;
                 String roomSecret = pingUpdate.getRoomSecret();

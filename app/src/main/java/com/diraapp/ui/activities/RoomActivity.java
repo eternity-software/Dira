@@ -32,8 +32,8 @@ import com.diraapp.api.updates.MessageReadUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
-import com.diraapp.api.updates.userstatus.Status;
-import com.diraapp.api.updates.userstatus.UserStatusUpdate;
+import com.diraapp.userstatus.Status;
+import com.diraapp.api.updates.UserStatusUpdate;
 import com.diraapp.api.views.UserStatus;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
@@ -53,9 +53,10 @@ import com.diraapp.ui.activities.resizer.FluidContentResizer;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.adapters.messages.RoomMessagesAdapter;
 import com.diraapp.ui.appearance.AppTheme;
-import com.diraapp.ui.appearance.ColorTheme;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.FilePreview;
+import com.diraapp.userstatus.UserStatusHandler;
+import com.diraapp.userstatus.UserStatusListener;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.EncryptionUtil;
 import com.diraapp.utils.SliderActivity;
@@ -74,7 +75,8 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 
-public class RoomActivity extends AppCompatActivity implements UpdateListener, ProcessorListener {
+public class RoomActivity extends AppCompatActivity
+        implements UpdateListener, ProcessorListener, UserStatusListener {
     private String roomSecret;
     private Room room;
     private RoomMessagesAdapter roomMessagesAdapter;
@@ -88,7 +90,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
 
     private boolean keepThread = true;
 
-    private ArrayList<Status> userStatusList = new ArrayList<>();
+    private AppTheme theme;
 
     public static void putRoomExtrasInIntent(Intent intent, String roomSecret, String roomName) {
         intent.putExtra(RoomSelectorActivity.PENDING_ROOM_SECRET, roomSecret);
@@ -112,6 +114,7 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
 
         UpdateProcessor.getInstance().addProcessorListener(this);
 
+        theme = AppTheme.getInstance();
         applyColorTheme();
 
         findViewById(R.id.button_back).setOnClickListener(new View.OnClickListener() {
@@ -240,13 +243,14 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                         recyclerView.setAdapter(roomMessagesAdapter);
                         roomMessagesAdapter.notifyDataSetChanged();
 
+                        updateUserStatus(roomSecret, UserStatusHandler.getInstance().getUserStatuses(roomSecret));
+
                     }
                 });
             }
         });
         loadMessagesHistory.start();
 
-        startUserStatusThread();
     }
 
 
@@ -439,10 +443,8 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                         }
 
                         TextView roomName = findViewById(R.id.room_name);
-                        TextView membersCount = findViewById(R.id.members_count);
+                        applyColorTheme();
 
-                        membersCount.setText(getString(R.string.members_count).replace("%s",
-                                String.valueOf(roomMessagesAdapter.getMembers().size() + 1)));
                         roomName.setText(room.getName());
                     }
                 });
@@ -562,22 +564,6 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
                 }
             });
 
-        } else if (update.getUpdateType() == UpdateType.USER_STATUS_UPDATE) {
-            // shit code
-            if (!update.getRoomSecret().equals(roomSecret)) return;
-
-            Status newStatus = ((UserStatusUpdate) update).getStatus();
-
-            if (newStatus.getUserId().equals(selfId)) return;
-
-            newStatus.setTime(System.currentTimeMillis() + Status.VISIBLE_TIME_MILLIS);
-            for (Status status: userStatusList) {
-                if (status.getUserStatus().equals(newStatus.getUserStatus())) {
-                    userStatusList.remove(status);
-                }
-            }
-            userStatusList.add(newStatus);
-            updateUserStatusTextView();
         }
     }
 
@@ -654,7 +640,8 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
 
     private void sendStatusRequest() {
         Thread statusRequestThread = new Thread(() -> {
-            SendUserStatusRequest request = new SendUserStatusRequest(selfId, UserStatus.TYPING);
+            SendUserStatusRequest request = new SendUserStatusRequest(
+                    new Status(UserStatus.TYPING, selfId, roomSecret));
             try {
                 UpdateProcessor.getInstance().sendRequest(request, roomSecret);
             } catch (UnablePerformRequestException e) {
@@ -664,65 +651,56 @@ public class RoomActivity extends AppCompatActivity implements UpdateListener, P
         statusRequestThread.start();
     }
 
-    private void startUserStatusThread() {
-        Thread userStatusThread = new Thread(() -> {
-            while (keepThread) {
-                if (userStatusList.size() == 0) {
-                    try {
-                        Thread.sleep(100);
-                        continue;
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+    public void updateUserStatus(String roomSecret, ArrayList<Status> usersStatusList) {
+        if (!roomSecret.equals(this.roomSecret)) return;
+        TextView membersCount = findViewById(R.id.members_count);
 
-                ArrayList<Status> listToDelete = new ArrayList<>();
-                long minTime = userStatusList.get(0).getTime();
-                listToDelete.add(userStatusList.get(0));
-                for (Status status: userStatusList) {
-                    if (status.getTime() < minTime) {
-                        listToDelete.clear();
-                        minTime = status.getTime();
-                        listToDelete.add(status);
-                    } else if (status.getTime() == minTime) {
-                        listToDelete.add(status);
-                    }
-                }
+        int size = usersStatusList.size();
+        String text;
 
-                long current = System.currentTimeMillis();
-                if (minTime < current) continue;
-                try {
-                    Thread.sleep(minTime - current);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+        if (size == 0) {
+            membersCount.setTextColor(theme.getColorTheme().getTextColor());
+            text = getString(R.string.members_count).replace("%s",
+                    String.valueOf(roomMessagesAdapter.getMembers().size() + 1));
+        } else {
+            membersCount.setTextColor(theme.getColorTheme().getAccentColor());
 
-                for (Status status: listToDelete) {
-                    userStatusList.remove(status);
-                }
+            int count = 3;
+            if (size < count) count = size;
 
-                runOnUiThread(this::updateUserStatusTextView);
+            String nickNames = "";
+            for (int i = 0; i < count; i++) {
+                Member member = roomMessagesAdapter.getMembers().get(usersStatusList.get(i).getUserId());
+                if (member == null) continue;
 
+                if (i != 0) nickNames = nickNames + ", ";
+
+                nickNames = nickNames + member.getNickname();
             }
-        });
-        userStatusThread.start();
-    }
 
-    private void updateUserStatusTextView() {
-        //
+            if (size == 1) {
+                text = getString(R.string.user_status_typing);
+            } else {
+                text = getString(R.string.users_status_typing);
+            }
+            text = text.replace("%s", nickNames);
+        }
+
+        String finalText = text;
+        runOnUiThread(() -> {
+            membersCount.setText(finalText);
+        });
     }
 
     private void applyColorTheme() {
-        ColorTheme theme = AppTheme.getInstance().getColorTheme();
-
         ImageView button_back = findViewById(R.id.button_back);
-        button_back.setColorFilter(theme.getAccentColor());
+        button_back.setColorFilter(theme.getColorTheme().getAccentColor());
 
         ImageView sendButton = findViewById(R.id.send_button);
-        sendButton.getBackground().setTint(theme.getAccentColor());
-        sendButton.setColorFilter(theme.getSendButtonColor());
+        sendButton.getBackground().setTint(theme.getColorTheme().getAccentColor());
+        sendButton.setColorFilter(theme.getColorTheme().getSendButtonColor());
 
         ImageView backgroundView = findViewById(R.id.room_background);
-        AppTheme.getInstance().getChatBackground().applyBackground(backgroundView);
+        theme.getChatBackground().applyBackground(backgroundView);
     }
 }

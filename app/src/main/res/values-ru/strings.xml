@@ -115,4 +115,6 @@
     <string name="key_generate_success">Ключ шифрования был обновлён</string>
     <string name="key_generate_time_error">Обновление ключа было отменено</string>
     <string name="key_generate_user_disconnected">Обновление ключа было прервано</string>
+    <string name="user_status_typing">%s печатает</string>
+    <string name="users_status_typing">%s печатают</string>
 </resources>

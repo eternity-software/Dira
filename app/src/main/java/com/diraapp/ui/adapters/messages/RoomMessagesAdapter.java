@@ -174,7 +174,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             messageAdapterListener.onFirstItemScrolled(message, position);
         }
 
-        if (!message.isRead()) {
+        if (!message.isRead() && message.getCustomClientData() == null) {
             message.setRead(true);
 
             MessageReadRequest request = new MessageReadRequest(selfId, System.currentTimeMillis(),

@@ -35,6 +35,9 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.adapters.RoomSelectorAdapter;
 import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.components.DiraPopup;
+import com.diraapp.userstatus.Status;
+import com.diraapp.userstatus.UserStatusHandler;
+import com.diraapp.userstatus.UserStatusListener;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.KeyGenerator;
 
@@ -42,7 +45,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class RoomSelectorActivity extends AppCompatActivity implements ProcessorListener, UpdateListener {
+public class RoomSelectorActivity extends AppCompatActivity
+        implements ProcessorListener, UpdateListener, UserStatusListener {
 
     public static final String PENDING_ROOM_SECRET = "pendingRoomSecret";
     public static final String PENDING_ROOM_NAME = "pendingRoomName";
@@ -132,7 +136,8 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
             canBackPress = getIntent().getExtras().getBoolean(CAN_BE_BACK_PRESSED);
         }
 
-
+        UserStatusHandler.getInstance().addListener(this);
+        UserStatusHandler.getInstance().startThread();
     }
 
     private void askForPermissions() {
@@ -274,6 +279,9 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
     protected void onDestroy() {
         super.onDestroy();
         UpdateProcessor.getInstance().removeUpdateListener(this);
+
+        UserStatusHandler.getInstance().removeListener(this);
+        UserStatusHandler.getInstance().killThread();
     }
 
     @Override
@@ -318,8 +326,11 @@ public class RoomSelectorActivity extends AppCompatActivity implements Processor
 
             roomList.add(index, updatedRoom);
             roomSelectorAdapter.notifyItemChanged(index);
-        } else if (update.getUpdateType() == UpdateType.USER_STATUS_UPDATE) {
-            //
         }
+    }
+
+    @Override
+    public void updateUserStatus(String secretName, ArrayList<Status> userStatusList) {
+        //
     }
 }
