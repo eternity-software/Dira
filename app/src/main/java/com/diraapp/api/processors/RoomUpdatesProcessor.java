@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.diraapp.api.requests.MessageReadRequest;
+import com.diraapp.api.requests.Request;
 import com.diraapp.api.updates.DhInitUpdate;
 import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.updates.MessageReadUpdate;
@@ -31,15 +32,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RoomUpdatesProcessor {
-
-    private static final long READ_REQUEST_DELAY = 100;
-
-    private HashMap<MessageReadRequest, String> retMessages = new HashMap<>(30);
+    private HashMap<Request, String> retMessages = new HashMap<>(30);
 
     private final RoomDao roomDao;
     private final MemberDao memberDao;
     private final MessageDao messageDao;
     private final Context context;
+
+    private Thread requestThread;
 
     public RoomUpdatesProcessor(RoomDao roomDao, MemberDao memberDao, MessageDao messageDao, Context context) {
         this.roomDao = roomDao;
@@ -47,7 +47,7 @@ public class RoomUpdatesProcessor {
         this.messageDao = messageDao;
         this.context = context;
 
-        initReadRequestThread();
+        initRequestThread();
     }
 
 
@@ -282,25 +282,28 @@ public class RoomUpdatesProcessor {
         UpdateProcessor.getInstance().notifyUpdateListeners(update);
     }
 
-    public void addMessageToRequestList(MessageReadRequest request, String address) {
+    public void addMessageToRequestList(Request request, String address) {
         retMessages.put(request, address);
+
+        if (requestThread == null) {
+            initRequestThread();
+            requestThread.start();
+        } else if (!requestThread.isAlive()) {
+            initRequestThread();
+            requestThread.start();
+        }
     }
 
-    private void initReadRequestThread() {
-        Thread thread = new Thread(() -> {
+    private void initRequestThread() {
+        requestThread = new Thread(() -> {
             while (true) {
                 if (retMessages.size() == 0) {
-                    try {
-                        Thread.sleep(READ_REQUEST_DELAY);
-                        continue;
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    break;
                 }
 
-                HashMap<MessageReadRequest, String> map = new HashMap<>(retMessages);
+                HashMap<Request, String> map = new HashMap<>(retMessages);
 
-                for (Map.Entry<MessageReadRequest, String> entry: map.entrySet()) {
+                for (Map.Entry<Request, String> entry: map.entrySet()) {
                     try {
                         UpdateProcessor.getInstance().sendRequest(entry.getKey(), entry.getValue());
                     } catch (UnablePerformRequestException e) {
@@ -310,7 +313,6 @@ public class RoomUpdatesProcessor {
                 }
             }
         });
-        thread.start();
     }
 
 }

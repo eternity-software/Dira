@@ -31,10 +31,8 @@ public enum RequestType {
     SEND_INTERMEDIATE_KEY,
     @SerializedName("13")
     SUBMIT_KEY,
-
     @SerializedName("14")
     MESSAGE_READ,
-
     @SerializedName("15")
     USER_STATUS_REQUEST
 }

@@ -1,6 +1,5 @@
 package com.diraapp.api.updates;
 
-import com.diraapp.api.updates.userstatus.UserStatusUpdate;
 import com.google.gson.Gson;
 
 public class UpdateDeserializer {

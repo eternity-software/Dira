@@ -1,4 +1,4 @@
-package com.diraapp.api.updates.userstatus;
+package com.diraapp.userstatus;
 
 import com.diraapp.api.views.UserStatus;
 
@@ -12,11 +12,18 @@ public class Status {
 
     private final String userId;
 
+    private final String secretName;
+
     private long time;
 
-    public Status(UserStatus userStatus, String userId) {
+    public Status(UserStatus userStatus, String userId, String secretName) {
         this.userStatus = userStatus;
         this.userId = userId;
+        this.secretName = secretName;
+    }
+
+    public String getSecretName() {
+        return secretName;
     }
 
     public UserStatus getUserStatus() {

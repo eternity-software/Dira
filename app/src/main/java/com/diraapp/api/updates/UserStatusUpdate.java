@@ -1,7 +1,6 @@
-package com.diraapp.api.updates.userstatus;
+package com.diraapp.api.updates;
 
-import com.diraapp.api.updates.Update;
-import com.diraapp.api.updates.UpdateType;
+import com.diraapp.userstatus.Status;
 
 public class UserStatusUpdate extends Update {
 
