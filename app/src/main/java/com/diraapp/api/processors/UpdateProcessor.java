@@ -210,15 +210,10 @@ public class UpdateProcessor {
             } else if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
                 roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.DIFFIE_HELLMAN_INIT_UPDATE) {
+                roomUpdatesProcessor.updateRoom(update);
                 diraKeyProtocol.onDiffieHellmanInit((DhInitUpdate) update);
-            //   roomUpdatesProcessor.updateRoom(update);
-            } else if (update.getUpdateType() == UpdateType.KEY_RECEIVED_UPDATE) {
-                diraKeyProtocol.onIntermediateKey((KeyReceivedUpdate) update);
-                //  roomUpdatesProcessor.updateRoom(update);
-            } else if (update.getUpdateType() == UpdateType.RENEWING_CANCEL) {
-                diraKeyProtocol.onKeyCancel((RenewingCancelUpdate) update);
-             //   roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.RENEWING_CONFIRMED) {
+                roomUpdatesProcessor.updateRoom(update);
                 diraKeyProtocol.onKeyConfirmed((RenewingConfirmUpdate) update);
 
                 System.out.println("Dhinit update - " + message);
@@ -226,20 +221,15 @@ public class UpdateProcessor {
                 // Exactly this thing breaks key generation
                 // Don't know why
 
-                //roomUpdatesProcessor.updateRoom(update, true);
-            } else if (update.getUpdateType() == UpdateType.KEY_RECEIVED_UPDATE) {
-                diraKeyProtocol.onIntermediateKey((KeyReceivedUpdate) update);
-                System.out.println("KeyReceived update - " + message);
-                // roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.RENEWING_CANCEL) {
+                roomUpdatesProcessor.updateRoom(update);
                 diraKeyProtocol.onKeyCancel((RenewingCancelUpdate) update);
                 System.out.println("Cancel update - " + message);
-                //roomUpdatesProcessor.updateRoom(update);
-            } else if (update.getUpdateType() == UpdateType.RENEWING_CONFIRMED) {
-                diraKeyProtocol.onKeyConfirmed((RenewingConfirmUpdate) update);
-                System.out.println("Confirmed update - " + message);
-                //roomUpdatesProcessor.updateRoom(update);
-            } else if (update.getUpdateType() == UpdateType.PING_UPDATE) {
+            }else if (update.getUpdateType() == UpdateType.KEY_RECEIVED_UPDATE) {
+                diraKeyProtocol.onIntermediateKey((KeyReceivedUpdate) update);
+                System.out.println("KeyReceived update - " + message);
+                // roomUpdatesProcessor.updateRoom(update, true);
+            }  else if (update.getUpdateType() == UpdateType.PING_UPDATE) {
                 PingUpdate pingUpdate = (PingUpdate) update;
                 String roomSecret = pingUpdate.getRoomSecret();
 

@@ -39,15 +39,11 @@ public class RoomUpdatesProcessor {
     private final MessageDao messageDao;
     private final Context context;
 
-    private Thread requestThread;
-
     public RoomUpdatesProcessor(RoomDao roomDao, MemberDao memberDao, MessageDao messageDao, Context context) {
         this.roomDao = roomDao;
         this.memberDao = memberDao;
         this.messageDao = messageDao;
         this.context = context;
-
-        initRequestThread();
     }
 
 
@@ -115,7 +111,12 @@ public class RoomUpdatesProcessor {
      *
      * @param update
      */
+
     public void updateRoom(Update update) throws OldUpdateException {
+        updateRoom(update, false);
+    }
+
+    public void updateRoom(Update update, boolean ignoreUpdateId) throws OldUpdateException {
         Message newMessage = null;
 
         String roomSecret = update.getRoomSecret();
@@ -129,9 +130,10 @@ public class RoomUpdatesProcessor {
         if (room != null) {
 
             compareStartupTimes(room);
-            if (room.getLastUpdateId() < update.getUpdateId()) {
-                room.setLastUpdateId(update.getUpdateId());
-
+            if (room.getLastUpdateId() < update.getUpdateId() || ignoreUpdateId) {
+                if (!ignoreUpdateId) {
+                    room.setLastUpdateId(update.getUpdateId());
+                }
 
                 if (update instanceof RoomUpdate) {
                     String oldName = room.getName();
@@ -280,39 +282,6 @@ public class RoomUpdatesProcessor {
         messageDao.update(message);
 
         UpdateProcessor.getInstance().notifyUpdateListeners(update);
-    }
-
-    public void addMessageToRequestList(Request request, String address) {
-        retMessages.put(request, address);
-
-        if (requestThread == null) {
-            initRequestThread();
-            requestThread.start();
-        } else if (!requestThread.isAlive()) {
-            initRequestThread();
-            requestThread.start();
-        }
-    }
-
-    private void initRequestThread() {
-        requestThread = new Thread(() -> {
-            while (true) {
-                if (retMessages.size() == 0) {
-                    break;
-                }
-
-                HashMap<Request, String> map = new HashMap<>(retMessages);
-
-                for (Map.Entry<Request, String> entry: map.entrySet()) {
-                    try {
-                        UpdateProcessor.getInstance().sendRequest(entry.getKey(), entry.getValue());
-                    } catch (UnablePerformRequestException e) {
-                        e.printStackTrace();
-                    }
-                    retMessages.remove(entry.getKey());
-                }
-            }
-        });
     }
 
 }

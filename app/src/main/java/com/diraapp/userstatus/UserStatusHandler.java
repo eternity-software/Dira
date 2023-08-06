@@ -74,6 +74,7 @@ public class UserStatusHandler implements UpdateListener {
     private void initUserStatusThread() {
         statusThread = new Thread(() -> {
             ArrayList<Status> listToDelete = new ArrayList<>();
+            System.out.println("User status thread started");
             long minTime = -1;
             while (true) {
                 ArrayList<Status> userStatusList = new ArrayList<>(userStatuses);
@@ -116,6 +117,7 @@ public class UserStatusHandler implements UpdateListener {
     public void onUpdate(Update update) {
         if (update.getUpdateType() == UpdateType.USER_STATUS_UPDATE) {
             Status status = ((UserStatusUpdate) update).getStatus();
+            status.setTime(System.currentTimeMillis() + Status.VISIBLE_TIME_MILLIS);
             userStatuses.add(status);
             notifyListeners(status.getSecretName());
             startThread();

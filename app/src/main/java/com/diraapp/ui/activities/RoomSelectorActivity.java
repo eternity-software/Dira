@@ -125,7 +125,7 @@ public class RoomSelectorActivity extends AppCompatActivity
         UpdateProcessor.getInstance(getApplicationContext()).addProcessorListener(this);
         UpdateProcessor.getInstance(getApplicationContext()).addUpdateListener(this);
 
-        updateRooms();
+        updateRooms(true);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             askForPermissions();
@@ -191,6 +191,10 @@ public class RoomSelectorActivity extends AppCompatActivity
     }
 
     private void updateRooms() {
+        updateRooms(false);
+    }
+
+    private void updateRooms(boolean updateRooms) {
         if (isRoomsUpdating) return;
         isRoomsUpdating = true;
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
@@ -202,12 +206,12 @@ public class RoomSelectorActivity extends AppCompatActivity
                 for (Room room : new ArrayList<>(roomList)) {
                     Message message = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getMessageById(room.getLastMessageId());
                     room.setMessage(message);
-                    try {
-
-                        UpdateProcessor.getInstance().sendRequest(new GetUpdatesRequest(room.getSecretName(), room.getLastUpdateId()), room.getServerAddress());
-                    } catch (Exception ignored) {
-                        ignored.printStackTrace();
-
+                    if (updateRooms) {
+                        try {
+                            UpdateProcessor.getInstance().sendRequest(new GetUpdatesRequest(room.getSecretName(), room.getLastUpdateId()), room.getServerAddress());
+                        } catch (Exception ignored) {
+                            ignored.printStackTrace();
+                        }
                     }
                 }
                 runOnUiThread(new Runnable() {
@@ -230,7 +234,7 @@ public class RoomSelectorActivity extends AppCompatActivity
         super.onResume();
 
 
-        updateRooms();
+        updateRooms(true);
         ImageView imageView = findViewById(R.id.profile_picture);
         String picPath = cacheUtils.getString(CacheUtils.PICTURE);
         if (picPath != null) imageView.setImageBitmap(AppStorage.getBitmapFromPath(picPath));

@@ -639,8 +639,11 @@ public class RoomActivity extends AppCompatActivity
         SendUserStatusRequest request = new SendUserStatusRequest(
                 new Status(UserStatus.TYPING, selfId, roomSecret));
 
-        UpdateProcessor.getInstance().getRoomUpdatesProcessor().addMessageToRequestList
-                (request, room.getServerAddress());
+        try {
+            UpdateProcessor.getInstance().sendRequest(request, room.getServerAddress());
+        } catch (UnablePerformRequestException e) {
+            e.printStackTrace();
+        }
     }
 
     public void updateUserStatus(String roomSecret, ArrayList<Status> usersStatusList) {

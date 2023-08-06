@@ -31,6 +31,7 @@ import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientDat
 import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
+import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DownloadHandler;
 import com.diraapp.storage.attachments.AttachmentsStorage;
@@ -70,8 +71,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private ColorTheme theme;
     private final List<AttachmentsStorageListener> listeners = new ArrayList<>();
     private final CacheUtils cacheUtils;
-    private final HashMap<View, Integer> pendingAsyncOperations = new HashMap<>();
-
     private final HashMap<String, Bitmap> loadedBitmaps = new HashMap<>();
     private final String secretName;
     private final String serverAddress;
@@ -174,15 +173,20 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         {
             messageAdapterListener.onFirstItemScrolled(message, position);
         }
-
         if (!message.isRead() && message.getCustomClientData() == null) {
-            message.setRead(true);
+            if (!message.getAuthorId().equals(selfId)) {
+                message.setRead(true);
 
-            MessageReadRequest request = new MessageReadRequest(selfId, System.currentTimeMillis(),
-                    message.getId(), message.getRoomSecret());
-            UpdateProcessor.getInstance().getRoomUpdatesProcessor().
-                    addMessageToRequestList(request, serverAddress);
+                MessageReadRequest request = new MessageReadRequest(selfId, System.currentTimeMillis(),
+                        message.getId(), message.getRoomSecret());
+                try {
+                    UpdateProcessor.getInstance().sendRequest(request, serverAddress);
+                } catch (UnablePerformRequestException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+
 
         if (message.getText() == null) {
             holder.messageText.setVisibility(View.GONE);
