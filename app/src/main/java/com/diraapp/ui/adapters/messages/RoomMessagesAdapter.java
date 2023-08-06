@@ -564,8 +564,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             if (isSelfMessage) {
                 holder.sizeText.setTextColor(theme.getSelfLinkColor());
                 holder.attachmentTooLargeText.setTextColor(theme.getSelfTextColor());
-                holder.buttonDownload.getBackground().setTint(theme.getDownloadButtonColor());
-                holder.buttonDownload.setTextColor(theme.getDownloadButtonColor());
+                holder.buttonDownload.getBackground().setTint(theme.getSelfDownButtonColor());
+                holder.buttonDownload.setTextColor(theme.getSelfDownloadButtonTextColor());
             } else {
                 holder.sizeText.setTextColor(theme.getRoomLickColor());
                 holder.attachmentTooLargeText.setTextColor(theme.getTextColor());

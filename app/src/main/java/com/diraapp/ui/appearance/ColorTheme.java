@@ -30,6 +30,9 @@ public class ColorTheme {
 
     private int downloadButtonTextColor;
     private int downloadButtonColor;
+
+    private int selfDownloadButtonTextColor;
+    private int selfDownButtonColor;
     private String name;
 
     public static void initColorThemes(Context context) {
@@ -45,6 +48,8 @@ public class ColorTheme {
         main.selfLinkColor = ContextCompat.getColor(context, R.color.accent_dark);
         main.downloadButtonTextColor = ContextCompat.getColor(context, R.color.white);
         main.downloadButtonColor = ContextCompat.getColor(context, R.color.dark);
+        main.selfDownloadButtonTextColor = ContextCompat.getColor(context, R.color.accent);
+        main.selfDownButtonColor = ContextCompat.getColor(context, R.color.dark);
         main.roomUpdateMessageColor = ContextCompat.getColor(context, R.color.gray);
         main.name = context.getResources().getString(R.string.theme_main);
         main.type = ColorThemeType.DIRA;
@@ -61,6 +66,8 @@ public class ColorTheme {
         kitty.selfLinkColor = ContextCompat.getColor(context, R.color.light_gray);
         kitty.downloadButtonTextColor = ContextCompat.getColor(context, R.color.white);
         kitty.downloadButtonColor = ContextCompat.getColor(context, R.color.dark);
+        kitty.selfDownloadButtonTextColor = ContextCompat.getColor(context, R.color.white);
+        kitty.selfDownButtonColor = ContextCompat.getColor(context, R.color.dark);
         kitty.roomUpdateMessageColor = ContextCompat.getColor(context, R.color.light_gray);
         kitty.name = context.getResources().getString(R.string.theme_kitty);
         kitty.type = ColorThemeType.KITTY;
@@ -77,6 +84,8 @@ public class ColorTheme {
         blue.selfLinkColor = ContextCompat.getColor(context, R.color.light_gray);
         blue.downloadButtonTextColor = ContextCompat.getColor(context, R.color.white);
         blue.downloadButtonColor = ContextCompat.getColor(context, R.color.blue_accent);
+        blue.selfDownloadButtonTextColor = ContextCompat.getColor(context, R.color.white);
+        blue.selfDownButtonColor = ContextCompat.getColor(context, R.color.blue_accent);
         blue.roomUpdateMessageColor = ContextCompat.getColor(context, R.color.light_gray);
         blue.name = context.getResources().getString(R.string.theme_blue);
         blue.type = ColorThemeType.BLUE;
@@ -93,6 +102,8 @@ public class ColorTheme {
         rock.selfLinkColor = ContextCompat.getColor(context, R.color.light_gray);
         rock.downloadButtonTextColor = ContextCompat.getColor(context, R.color.white);
         rock.downloadButtonColor = ContextCompat.getColor(context, R.color.dark);
+        rock.selfDownloadButtonTextColor = ContextCompat.getColor(context, R.color.white);
+        rock.selfDownButtonColor = ContextCompat.getColor(context, R.color.dark);
         rock.roomUpdateMessageColor = ContextCompat.getColor(context, R.color.light_gray);
         rock.name = context.getResources().getString(R.string.theme_rock);
         rock.type = ColorThemeType.ROCK;
@@ -109,6 +120,8 @@ public class ColorTheme {
         green.selfLinkColor = ContextCompat.getColor(context, R.color.light_gray);
         green.downloadButtonTextColor = ContextCompat.getColor(context, R.color.white);
         green.downloadButtonColor = ContextCompat.getColor(context, R.color.dark);
+        green.selfDownloadButtonTextColor = ContextCompat.getColor(context, R.color.white);
+        green.selfDownButtonColor = ContextCompat.getColor(context, R.color.dark);
         green.roomUpdateMessageColor = ContextCompat.getColor(context, R.color.light_gray);
         green.name = context.getResources().getString(R.string.theme_green);
         green.type = ColorThemeType.GREEN;
@@ -198,5 +211,13 @@ public class ColorTheme {
 
     public int getRoomUpdateMessageColor() {
         return roomUpdateMessageColor;
+    }
+
+    public int getSelfDownloadButtonTextColor() {
+        return selfDownloadButtonTextColor;
+    }
+
+    public int getSelfDownButtonColor() {
+        return selfDownButtonColor;
     }
 }

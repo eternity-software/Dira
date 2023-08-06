@@ -215,12 +215,7 @@ public class UpdateProcessor {
             } else if (update.getUpdateType() == UpdateType.RENEWING_CONFIRMED) {
                 roomUpdatesProcessor.updateRoom(update);
                 diraKeyProtocol.onKeyConfirmed((RenewingConfirmUpdate) update);
-
                 System.out.println("Dhinit update - " + message);
-
-                // Exactly this thing breaks key generation
-                // Don't know why
-
             } else if (update.getUpdateType() == UpdateType.RENEWING_CANCEL) {
                 roomUpdatesProcessor.updateRoom(update);
                 diraKeyProtocol.onKeyCancel((RenewingCancelUpdate) update);

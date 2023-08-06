@@ -113,10 +113,6 @@ public class RoomUpdatesProcessor {
      */
 
     public void updateRoom(Update update) throws OldUpdateException {
-        updateRoom(update, false);
-    }
-
-    public void updateRoom(Update update, boolean ignoreUpdateId) throws OldUpdateException {
         Message newMessage = null;
 
         String roomSecret = update.getRoomSecret();
@@ -130,10 +126,8 @@ public class RoomUpdatesProcessor {
         if (room != null) {
 
             compareStartupTimes(room);
-            if (room.getLastUpdateId() < update.getUpdateId() || ignoreUpdateId) {
-                if (!ignoreUpdateId) {
-                    room.setLastUpdateId(update.getUpdateId());
-                }
+            if (room.getLastUpdateId() < update.getUpdateId()) {
+                room.setLastUpdateId(update.getUpdateId());
 
                 if (update instanceof RoomUpdate) {
                     String oldName = room.getName();
