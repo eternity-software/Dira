@@ -78,6 +78,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private HashMap<String, Member> members = new HashMap<>();
 
     private final long maxAutoLoadSize;
+    private String firstLoadedId;
 
     private MessageAdapterListener messageAdapterListener;
 
@@ -172,8 +173,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         if(position == messages.size() - 1)
         {
             messageAdapterListener.onFirstItemScrolled(message, position);
+
         }
         if (!message.isRead() && message.getCustomClientData() == null) {
+            if(message.getAuthorId() == null) return;
             if (!message.getAuthorId().equals(selfId)) {
                 message.setRead(true);
 
@@ -450,7 +453,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.roomUpdatesLayout.setVisibility(View.VISIBLE);
 
         holder.nicknameText.setVisibility(View.GONE);
-        holder.pictureContainer.setVisibility(View.GONE);
+        holder.pictureContainer.setVisibility(View.VISIBLE);
+
+        Picasso.get().load(new File(room.getImagePath())).into(holder.profilePicture);
+
         holder.emojiText.setVisibility(View.GONE);
         holder.messageText.setVisibility(View.GONE);
         holder.roomUpdatesText.setVisibility(View.GONE);

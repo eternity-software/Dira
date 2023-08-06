@@ -73,7 +73,7 @@
 
                     android:fontFamily="@font/montserratbold"
                     android:paddingHorizontal="3dp"
-                    android:paddingVertical="5dp"
+                    android:paddingBottom="5dp"
                     android:text="Author"
                     android:textColor="@color/white"
 
@@ -236,6 +236,7 @@
                                         android:layout_height="match_parent"
                                         android:background="@color/accent"
                                         android:padding="6dp"
+                                        android:scaleType="fitXY"
                                         android:src="@drawable/ic_room_updates"
                                         app:tint="@color/dark" />
 
@@ -316,8 +317,8 @@
                         android:backgroundTint="@color/gray_trans"
                         android:fontFamily="@font/montserratsemibold"
                         android:gravity="bottom"
-                        android:padding="5dp"
-                        android:paddingBottom="5dp"
+                        android:paddingVertical="2dp"
+                        android:paddingHorizontal="6dp"
                         android:text="00:00"
                         android:textColor="@color/white"
                         android:textSize="11sp" />

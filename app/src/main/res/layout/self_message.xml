@@ -41,7 +41,7 @@
             android:gravity="end"
             android:orientation="horizontal"
             android:paddingLeft="60dp"
-            android:paddingRight="15dp">
+            android:paddingRight="4dp">
 
             <TextView
                 android:id="@+id/time_view"
@@ -55,7 +55,8 @@
                 android:backgroundTint="@color/gray_trans"
                 android:fontFamily="@font/montserratsemibold"
                 android:gravity="bottom"
-                android:padding="5dp"
+                android:paddingVertical="2dp"
+                android:paddingHorizontal="6dp"
                 android:text="00:00"
                 android:textColor="@color/white"
 

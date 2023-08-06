@@ -1,6 +1,7 @@
 package com.diraapp.ui.activities;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -231,6 +232,7 @@ public class RoomActivity extends AppCompatActivity
 
                 messageList = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getLastMessagesInRoom(roomSecret);
                 roomMessagesAdapter.setMessages(messageList);
+                loadMembers();
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -600,8 +602,9 @@ public class RoomActivity extends AppCompatActivity
                        }
                    });
 
-                   loadMembers();
+
            if(roomMessagesAdapter == null) return;
+           loadMembers();
            roomMessagesAdapter.setRoom(room);
        });
        updateRoom.start();
@@ -692,7 +695,7 @@ public class RoomActivity extends AppCompatActivity
         button_back.setColorFilter(theme.getColorTheme().getAccentColor());
 
         ImageView sendButton = findViewById(R.id.send_button);
-        sendButton.getBackground().setTint(theme.getColorTheme().getAccentColor());
+        sendButton.getBackground().setColorFilter(theme.getColorTheme().getAccentColor(), PorterDuff.Mode.SRC_IN);
         sendButton.setColorFilter(theme.getColorTheme().getSendButtonColor());
 
         ImageView backgroundView = findViewById(R.id.room_background);
