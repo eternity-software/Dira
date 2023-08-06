@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -530,7 +531,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     private void applyRoomUpdateMessagesColorTheme(ViewHolder holder) {
-        holder.messageContainer.getBackground().setTint(theme.getMessageColor());
+        holder.messageContainer.getBackground().setColorFilter(theme.getMessageColor(), PorterDuff.Mode.SRC_IN);
         holder.roomUpdatesMainText.setTextColor(theme.getTextColor());
         holder.roomUpdatesText.setTextColor(theme.getRoomUpdateMessageColor());
     }
@@ -540,8 +541,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         if (bitmap == null) {
             holder.roomUpdatesIcon.setImageDrawable(context.getDrawable(R.drawable.placeholder));
             holder.roomUpdatesIcon.setImageTintList(null);
-            holder.roomUpdatesIcon.getBackground().setTintList(ColorStateList.valueOf(context.
-                    getResources().getColor(R.color.dark)));
+            holder.roomUpdatesIcon.getBackground().setColorFilter(context.
+                    getResources().getColor(R.color.dark), PorterDuff.Mode.SRC_IN);
         } else {
             holder.roomUpdatesIcon.setImageBitmap(bitmap);
             holder.roomUpdatesIcon.setImageTintList(null);
@@ -551,31 +552,30 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private void applyDefaultIconOnUpdateMessage(ViewHolder holder) {
         holder.roomUpdatesIcon.setImageTintList(ColorStateList.valueOf(
                 AppTheme.getInstance().getColorTheme().getTextColor()));
-        holder.roomUpdatesIcon.getBackground().setTintList(ColorStateList.valueOf(
-                AppTheme.getInstance().getColorTheme().getMessageColor()));
+        holder.roomUpdatesIcon.getBackground().setColorFilter(AppTheme.getInstance().getColorTheme().getMessageColor(), PorterDuff.Mode.SRC_IN);
     }
 
     private void applyUserMessageColorTheme(ViewHolder holder, boolean isSelfMessage) {
         if (isSelfMessage) {
             holder.messageText.setTextColor(theme.getSelfTextColor());
             holder.messageText.setLinkTextColor(theme.getSelfLinkColor());
-            holder.messageContainer.getBackground().setTint(theme.getSelfMessageColor());
+            holder.messageContainer.getBackground().setColorFilter(theme.getSelfMessageColor(), PorterDuff.Mode.SRC_IN);
         } else {
             holder.messageText.setTextColor(theme.getTextColor());
             holder.messageText.setLinkTextColor(theme.getRoomLickColor());
-            holder.messageContainer.getBackground().setTint(theme.getMessageColor());
+            holder.messageContainer.getBackground().setColorFilter(theme.getMessageColor(), PorterDuff.Mode.SRC_IN);
         }
 
         if (holder.sizeContainer.getVisibility() == View.VISIBLE) {
             if (isSelfMessage) {
                 holder.sizeText.setTextColor(theme.getSelfLinkColor());
                 holder.attachmentTooLargeText.setTextColor(theme.getSelfTextColor());
-                holder.buttonDownload.getBackground().setTint(theme.getSelfDownButtonColor());
+                holder.buttonDownload.getBackground().setColorFilter(theme.getSelfDownButtonColor(), PorterDuff.Mode.SRC_IN);
                 holder.buttonDownload.setTextColor(theme.getSelfDownloadButtonTextColor());
             } else {
                 holder.sizeText.setTextColor(theme.getRoomLickColor());
                 holder.attachmentTooLargeText.setTextColor(theme.getTextColor());
-                holder.buttonDownload.getBackground().setTint(theme.getDownloadButtonColor());
+                holder.buttonDownload.getBackground().setColorFilter(theme.getDownloadButtonColor(), PorterDuff.Mode.SRC_IN);
                 holder.buttonDownload.setTextColor(theme.getDownloadButtonTextColor());
             }
 

@@ -328,8 +328,8 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
     private void applyColorTheme() {
         ColorTheme theme = AppTheme.getInstance().getColorTheme();
 
-        ImageView button_back = findViewById(R.id.button_back);
-        button_back.setColorFilter(theme.getAccentColor());
+        ImageView buttonBack = findViewById(R.id.button_back);
+        buttonBack.setColorFilter(theme.getAccentColor());
     }
 
     private void initNotificationButton() {

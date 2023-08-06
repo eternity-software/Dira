@@ -626,7 +626,7 @@ public class RoomActivity extends AppCompatActivity
                     sendStatusRequest();
                 } else if (userStatus.getUserStatus() != UserStatus.TYPING) {
                     sendStatusRequest();
-                } else if (userStatus.getTime() - System.currentTimeMillis() > Status.REQUEST_DELAY) {
+                } else if (System.currentTimeMillis() - userStatus.getTime() > Status.REQUEST_DELAY) {
                     sendStatusRequest();
                 }
             }
@@ -639,8 +639,9 @@ public class RoomActivity extends AppCompatActivity
     }
 
     private void sendStatusRequest() {
-        SendUserStatusRequest request = new SendUserStatusRequest(
-                new Status(UserStatus.TYPING, selfId, roomSecret));
+        userStatus = new Status(UserStatus.TYPING, selfId, roomSecret);
+        SendUserStatusRequest request = new SendUserStatusRequest(userStatus);
+        userStatus.setTime(System.currentTimeMillis());
 
         try {
             UpdateProcessor.getInstance().sendRequest(request, room.getServerAddress());
@@ -657,7 +658,7 @@ public class RoomActivity extends AppCompatActivity
         String text;
 
         if (size == 0) {
-            membersCount.setTextColor(theme.getColorTheme().getTextColor());
+            membersCount.setTextColor(ContextCompat.getColor(this, R.color.medium_light_light_gray));
             text = getString(R.string.members_count).replace("%s",
                     String.valueOf(roomMessagesAdapter.getMembers().size() + 1));
         } else {
@@ -691,8 +692,8 @@ public class RoomActivity extends AppCompatActivity
     }
 
     private void applyColorTheme() {
-        ImageView button_back = findViewById(R.id.button_back);
-        button_back.setColorFilter(theme.getColorTheme().getAccentColor());
+        ImageView buttonBack = findViewById(R.id.button_back);
+        buttonBack.setColorFilter(theme.getColorTheme().getAccentColor());
 
         ImageView sendButton = findViewById(R.id.send_button);
         sendButton.getBackground().setColorFilter(theme.getColorTheme().getAccentColor(), PorterDuff.Mode.SRC_IN);
