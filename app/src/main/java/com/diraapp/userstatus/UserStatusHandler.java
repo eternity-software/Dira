@@ -106,7 +106,7 @@ public class UserStatusHandler implements UpdateListener {
                 }
 
                 for (Status status: listToDelete) {
-                    userStatusList.remove(status);
+                    userStatuses.remove(status);
                     notifyListeners(status.getSecretName());
                 }
             }

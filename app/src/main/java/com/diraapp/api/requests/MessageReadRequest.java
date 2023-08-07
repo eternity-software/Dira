@@ -41,4 +41,8 @@ public class MessageReadRequest extends Request {
     public void setMessageId(String messageId) {
         this.messageId = messageId;
     }
+
+    public String getRoomSecret() {
+        return roomSecret;
+    }
 }

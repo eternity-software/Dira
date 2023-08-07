@@ -28,6 +28,7 @@ import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -263,10 +264,12 @@ public class RoomUpdatesProcessor {
             Room room = roomDao.getRoomBySecretName(update.getRoomSecret());
             int index = room.getUnreadMessagesIds().indexOf(message.getId());
 
+            ArrayList<String> toDelete = new ArrayList<>();
             if (index != -1) {
                 for (int i = 0; i <= index; i++) {
-                    room.getUnreadMessagesIds().remove(i);
+                    toDelete.add(room.getUnreadMessagesIds().get(i));
                 }
+                room.getUnreadMessagesIds().removeAll(toDelete);
                 roomDao.update(room);
             }
 
