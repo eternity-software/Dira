@@ -393,7 +393,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                 diraMediaPlayer.setDataSource(file.getPath());
 
 
-                                diraMediaPlayer.prepare();
+                                diraMediaPlayer.prepareAsync();
 
                                 diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                                     @Override
@@ -459,7 +459,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                 diraMediaPlayer.reset();
                                 diraMediaPlayer.setDataSource(file.getPath());
 
-                                diraMediaPlayer.prepare();
+                                diraMediaPlayer.prepareAsync();
 
                                 diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                                     @Override
@@ -501,10 +501,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         });
     }
 
-    public void unregisterListeners() {
+    public void release() {
         for (AttachmentsStorageListener attachmentsStorageListener : listeners) {
             AttachmentsStorage.removeAttachmentsStorageListener(attachmentsStorageListener);
         }
+        diraMediaPlayer.release();
+        diraMediaPlayer.reset();
+
     }
 
     public HashMap<String, Member> getMembers() {

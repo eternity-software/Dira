@@ -82,10 +82,7 @@ import com.diraapp.media.SoundRecorder;
 import com.otaliastudios.cameraview.CameraListener;
 import com.otaliastudios.cameraview.CameraOptions;
 import com.otaliastudios.cameraview.VideoResult;
-import com.otaliastudios.cameraview.controls.Facing;
 import com.otaliastudios.cameraview.controls.Mode;
-import com.otaliastudios.cameraview.size.AspectRatio;
-import com.otaliastudios.cameraview.size.SizeSelectors;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -570,7 +567,7 @@ public class RoomActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        roomMessagesAdapter.unregisterListeners();
+        roomMessagesAdapter.release();
         UpdateProcessor.getInstance().removeUpdateListener(this);
         UpdateProcessor.getInstance().removeProcessorListener(this);
     }
