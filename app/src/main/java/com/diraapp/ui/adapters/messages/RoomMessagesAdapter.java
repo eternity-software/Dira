@@ -12,7 +12,6 @@ import android.graphics.PorterDuff;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -80,8 +79,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
@@ -94,7 +91,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final String selfId;
     private final Activity context;
     private Room room;
-    private DiraMediaPlayer mMediaPlayer = new DiraMediaPlayer();
+    private DiraMediaPlayer diraMediaPlayer = new DiraMediaPlayer();
 
     private ColorTheme theme;
     private final List<AttachmentsStorageListener> listeners = new ArrayList<>();
@@ -373,6 +370,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                         e.printStackTrace();
                     }
                     VideoPlayer finalVideoPlayer = videoPlayer;
+                    VideoPlayer finalVideoPlayer1 = videoPlayer;
                     videoPlayer.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -385,9 +383,29 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                             }
                             else
                             {
-                                finalVideoPlayer.setProgress(0);
-                                finalVideoPlayer.setVolume(1);
 
+                                try {
+                                    if(diraMediaPlayer.isPlaying())
+                                    {
+                                        diraMediaPlayer.stop();
+                                    }
+                                    diraMediaPlayer.reset();
+                                diraMediaPlayer.setDataSource(file.getPath());
+
+
+                                diraMediaPlayer.prepare();
+
+                                diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                    @Override
+                                    public void onPrepared(MediaPlayer mp) {
+                                        diraMediaPlayer.start();
+                                        finalVideoPlayer1.setProgress(0);
+
+                                    }
+                                    });
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     });
@@ -434,16 +452,16 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                         public void onClick(View v) {
 
                             try {
-                                if(mMediaPlayer.isPlaying())
+                                if(diraMediaPlayer.isPlaying())
                                 {
-                                    mMediaPlayer.stop();
+                                    diraMediaPlayer.stop();
                                 }
-                                mMediaPlayer.reset();
-                                mMediaPlayer.setDataSource(file.getPath());
+                                diraMediaPlayer.reset();
+                                diraMediaPlayer.setDataSource(file.getPath());
 
-                                mMediaPlayer.prepare();
-                                mMediaPlayer.start();
-                                mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                diraMediaPlayer.prepare();
+                                diraMediaPlayer.start();
+                                diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                                     @Override
                                     public void onPrepared(MediaPlayer mp) {
                                         holder.waveformSeekBar.setOnProgressChanged(new SeekBarOnProgressChanged() {
@@ -451,18 +469,18 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                             public void onProgressChanged(@NonNull WaveformSeekBar waveformSeekBar, float v, boolean fromUser) {
                                                 if(fromUser)
                                                 {
-                                                    mMediaPlayer.setProgress(v / 10);
+                                                    diraMediaPlayer.setProgress(v / 10);
                                                 }
                                             }
                                         });
 
-                                        mMediaPlayer.setOnProgressTick(new Runnable() {
+                                        diraMediaPlayer.setOnProgressTick(new Runnable() {
                                             @Override
                                             public void run() {
                                                 context.runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        holder.waveformSeekBar.setProgress(10 * mMediaPlayer.getProgress());
+                                                        holder.waveformSeekBar.setProgress(10 * diraMediaPlayer.getProgress());
                                                     }
                                                 });
                                             }
