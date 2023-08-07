@@ -460,10 +460,11 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                 diraMediaPlayer.setDataSource(file.getPath());
 
                                 diraMediaPlayer.prepare();
-                                diraMediaPlayer.start();
+
                                 diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                                     @Override
                                     public void onPrepared(MediaPlayer mp) {
+                                        diraMediaPlayer.start();
                                         holder.waveformSeekBar.setOnProgressChanged(new SeekBarOnProgressChanged() {
                                             @Override
                                             public void onProgressChanged(@NonNull WaveformSeekBar waveformSeekBar, float v, boolean fromUser) {
@@ -490,7 +491,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                     }
                                 });
                             } catch (IOException e) {
-
+                                e.printStackTrace();
                             }
                         }
                     });

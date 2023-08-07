@@ -8,11 +8,11 @@ public class DiraMediaPlayer extends MediaPlayer {
 
     private Runnable onProgressTick = null;
 
-
+    private Thread progressThread;
 
     public DiraMediaPlayer()
     {
-        Thread progressThread = new Thread(() -> {
+        progressThread = new Thread(() -> {
             while (!isReleased) {
                 try {
                     Thread.sleep(50);
