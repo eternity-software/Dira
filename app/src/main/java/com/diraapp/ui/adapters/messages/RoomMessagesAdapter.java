@@ -99,6 +99,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final HashMap<String, Bitmap> loadedBitmaps = new HashMap<>();
     private final String secretName;
     private final String serverAddress;
+    private final RecyclerView recyclerView;
     private List<Message> messages = new ArrayList<>();
     private HashMap<String, Member> members = new HashMap<>();
 
@@ -112,14 +113,17 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         void onFirstItemScrolled(Message message, int index);
     }
 
-    public RoomMessagesAdapter(Activity context, String secretName, String serverAddress, Room room, MessageAdapterListener messageAdapterListener) {
+    public RoomMessagesAdapter(Activity context, RecyclerView recyclerView, String secretName, String serverAddress, Room room, MessageAdapterListener messageAdapterListener) {
         this.context = context;
         this.secretName = secretName;
         this.serverAddress = serverAddress;
         this.messageAdapterListener = messageAdapterListener;
         this.room = room;
+        this.recyclerView = recyclerView;
         layoutInflater = LayoutInflater.from(context);
         cacheUtils = new CacheUtils(context);
+
+
 
         selfId = cacheUtils.getString(CacheUtils.ID);
         maxAutoLoadSize = cacheUtils.getLong(CacheUtils.AUTO_LOAD_SIZE);
@@ -186,6 +190,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         holder.messageText.setVisibility(View.VISIBLE);
         holder.videoPlayer.release();
+        holder.videoPlayer.setRecyclerView(recyclerView);
+        holder.bubblePlayer.setRecyclerView(recyclerView);
         holder.bubblePlayer.release();
         holder.videoPlayer.setDelay(10);
         holder.bubblePlayer.setDelay(10);
@@ -202,7 +208,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         if(position == messages.size() - 1)
         {
             messageAdapterListener.onFirstItemScrolled(message, position);
-
         }
         if (!message.isRead() && message.getCustomClientData() == null) {
             if(message.getAuthorId() == null) return;
@@ -274,9 +279,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
                     holder.imageView.setVisibility(View.VISIBLE);
                     holder.videoPlayer.setVisibility(View.GONE);
-                    Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
-                    Bitmap bmp = Bitmap.createBitmap(300, 300, conf);
-                    holder.imageView.setImageBitmap(bmp);
+
                     Picasso.get().load(Uri.fromFile(file)).into(holder.imageView);
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -395,11 +398,15 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
                                 diraMediaPlayer.prepareAsync();
 
+
                                 diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                                     @Override
                                     public void onPrepared(MediaPlayer mp) {
                                         diraMediaPlayer.start();
+                                        finalVideoPlayer1.setVolume(0);
                                         finalVideoPlayer1.setProgress(0);
+                                        finalVideoPlayer1.setSpeed(1f);
+                                        diraMediaPlayer.setOnPreparedListener(null);
 
                                     }
                                     });
@@ -481,7 +488,11 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                                 context.runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        holder.waveformSeekBar.setProgress(10 * diraMediaPlayer.getProgress());
+                                                        try {
+
+                                                            holder.waveformSeekBar.setProgress(10 * diraMediaPlayer.getProgress());
+                                                        }
+                                                        catch (Exception ignored) {}
                                                     }
                                                 });
                                             }
@@ -560,14 +571,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 holder.nicknameText.setText(member.getNickname());
 
                 if (member.getImagePath() != null) {
-                    Bitmap bitmap;
-                    if (loadedBitmaps.containsKey(member.getImagePath())) {
-                        bitmap = loadedBitmaps.get(member.getImagePath());
-                    } else {
-                        bitmap = AppStorage.getBitmapFromPath(member.getImagePath());
-                        loadedBitmaps.put(member.getImagePath(), bitmap);
-                    }
-                    holder.profilePicture.setImageBitmap(bitmap);
+                    Picasso.get().load(new File(member.getImagePath())).into(holder.profilePicture);
                 } else {
                     holder.profilePicture.setImageResource(R.drawable.placeholder);
                 }
@@ -677,14 +681,14 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     private void setImageOnRoomUpdateMessage(ViewHolder holder, String path) {
-        Bitmap bitmap = AppStorage.getBitmapFromPath(path);
-        if (bitmap == null) {
+
+        if (path == null) {
             holder.roomUpdatesIcon.setImageDrawable(context.getDrawable(R.drawable.placeholder));
             holder.roomUpdatesIcon.setImageTintList(null);
             holder.roomUpdatesIcon.getBackground().setColorFilter(context.
                     getResources().getColor(R.color.dark), PorterDuff.Mode.SRC_IN);
         } else {
-            holder.roomUpdatesIcon.setImageBitmap(bitmap);
+            Picasso.get().load(new File(path)).into(holder.roomUpdatesIcon);
             holder.roomUpdatesIcon.setImageTintList(null);
         }
     }

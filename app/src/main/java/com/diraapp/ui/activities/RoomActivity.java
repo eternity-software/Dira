@@ -244,7 +244,7 @@ public class RoomActivity extends AppCompatActivity
             @Override
             public void run() {
                 Room room = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getRoomBySecretName(roomSecret);
-                roomMessagesAdapter = new RoomMessagesAdapter(RoomActivity.this, roomSecret, room.getServerAddress(), room, new RoomMessagesAdapter.MessageAdapterListener() {
+                roomMessagesAdapter = new RoomMessagesAdapter(RoomActivity.this, recyclerView, roomSecret, room.getServerAddress(), room, new RoomMessagesAdapter.MessageAdapterListener() {
                     @Override
                     public void onFirstItemScrolled(Message message, int index) {
                         Thread loadPreviousMessages = new Thread(() -> {
@@ -367,7 +367,14 @@ public class RoomActivity extends AppCompatActivity
                     System.out.println("compression started");
 
 
+                    Double videoHeight = null;
+                    Double videoWidth = null;
 
+                    if(attachmentType == AttachmentType.BUBBLE)
+                    {
+                        videoHeight = 256D;
+                        videoWidth = 256D;
+                    }
 
                     VideoCompressor.start(getApplicationContext(), urisToCompress,
                             false,
@@ -379,8 +386,8 @@ public class RoomActivity extends AppCompatActivity
                                     2,
                                     false,
                                     false,
-                                    null,
-                                    null), new CompressionListener() {
+                                    videoHeight,
+                                    videoWidth), new CompressionListener() {
                                 @Override
                                 public void onStart(int i) {
 

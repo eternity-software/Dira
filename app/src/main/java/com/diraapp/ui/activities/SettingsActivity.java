@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.diraapp.BuildConfig;
 import com.diraapp.R;
+import com.diraapp.device.PerformanceTester;
 import com.diraapp.utils.SliderActivity;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -37,7 +38,8 @@ public class SettingsActivity extends AppCompatActivity {
         sliderActivity.attachSlider(this);
 
         TextView versionView = findViewById(R.id.version_view);
-        versionView.setText(BuildConfig.VERSION_NAME + ", code " + BuildConfig.VERSION_CODE);
+        versionView.setText(BuildConfig.VERSION_NAME + ", code " + BuildConfig.VERSION_CODE + ", device " +
+                PerformanceTester.measureDevicePerformanceClass(getApplicationContext()));
 
         initViews();
     }

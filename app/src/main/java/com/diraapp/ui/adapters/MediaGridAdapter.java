@@ -16,6 +16,8 @@ import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.device.PerformanceClass;
+import com.diraapp.device.PerformanceTester;
 import com.diraapp.storage.images.WaterfallBalancer;
 import com.diraapp.ui.bottomsheet.filepicker.FileInfo;
 import com.diraapp.ui.components.FilePreview;
@@ -48,7 +50,18 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
         this.mediaElements = mediaElements;
         //   Collections.reverse(images);
-        waterfallBalancer = new WaterfallBalancer(context, 5, recyclerView);
+        int balancerCount = 4;
+
+        PerformanceClass performanceClass = PerformanceTester.measureDevicePerformanceClass(context);
+        if(performanceClass == PerformanceClass.MEDIUM)
+        {
+            balancerCount = 8;
+        }
+        else if(performanceClass == PerformanceClass.HIGH)
+        {
+            balancerCount = 14;
+        }
+        waterfallBalancer = new WaterfallBalancer(context, balancerCount, recyclerView);
 
 
     }

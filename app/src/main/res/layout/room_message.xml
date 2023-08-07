@@ -350,6 +350,7 @@
                         android:id="@+id/bubble_container"
                         android:layout_width="200dp"
                         android:layout_height="200dp"
+                        app:cardBackgroundColor="@color/gray"
 
                         app:cardCornerRadius="200dp">
                         <com.diraapp.ui.components.VideoPlayer

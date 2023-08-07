@@ -6,6 +6,7 @@ import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
@@ -19,8 +20,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
 
 import com.diraapp.R;
+import com.diraapp.device.PerformanceClass;
+import com.diraapp.device.PerformanceTester;
 import com.diraapp.exceptions.VideoPlayerException;
 
 import java.io.IOException;
@@ -36,12 +41,43 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
     private boolean isInit = false;
     private boolean isLoadingLayerEnabled = false;
     private long delay = 0;
+    private float volume = 0;
     private VideoPlayerListener videoPlayerListener;
     private String currentPlaying;
+    private RecyclerView recyclerView;
 
     public VideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
         initViews();
+    }
+
+
+    public void setRecyclerView(RecyclerView recyclerView) {
+        if(this.recyclerView != null) return;
+        this.recyclerView = recyclerView;
+
+        this.recyclerView.addOnScrollListener(new OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                    if(PerformanceTester.measureDevicePerformanceClass(getContext()) != PerformanceClass.POTATO) return;
+                    try {
+                      if(newState == RecyclerView.SCROLL_STATE_IDLE)
+                      {
+                          play();
+                      }
+                      else
+                      {
+                          pause();
+                      }
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+
     }
 
     public void setVideoPlayerListener(VideoPlayerListener videoPlayerListener) {
@@ -175,6 +211,9 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
                 public void onPrepared(MediaPlayer mp) {
                  //   adjustAspectRatio(mp.getVideoWidth(), mp.getVideoHeight());
                     mediaPlayer.start();
+                    if(recyclerView != null && PerformanceTester.measureDevicePerformanceClass(getContext()) == PerformanceClass.POTATO) mediaPlayer.pause();
+
+                    if(recyclerView != null) setVolume(0);
                     thumbNail.setVisibility(INVISIBLE);
                     hideLoading(200);
                     if (videoPlayerListener != null) videoPlayerListener.onStarted();
@@ -219,17 +258,15 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
         final Surface s = new Surface(surface);
 
 
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
 
 
-                    Thread.sleep(delay);
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             try {
+
+
                                 mediaPlayer = new MediaPlayer();
                                 setVolume(0);
 
@@ -253,35 +290,39 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
                             }
 
                         }
-                    });
+                    }, delay);
 
 
-                } catch (IllegalArgumentException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (SecurityException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (IllegalStateException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread.start();
+
 
     }
 
     public void setVolume(float volume) {
         if (mediaPlayer != null) {
             try {
+                this.volume = volume;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                        PerformanceTester.measureDevicePerformanceClass(getContext()) == PerformanceClass.POTATO) {
+                    if (volume == 0) {
+                        mediaPlayer.setPlaybackParams(mediaPlayer.getPlaybackParams().setSpeed(0.3f));
+                    }
+                    else {
+                        mediaPlayer.setPlaybackParams(mediaPlayer.getPlaybackParams().setSpeed(1f));
+                    }
+                }
                 mediaPlayer.setVolume(volume, volume);
             } catch (Exception e) {
 
             }
 
+        }
+    }
+
+    public void setSpeed(float speed)
+    {
+        if (mediaPlayer == null) return;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mediaPlayer.setPlaybackParams(mediaPlayer.getPlaybackParams().setSpeed(speed));
         }
     }
 
