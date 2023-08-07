@@ -117,4 +117,8 @@
     <string name="key_generate_user_disconnected">Обновление ключа было прервано</string>
     <string name="user_status_typing">%s печатает</string>
     <string name="users_status_typing">%s печатают</string>
+    <string name="message_tooltip_copy">Копировать</string>
+    <string name="message_tooltip_read_count">%s просмотрели</string>
+    <string name="message_tooltip_one_read">%s просмотрел</string>
+    <string name="message_tooltip_zero_read">Не прочитано</string>
 </resources>

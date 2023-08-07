@@ -2,6 +2,9 @@ package com.diraapp.ui.adapters.messages;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -9,11 +12,17 @@ import android.graphics.PorterDuff;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
@@ -26,6 +35,7 @@ import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.db.entities.messages.customclientdata.KeyGenerateStartClientData;
 import com.diraapp.db.entities.messages.customclientdata.KeyGeneratedClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientData;
@@ -39,6 +49,8 @@ import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.ui.activities.PreviewActivity;
+import com.diraapp.ui.adapters.messagetooltipread.MessageTooltipAdapter;
+import com.diraapp.ui.adapters.messagetooltipread.UserReadMessage;
 import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.appearance.ColorTheme;
 import com.diraapp.ui.components.VideoPlayer;
@@ -46,6 +58,10 @@ import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Numbers;
 import com.diraapp.utils.StringFormatter;
 import com.diraapp.utils.TimeConverter;
+import com.skydoves.balloon.Balloon;
+import com.skydoves.balloon.BalloonAnimation;
+import com.skydoves.balloon.OnBalloonOutsideTouchListener;
+import com.skydoves.balloon.radius.RadiusLayout;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -389,6 +405,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private void bindUserMessage(Message message, Message previousMessage,
                                  boolean isSameDay, boolean isSameYear, ViewHolder holder) {
+        holder.itemView.setOnClickListener((View v) -> {
+            createBalloon(message, holder.itemView);
+        });
+
         boolean isSelfMessage = selfId.equals(
                 message.getAuthorId());
         if (holder.roomUpdatesLayout != null) {
@@ -727,5 +747,105 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     public void setTheme(ColorTheme theme) {
         this.theme = theme;
+    }
+
+    private void createBalloon(Message message, View view) {
+        ArrayList<UserReadMessage> userReadMessages = new ArrayList<>(
+                message.getMessageReadingList().size());
+
+        for (MessageReading messageReading: message.getMessageReadingList()) {
+            Member member = members.get(messageReading.getUserId());
+            if (member == null) continue;
+            UserReadMessage userReadMessage = new UserReadMessage(
+                    member.getNickname(), loadedBitmaps.get(member.getImagePath()));
+            userReadMessages.add(userReadMessage);
+        }
+
+        Balloon balloon = new Balloon.Builder(context).
+                setLayout(R.layout.message_actions_tooltip)
+                .setBalloonAnimation(BalloonAnimation.FADE)
+                .setIsVisibleArrow(false)
+                .build();
+
+        RadiusLayout layout = (RadiusLayout) balloon.getContentView();
+        layout.setBackground(ContextCompat.getDrawable(context, R.drawable.tooltip_drawable));
+        LinearLayout copyRow = layout.findViewById(R.id.copy_row);
+        LinearLayout countRow = layout.findViewById(R.id.count_row);
+        RecyclerView recyclerView = layout.findViewById(R.id.message_tooltip_recycler);
+
+        int size = userReadMessages.size();
+        CardView firstCard = countRow.findViewById(R.id.card_view_1);
+        CardView secondCard = countRow.findViewById(R.id.card_view_2);
+        ImageView firstUserIcon = countRow.findViewById(R.id.icon_user_1);
+        ImageView secondUserIcon = countRow.findViewById(R.id.icon_user_2);
+        TextView countTextView = countRow.findViewById(R.id.count_row_text);
+        ImageView backArrow = countRow.findViewById(R.id.count_row_arrow);
+
+        final boolean[] isInitialDisplay = {true};
+
+        backArrow.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
+
+        if (size < 4) {
+            recyclerView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+        }
+
+        if (size == 0) {
+            firstCard.setVisibility(View.GONE);
+            secondCard.setVisibility(View.GONE);
+            countTextView.setText(context.getString(R.string.message_tooltip_zero_read));
+        } else if (size == 1) {
+            firstUserIcon.setImageBitmap(userReadMessages.get(0).getPicture());
+            secondCard.setVisibility(View.GONE);
+            countTextView.setText(context.getString(R.string.message_tooltip_one_read).
+                    replace("%s", String.valueOf(size)));
+        } else {
+            firstUserIcon.setImageBitmap(userReadMessages.get(0).getPicture());
+            secondUserIcon.setImageBitmap(userReadMessages.get(1).getPicture());
+            countTextView.setText(context.getString(R.string.message_tooltip_read_count).
+                    replace("%s", String.valueOf(size)));
+        }
+
+        MessageTooltipAdapter adapter = new MessageTooltipAdapter(context, userReadMessages);
+        recyclerView.setAdapter(adapter);
+
+        copyRow.setOnClickListener((View v) -> {
+            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("Copied Text", message.getText());
+            clipboard.setPrimaryClip(clip);
+            balloon.dismiss();
+        });
+
+        if (size != 0) {
+            countRow.setOnClickListener((View v) -> {
+                if (isInitialDisplay[0]) {
+                    backArrow.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    countRow.setVisibility(View.GONE);
+                    firstCard.setVisibility(View.GONE);
+                    secondCard.setVisibility(View.GONE);
+                } else {
+                    firstCard.setVisibility(View.VISIBLE);
+                    if (size != 1) {
+                        secondCard.setVisibility(View.VISIBLE);
+                    }
+                    copyRow.setVisibility(View.VISIBLE);
+                    backArrow.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.GONE);
+                }
+                isInitialDisplay[0] = !isInitialDisplay[0];
+            });
+        }
+
+        balloon.setOnBalloonOutsideTouchListener((new OnBalloonOutsideTouchListener() {
+            @Override
+            public void onBalloonOutsideTouch(@NonNull View view, @NonNull MotionEvent motionEvent) {
+                balloon.dismiss();
+            }
+        }));
+
+        balloon.showAlignBottom(view);
     }
 }

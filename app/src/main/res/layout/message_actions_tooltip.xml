@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="240dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/tooltip_drawable"
+    android:paddingHorizontal="16dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/copy_row"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_copy"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/montserratsemibold"
+            android:includeFontPadding="false"
+            android:text="@string/message_tooltip_copy"
+            android:textColor="@color/white"
+
+            android:textIsSelectable="true"
+            android:textSize="13sp" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/count_row"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view_1"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+
+            app:cardBackgroundColor="@color/dark"
+            app:cardCornerRadius="120dp"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:id="@+id/icon_user_1"
+                android:layout_width="match_parent"
+
+                android:layout_height="match_parent"
+                android:src="@drawable/placeholder" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view_2"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="-12dp"
+            app:cardBackgroundColor="@color/dark"
+            app:cardCornerRadius="120dp"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:id="@+id/icon_user_2"
+                android:layout_width="match_parent"
+
+                android:layout_height="match_parent"
+                android:src="@drawable/placeholder" />
+        </androidx.cardview.widget.CardView>
+
+        <ImageView
+            android:id="@+id/count_row_arrow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_short_arrow"/>
+
+        <TextView
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:id="@+id/count_row_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/montserratsemibold"
+            android:includeFontPadding="false"
+            android:text="@string/message_tooltip_read_count"
+            android:textColor="@color/white"
+
+            android:textIsSelectable="true"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        android:id="@+id/message_tooltip_recycler">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+</LinearLayout>

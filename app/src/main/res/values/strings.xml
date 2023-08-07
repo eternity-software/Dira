@@ -183,4 +183,10 @@
     <!--Transitions -->
     <string name="transition_image_prepare" translatable="false">img_prepare_transition</string>
 
+    <!-- message tooltip -->
+    <string name="message_tooltip_copy">Copy</string>
+    <string name="message_tooltip_read_count">%s read</string>
+    <string name="message_tooltip_one_read">%s read</string>
+    <string name="message_tooltip_zero_read">nobody read</string>
+
 </resources>
