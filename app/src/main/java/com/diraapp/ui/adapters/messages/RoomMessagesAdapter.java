@@ -505,8 +505,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         for (AttachmentsStorageListener attachmentsStorageListener : listeners) {
             AttachmentsStorage.removeAttachmentsStorageListener(attachmentsStorageListener);
         }
-        diraMediaPlayer.release();
         diraMediaPlayer.reset();
+        diraMediaPlayer.release();
 
     }
 
