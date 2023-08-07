@@ -82,6 +82,7 @@ import com.diraapp.media.SoundRecorder;
 import com.otaliastudios.cameraview.CameraListener;
 import com.otaliastudios.cameraview.CameraOptions;
 import com.otaliastudios.cameraview.VideoResult;
+import com.otaliastudios.cameraview.controls.Facing;
 import com.otaliastudios.cameraview.controls.Mode;
 import com.otaliastudios.cameraview.size.AspectRatio;
 import com.otaliastudios.cameraview.size.SizeSelectors;
@@ -147,11 +148,15 @@ public class RoomActivity extends AppCompatActivity
             public void onCameraOpened(@NonNull CameraOptions options) {
                 super.onCameraOpened(options);
                 System.out.println("Camera opened");
+                if(binding.bubbleRecordingLayout.getVisibility() == View.GONE)
+                {
+                    binding.camera.close();
+                }
             }
         });
 
         binding.camera.setMode(Mode.VIDEO);
-
+        binding.camera.close();
 
 
         binding.bubbleRecordingLayout.setVisibility(View.GONE);
@@ -775,6 +780,7 @@ public class RoomActivity extends AppCompatActivity
                         {
                             binding.camera.stopVideo();
                             binding.camera.close();
+
                             binding.bubbleRecordingLayout.setVisibility(View.GONE);
                         }
                         else {
@@ -807,8 +813,10 @@ public class RoomActivity extends AppCompatActivity
 
 
         binding.bubbleRecordingLayout.setVisibility(View.VISIBLE);
+        preformScaleAnimation(0.5f, 1, binding.bubbleFrame);
         binding.camera.close();
         binding.camera.open();
+
 
         binding.camera.addCameraListener(new CameraListener() {
             @Override
@@ -816,7 +824,7 @@ public class RoomActivity extends AppCompatActivity
                 super.onCameraOpened(options);
                 System.out.println("Taking snapshot...");
                 binding.camera.takeVideoSnapshot(new File(directory, "bubbleMessage.mp4"));
-                //   binding.camera.removeCameraListener(this);
+                binding.camera.removeCameraListener(this);
             }
         });
 

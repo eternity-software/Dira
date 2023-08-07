@@ -242,7 +242,7 @@
     </LinearLayout>
 
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bubble_recording_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -254,36 +254,40 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/bubble_frame"
             android:layout_width="300dp"
             android:layout_height="300dp"
-            app:cardCornerRadius="300dp">
+            app:cardCornerRadius="300dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <com.otaliastudios.cameraview.CameraView
                 android:id="@+id/camera"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
-                app:cameraVideoSizeSmallest="true"
                 android:keepScreenOn="true"
-                app:cameraVideoSizeAspectRatio="1:1"
-                app:cameraVideoSizeMinWidth="100"
-                app:cameraVideoSizeMinHeight="100"
-                app:cameraVideoSizeMaxWidth="500"
-                app:cameraVideoSizeMaxHeight="500"
+                app:cameraEngine="camera2"
+                app:cameraExperimental="false"
                 app:cameraFacing="front"
-                app:cameraVideoMaxDuration="60000"
+                app:cameraFrameProcessingMaxHeight="640"
+                app:cameraFrameProcessingMaxWidth="640"
+                app:cameraPictureSnapshotMetering="true"
                 app:cameraSnapshotMaxHeight="800"
                 app:cameraSnapshotMaxWidth="800"
-                app:cameraExperimental="false"
-                app:cameraFrameProcessingMaxWidth="640"
-
-                app:cameraPictureSnapshotMetering="true"
-                app:cameraFrameProcessingMaxHeight="640"
-                app:cameraEngine="camera2"
                 app:cameraVideoBitRate="6400"
-            />
+                app:cameraVideoMaxDuration="60000"
+                app:cameraVideoSizeAspectRatio="1:1"
+                app:cameraVideoSizeMaxHeight="500"
+
+                app:cameraVideoSizeMaxWidth="500"
+                app:cameraVideoSizeMinHeight="100"
+                app:cameraVideoSizeMinWidth="100"
+                app:cameraVideoSizeSmallest="true" />
         </androidx.cardview.widget.CardView>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
