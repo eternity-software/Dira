@@ -20,6 +20,7 @@ public class CacheUtils {
     public final static String BACKGROUND = "background_id";
     public final static String BACKGROUND_PATH = "background_path";
     public final static String SERVER_LIST = "server_list";
+    public final static String IS_VOICE_RECORD_DEFAULT = "voice_default";
 
     private final static String IDENTIFIER = "APP_SETTINGS";
 

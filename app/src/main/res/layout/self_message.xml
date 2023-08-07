@@ -55,13 +55,24 @@
                 android:backgroundTint="@color/gray_trans"
                 android:fontFamily="@font/montserratsemibold"
                 android:gravity="bottom"
-                android:paddingVertical="2dp"
                 android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
                 android:text="00:00"
                 android:textColor="@color/white"
 
                 android:textSize="11sp" />
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/bubble_container"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+
+                app:cardCornerRadius="200dp">
+                <com.diraapp.ui.components.VideoPlayer
+                    android:id="@+id/bubble_player"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp" />
+            </androidx.cardview.widget.CardView>
             <LinearLayout
                 android:id="@+id/message_container"
                 android:layout_width="wrap_content"
@@ -120,6 +131,47 @@
 
                     android:textIsSelectable="true"
                     android:textSize="15sp" />
+                <LinearLayout
+                    android:id="@+id/voice_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_height="wrap_content">
+
+
+                    <ImageView
+                        android:id="@+id/play_button"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="4dp"
+                        android:layout_weight="0"
+                        android:background="@drawable/light_round"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_play"
+                        app:tint="@color/white" />
+                    <com.masoudss.lib.WaveformSeekBar
+                        android:id="@+id/waveform_seek_bar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        app:wave_progress="0"
+                        app:wave_max_progress="10"
+                        app:wave_width="3dp"
+
+                        app:wave_gap="2dp"
+                        app:wave_min_height="5dp"
+                        app:wave_corner_radius="2dp"
+                        app:wave_background_color="@color/medium_light_gray"
+                        app:wave_progress_color="@color/white"
+                        app:wave_gravity="center"
+                        app:wave_padding_top="4dp"
+                        app:wave_padding_Bottom="4dp"
+                        app:wave_padding_right="2dp"
+                        app:wave_padding_left="2dp"
+
+
+                        app:wave_visible_progress="0"
+                        />
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/attachment_too_large"

@@ -90,6 +90,12 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
         }
     }
 
+    public void setProgress(float progress)
+    {
+        if (mediaPlayer != null) {
+            mediaPlayer.seekTo((int) (progress * mediaPlayer.getDuration()));
+        }
+    }
     public void release() {
         if (mediaPlayer != null) {
             try {

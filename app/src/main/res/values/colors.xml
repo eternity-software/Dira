@@ -2,6 +2,7 @@
 <resources>
     <color name="accent">#00FFE0</color>
     <color name="accent_dark">#00BAA3</color>
+    <color name="accent_medium">#1AE3CB</color>
     <color name="dark">#202020</color>
     <color name="light_gray">#CDCDCD</color>
     <color name="medium_light_gray">#6D6D6D</color>

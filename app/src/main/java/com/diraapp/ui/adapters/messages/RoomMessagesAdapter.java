@@ -10,7 +10,9 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -43,6 +45,7 @@ import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
 import com.diraapp.exceptions.UnablePerformRequestException;
+import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DownloadHandler;
 import com.diraapp.storage.attachments.AttachmentsStorage;
@@ -58,10 +61,15 @@ import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Numbers;
 import com.diraapp.utils.StringFormatter;
 import com.diraapp.utils.TimeConverter;
+
 import com.skydoves.balloon.Balloon;
 import com.skydoves.balloon.BalloonAnimation;
 import com.skydoves.balloon.OnBalloonOutsideTouchListener;
 import com.skydoves.balloon.radius.RadiusLayout;
+
+import com.masoudss.lib.SeekBarOnProgressChanged;
+import com.masoudss.lib.WaveformSeekBar;
+
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -72,6 +80,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
@@ -84,6 +94,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final String selfId;
     private final Activity context;
     private Room room;
+    private DiraMediaPlayer mMediaPlayer = new DiraMediaPlayer();
 
     private ColorTheme theme;
     private final List<AttachmentsStorageListener> listeners = new ArrayList<>();
@@ -156,6 +167,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onViewRecycled(@NonNull ViewHolder holder) {
         super.onViewRecycled(holder);
         holder.videoPlayer.release();
+        holder.bubblePlayer.release();
     }
 
 
@@ -163,6 +175,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
         holder.videoPlayer.release();
+        holder.bubblePlayer.release();
     }
 
     @Override
@@ -176,14 +189,16 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         holder.messageText.setVisibility(View.VISIBLE);
         holder.videoPlayer.release();
+        holder.bubblePlayer.release();
         holder.videoPlayer.setDelay(10);
-
+        holder.bubblePlayer.setDelay(10);
+        holder.voiceLayout.setVisibility(View.GONE);
         holder.loading.setVisibility(View.GONE);
         holder.sizeContainer.setVisibility(View.GONE);
         holder.imageView.setVisibility(View.GONE);
         holder.videoPlayer.setVisibility(View.GONE);
         holder.dateText.setVisibility(View.GONE);
-
+        holder.bubbleContainer.setVisibility(View.GONE);
 
         Message message = messages.get(position);
 
@@ -276,81 +291,108 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                         }
                     });
                     holder.loading.setVisibility(View.GONE);
-                } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
+                } else if (attachment.getAttachmentType() == AttachmentType.VIDEO || attachment.getAttachmentType() == AttachmentType.BUBBLE) {
+
+
+                    VideoPlayer videoPlayer = holder.videoPlayer;
+
+                    if(attachment.getAttachmentType() == AttachmentType.BUBBLE)
+                    {
+                        videoPlayer = holder.bubblePlayer;
+                        videoPlayer.setLoadingLayerEnabled(true);
+                        holder.messageContainer.setVisibility(View.GONE);
+                        holder.bubbleContainer.setVisibility(View.VISIBLE);
+
+                    }
                     holder.imageView.setVisibility(View.VISIBLE);
-                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                    if(attachment.getAttachmentType() == AttachmentType.VIDEO) {
+                        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 
-                    int width = 1;
-                    int height = 1;
-                    int rotation = 0;
-                    try {
-                        retriever.setDataSource(file.getPath());
-                        width = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
-                        height = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
-                        rotation = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
+                        int width = 1;
+                        int height = 1;
+                        int rotation = 0;
+                        try {
+                            retriever.setDataSource(file.getPath());
+                            width = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+                            height = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+                            rotation = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
 
-                        if (rotation != 0) {
-                            width = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
-                            height = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+                            if (rotation != 0) {
+                                width = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+                                height = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, false,
+                                    attachment, secretName);
+                            AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, serverAddress);
+                            file.delete();
+                            return;
                         }
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, false,
-                                attachment, secretName);
-                        AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, serverAddress);
-                        file.delete();
-                        return;
-                    }
-
-                    if (height > width * 3) {
-                        height = width * 2;
-                    }
-
-                    try {
-                        retriever.release();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
-                    Bitmap bmp = Bitmap.createBitmap(width, height, conf);
-                    holder.imageView.setImageBitmap(bmp);
-                    holder.videoPlayer.setVisibility(View.VISIBLE);
-                    holder.imageView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            holder.videoPlayer.getLayoutParams().height = holder.imageView.getMeasuredHeight();
-                            holder.videoPlayer.getLayoutParams().width = holder.imageView.getMeasuredWidth();
-                            holder.videoPlayer.requestLayout();
-
-                            holder.videoPlayer.setVolume(0);
-
-                            AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
-                            alphaAnimation.setDuration(500);
-
-                            alphaAnimation.setFillAfter(true);
-                            holder.videoPlayer.startAnimation(alphaAnimation);
+                        if (height > width * 3) {
+                            height = width * 2;
                         }
-                    });
 
+                        try {
+                            retriever.release();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
+                        Bitmap bmp = Bitmap.createBitmap(width, height, conf);
+                        holder.imageView.setImageBitmap(bmp);
 
+                        videoPlayer.setVisibility(View.VISIBLE);
+                        VideoPlayer finalVideoPlayer = videoPlayer;
+                        holder.imageView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                finalVideoPlayer.getLayoutParams().height = holder.imageView.getMeasuredHeight();
+                                finalVideoPlayer.getLayoutParams().width = holder.imageView.getMeasuredWidth();
+                                finalVideoPlayer.requestLayout();
+
+                                finalVideoPlayer.setVolume(0);
+
+                                AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
+                                alphaAnimation.setDuration(500);
+
+                                alphaAnimation.setFillAfter(true);
+                                finalVideoPlayer.startAnimation(alphaAnimation);
+                            }
+                        });
+
+                    }
                     try {
-                        holder.videoPlayer.play(file.getPath());
+                        videoPlayer.play(file.getPath());
 
                         holder.loading.setVisibility(View.GONE);
+                        holder.messageContainer.setVisibility(View.GONE);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    holder.videoPlayer.setOnClickListener(new View.OnClickListener() {
+                    VideoPlayer finalVideoPlayer = videoPlayer;
+                    videoPlayer.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(context, PreviewActivity.class);
-                            intent.putExtra(PreviewActivity.URI, file.getPath());
-                            intent.putExtra(PreviewActivity.IS_VIDEO, attachment.getAttachmentType() == AttachmentType.VIDEO);
-                            context.startActivity(intent);
+                            if(attachment.getAttachmentType() == AttachmentType.VIDEO)
+                            {
+                                Intent intent = new Intent(context, PreviewActivity.class);
+                                intent.putExtra(PreviewActivity.URI, file.getPath());
+                                intent.putExtra(PreviewActivity.IS_VIDEO, attachment.getAttachmentType() == AttachmentType.VIDEO);
+                                context.startActivity(intent);
+                            }
+                            else
+                            {
+                                finalVideoPlayer.setProgress(0);
+                                finalVideoPlayer.setVolume(1);
+
+                            }
                         }
                     });
-                    holder.videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
+                    VideoPlayer finalVideoPlayer2 = videoPlayer;
+                    videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
                         @Override
                         public void onStarted() {
 
@@ -369,9 +411,9 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                         @Override
                         public void onReady(int width, int height) {
                             try {
-                                holder.videoPlayer.play(file.getPath());
-                                holder.videoPlayer.setVideoPlayerListener(null);
-                                holder.videoPlayer.setVolume(0);
+                                finalVideoPlayer2.play(file.getPath());
+                                finalVideoPlayer2.setVideoPlayerListener(null);
+                                finalVideoPlayer2.setVolume(0);
 
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -379,6 +421,62 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                             holder.loading.setVisibility(View.GONE);
                         }
                     });
+                }
+                else if(attachment.getAttachmentType() == AttachmentType.VOICE)
+                {
+                    holder.loading.setVisibility(View.GONE);
+                    holder.waveformSeekBar.setSampleFrom(file);
+                    holder.waveformSeekBar.setProgress(0);
+                    holder.voiceLayout.setVisibility(View.VISIBLE);
+
+                    holder.playButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            try {
+                                if(mMediaPlayer.isPlaying())
+                                {
+                                    mMediaPlayer.stop();
+                                }
+                                mMediaPlayer.reset();
+                                mMediaPlayer.setDataSource(file.getPath());
+
+                                mMediaPlayer.prepare();
+                                mMediaPlayer.start();
+                                mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                    @Override
+                                    public void onPrepared(MediaPlayer mp) {
+                                        holder.waveformSeekBar.setOnProgressChanged(new SeekBarOnProgressChanged() {
+                                            @Override
+                                            public void onProgressChanged(@NonNull WaveformSeekBar waveformSeekBar, float v, boolean fromUser) {
+                                                if(fromUser)
+                                                {
+                                                    mMediaPlayer.setProgress(v / 10);
+                                                }
+                                            }
+                                        });
+
+                                        mMediaPlayer.setOnProgressTick(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                context.runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        holder.waveformSeekBar.setProgress(10 * mMediaPlayer.getProgress());
+                                                    }
+                                                });
+                                            }
+                                        });
+
+
+                                    }
+                                });
+                            } catch (IOException e) {
+
+                            }
+                        }
+                    });
+
                 }
             }
         });
@@ -416,7 +514,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
 
 
-        loadMessageAttachment(message, holder);
 
 
         if (StringFormatter.isEmoji(message.getText()) && StringFormatter.getEmojiCount(message.getText()) < 3) {
@@ -430,6 +527,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         }
 
+        loadMessageAttachment(message, holder);
         if (!isSelfMessage) {
             holder.nicknameText.setText(message.getAuthorNickname());
             holder.pictureContainer.setVisibility(View.VISIBLE);
@@ -602,6 +700,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
 
         if (holder.loading.getVisibility() == View.VISIBLE) {
+
             holder.attachmentProgressbar.setIndeterminateTintList(ColorStateList.
                     valueOf(theme.getSelfTextColor()));
         }

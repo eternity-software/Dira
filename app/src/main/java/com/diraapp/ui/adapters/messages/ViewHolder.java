@@ -1,5 +1,6 @@
 package com.diraapp.ui.adapters.messages;
 
+import android.media.Image;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diraapp.R;
 import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.ui.components.VideoPlayer;
+import com.masoudss.lib.WaveformSeekBar;
 
 public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -44,6 +46,13 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     TextView roomUpdatesMainText;
 
     TextView roomUpdatesText;
+    WaveformSeekBar waveformSeekBar;
+    LinearLayout voiceLayout;
+    ImageView playButton;
+    VideoPlayer bubblePlayer;
+    CardView bubbleContainer;
+
+
 
     public ViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -67,5 +76,10 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         roomUpdatesIcon = itemView.findViewById(R.id.room_updates_icon);
         roomUpdatesMainText = itemView.findViewById(R.id.room_updates_main_text);
         roomUpdatesText = itemView.findViewById(R.id.room_updates_text);
+        waveformSeekBar = itemView.findViewById(R.id.waveform_seek_bar);
+        playButton = itemView.findViewById(R.id.play_button);
+        voiceLayout = itemView.findViewById(R.id.voice_layout);
+        bubbleContainer = itemView.findViewById(R.id.bubble_container);
+        bubblePlayer = itemView.findViewById(R.id.bubble_player);
     }
 }

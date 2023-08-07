@@ -5,5 +5,6 @@ public enum AttachmentType {
     VOICE,
     AUDIO,
     FILE,
-    VIDEO
+    VIDEO,
+    BUBBLE
 }

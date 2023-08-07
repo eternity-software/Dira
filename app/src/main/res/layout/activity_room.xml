@@ -130,14 +130,56 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/record_ripple"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+
+
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="6dp"
+
+
+        android:alpha="0.5"
+
+        android:background="@drawable/accent_rounded"
+        android:elevation="2dp"
+
+        android:padding="8dp"
+        android:scaleX="2"
+
+        android:scaleY="2"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/record_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+
+        android:background="@drawable/accent_rounded"
+        android:elevation="10dp"
+
+        android:padding="8dp"
+        android:src="@drawable/ic_mic"
+
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/record_ripple"
+        app:layout_constraintEnd_toEndOf="@+id/record_ripple"
+        app:tint="@color/dark" />
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/message_input"
+        android:clipToPadding="false"
         android:orientation="horizontal"
-        android:paddingHorizontal="8dp"
+        android:elevation="1dp"
 
+        android:paddingHorizontal="8dp"
         android:paddingVertical="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -156,7 +198,7 @@
 
         <EditText
             android:id="@+id/message_text_input"
-            android:layout_width="match_parent"
+            android:layout_width="294dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginHorizontal="12dp"
@@ -183,6 +225,11 @@
             android:src="@drawable/ic_send"
             app:tint="@color/dark" />
 
+
+
+
+
+
         <ImageView
             android:id="@+id/status_light"
             android:layout_width="10dp"
@@ -192,6 +239,51 @@
             android:layout_marginBottom="4dp"
             android:src="@drawable/circle"
             android:visibility="gone" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/bubble_recording_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/gray_trans"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/recycler_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            app:cardCornerRadius="300dp">
+
+            <com.otaliastudios.cameraview.CameraView
+                android:id="@+id/camera"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                app:cameraVideoSizeSmallest="true"
+                android:keepScreenOn="true"
+                app:cameraVideoSizeAspectRatio="1:1"
+                app:cameraVideoSizeMinWidth="100"
+                app:cameraVideoSizeMinHeight="100"
+                app:cameraVideoSizeMaxWidth="500"
+                app:cameraVideoSizeMaxHeight="500"
+                app:cameraFacing="front"
+                app:cameraVideoMaxDuration="60000"
+                app:cameraSnapshotMaxHeight="800"
+                app:cameraSnapshotMaxWidth="800"
+                app:cameraExperimental="false"
+                app:cameraFrameProcessingMaxWidth="640"
+
+                app:cameraPictureSnapshotMetering="true"
+                app:cameraFrameProcessingMaxHeight="640"
+                app:cameraEngine="camera2"
+                app:cameraVideoBitRate="6400"
+            />
+        </androidx.cardview.widget.CardView>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
