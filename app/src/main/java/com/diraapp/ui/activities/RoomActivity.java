@@ -721,7 +721,10 @@ public class RoomActivity extends AppCompatActivity
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (count == 0) return;
+                if (count == 0) {
+                    notifyRecordButton();
+                    return;
+                }
                 if (userStatus == null) {
                     sendStatusRequest();
                 } else if (userStatus.getUserStatus() != UserStatus.TYPING) {
@@ -1009,6 +1012,10 @@ public class RoomActivity extends AppCompatActivity
         if (!roomSecret.equals(this.roomSecret)) return;
         TextView membersCount = findViewById(R.id.members_count);
 
+        for (Status status: new ArrayList<>(usersStatusList)) {
+            if (status.getUserId().equals(selfId)) usersStatusList.remove(status);
+        }
+
         int size = usersStatusList.size();
         String text;
 
@@ -1023,10 +1030,15 @@ public class RoomActivity extends AppCompatActivity
             for (int i = 0; i < size; i++) {
                 Member member = roomMessagesAdapter.getMembers().get(usersStatusList.get(i).getUserId());
                 if (member == null) continue;
+                if (member.getId().equals(selfId)) continue;
 
                 if (i != 0) nickNames = nickNames + ", ";
 
                 nickNames = nickNames + member.getNickname();
+            }
+
+            if (nickNames.length() > 22) {
+                nickNames = nickNames.substring(0, 22) + "..";
             }
 
             if (size == 1) {
@@ -1034,6 +1046,7 @@ public class RoomActivity extends AppCompatActivity
             } else {
                 text = getString(R.string.users_status_typing);
             }
+
             text = text.replace("%s", nickNames);
         }
 

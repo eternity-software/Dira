@@ -4,9 +4,9 @@ import com.diraapp.api.views.UserStatus;
 
 public class Status {
 
-    public static final long VISIBLE_TIME_MILLIS = 500;
+    public static final long VISIBLE_TIME_MILLIS = 1000;
 
-    public static final long REQUEST_DELAY = 400;
+    public static final long REQUEST_DELAY = 700;
 
     private final UserStatus userStatus;
 

@@ -51,8 +51,8 @@
     <string name="members_count">%s members</string>
     <string name="attachment_large_title">This attachment too large</string>
     <string name="download">Download</string>
-    <string name="user_status_typing">%s is typing</string>
-    <string name="users_status_typing">%s are typing</string>
+    <string name="user_status_typing">%s is typing…</string>
+    <string name="users_status_typing">%s are typing…</string>
 
     <!-- Room info -->
 
