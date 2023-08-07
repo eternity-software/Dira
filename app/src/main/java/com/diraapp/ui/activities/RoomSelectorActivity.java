@@ -315,6 +315,7 @@ public class RoomSelectorActivity extends AppCompatActivity
         } else if (update.getUpdateType() == UpdateType.READ_UPDATE) {
             Message message = null;
             int index = -1;
+
             for (Room room: new ArrayList<>(roomList)) {
                 if (room.getSecretName().equals(update.getRoomSecret())) {
                     message = room.getMessage();

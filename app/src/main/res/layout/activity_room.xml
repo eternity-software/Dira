@@ -277,7 +277,7 @@
                 app:cameraPictureSnapshotMetering="true"
                 app:cameraSnapshotMaxHeight="800"
                 app:cameraSnapshotMaxWidth="800"
-                app:cameraVideoBitRate="6400"
+                app:cameraVideoBitRate="32000"
                 app:cameraVideoMaxDuration="60000"
                 app:cameraVideoSizeAspectRatio="1:1"
                 app:cameraVideoSizeMaxHeight="500"
