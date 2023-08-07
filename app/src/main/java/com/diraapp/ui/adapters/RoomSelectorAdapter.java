@@ -60,10 +60,13 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
 
         Message message = room.getMessage();
 
-        if (room.isUpdatedRead()) {
+        if (room.getUnreadMessagesIds().size() == 0) {
             holder.roomContainer.setBackground(context.getResources().getDrawable(R.drawable.room_header_clickable));
+            holder.unreadMessagesCount.setVisibility(View.GONE);
         } else {
             holder.roomContainer.setBackground(context.getResources().getDrawable(R.drawable.room_unread_background));
+            holder.unreadMessagesCount.setVisibility(View.VISIBLE);
+            holder.unreadMessagesCount.setText(String.valueOf(room.getUnreadMessagesIds().size()));
         }
 
         holder.rootView.setOnClickListener(new View.OnClickListener() {
@@ -138,6 +141,8 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
         LinearLayout roomContainer;
         View rootView;
 
+        TextView unreadMessagesCount;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -149,6 +154,7 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
             roomContainer = itemView.findViewById(R.id.room_container);
             timeText = itemView.findViewById(R.id.time_text);
             accentText = itemView.findViewById(R.id.author_text);
+            unreadMessagesCount = itemView.findViewById(R.id.unread_messages_count);
         }
     }
 }

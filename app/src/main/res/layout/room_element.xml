@@ -38,17 +38,42 @@
             android:gravity="center_vertical"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/room_name"
-                android:layout_width="wrap_content"
-                android:layout_height="22dp"
-                android:layout_gravity="center_vertical"
-                android:fontFamily="@font/montserratbold"
-                android:maxLines="1"
-                android:text=".."
-                android:textColor="@color/white"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                android:textSize="18sp" />
+                <TextView
+                    android:id="@+id/room_name"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="@font/montserratbold"
+                    android:maxLines="1"
+                    android:text=".."
+                    android:textColor="@color/white"
+
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/time_text"
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="18dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="2dp"
+                    android:fontFamily="@font/montserratsemibold"
+                    android:gravity="center_vertical|right"
+                    android:text=""
+                    android:textColor="@color/light_gray"
+                    android:textSize="12sp" />
+
+
+            </LinearLayout>
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -83,17 +108,21 @@
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/time_text"
+                    android:id="@+id/unread_messages_count"
                     android:layout_width="wrap_content"
+                    android:minWidth="12dp"
+                    android:visibility="gone"
+                    android:paddingHorizontal="6dp"
+                    android:background="@drawable/rounded_accent_rectangle"
 
                     android:layout_height="18dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="4dp"
                     android:layout_marginTop="2dp"
-                    android:fontFamily="@font/montserratsemibold"
+                    android:fontFamily="@font/montserratbold"
                     android:gravity="center_vertical|right"
                     android:text=""
-                    android:textColor="@color/light_gray"
+                    android:textColor="@color/gray"
                     android:textSize="12sp" />
             </LinearLayout>
 

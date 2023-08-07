@@ -336,10 +336,14 @@ public class RoomSelectorActivity extends AppCompatActivity
             MessageReading reading = new MessageReading(messageReadUpdate.getUserId(),
                     messageReadUpdate.getReadTime());
 
-            if (message.getMessageReadingList().contains(reading)) return;
-
             message.getMessageReadingList().add(reading);
-            roomSelectorAdapter.notifyItemChanged(index);
+            int finalIndex = index;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    roomSelectorAdapter.notifyItemChanged(finalIndex);
+                }
+            });
         }
     }
 

@@ -111,7 +111,7 @@ public class ChatAppearanceActivity extends AppCompatActivity {
         long keyTime = 1;
 
         String secretName = "1111";
-        Room room = new Room(null, keyTime, secretName, null, false);
+        Room room = new Room(null, keyTime, secretName, null, false, new ArrayList<>());
         room.setTimeEncryptionKeyUpdated(keyTime);
 
         Message senderMessage = new Message();

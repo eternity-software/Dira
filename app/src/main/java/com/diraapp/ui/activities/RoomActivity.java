@@ -299,6 +299,8 @@ public class RoomActivity extends AppCompatActivity
         });
         loadMessagesHistory.start();
 
+        UserStatusHandler.getInstance().addListener(this);
+
     }
 
 
@@ -577,6 +579,7 @@ public class RoomActivity extends AppCompatActivity
         roomMessagesAdapter.release();
         UpdateProcessor.getInstance().removeUpdateListener(this);
         UpdateProcessor.getInstance().removeProcessorListener(this);
+        UserStatusHandler.getInstance().removeListener(this);
     }
 
     @Override
@@ -639,12 +642,14 @@ public class RoomActivity extends AppCompatActivity
             }
             if (thisMessage == null) return;
 
-            MessageReading reading = new MessageReading(readUpdate.getUserId(),
+            MessageReading thisReading = new MessageReading(readUpdate.getUserId(),
                     readUpdate.getReadTime());
 
-            if (thisMessage.getMessageReadingList().contains(reading)) return;
+            for (MessageReading reading: thisMessage.getMessageReadingList()) {
+                if (reading.getUserId().equals(thisReading.getUserId())) return;
+            }
 
-            thisMessage.getMessageReadingList().add(reading);
+            thisMessage.getMessageReadingList().add(thisReading);
 
 
             int finalIndex = index;
@@ -716,6 +721,7 @@ public class RoomActivity extends AppCompatActivity
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (count == 0) return;
                 if (userStatus == null) {
                     sendStatusRequest();
                 } else if (userStatus.getUserStatus() != UserStatus.TYPING) {
@@ -1013,11 +1019,8 @@ public class RoomActivity extends AppCompatActivity
         } else {
             membersCount.setTextColor(theme.getColorTheme().getAccentColor());
 
-            int count = 3;
-            if (size < count) count = size;
-
             String nickNames = "";
-            for (int i = 0; i < count; i++) {
+            for (int i = 0; i < size; i++) {
                 Member member = roomMessagesAdapter.getMembers().get(usersStatusList.get(i).getUserId());
                 if (member == null) continue;
 

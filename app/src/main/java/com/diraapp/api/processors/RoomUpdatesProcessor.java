@@ -55,7 +55,7 @@ public class RoomUpdatesProcessor {
         Room oldRoom = roomDao.getRoomBySecretName(newRoomUpdate.getRoomSecret());
         if (oldRoom == null) {
 
-            Room room = new Room(inviteRoom.getName(), System.currentTimeMillis(), inviteRoom.getSecretName(), serverAddress, true);
+            Room room = new Room(inviteRoom.getName(), System.currentTimeMillis(), inviteRoom.getSecretName(), serverAddress, true, new ArrayList<>());
 
             if (inviteRoom.getBase64pic() != null) {
                 Bitmap bitmap = AppStorage.getBitmapFromBase64(inviteRoom.getBase64pic());
@@ -158,7 +158,7 @@ public class RoomUpdatesProcessor {
                 } else if (update instanceof MemberUpdate) {
                     newMessage = updateMember((MemberUpdate) update);
                 } else if (update instanceof MessageReadUpdate) {
-                    updateMessageReading((MessageReadUpdate) update);
+                    updateMessageReading((MessageReadUpdate) update, room);
                 } else if (update instanceof DhInitUpdate) {
                     newMessage = UpdateProcessor.getInstance().getClientMessageProcessor().
                             notifyRoomKeyGenerationStart((DhInitUpdate) update, room);
@@ -246,7 +246,7 @@ public class RoomUpdatesProcessor {
         return null;
     }
 
-    private void updateMessageReading(MessageReadUpdate update) {
+    private void updateMessageReading(MessageReadUpdate update, Room room) {
 
         Message message = messageDao.getMessageById(update.getMessageId());
 
@@ -261,7 +261,6 @@ public class RoomUpdatesProcessor {
 
             message.setRead(true);
 
-            Room room = roomDao.getRoomBySecretName(update.getRoomSecret());
             int index = room.getUnreadMessagesIds().indexOf(message.getId());
 
             ArrayList<String> toDelete = new ArrayList<>();
@@ -269,8 +268,7 @@ public class RoomUpdatesProcessor {
                 for (int i = 0; i <= index; i++) {
                     toDelete.add(room.getUnreadMessagesIds().get(i));
                 }
-                room.getUnreadMessagesIds().removeAll(toDelete);
-                roomDao.update(room);
+                room.removeFromUnreadMessages(toDelete);
             }
 
         } else {

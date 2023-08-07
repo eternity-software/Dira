@@ -8,6 +8,7 @@ import com.diraapp.api.updates.UserStatusUpdate;
 import com.diraapp.exceptions.SingletonException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class UserStatusHandler implements UpdateListener {
     private static UserStatusHandler instance;
@@ -40,9 +41,23 @@ public class UserStatusHandler implements UpdateListener {
     }
 
     public ArrayList<Status> getUserStatuses(String secretName) {
+        ArrayList<String> usersIds = new ArrayList<>();
         ArrayList<Status> list = new ArrayList<>();
-        for (Status status: userStatuses) {
-            if (status.getSecretName().equals(secretName)) list.add(status);
+
+        int size = userStatuses.size();
+        if (size > 0) {
+            int stop = 3;
+
+            for (int i = size - 1; i >= 0; i--) {
+                Status status = userStatuses.get(i);
+                if (status.getSecretName().equals(secretName)) {
+                    if (!usersIds.contains(status.getUserId())) {
+                        list.add(status);
+                        usersIds.add(status.getUserId());
+                        if (list.size() == stop) break;
+                    }
+                }
+            }
         }
         return list;
     }

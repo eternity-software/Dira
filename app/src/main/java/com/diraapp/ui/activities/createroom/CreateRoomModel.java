@@ -7,6 +7,8 @@ import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.utils.KeyGenerator;
 
+import java.util.ArrayList;
+
 public class CreateRoomModel implements CreateRoomContract.Model {
 
     private final RoomDao roomDao;
@@ -19,7 +21,7 @@ public class CreateRoomModel implements CreateRoomContract.Model {
     public void createRoom(String roomName, String roomSecret, String welcomeMessage,
                            String authorId, String authorName, String serverAddress) {
 
-        Room room = new Room(roomName, System.currentTimeMillis(), roomSecret, serverAddress, true);
+        Room room = new Room(roomName, System.currentTimeMillis(), roomSecret, serverAddress, true, new ArrayList<>());
 
         roomDao.insertAll(room);
 

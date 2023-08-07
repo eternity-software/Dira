@@ -570,19 +570,23 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 Member member = members.get(message.getAuthorId());
                 holder.nicknameText.setText(member.getNickname());
 
-                if (member.getImagePath() != null) {
-                    Picasso.get().load(new File(member.getImagePath())).into(holder.profilePicture);
-                } else {
-                    holder.profilePicture.setImageResource(R.drawable.placeholder);
-                }
-
+                boolean showProfilePicture = true;
                 if (previousMessage != null) {
                     if (previousMessage.getAuthorId() != null) {
                         if (previousMessage.getAuthorId().equals(message.getAuthorId()) && isSameDay
                                 && isSameYear) {
                             holder.pictureContainer.setVisibility(View.INVISIBLE);
                             holder.nicknameText.setVisibility(View.GONE);
+                            showProfilePicture = false;
                         }
+                    }
+                }
+
+                if (showProfilePicture) {
+                    if (member.getImagePath() != null) {
+                        Picasso.get().load(new File(member.getImagePath())).into(holder.profilePicture);
+                    } else {
+                        holder.profilePicture.setImageResource(R.drawable.placeholder);
                     }
                 }
 
@@ -600,7 +604,9 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.nicknameText.setVisibility(View.GONE);
         holder.pictureContainer.setVisibility(View.VISIBLE);
 
-        Picasso.get().load(new File(room.getImagePath())).into(holder.profilePicture);
+        if (room.getImagePath() != null) {
+            Picasso.get().load(new File(room.getImagePath())).into(holder.profilePicture);
+        }
 
         holder.emojiText.setVisibility(View.GONE);
         holder.messageText.setVisibility(View.GONE);
@@ -882,7 +888,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             Member member = members.get(messageReading.getUserId());
             if (member == null) continue;
             UserReadMessage userReadMessage = new UserReadMessage(
-                    member.getNickname(), loadedBitmaps.get(member.getImagePath()));
+                    member.getNickname(), member.getImagePath());
             userReadMessages.add(userReadMessage);
         }
 
@@ -909,26 +915,39 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         final boolean[] isInitialDisplay = {true};
 
         backArrow.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.GONE);
 
-        if (size < 4) {
-            recyclerView.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
-        }
+        LinearLayout recyclerLayout = layout.findViewById(R.id.recycler_layout);
+        int n = 4;
+        if (n > size) n = size;
+        recyclerLayout.setVisibility(View.GONE);
+        recyclerLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                Numbers.dpToPx(48 * n, context)));
 
         if (size == 0) {
             firstCard.setVisibility(View.GONE);
             secondCard.setVisibility(View.GONE);
             countTextView.setText(context.getString(R.string.message_tooltip_zero_read));
         } else if (size == 1) {
-            firstUserIcon.setImageBitmap(userReadMessages.get(0).getPicture());
+            if (userReadMessages.get(0).getPicturePath() != null) {
+                Picasso.get().load(new File(userReadMessages.get(0).getPicturePath())).into(firstUserIcon);
+            } else {
+                firstUserIcon.setImageResource(R.drawable.placeholder);
+            }
             secondCard.setVisibility(View.GONE);
             countTextView.setText(context.getString(R.string.message_tooltip_one_read).
                     replace("%s", String.valueOf(size)));
         } else {
-            firstUserIcon.setImageBitmap(userReadMessages.get(0).getPicture());
-            secondUserIcon.setImageBitmap(userReadMessages.get(1).getPicture());
+            if (userReadMessages.get(0).getPicturePath() != null) {
+                Picasso.get().load(new File(userReadMessages.get(0).getPicturePath())).into(firstUserIcon);
+            } else {
+                firstUserIcon.setImageResource(R.drawable.placeholder);
+            }
+            if (userReadMessages.get(1).getPicturePath() != null) {
+                Picasso.get().load(new File(userReadMessages.get(1).getPicturePath())).into(firstUserIcon);
+            } else {
+                firstUserIcon.setImageResource(R.drawable.placeholder);
+            }
             countTextView.setText(context.getString(R.string.message_tooltip_read_count).
                     replace("%s", String.valueOf(size)));
         }
@@ -947,8 +966,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             countRow.setOnClickListener((View v) -> {
                 if (isInitialDisplay[0]) {
                     backArrow.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    countRow.setVisibility(View.GONE);
+                    recyclerLayout.setVisibility(View.VISIBLE);
+                    copyRow.setVisibility(View.GONE);
                     firstCard.setVisibility(View.GONE);
                     secondCard.setVisibility(View.GONE);
                 } else {
@@ -958,7 +977,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                     }
                     copyRow.setVisibility(View.VISIBLE);
                     backArrow.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.GONE);
+                    recyclerLayout.setVisibility(View.GONE);
                 }
                 isInitialDisplay[0] = !isInitialDisplay[0];
             });

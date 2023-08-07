@@ -5,15 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
-import com.diraapp.ui.adapters.MembersAdapter;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +42,8 @@ public class MessageTooltipAdapter extends RecyclerView.Adapter<MessageTooltipAd
         UserReadMessage userReadMessage = users.get(position);
 
         holder.nickNameView.setText(userReadMessage.getNickName());
-        if (userReadMessage.getPicture() != null) {
-            holder.userPictureView.setImageBitmap(userReadMessage.getPicture());
+        if (userReadMessage.getPicturePath() != null) {
+            Picasso.get().load(new File(userReadMessage.getPicturePath())).into(holder.userPictureView);
         }
     }
 

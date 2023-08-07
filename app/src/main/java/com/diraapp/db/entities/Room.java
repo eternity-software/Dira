@@ -51,12 +51,17 @@ public class Room {
     private Message message;
 
     public Room(String name, long lastUpdatedTime, String secretName, String serverAddress,
-                boolean isNotificationsEnabled) {
+                boolean isNotificationsEnabled, ArrayList<String> unreadMessagesIds) {
         this.name = name;
         this.lastUpdatedTime = lastUpdatedTime;
         this.secretName = secretName;
         this.serverAddress = serverAddress;
         this.isNotificationsEnabled = isNotificationsEnabled;
+        if (unreadMessagesIds == null) {
+            this.unreadMessagesIds = new ArrayList<>();
+            return;
+        }
+        this.unreadMessagesIds = unreadMessagesIds;
     }
 
     public String getClientSecret() {
@@ -177,6 +182,10 @@ public class Room {
 
     public ArrayList<String> getUnreadMessagesIds() {
         return unreadMessagesIds;
+    }
+
+    public boolean removeFromUnreadMessages(ArrayList<String> list) {
+        return unreadMessagesIds.removeAll(list);
     }
 
     public void setUnreadMessagesIds(ArrayList<String> unreadMessagesIds) {

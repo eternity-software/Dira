@@ -6,18 +6,18 @@ public class UserReadMessage {
 
     private String nickName;
 
-    private Bitmap picture;
+    private String picturePath;
 
-    public UserReadMessage(String nickName, Bitmap picture) {
+    public UserReadMessage(String nickName, String picture) {
         this.nickName = nickName;
-        this.picture = picture;
+        this.picturePath = picture;
     }
 
     public String getNickName() {
         return nickName;
     }
 
-    public Bitmap getPicture() {
-        return picture;
+    public String getPicturePath() {
+        return picturePath;
     }
 }
