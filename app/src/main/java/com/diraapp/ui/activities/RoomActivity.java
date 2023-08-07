@@ -630,8 +630,12 @@ public class RoomActivity extends AppCompatActivity
             }
             if (thisMessage == null) return;
 
-            thisMessage.getMessageReadingList().add(new MessageReading(readUpdate.getMessageId(),
-                    readUpdate.getReadTime()));
+            MessageReading reading = new MessageReading(readUpdate.getUserId(),
+                    readUpdate.getReadTime());
+
+            if (thisMessage.getMessageReadingList().contains(reading)) return;
+
+            thisMessage.getMessageReadingList().add(reading);
 
 
             int finalIndex = index;

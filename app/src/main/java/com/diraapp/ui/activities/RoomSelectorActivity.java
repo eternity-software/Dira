@@ -22,6 +22,7 @@ import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.ProcessorListener;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.GetUpdatesRequest;
+import com.diraapp.api.updates.MessageReadUpdate;
 import com.diraapp.api.updates.ServerSyncUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
@@ -29,6 +30,7 @@ import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.services.UpdaterService;
 import com.diraapp.storage.AppStorage;
@@ -311,21 +313,31 @@ public class RoomSelectorActivity extends AppCompatActivity
                 });
             }
         } else if (update.getUpdateType() == UpdateType.READ_UPDATE) {
-            Room updatedRoom = DiraRoomDatabase.getDatabase(this).getRoomDao().
-                    getRoomBySecretName(update.getRoomSecret());
-
+            Message message = null;
             int index = -1;
-
-            for (Room room: roomList) {
+            for (Room room: new ArrayList<>(roomList)) {
                 if (room.getSecretName().equals(update.getRoomSecret())) {
+                    message = room.getMessage();
                     index = roomList.indexOf(room);
-                    roomList.remove(index);
+                    break;
                 }
             }
 
+            if (message == null) return;
             if (index == -1) return;
 
-            roomList.add(index, updatedRoom);
+            if (!message.getAuthorId().equals(cacheUtils.getString(CacheUtils.ID))) return;
+
+            if (message.getMessageReadingList().size() != 0) return;
+
+            MessageReadUpdate messageReadUpdate = (MessageReadUpdate) update;
+
+            MessageReading reading = new MessageReading(messageReadUpdate.getUserId(),
+                    messageReadUpdate.getReadTime());
+
+            if (message.getMessageReadingList().contains(reading)) return;
+
+            message.getMessageReadingList().add(reading);
             roomSelectorAdapter.notifyItemChanged(index);
         }
     }
