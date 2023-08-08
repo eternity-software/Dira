@@ -50,6 +50,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
         this.mediaElements = mediaElements;
         //   Collections.reverse(images);
+
+        waterfallBalancer = new WaterfallBalancer(context, getHardwareDependBalancerCount(), recyclerView);
+
+
+    }
+
+    private int getHardwareDependBalancerCount(){
         int balancerCount = 4;
 
         PerformanceClass performanceClass = PerformanceTester.measureDevicePerformanceClass(context);
@@ -61,9 +68,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         {
             balancerCount = 14;
         }
-        waterfallBalancer = new WaterfallBalancer(context, balancerCount, recyclerView);
-
-
+        return balancerCount;
     }
 
     /**
@@ -79,7 +84,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         this.context = context;
         mediaElements = getAllShownImagesPath();
         //   Collections.reverse(images);
-        waterfallBalancer = new WaterfallBalancer(context, 5, recyclerView);
+        waterfallBalancer = new WaterfallBalancer(context, getHardwareDependBalancerCount(), recyclerView);
 
         registerTransitionListener();
     }
