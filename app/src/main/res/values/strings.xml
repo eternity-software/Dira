@@ -9,6 +9,7 @@
     <string name="not_read">Not read</string>
     <string name="rooms_list_last">That’s all rooms stored on device</string>
     <string name="no_messages">History is empty</string>
+    <string name="room_last_not_read"> (Not read)</string>
 
     <!-- Join room -->
     <string name="join_room">Join room</string>

@@ -3,6 +3,7 @@
     <color name="accent">#00FFE0</color>
     <color name="accent_dark">#00BAA3</color>
     <color name="accent_medium">#1AE3CB</color>
+    <color name="unread_message_background">#3F5350</color>
     <color name="dark">#202020</color>
     <color name="light_gray">#CDCDCD</color>
     <color name="medium_light_gray">#6D6D6D</color>
@@ -16,15 +17,19 @@
 
     <color name="kitty_accent">#5A4BB9</color>
     <color name="kitty_message">#474169</color>
+    <color name="unread_message_background_kitty">#433F5F</color>
 
     <color name="blue_accent">#388BD7</color>
     <color name="blue_message">#424242</color>
+    <color name="unread_message_background_blue">#374B5E</color>
 
     <color name="rock_accent">#C26734</color>
     <color name="rock_message">#424242</color>
+    <color name="unread_message_background_rock">#756155</color>
 
     <color name="green_accent">#0D4A43</color>
     <color name="green_message">#1A796E</color>
+    <color name="unread_message_background_green">#3D4C4A</color>
 
     <!-- Paint colors !-->
     <color name="paintBlack">#131313</color>

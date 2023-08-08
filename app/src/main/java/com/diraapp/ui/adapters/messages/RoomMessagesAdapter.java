@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -590,6 +591,15 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                     }
                 }
 
+            }
+        } else {
+            if (message.getMessageReadingList().size() == 0) {
+                holder.messageBackground.getBackground().setColorFilter(
+                        theme.getUnreadMessageBackground(), PorterDuff.Mode.SRC_IN);
+                holder.messageBackground.getBackground().setAlpha((int)(255 * 0.18));
+            } else {
+                holder.messageBackground.getBackground().setColorFilter(
+                        Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
             }
         }
 
