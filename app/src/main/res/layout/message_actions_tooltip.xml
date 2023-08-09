@@ -92,20 +92,20 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:id="@+id/recycler_layout">
 
         <androidx.recyclerview.widget.RecyclerView
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/message_tooltip_recycler">
 
         </androidx.recyclerview.widget.RecyclerView>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
 </LinearLayout>

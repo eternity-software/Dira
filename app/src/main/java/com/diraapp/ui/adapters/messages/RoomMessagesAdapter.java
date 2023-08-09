@@ -18,13 +18,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
@@ -537,6 +542,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private void bindUserMessage(Message message, Message previousMessage,
                                  boolean isSameDay, boolean isSameYear, ViewHolder holder) {
+        holder.itemView.setClickable(true);
         holder.itemView.setOnClickListener((View v) -> {
             createBalloon(message, holder.itemView);
         });
@@ -609,6 +615,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void bindRoomUpdateMessage(Message message, ViewHolder holder) {
+        holder.itemView.setClickable(false);
+
         holder.roomUpdatesLayout.setVisibility(View.VISIBLE);
 
         holder.nicknameText.setVisibility(View.GONE);
@@ -904,12 +912,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         Balloon balloon = new Balloon.Builder(context).
                 setLayout(R.layout.message_actions_tooltip)
-                .setBalloonAnimation(BalloonAnimation.FADE)
+                .setBalloonAnimation(BalloonAnimation.OVERSHOOT)
                 .setIsVisibleArrow(false)
                 .build();
 
         RadiusLayout layout = (RadiusLayout) balloon.getContentView();
         layout.setBackground(ContextCompat.getDrawable(context, R.drawable.tooltip_drawable));
+        RelativeLayout recyclerLayout = layout.findViewById(R.id.recycler_layout);
         LinearLayout copyRow = layout.findViewById(R.id.copy_row);
         LinearLayout countRow = layout.findViewById(R.id.count_row);
         RecyclerView recyclerView = layout.findViewById(R.id.message_tooltip_recycler);
@@ -925,14 +934,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         final boolean[] isInitialDisplay = {true};
 
         backArrow.setVisibility(View.GONE);
-
-        LinearLayout recyclerLayout = layout.findViewById(R.id.recycler_layout);
-        int n = 4;
-        if (n > size) n = size;
         recyclerLayout.setVisibility(View.GONE);
-        recyclerLayout.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                Numbers.dpToPx(48 * n, context)));
+
+        int height = size * 48;
+        if (size > 4) {
+            height = 4 * 48;
+        }
+        height = Numbers.dpToPx(height, context);
 
         if (size == 0) {
             firstCard.setVisibility(View.GONE);
@@ -954,7 +962,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 firstUserIcon.setImageResource(R.drawable.placeholder);
             }
             if (userReadMessages.get(1).getPicturePath() != null) {
-                Picasso.get().load(new File(userReadMessages.get(1).getPicturePath())).into(firstUserIcon);
+                Picasso.get().load(new File(userReadMessages.get(1).getPicturePath())).into(secondUserIcon);
             } else {
                 firstUserIcon.setImageResource(R.drawable.placeholder);
             }
@@ -973,10 +981,12 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         });
 
         if (size != 0) {
+            int finalHeight = height;
             countRow.setOnClickListener((View v) -> {
                 if (isInitialDisplay[0]) {
                     backArrow.setVisibility(View.VISIBLE);
                     recyclerLayout.setVisibility(View.VISIBLE);
+                    recyclerLayout.getLayoutParams().height = finalHeight;
                     copyRow.setVisibility(View.GONE);
                     firstCard.setVisibility(View.GONE);
                     secondCard.setVisibility(View.GONE);
