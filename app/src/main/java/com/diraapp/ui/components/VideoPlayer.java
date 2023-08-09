@@ -102,11 +102,11 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
                 try {
                     int widthWas = rightWas - leftWas; // Right exclusive, left inclusive
                     if (v.getWidth() != widthWas) {
-                        //adjustAspectRatio(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
+                        adjustAspectRatio(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
                     }
                     int heightWas = bottomWas - topWas; // Bottom exclusive, top inclusive
                     if (v.getHeight() != heightWas) {
-                       // adjustAspectRatio(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
+                        adjustAspectRatio(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
                     }
                 } catch (Exception e) {
 
@@ -220,7 +220,7 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
                     mediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
                         @Override
                         public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-                            //adjustAspectRatio(width, height);
+                            adjustAspectRatio(width, height);
 
                         }
                     });
@@ -278,6 +278,7 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
                                     play(currentPlaying);
                                 }
 
+                                adjustAspectRatio(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
 
 //            mediaPlayer.setOnBufferingUpdateListener(this);
 //            mediaPlayer.setOnCompletionListener(this);

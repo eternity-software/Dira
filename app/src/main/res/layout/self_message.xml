@@ -28,7 +28,7 @@
             android:gravity="center"
             android:includeFontPadding="false"
             android:paddingHorizontal="10dp"
-            android:paddingTop="5dp"
+            android:paddingVertical="5dp"
 
             android:text="05 december, 2004"
             android:textColor="@color/white"
@@ -168,7 +168,7 @@
                         app:wave_progress_color="@color/white"
                         app:wave_gravity="center"
                         app:wave_padding_top="4dp"
-                        app:wave_padding_Bottom="4dp"
+                        app:wave_padding_Bottom="8dp"
                         app:wave_padding_right="2dp"
                         app:wave_padding_left="2dp"
 

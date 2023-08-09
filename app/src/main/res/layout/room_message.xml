@@ -166,7 +166,7 @@
                                 app:wave_progress_color="@color/gray"
                                 app:wave_gravity="center"
                                 app:wave_padding_top="4dp"
-                                app:wave_padding_Bottom="4dp"
+                                app:wave_padding_Bottom="8dp"
                                 app:wave_padding_right="2dp"
                                 app:wave_padding_left="2dp"
 
