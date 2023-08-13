@@ -59,6 +59,7 @@ import com.diraapp.utils.SliderActivity;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -89,7 +90,7 @@ public class RoomActivity extends DiraActivity
 
         SliderActivity sliderActivity = new SliderActivity();
         sliderActivity.attachSlider(this);
-        
+
         roomSecret = getIntent().getExtras().getString(RoomSelectorActivity.PENDING_ROOM_SECRET);
         String roomName = getIntent().getExtras().getString(RoomSelectorActivity.PENDING_ROOM_NAME);
 
@@ -386,10 +387,8 @@ public class RoomActivity extends DiraActivity
                 }
             });
 
-
             binding.recyclerView.setAdapter(roomMessagesAdapter);
 
-            updateUserStatus(roomSecret, UserStatusHandler.getInstance().getUserStatuses(roomSecret));
             presenter.loadMessages();
         });
     }
@@ -422,6 +421,7 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void setMembers(HashMap<String, Member> members) {
+        runOnUiThread(() -> updateUserStatus(roomSecret, new ArrayList<>()));
         roomMessagesAdapter.setMembers(members);
     }
 

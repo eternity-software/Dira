@@ -122,16 +122,17 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     @Override
     public void initRoomInfo() {
         view.runBackground(() -> {
-            messageList = view.getMessagesDatabase().getMessageDao().getAllMessages(roomSecret);
             room = view.getRoomDatabase().getRoomDao().getRoomBySecretName(roomSecret);
             room.setUpdatedRead(true);
             view.getRoomDatabase().getRoomDao().update(room);
 
             Bitmap roomPicture = null;
-            if (room.getImagePath() != null)
+            if (room.getImagePath() != null) {
                 roomPicture = AppStorage.getBitmapFromPath(room.getImagePath());
+            }
 
             view.fillRoomInfo(roomPicture, room);
+
 
         });
     }
@@ -187,6 +188,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     @Override
     public void loadMessages() {
         view.runBackground(() -> {
+            messageList = view.getMessagesDatabase().getMessageDao().getLastMessagesInRoom(roomSecret);
             initMembers();
             view.setMessages(messageList);
             view.notifyMessagesChanged();
