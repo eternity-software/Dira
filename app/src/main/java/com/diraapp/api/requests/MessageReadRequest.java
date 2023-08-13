@@ -2,13 +2,10 @@ package com.diraapp.api.requests;
 
 public class MessageReadRequest extends Request {
 
-    private String userId;
-
-    private long readTime;
-
-    private String messageId;
-
     private final String roomSecret;
+    private String userId;
+    private long readTime;
+    private String messageId;
 
     public MessageReadRequest(String userId, long readTime, String messageId, String roomSecret) {
         super(0, RequestType.MESSAGE_READ);

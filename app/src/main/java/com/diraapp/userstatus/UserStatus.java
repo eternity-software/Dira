@@ -1,14 +1,14 @@
 package com.diraapp.userstatus;
 
-import com.diraapp.api.views.UserStatus;
+import com.diraapp.api.views.UserStatusType;
 
-public class Status {
+public class UserStatus {
 
     public static final long VISIBLE_TIME_MILLIS = 1000;
 
     public static final long REQUEST_DELAY = 700;
 
-    private final UserStatus userStatus;
+    private final UserStatusType userStatusType;
 
     private final String userId;
 
@@ -16,8 +16,8 @@ public class Status {
 
     private long time;
 
-    public Status(UserStatus userStatus, String userId, String secretName) {
-        this.userStatus = userStatus;
+    public UserStatus(UserStatusType userStatusType, String userId, String secretName) {
+        this.userStatusType = userStatusType;
         this.userId = userId;
         this.secretName = secretName;
     }
@@ -26,8 +26,8 @@ public class Status {
         return secretName;
     }
 
-    public UserStatus getUserStatus() {
-        return userStatus;
+    public UserStatusType getUserStatus() {
+        return userStatusType;
     }
 
     public String getUserId() {

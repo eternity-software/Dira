@@ -12,11 +12,9 @@ import java.util.ArrayList;
 public class UserStatusHandler implements UpdateListener {
     private static UserStatusHandler instance;
 
-    private final ArrayList<Status> userStatuses = new ArrayList<>();
-
-    private Thread statusThread;
-
+    private final ArrayList<UserStatus> userUserStatuses = new ArrayList<>();
     private final ArrayList<UserStatusListener> listenerList = new ArrayList<>();
+    private Thread statusThread;
 
     public UserStatusHandler() throws SingletonException {
         if (instance == null) {
@@ -39,20 +37,20 @@ public class UserStatusHandler implements UpdateListener {
         return instance;
     }
 
-    public ArrayList<Status> getUserStatuses(String secretName) {
+    public ArrayList<UserStatus> getUserStatuses(String secretName) {
         ArrayList<String> usersIds = new ArrayList<>();
-        ArrayList<Status> list = new ArrayList<>();
+        ArrayList<UserStatus> list = new ArrayList<>();
 
-        int size = userStatuses.size();
+        int size = userUserStatuses.size();
         if (size > 0) {
             int stop = 3;
 
             for (int i = size - 1; i >= 0; i--) {
-                Status status = userStatuses.get(i);
-                if (status.getSecretName().equals(secretName)) {
-                    if (!usersIds.contains(status.getUserId())) {
-                        list.add(status);
-                        usersIds.add(status.getUserId());
+                UserStatus userStatus = userUserStatuses.get(i);
+                if (userStatus.getSecretName().equals(secretName)) {
+                    if (!usersIds.contains(userStatus.getUserId())) {
+                        list.add(userStatus);
+                        usersIds.add(userStatus.getUserId());
                         if (list.size() == stop) break;
                     }
                 }
@@ -87,26 +85,26 @@ public class UserStatusHandler implements UpdateListener {
 
     private void initUserStatusThread() {
         statusThread = new Thread(() -> {
-            ArrayList<Status> listToDelete = new ArrayList<>();
+            ArrayList<UserStatus> listToDelete = new ArrayList<>();
             System.out.println("User status thread started");
             long minTime = -1;
             while (true) {
-                ArrayList<Status> userStatusList = new ArrayList<>(userStatuses);
-                int size = userStatusList.size();
+                ArrayList<UserStatus> userUserStatusList = new ArrayList<>(userUserStatuses);
+                int size = userUserStatusList.size();
                 if (size == 0) {
                     break;
                 }
 
-                for (Status status : userStatusList) {
-                    minTime = userStatusList.get(0).getTime();
-                    listToDelete.add(userStatusList.get(0));
+                for (UserStatus userStatus : userUserStatusList) {
+                    minTime = userUserStatusList.get(0).getTime();
+                    listToDelete.add(userUserStatusList.get(0));
 
-                    if (status.getTime() < minTime) {
+                    if (userStatus.getTime() < minTime) {
                         listToDelete.clear();
-                        minTime = status.getTime();
-                        listToDelete.add(status);
-                    } else if (status.getTime() == minTime) {
-                        listToDelete.add(status);
+                        minTime = userStatus.getTime();
+                        listToDelete.add(userStatus);
+                    } else if (userStatus.getTime() == minTime) {
+                        listToDelete.add(userStatus);
                     }
                 }
 
@@ -119,9 +117,9 @@ public class UserStatusHandler implements UpdateListener {
                     }
                 }
 
-                for (Status status : listToDelete) {
-                    userStatuses.remove(status);
-                    notifyListeners(status.getSecretName());
+                for (UserStatus userStatus : listToDelete) {
+                    userUserStatuses.remove(userStatus);
+                    notifyListeners(userStatus.getSecretName());
                 }
             }
         });
@@ -130,10 +128,10 @@ public class UserStatusHandler implements UpdateListener {
     @Override
     public void onUpdate(Update update) {
         if (update.getUpdateType() == UpdateType.USER_STATUS_UPDATE) {
-            Status status = ((UserStatusUpdate) update).getStatus();
-            status.setTime(System.currentTimeMillis() + Status.VISIBLE_TIME_MILLIS);
-            userStatuses.add(status);
-            notifyListeners(status.getSecretName());
+            UserStatus userStatus = ((UserStatusUpdate) update).getStatus();
+            userStatus.setTime(System.currentTimeMillis() + UserStatus.VISIBLE_TIME_MILLIS);
+            userUserStatuses.add(userStatus);
+            notifyListeners(userStatus.getSecretName());
             startThread();
         }
     }

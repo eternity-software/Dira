@@ -85,7 +85,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.activities.RoomActivity"
+            android:name=".ui.activities.room.RoomActivity"
             android:exported="false"
             android:theme="@style/AppSlideTheme"
             android:windowSoftInputMode="adjustResize">

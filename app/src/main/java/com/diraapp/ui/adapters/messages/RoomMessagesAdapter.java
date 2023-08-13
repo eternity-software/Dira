@@ -94,14 +94,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final String serverAddress;
     private final RecyclerView recyclerView;
     private final long maxAutoLoadSize;
-    private Room room;
     private final DiraMediaPlayer diraMediaPlayer = new DiraMediaPlayer();
+    private final MessageAdapterListener messageAdapterListener;
+    private Room room;
     private ColorTheme theme;
     private List<Message> messages = new ArrayList<>();
     private HashMap<String, Member> members = new HashMap<>();
     private String firstLoadedId;
-
-    private final MessageAdapterListener messageAdapterListener;
 
 
     public RoomMessagesAdapter(Activity context, RecyclerView recyclerView, String secretName, String serverAddress, Room room, MessageAdapterListener messageAdapterListener) {

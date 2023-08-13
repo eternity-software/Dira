@@ -34,10 +34,11 @@ import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.services.UpdaterService;
 import com.diraapp.storage.AppStorage;
+import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.ui.adapters.RoomSelectorAdapter;
 import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.components.DiraPopup;
-import com.diraapp.userstatus.Status;
+import com.diraapp.userstatus.UserStatus;
 import com.diraapp.userstatus.UserStatusHandler;
 import com.diraapp.userstatus.UserStatusListener;
 import com.diraapp.utils.CacheUtils;
@@ -348,7 +349,7 @@ public class RoomSelectorActivity extends AppCompatActivity
     }
 
     @Override
-    public void updateUserStatus(String secretName, ArrayList<Status> userStatusList) {
+    public void updateUserStatus(String secretName, ArrayList<UserStatus> userUserStatusList) {
         //
     }
 }

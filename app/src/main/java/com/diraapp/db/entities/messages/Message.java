@@ -1,7 +1,5 @@
 package com.diraapp.db.entities.messages;
 
-import android.content.Context;
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -65,10 +63,8 @@ public class Message {
 
     }
 
-    public static Message generateMessage(Context context, String roomSecret) {
+    public static Message generateMessage(CacheUtils cacheUtils, String roomSecret) {
         Message message = new Message();
-
-        CacheUtils cacheUtils = new CacheUtils(context);
 
         message.setAuthorId(cacheUtils.getString(CacheUtils.ID));
         message.setAuthorNickname(cacheUtils.getString(CacheUtils.NICKNAME));

@@ -22,7 +22,7 @@ import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
 import com.diraapp.storage.AppStorage;
-import com.diraapp.ui.activities.RoomActivity;
+import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.TimeConverter;
 

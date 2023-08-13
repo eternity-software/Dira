@@ -26,8 +26,8 @@ import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeCl
 import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.images.ImagesWorker;
-import com.diraapp.ui.activities.RoomActivity;
 import com.diraapp.ui.activities.RoomSelectorActivity;
+import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.utils.CacheUtils;
 
 public class Notifier {

@@ -4,11 +4,9 @@ import android.media.MediaPlayer;
 
 public class DiraMediaPlayer extends MediaPlayer {
 
-    private boolean isReleased = false;
-
-    private Runnable onProgressTick = null;
-
     private final Thread progressThread;
+    private boolean isReleased = false;
+    private Runnable onProgressTick = null;
 
     public DiraMediaPlayer() {
         progressThread = new Thread(() -> {

@@ -28,7 +28,12 @@ import okhttp3.Response;
 
 public class FilesUploader {
 
-    public static boolean uploadFile(String sourceFileUri, Callback callback, Context context, boolean deleteAfterUpload, String serverAddress, String encryptionKey) throws IOException {
+    public static boolean uploadFile(String sourceFileUri,
+                                     Callback callback,
+                                     Context context,
+                                     boolean deleteAfterUpload,
+                                     String serverAddress,
+                                     String encryptionKey) throws IOException {
 
         try {
 

@@ -1,21 +1,21 @@
 package com.diraapp.api.requests;
 
-import com.diraapp.userstatus.Status;
+import com.diraapp.userstatus.UserStatus;
 
 public class SendUserStatusRequest extends Request {
 
-    private Status status;
+    private UserStatus userStatus;
 
-    public SendUserStatusRequest(Status status) {
+    public SendUserStatusRequest(UserStatus userStatus) {
         super(0, RequestType.USER_STATUS_REQUEST);
-        this.status = status;
+        this.userStatus = userStatus;
     }
 
-    public Status getUserStatus() {
-        return status;
+    public UserStatus getUserStatus() {
+        return userStatus;
     }
 
-    public void setUserStatus(Status status) {
-        this.status = status;
+    public void setUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
     }
 }

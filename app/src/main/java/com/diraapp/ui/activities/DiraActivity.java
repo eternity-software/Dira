@@ -9,13 +9,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.diraapp.utils.CacheUtils;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * Base class for activities with utility methods
  */
 public class DiraActivity extends AppCompatActivity {
 
+    private static final ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(4);
     private CacheUtils cacheUtils;
 
+    public void runBackground(Runnable runnable) {
+        threadPoolExecutor.execute(runnable);
+    }
 
     public CacheUtils getCacheUtils() {
         if (cacheUtils == null) cacheUtils = new CacheUtils(getApplicationContext());

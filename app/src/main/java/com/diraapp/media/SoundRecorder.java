@@ -13,11 +13,9 @@ import java.io.File;
  */
 public class SoundRecorder {
     static final private double EMA_FILTER = 0.6;
-
+    private final Context context;
     private MediaRecorder mediaRecorder = null;
     private double ema = 0.0;
-
-    private final Context context;
 
     public SoundRecorder(Context context) {
         this.context = context;

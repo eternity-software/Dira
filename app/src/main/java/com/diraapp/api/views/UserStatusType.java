@@ -2,7 +2,7 @@ package com.diraapp.api.views;
 
 import com.google.gson.annotations.SerializedName;
 
-public enum UserStatus {
+public enum UserStatusType {
 
     @SerializedName("0")
     TYPING,

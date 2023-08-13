@@ -42,18 +42,15 @@ import java.io.File;
  */
 public class RecordComponentsController {
 
-    private long lastTimeRecordButtonDown = 0;
-    private long lastTimeRecordButtonUp = 0;
-
     private final ImageView recordButton;
     private final ImageView recordRipple;
-
     private final DiraActivity context;
-
     private final SoundRecorder soundRecorder;
     private final CameraView camera;
     private final View recordBubbleLayout;
     private final CardView bubbleContainer;
+    private long lastTimeRecordButtonDown = 0;
+    private long lastTimeRecordButtonUp = 0;
     private boolean isRecordButtonVisible = true;
 
     private RecordListener recordListener;
