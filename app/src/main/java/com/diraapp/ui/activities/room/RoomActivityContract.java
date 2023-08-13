@@ -46,8 +46,8 @@ public interface RoomActivityContract {
         void compressVideo(List<Uri> urisToCompress,
                            String fileUri,
                            VideoQuality videoQuality,
-                           double videoHeight,
-                           double videoWidth,
+                           Double videoHeight,
+                           Double videoWidth,
                            RoomActivityPresenter.RoomAttachmentCallback callback,
                            String serverAddress,
                            String encryptionKey);
