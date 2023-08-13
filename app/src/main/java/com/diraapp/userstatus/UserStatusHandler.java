@@ -8,16 +8,15 @@ import com.diraapp.api.updates.UserStatusUpdate;
 import com.diraapp.exceptions.SingletonException;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class UserStatusHandler implements UpdateListener {
     private static UserStatusHandler instance;
 
-    private ArrayList<Status> userStatuses = new ArrayList<>();
+    private final ArrayList<Status> userStatuses = new ArrayList<>();
 
     private Thread statusThread;
 
-    private ArrayList<UserStatusListener> listenerList = new ArrayList<>();
+    private final ArrayList<UserStatusListener> listenerList = new ArrayList<>();
 
     public UserStatusHandler() throws SingletonException {
         if (instance == null) {
@@ -81,7 +80,7 @@ public class UserStatusHandler implements UpdateListener {
     }
 
     private void notifyListeners(String secretName) {
-        for (UserStatusListener listener: listenerList) {
+        for (UserStatusListener listener : listenerList) {
             listener.updateUserStatus(secretName, getUserStatuses(secretName));
         }
     }
@@ -98,7 +97,7 @@ public class UserStatusHandler implements UpdateListener {
                     break;
                 }
 
-                for (Status status: userStatusList) {
+                for (Status status : userStatusList) {
                     minTime = userStatusList.get(0).getTime();
                     listToDelete.add(userStatusList.get(0));
 
@@ -120,7 +119,7 @@ public class UserStatusHandler implements UpdateListener {
                     }
                 }
 
-                for (Status status: listToDelete) {
+                for (Status status : listToDelete) {
                     userStatuses.remove(status);
                     notifyListeners(status.getSecretName());
                 }

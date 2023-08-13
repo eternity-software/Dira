@@ -362,8 +362,7 @@ public class RoomInfoActivity extends AppCompatActivity implements UpdateListene
         });
     }
 
-    private void updateNotification()
-    {
+    private void updateNotification() {
 
         ImageView bellOn = findViewById(R.id.notification_enabled_icon);
         ImageView bellOff = findViewById(R.id.notification_disabled_icon);

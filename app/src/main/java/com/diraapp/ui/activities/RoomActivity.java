@@ -1,34 +1,20 @@
 package com.diraapp.ui.activities;
 
-import static com.diraapp.storage.AppStorage.DIRA_FILES_PATH;
-
 import android.Manifest;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.ScaleAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,7 +25,6 @@ import com.abedelazizshe.lightcompressorlibrary.VideoCompressor;
 import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
 import com.abedelazizshe.lightcompressorlibrary.config.AppSpecificStorageConfiguration;
 import com.abedelazizshe.lightcompressorlibrary.config.Configuration;
-
 import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.ProcessorListener;
@@ -50,9 +35,8 @@ import com.diraapp.api.updates.MessageReadUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
-import com.diraapp.userstatus.Status;
-import com.diraapp.databinding.ActivityRoomBinding;
 import com.diraapp.api.views.UserStatus;
+import com.diraapp.databinding.ActivityRoomBinding;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.daos.MessageDao;
@@ -73,16 +57,13 @@ import com.diraapp.ui.adapters.messages.RoomMessagesAdapter;
 import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.FilePreview;
+import com.diraapp.ui.components.RecordComponentsController;
+import com.diraapp.userstatus.Status;
 import com.diraapp.userstatus.UserStatusHandler;
 import com.diraapp.userstatus.UserStatusListener;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.EncryptionUtil;
 import com.diraapp.utils.SliderActivity;
-import com.diraapp.media.SoundRecorder;
-import com.otaliastudios.cameraview.CameraListener;
-import com.otaliastudios.cameraview.CameraOptions;
-import com.otaliastudios.cameraview.VideoResult;
-import com.otaliastudios.cameraview.controls.Mode;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -98,8 +79,8 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 
-public class RoomActivity extends AppCompatActivity
-        implements UpdateListener, ProcessorListener, UserStatusListener {
+public class RoomActivity extends DiraActivity
+        implements UpdateListener, ProcessorListener, UserStatusListener, RecordComponentsController.RecordListener {
     private String roomSecret;
     private Room room;
     private RoomMessagesAdapter roomMessagesAdapter;
@@ -113,9 +94,7 @@ public class RoomActivity extends AppCompatActivity
     private Status userStatus;
 
     private AppTheme theme;
-    private boolean isRecordButtonVisible = true;
-
-    private SoundRecorder soundRecorder;
+    private RecordComponentsController recordComponentsController;
 
     public static void putRoomExtrasInIntent(Intent intent, String roomSecret, String roomName) {
         intent.putExtra(RoomSelectorActivity.PENDING_ROOM_SECRET, roomSecret);
@@ -127,36 +106,10 @@ public class RoomActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         binding = ActivityRoomBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        soundRecorder = new SoundRecorder(getApplicationContext());
+
         SliderActivity sliderActivity = new SliderActivity();
         sliderActivity.attachSlider(this);
-        binding.camera.setLifecycleOwner(this);
-        binding.camera.addCameraListener(new CameraListener() {
-            @Override
-            public void onVideoTaken(VideoResult result) {
-                // Video was taken!
-                // Use result.getFile() to access a file holding
-                // the recorded video.
-                System.out.println("Bubble captured");
-                uploadAttachmentAndSendMessage(AttachmentType.BUBBLE, result.getFile().getPath(), "");
-            }
 
-            @Override
-            public void onCameraOpened(@NonNull CameraOptions options) {
-                super.onCameraOpened(options);
-                System.out.println("Camera opened");
-                if(binding.bubbleRecordingLayout.getVisibility() == View.GONE)
-                {
-                    binding.camera.close();
-                }
-            }
-        });
-
-        binding.camera.setMode(Mode.VIDEO);
-        binding.camera.close();
-
-
-        binding.bubbleRecordingLayout.setVisibility(View.GONE);
         roomSecret = getIntent().getExtras().getString(RoomSelectorActivity.PENDING_ROOM_SECRET);
         String roomName = getIntent().getExtras().getString(RoomSelectorActivity.PENDING_ROOM_NAME);
         selfId = new CacheUtils(this).getString(CacheUtils.ID);
@@ -166,7 +119,12 @@ public class RoomActivity extends AppCompatActivity
 
         UpdateProcessor.getInstance().addProcessorListener(this);
 
-        initRecordButton();
+        recordComponentsController = new RecordComponentsController(binding.recordButton,
+                binding.recordRipple, this,
+                binding.camera, binding.bubbleRecordingLayout, binding.bubbleFrame);
+
+        recordComponentsController.setRecordListener(this);
+
         theme = AppTheme.getInstance();
         applyColorTheme();
 
@@ -268,9 +226,7 @@ public class RoomActivity extends AppCompatActivity
 
                                     }
                                 });
-                            }
-                            catch (Exception e)
-                            {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
@@ -338,11 +294,9 @@ public class RoomActivity extends AppCompatActivity
                 try {
                     if (FileClassifier.isVideoFile(fileUri)) {
                         uploadAttachmentAndSendMessage(AttachmentType.VIDEO, fileUri, messageText);
-                    }
-                    else {
+                    } else {
                         uploadAttachmentAndSendMessage(AttachmentType.IMAGE, fileUri, messageText);
                     }
-
 
 
                 } catch (Exception e) {
@@ -354,8 +308,7 @@ public class RoomActivity extends AppCompatActivity
         }
     }
 
-    public void uploadAttachmentAndSendMessage(AttachmentType attachmentType, String fileUri, String messageText)
-    {
+    public void uploadAttachmentAndSendMessage(AttachmentType attachmentType, String fileUri, String messageText) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -372,10 +325,11 @@ public class RoomActivity extends AppCompatActivity
                     Double videoHeight = null;
                     Double videoWidth = null;
 
-                    if(attachmentType == AttachmentType.BUBBLE)
-                    {
-                        videoHeight = 256D;
-                        videoWidth = 256D;
+                    VideoQuality videoQuality = VideoQuality.VERY_LOW;
+
+                    if (attachmentType == AttachmentType.BUBBLE) {
+
+                        videoQuality = VideoQuality.HIGH;
                     }
 
                     VideoCompressor.start(getApplicationContext(), urisToCompress,
@@ -383,7 +337,7 @@ public class RoomActivity extends AppCompatActivity
                             null,
                             new AppSpecificStorageConfiguration(
                                     new File(fileUri).getName() + "temp_compressed", null), // => required name
-                            new Configuration(VideoQuality.VERY_LOW,
+                            new Configuration(videoQuality,
                                     false,
                                     2,
                                     false,
@@ -444,7 +398,6 @@ public class RoomActivity extends AppCompatActivity
 
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA},
                     1);
-            return;
         }
 
     }
@@ -645,7 +598,7 @@ public class RoomActivity extends AppCompatActivity
             MessageReading thisReading = new MessageReading(readUpdate.getUserId(),
                     readUpdate.getReadTime());
 
-            for (MessageReading reading: thisMessage.getMessageReadingList()) {
+            for (MessageReading reading : thisMessage.getMessageReadingList()) {
                 if (reading.getUserId().equals(thisReading.getUserId())) return;
             }
 
@@ -691,22 +644,22 @@ public class RoomActivity extends AppCompatActivity
 
         Thread updateRoom = new Thread(() -> {
 
-                   Room room = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getRoomBySecretName(roomSecret);
+            Room room = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getRoomBySecretName(roomSecret);
 
 
-                   runOnUiThread(new Runnable() {
-                       @Override
-                       public void run() {
-                           loadData();
-                       }
-                   });
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loadData();
+                }
+            });
 
 
-           if(roomMessagesAdapter == null) return;
-           loadMembers();
-           roomMessagesAdapter.setRoom(room);
-       });
-       updateRoom.start();
+            if (roomMessagesAdapter == null) return;
+            loadMembers();
+            roomMessagesAdapter.setRoom(room);
+        });
+        updateRoom.start();
 
     }
 
@@ -721,8 +674,11 @@ public class RoomActivity extends AppCompatActivity
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                recordComponentsController.handleInputAnimation(
+                        editText.getText().length() == 0,
+                        binding.sendButton);
                 if (count == 0) {
-                    notifyRecordButton();
+
                     return;
                 }
                 if (userStatus == null) {
@@ -732,7 +688,6 @@ public class RoomActivity extends AppCompatActivity
                 } else if (System.currentTimeMillis() - userStatus.getTime() > Status.REQUEST_DELAY) {
                     sendStatusRequest();
                 }
-                notifyRecordButton();
 
             }
 
@@ -743,258 +698,6 @@ public class RoomActivity extends AppCompatActivity
         });
     }
 
-    private long lastTimeRecordButtonDown = 0;
-    private long lastTimeRecordButtonUp = 0;
-    public void initRecordButton() {
-        initRecordType();
-        binding.recordButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN)
-                {
-                    lastTimeRecordButtonDown = System.currentTimeMillis();
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    final long localTimeDown = lastTimeRecordButtonDown;
-                    handler.postDelayed(() -> {
-                        if(lastTimeRecordButtonUp < lastTimeRecordButtonDown
-                        && lastTimeRecordButtonDown == localTimeDown)
-                        {
-                            // record
-
-                            CacheUtils cacheUtils = new CacheUtils(getApplicationContext());
-                            boolean isVoiceRecord = cacheUtils.getBoolean(CacheUtils.IS_VOICE_RECORD_DEFAULT);
-                            if(!isVoiceRecord)
-                            {
-                                recordBubble();
-                            }
-                            initVoiceIndicator();
-
-                        }
-                    }, 200);
-                }
-                else if(event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)
-                {
-                    lastTimeRecordButtonUp = System.currentTimeMillis();
-
-                    if(lastTimeRecordButtonUp - lastTimeRecordButtonDown < 100)
-                    {
-                        CacheUtils cacheUtils = new CacheUtils(getApplicationContext());
-                        boolean isVoiceRecord = cacheUtils.getBoolean(CacheUtils.IS_VOICE_RECORD_DEFAULT);
-                        cacheUtils.setBoolean(CacheUtils.IS_VOICE_RECORD_DEFAULT, !isVoiceRecord);
-                        initRecordType();
-                    }
-                    else
-                    {
-
-                        soundRecorder.stop();
-                        CacheUtils cacheUtils = new CacheUtils(getApplicationContext());
-                        boolean isVoiceRecord = cacheUtils.getBoolean(CacheUtils.IS_VOICE_RECORD_DEFAULT);
-                        if(!isVoiceRecord)
-                        {
-                            binding.camera.stopVideo();
-                            binding.camera.close();
-
-                            binding.bubbleRecordingLayout.setVisibility(View.GONE);
-                        }
-                        else {
-                            uploadAttachmentAndSendMessage(AttachmentType.VOICE, soundRecorder.getVoiceMessagePath(), "");
-                        }
-
-                        preformScaleAnimation(lastScale, 0, binding.recordRipple);
-                    }
-                }
-                return true;
-            }
-        });
-    }
-
-    private float lastScale = 1;
-
-    public void recordBubble()
-    {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
-                    1);
-            return;
-        }
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-
-        File directory = cw.getDir(DIRA_FILES_PATH, Context.MODE_PRIVATE);
-
-
-
-
-        binding.bubbleRecordingLayout.setVisibility(View.VISIBLE);
-        preformScaleAnimation(0.5f, 1, binding.bubbleFrame);
-        binding.camera.close();
-        binding.camera.open();
-
-
-        binding.camera.addCameraListener(new CameraListener() {
-            @Override
-            public void onCameraOpened(@NonNull CameraOptions options) {
-                super.onCameraOpened(options);
-                System.out.println("Taking snapshot...");
-                binding.camera.takeVideoSnapshot(new File(directory, "bubbleMessage.mp4"));
-                binding.camera.removeCameraListener(this);
-            }
-        });
-
-       // binding.camera.open();
-
-
-
-
-    }
-
-    public void vibrateRecording()
-    {
-        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE));
-        } else {
-            //deprecated in API 26
-            vibrator.vibrate(100);
-        }
-        soundRecorder.start();
-    }
-    public void initVoiceIndicator()
-    {
-
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.RECORD_AUDIO},
-                    1);
-            return;
-        }
-
-        vibrateRecording();
-        preformScaleAnimation(0, 2, binding.recordRipple).setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                lastScale = 2;
-                Runnable pollTask = new Runnable() {
-                    @Override
-                    public void run() {
-                        if(!soundRecorder.isRunning()) return;
-                        double amplitude = soundRecorder.getAmplitude();
-
-
-                        float scale = 2;
-                        if(amplitude > 5)
-                        {
-                            amplitude = 5;
-                        }
-
-
-                        scale += (float) amplitude / 3;
-
-
-                        float finalScale = scale;
-
-                        ScaleAnimation scaleOut =  new ScaleAnimation(lastScale, scale,
-                                lastScale, scale, Animation.RELATIVE_TO_SELF, 0.5f,
-                                Animation.RELATIVE_TO_SELF, 0.5f);
-                        scaleOut.setDuration(50);
-                        scaleOut.setInterpolator(new DecelerateInterpolator());
-
-
-                        scaleOut.setFillAfter(true);
-
-                        binding.recordRipple.startAnimation(scaleOut);
-                        scaleOut.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                lastScale = finalScale;
-                                run();
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-
-                    }
-                };
-                pollTask.run();
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-
-
-    }
-
-    public void initRecordType()
-    {
-        CacheUtils cacheUtils = new CacheUtils(getApplicationContext());
-        boolean isVoiceRecord = cacheUtils.getBoolean(CacheUtils.IS_VOICE_RECORD_DEFAULT);
-        if(isVoiceRecord)
-        {
-            binding.recordButton.setImageDrawable(getDrawable(R.drawable.ic_mic));
-        }
-        else
-        {
-            binding.recordButton.setImageDrawable(getDrawable(R.drawable.ic_bubble));
-
-        }
-    }
-    public void notifyRecordButton()
-    {
-        String text = binding.messageTextInput.getText().toString();
-
-
-        if(text.length() == 0) {
-            if(!isRecordButtonVisible)
-            {
-                isRecordButtonVisible = true;
-                preformScaleAnimation(0, 1, binding.recordButton);
-                binding.recordButton.setEnabled(true);
-                preformScaleAnimation(1, 0, binding.sendButton);
-            }
-
-        }
-        else {
-            if(isRecordButtonVisible) {
-                isRecordButtonVisible = false;
-                binding.recordButton.setEnabled(false);
-                preformScaleAnimation(binding.recordButton.getScaleX(), 0, binding.recordButton);
-                preformScaleAnimation(0, 1, binding.sendButton);
-            }
-        }
-    }
-
-    public ScaleAnimation preformScaleAnimation(float fromScale, float toScale, View view) {
-        ScaleAnimation scaleOut =  new ScaleAnimation(fromScale, toScale,
-                fromScale, toScale, Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f);
-        scaleOut.setDuration(200);
-        scaleOut.setInterpolator(new DecelerateInterpolator(2f));
-
-
-        scaleOut.setFillAfter(true);
-
-        view.startAnimation(scaleOut);
-        return scaleOut;
-    }
 
     private void sendStatusRequest() {
         userStatus = new Status(UserStatus.TYPING, selfId, roomSecret);
@@ -1012,7 +715,7 @@ public class RoomActivity extends AppCompatActivity
         if (!roomSecret.equals(this.roomSecret)) return;
         TextView membersCount = findViewById(R.id.members_count);
 
-        for (Status status: new ArrayList<>(usersStatusList)) {
+        for (Status status : new ArrayList<>(usersStatusList)) {
             if (status.getUserId().equals(selfId)) usersStatusList.remove(status);
         }
 
@@ -1066,5 +769,10 @@ public class RoomActivity extends AppCompatActivity
 
         ImageView backgroundView = findViewById(R.id.room_background);
         theme.getChatBackground().applyBackground(backgroundView);
+    }
+
+    @Override
+    public void onMediaMessageRecorded(String path, AttachmentType attachmentType) {
+        uploadAttachmentAndSendMessage(attachmentType, path, "");
     }
 }

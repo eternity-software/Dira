@@ -23,12 +23,13 @@ public class BorderScaleView extends RelativeLayout {
     public final int BOTTOM_BORDER = 3;
 
     private final int borderDp = 20;
+    private final String TAG = "BorderScaleView";
+    private final List<Integer> borderTouchType = new ArrayList<>();
     private int borderPx;
     private int containerWidth = -1;
     private int containerHeight = -1;
     private View rootView;
     private View container;
-    private final String TAG = "BorderScaleView";
     private BorderScaleViewListener borderScaleViewListener;
     private float downX;
     private float downY;
@@ -39,7 +40,6 @@ public class BorderScaleView extends RelativeLayout {
     private float startX;
     private float startY;
     private boolean isBorderTouch;
-    private final List<Integer> borderTouchType = new ArrayList<>();
 
     public BorderScaleView(Context context, AttributeSet attrs) {
         super(context, attrs);

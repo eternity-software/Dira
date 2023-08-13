@@ -30,8 +30,6 @@ import com.diraapp.ui.activities.RoomActivity;
 import com.diraapp.ui.activities.RoomSelectorActivity;
 import com.diraapp.utils.CacheUtils;
 
-import kotlin._Assertions;
-
 public class Notifier {
 
     public static String DIRA_ID = "Dira";

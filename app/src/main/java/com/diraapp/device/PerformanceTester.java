@@ -12,8 +12,6 @@ import java.util.regex.Pattern;
 
 public class PerformanceTester {
 
-    private static PerformanceClass measuredClass;
-
     private static final int[] LOW_SOC = {
             -1775228513, // EXYNOS 850
             802464304,  // EXYNOS 7872
@@ -27,15 +25,15 @@ public class PerformanceTester {
             2067361998, // MSM8917
             -1853602818 // SDM439
     };
+    private static PerformanceClass measuredClass;
 
     public static PerformanceClass measureDevicePerformanceClass(Context context) {
-        if(measuredClass != null) return measuredClass;
+        if (measuredClass != null) return measuredClass;
         int androidVersion = Build.VERSION.SDK_INT;
         int cpuCount;
-        if(Build.VERSION.SDK_INT >= 17) {
+        if (Build.VERSION.SDK_INT >= 17) {
             cpuCount = Runtime.getRuntime().availableProcessors();
-        }
-        else {
+        } else {
             // Use saurabh64's answer
             cpuCount = getNumCoresOldPhones();
         }
@@ -62,7 +60,8 @@ public class PerformanceTester {
                     freqResolved++;
                 }
                 reader.close();
-            } catch (Throwable ignore) {}
+            } catch (Throwable ignore) {
+            }
         }
         int maxCpuFreq = freqResolved == 0 ? -1 : (int) Math.ceil(totalCpuFreq / (float) freqResolved);
 
@@ -71,7 +70,8 @@ public class PerformanceTester {
             ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
             ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryInfo(memoryInfo);
             ram = memoryInfo.totalMem;
-        } catch (Exception ignore) {}
+        } catch (Exception ignore) {
+        }
 
         PerformanceClass performanceClass;
         if (
@@ -102,6 +102,7 @@ public class PerformanceTester {
     /**
      * Gets the number of cores available in this device, across all processors.
      * Requires: Ability to peruse the filesystem at "/sys/devices/system/cpu"
+     *
      * @return The number of cores, or 1 if failed to get result
      */
     private static int getNumCoresOldPhones() {
@@ -110,10 +111,7 @@ public class PerformanceTester {
             @Override
             public boolean accept(File pathname) {
                 //Check if filename is "cpu", followed by a single digit number
-                if(Pattern.matches("cpu[0-9]+", pathname.getName())) {
-                    return true;
-                }
-                return false;
+                return Pattern.matches("cpu[0-9]+", pathname.getName());
             }
         }
 
@@ -124,7 +122,7 @@ public class PerformanceTester {
             File[] files = dir.listFiles(new CpuFilter());
             //Return the number of cores (virtual CPU devices)
             return files.length;
-        } catch(Exception e) {
+        } catch (Exception e) {
             //Default to return 1 core
             return 1;
         }

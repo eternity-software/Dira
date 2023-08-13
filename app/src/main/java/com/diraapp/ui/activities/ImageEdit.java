@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.ImageViewCompat;
 
@@ -34,7 +33,7 @@ import com.diraapp.utils.Numbers;
 import java.io.File;
 import java.io.IOException;
 
-public class ImageEdit extends AppCompatActivity {
+public class ImageEdit extends DiraActivity {
 
     public final static int RESULT_CODE = 10;
     float startY = 0;

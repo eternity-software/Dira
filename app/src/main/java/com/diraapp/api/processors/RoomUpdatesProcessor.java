@@ -3,7 +3,6 @@ package com.diraapp.api.processors;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.diraapp.api.requests.MessageReadRequest;
 import com.diraapp.api.requests.Request;
 import com.diraapp.api.updates.DhInitUpdate;
 import com.diraapp.api.updates.MemberUpdate;
@@ -24,21 +23,18 @@ import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.exceptions.OldUpdateException;
-import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class RoomUpdatesProcessor {
-    private HashMap<Request, String> retMessages = new HashMap<>(30);
-
     private final RoomDao roomDao;
     private final MemberDao memberDao;
     private final MessageDao messageDao;
     private final Context context;
+    private final HashMap<Request, String> retMessages = new HashMap<>(30);
 
     public RoomUpdatesProcessor(RoomDao roomDao, MemberDao memberDao, MessageDao messageDao, Context context) {
         this.roomDao = roomDao;

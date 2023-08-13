@@ -18,21 +18,21 @@ import android.view.View;
 public class DrawingView extends View {
 
     private static final float TOUCH_TOLERANCE = 4;
+    private final Path path;
+    private final Paint bitmapPaint;
+    private final Paint circlePaint;
+    private final Path circlePath;
+    private final int maxSize = 30;
     public int width;
     public int height;
     public PorterDuffXfermode clear = new PorterDuffXfermode(PorterDuff.Mode.DST_OUT);
     Context context;
     private Bitmap bitmap;
     private Canvas canvas;
-    private final Path path;
-    private final Paint bitmapPaint;
-    private final Paint circlePaint;
-    private final Path circlePath;
     private Paint paint;
     private boolean isErasing = false;
     private int size = 20;
     private int color = Color.BLACK;
-    private final int maxSize = 30;
     private boolean isActive = false;
     private float mX, mY;
 

@@ -8,7 +8,6 @@ import com.diraapp.api.processors.listeners.ProcessorListener;
 import com.diraapp.api.processors.listeners.SocketListener;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.GetUpdatesRequest;
-import com.diraapp.api.requests.MessageReadRequest;
 import com.diraapp.api.requests.PingReactRequest;
 import com.diraapp.api.requests.Request;
 import com.diraapp.api.requests.SubscribeRequest;
@@ -220,11 +219,11 @@ public class UpdateProcessor {
                 roomUpdatesProcessor.updateRoom(update);
                 diraKeyProtocol.onKeyCancel((RenewingCancelUpdate) update);
                 System.out.println("Cancel update - " + message);
-            }else if (update.getUpdateType() == UpdateType.KEY_RECEIVED_UPDATE) {
+            } else if (update.getUpdateType() == UpdateType.KEY_RECEIVED_UPDATE) {
                 diraKeyProtocol.onIntermediateKey((KeyReceivedUpdate) update);
                 System.out.println("KeyReceived update - " + message);
                 // roomUpdatesProcessor.updateRoom(update, true);
-            }  else if (update.getUpdateType() == UpdateType.PING_UPDATE) {
+            } else if (update.getUpdateType() == UpdateType.PING_UPDATE) {
                 PingUpdate pingUpdate = (PingUpdate) update;
                 String roomSecret = pingUpdate.getRoomSecret();
 

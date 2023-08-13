@@ -53,30 +53,26 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
 
 
     public void setRecyclerView(RecyclerView recyclerView) {
-        if(this.recyclerView != null) return;
+        if (this.recyclerView != null) return;
         this.recyclerView = recyclerView;
 
         this.recyclerView.addOnScrollListener(new OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                    if(PerformanceTester.measureDevicePerformanceClass(getContext()) != PerformanceClass.POTATO) return;
-                    try {
-                      if(newState == RecyclerView.SCROLL_STATE_IDLE)
-                      {
-                          play();
-                      }
-                      else
-                      {
-                          pause();
-                      }
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (PerformanceTester.measureDevicePerformanceClass(getContext()) != PerformanceClass.POTATO)
+                    return;
+                try {
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        play();
+                    } else {
+                        pause();
                     }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            });
+
+            }
+        });
 
     }
 
@@ -126,12 +122,12 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
         }
     }
 
-    public void setProgress(float progress)
-    {
+    public void setProgress(float progress) {
         if (mediaPlayer != null) {
             mediaPlayer.seekTo((int) (progress * mediaPlayer.getDuration()));
         }
     }
+
     public void release() {
         if (mediaPlayer != null) {
             try {
@@ -209,11 +205,12 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
-                 //   adjustAspectRatio(mp.getVideoWidth(), mp.getVideoHeight());
+                    //   adjustAspectRatio(mp.getVideoWidth(), mp.getVideoHeight());
                     mediaPlayer.start();
-                    if(recyclerView != null && PerformanceTester.measureDevicePerformanceClass(getContext()) == PerformanceClass.POTATO) mediaPlayer.pause();
+                    if (recyclerView != null && PerformanceTester.measureDevicePerformanceClass(getContext()) == PerformanceClass.POTATO)
+                        mediaPlayer.pause();
 
-                    if(recyclerView != null) setVolume(0);
+                    if (recyclerView != null) setVolume(0);
                     thumbNail.setVisibility(INVISIBLE);
                     hideLoading(200);
                     if (videoPlayerListener != null) videoPlayerListener.onStarted();
@@ -258,42 +255,37 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
         final Surface s = new Surface(surface);
 
 
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
 
 
+                    mediaPlayer = new MediaPlayer();
+                    setVolume(0);
 
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-
-
-                                mediaPlayer = new MediaPlayer();
-                                setVolume(0);
-
-                                mediaPlayer.setSurface(s);
-                                mediaPlayer.setLooping(true);
+                    mediaPlayer.setSurface(s);
+                    mediaPlayer.setLooping(true);
 
 
-                                if (currentPlaying != null) {
-                                    play(currentPlaying);
-                                }
+                    if (currentPlaying != null) {
+                        play(currentPlaying);
+                    }
 
-                                adjustAspectRatio(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
+                    adjustAspectRatio(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
 
 //            mediaPlayer.setOnBufferingUpdateListener(this);
 //            mediaPlayer.setOnCompletionListener(this);
 
-                                if (videoPlayerListener != null)
-                                    videoPlayerListener.onReady(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
-                                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                    if (videoPlayerListener != null)
+                        videoPlayerListener.onReady(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
+                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-                        }
-                    }, delay);
-
-
+            }
+        }, delay);
 
 
     }
@@ -306,8 +298,7 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
                         PerformanceTester.measureDevicePerformanceClass(getContext()) == PerformanceClass.POTATO) {
                     if (volume == 0) {
                         mediaPlayer.setPlaybackParams(mediaPlayer.getPlaybackParams().setSpeed(0.3f));
-                    }
-                    else {
+                    } else {
                         mediaPlayer.setPlaybackParams(mediaPlayer.getPlaybackParams().setSpeed(1f));
                     }
                 }
@@ -319,8 +310,7 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
         }
     }
 
-    public void setSpeed(float speed)
-    {
+    public void setSpeed(float speed) {
         if (mediaPlayer == null) return;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mediaPlayer.setPlaybackParams(mediaPlayer.getPlaybackParams().setSpeed(speed));

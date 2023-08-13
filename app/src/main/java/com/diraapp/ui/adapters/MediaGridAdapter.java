@@ -56,21 +56,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
     }
 
-    private int getHardwareDependBalancerCount(){
-        int balancerCount = 4;
-
-        PerformanceClass performanceClass = PerformanceTester.measureDevicePerformanceClass(context);
-        if(performanceClass == PerformanceClass.MEDIUM)
-        {
-            balancerCount = 8;
-        }
-        else if(performanceClass == PerformanceClass.HIGH)
-        {
-            balancerCount = 14;
-        }
-        return balancerCount;
-    }
-
     /**
      * Constructor to get whole device memory
      *
@@ -87,6 +72,18 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         waterfallBalancer = new WaterfallBalancer(context, getHardwareDependBalancerCount(), recyclerView);
 
         registerTransitionListener();
+    }
+
+    private int getHardwareDependBalancerCount() {
+        int balancerCount = 4;
+
+        PerformanceClass performanceClass = PerformanceTester.measureDevicePerformanceClass(context);
+        if (performanceClass == PerformanceClass.MEDIUM) {
+            balancerCount = 8;
+        } else if (performanceClass == PerformanceClass.HIGH) {
+            balancerCount = 14;
+        }
+        return balancerCount;
     }
 
     public void setBalancerCallback(WaterfallBalancer.BalancerCallback balancerCallback) {
@@ -114,7 +111,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
             waterfallBalancer.add(picturesView);
 
-            if(position == mediaElements.size() - 1) {
+            if (position == mediaElements.size() - 1) {
                 itemClickListener.onLastItemLoaded(position, holder.fileParingImageView);
             }
 

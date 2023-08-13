@@ -8,16 +8,15 @@ public class DiraMediaPlayer extends MediaPlayer {
 
     private Runnable onProgressTick = null;
 
-    private Thread progressThread;
+    private final Thread progressThread;
 
-    public DiraMediaPlayer()
-    {
+    public DiraMediaPlayer() {
         progressThread = new Thread(() -> {
             while (!isReleased) {
                 try {
                     Thread.sleep(50);
 
-                    if(onProgressTick != null) {
+                    if (onProgressTick != null) {
                         onProgressTick.run();
                     }
 
@@ -40,13 +39,12 @@ public class DiraMediaPlayer extends MediaPlayer {
         onProgressTick = null;
     }
 
-    public void setProgress(float progress) {
-        seekTo((int) (getDuration() * progress));
+    public float getProgress() {
+        return getCurrentPosition() / (float) getDuration();
     }
 
-    public float getProgress()
-    {
-        return  getCurrentPosition() / (float) getDuration();
+    public void setProgress(float progress) {
+        seekTo((int) (getDuration() * progress));
     }
 
     @Override

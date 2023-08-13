@@ -18,24 +18,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
-
 import com.diraapp.api.processors.UpdateProcessor;
-
 import com.diraapp.api.requests.MessageReadRequest;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
@@ -66,15 +60,12 @@ import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Numbers;
 import com.diraapp.utils.StringFormatter;
 import com.diraapp.utils.TimeConverter;
-
+import com.masoudss.lib.SeekBarOnProgressChanged;
+import com.masoudss.lib.WaveformSeekBar;
 import com.skydoves.balloon.Balloon;
 import com.skydoves.balloon.BalloonAnimation;
 import com.skydoves.balloon.OnBalloonOutsideTouchListener;
 import com.skydoves.balloon.radius.RadiusLayout;
-
-import com.masoudss.lib.SeekBarOnProgressChanged;
-import com.masoudss.lib.WaveformSeekBar;
-
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -96,28 +87,22 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private final String selfId;
     private final Activity context;
-    private Room room;
-    private DiraMediaPlayer diraMediaPlayer = new DiraMediaPlayer();
-
-    private ColorTheme theme;
     private final List<AttachmentsStorageListener> listeners = new ArrayList<>();
     private final CacheUtils cacheUtils;
     private final HashMap<String, Bitmap> loadedBitmaps = new HashMap<>();
     private final String secretName;
     private final String serverAddress;
     private final RecyclerView recyclerView;
+    private final long maxAutoLoadSize;
+    private Room room;
+    private final DiraMediaPlayer diraMediaPlayer = new DiraMediaPlayer();
+    private ColorTheme theme;
     private List<Message> messages = new ArrayList<>();
     private HashMap<String, Member> members = new HashMap<>();
-
-    private final long maxAutoLoadSize;
     private String firstLoadedId;
 
-    private MessageAdapterListener messageAdapterListener;
+    private final MessageAdapterListener messageAdapterListener;
 
-
-    public interface MessageAdapterListener {
-        void onFirstItemScrolled(Message message, int index);
-    }
 
     public RoomMessagesAdapter(Activity context, RecyclerView recyclerView, String secretName, String serverAddress, Room room, MessageAdapterListener messageAdapterListener) {
         this.context = context;
@@ -128,7 +113,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         this.recyclerView = recyclerView;
         layoutInflater = LayoutInflater.from(context);
         cacheUtils = new CacheUtils(context);
-
 
 
         selfId = cacheUtils.getString(CacheUtils.ID);
@@ -177,7 +161,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.bubblePlayer.release();
     }
 
-
     @Override
     public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
@@ -211,12 +194,11 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         Message message = messages.get(position);
 
-        if(position == messages.size() - 1)
-        {
+        if (position == messages.size() - 1) {
             messageAdapterListener.onFirstItemScrolled(message, position);
         }
         if (!message.isRead() && message.getCustomClientData() == null) {
-            if(message.getAuthorId() == null) return;
+            if (message.getAuthorId() == null) return;
             if (!message.getAuthorId().equals(selfId)) {
                 message.setRead(true);
 
@@ -302,8 +284,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
                     VideoPlayer videoPlayer = holder.videoPlayer;
 
-                    if(attachment.getAttachmentType() == AttachmentType.BUBBLE)
-                    {
+                    if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
                         videoPlayer = holder.bubblePlayer;
                         videoPlayer.setLoadingLayerEnabled(true);
                         holder.messageContainer.setVisibility(View.GONE);
@@ -311,7 +292,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
                     }
                     holder.imageView.setVisibility(View.VISIBLE);
-                    if(attachment.getAttachmentType() == AttachmentType.VIDEO) {
+                    if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
                         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 
                         int width = 1;
@@ -383,38 +364,34 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                     videoPlayer.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(attachment.getAttachmentType() == AttachmentType.VIDEO)
-                            {
+                            if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
                                 Intent intent = new Intent(context, PreviewActivity.class);
                                 intent.putExtra(PreviewActivity.URI, file.getPath());
                                 intent.putExtra(PreviewActivity.IS_VIDEO, attachment.getAttachmentType() == AttachmentType.VIDEO);
                                 context.startActivity(intent);
-                            }
-                            else
-                            {
+                            } else {
 
                                 try {
-                                    if(diraMediaPlayer.isPlaying())
-                                    {
+                                    if (diraMediaPlayer.isPlaying()) {
                                         diraMediaPlayer.stop();
                                     }
                                     diraMediaPlayer.reset();
-                                diraMediaPlayer.setDataSource(file.getPath());
+                                    diraMediaPlayer.setDataSource(file.getPath());
 
 
-                                diraMediaPlayer.prepareAsync();
+                                    diraMediaPlayer.prepareAsync();
 
 
-                                diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                                    @Override
-                                    public void onPrepared(MediaPlayer mp) {
-                                        diraMediaPlayer.start();
-                                        finalVideoPlayer1.setVolume(0);
-                                        finalVideoPlayer1.setProgress(0);
-                                        finalVideoPlayer1.setSpeed(1f);
-                                        diraMediaPlayer.setOnPreparedListener(null);
+                                    diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                        @Override
+                                        public void onPrepared(MediaPlayer mp) {
+                                            diraMediaPlayer.start();
+                                            finalVideoPlayer1.setVolume(0);
+                                            finalVideoPlayer1.setProgress(0);
+                                            finalVideoPlayer1.setSpeed(1f);
+                                            diraMediaPlayer.setOnPreparedListener(null);
 
-                                    }
+                                        }
                                     });
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -452,9 +429,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                             holder.loading.setVisibility(View.GONE);
                         }
                     });
-                }
-                else if(attachment.getAttachmentType() == AttachmentType.VOICE)
-                {
+                } else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
                     holder.loading.setVisibility(View.GONE);
                     holder.waveformSeekBar.setSampleFrom(file);
                     holder.waveformSeekBar.setProgress(0);
@@ -465,8 +440,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                         public void onClick(View v) {
 
                             try {
-                                if(diraMediaPlayer.isPlaying())
-                                {
+                                if (diraMediaPlayer.isPlaying()) {
                                     diraMediaPlayer.stop();
                                 }
                                 diraMediaPlayer.reset();
@@ -481,8 +455,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                         holder.waveformSeekBar.setOnProgressChanged(new SeekBarOnProgressChanged() {
                                             @Override
                                             public void onProgressChanged(@NonNull WaveformSeekBar waveformSeekBar, float v, boolean fromUser) {
-                                                if(fromUser)
-                                                {
+                                                if (fromUser) {
                                                     diraMediaPlayer.setProgress(v / 10);
                                                 }
                                             }
@@ -497,8 +470,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                                         try {
 
                                                             holder.waveformSeekBar.setProgress(10 * diraMediaPlayer.getProgress());
+                                                        } catch (Exception ignored) {
                                                         }
-                                                        catch (Exception ignored) {}
                                                     }
                                                 });
                                             }
@@ -554,8 +527,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
 
 
-
-
         if (StringFormatter.isEmoji(message.getText()) && StringFormatter.getEmojiCount(message.getText()) < 3) {
             holder.messageContainer.setVisibility(View.GONE);
             holder.emojiText.setVisibility(View.VISIBLE);
@@ -599,14 +570,17 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
             }
         } else {
-            if (message.getMessageReadingList().size() == 0) {
-                holder.messageBackground.getBackground().setColorFilter(
-                        theme.getUnreadMessageBackground(), PorterDuff.Mode.SRC_IN);
-                holder.messageBackground.getBackground().setAlpha((int)(255 * 0.18));
-            } else {
-                holder.messageBackground.getBackground().setColorFilter(
-                        Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
+            if (message.getMessageReadingList() != null) {
+                if (message.getMessageReadingList().size() == 0) {
+                    holder.messageBackground.getBackground().setColorFilter(
+                            theme.getUnreadMessageBackground(), PorterDuff.Mode.SRC_IN);
+                    holder.messageBackground.getBackground().setAlpha((int) (255 * 0.18));
+                } else {
+                    holder.messageBackground.getBackground().setColorFilter(
+                            Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
+                }
             }
+
         }
 
         // apply color theme
@@ -683,13 +657,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder.roomUpdatesMainText.setText(((KeyGeneratedClientData) message.
                     getCustomClientData()).getClientDataText(context));
 
-            if(Objects.equals(((KeyGeneratedClientData) message.
-                    getCustomClientData()).getResult(), KeyGeneratedClientData.RESULT_CANCELLED))
-            {
+            if (Objects.equals(((KeyGeneratedClientData) message.
+                    getCustomClientData()).getResult(), KeyGeneratedClientData.RESULT_CANCELLED)) {
                 holder.roomUpdatesIcon.setImageDrawable(context.getDrawable(R.drawable.ic_encryption_disabled));
-            }
-            else
-            {
+            } else {
                 holder.roomUpdatesIcon.setImageDrawable(context.getDrawable(R.drawable.ic_encryption));
             }
             applyDefaultIconOnUpdateMessage(holder);
@@ -756,16 +727,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-
     private void loadMessageAttachment(Message message, ViewHolder holder) {
         String encryptionKey = "";
-        if(room != null)
-        {
+        if (room != null) {
             if (message.getLastTimeEncryptionKeyUpdated() == room.getTimeEncryptionKeyUpdated()) {
                 encryptionKey = room.getEncryptionKey();
             }
         }
-
 
 
         if (message.getAttachments() != null) {
@@ -902,7 +870,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         ArrayList<UserReadMessage> userReadMessages = new ArrayList<>(
                 message.getMessageReadingList().size());
 
-        for (MessageReading messageReading: message.getMessageReadingList()) {
+        for (MessageReading messageReading : message.getMessageReadingList()) {
             Member member = members.get(messageReading.getUserId());
             if (member == null) continue;
             UserReadMessage userReadMessage = new UserReadMessage(
@@ -1011,5 +979,9 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         }));
 
         balloon.showAlignBottom(view);
+    }
+
+    public interface MessageAdapterListener {
+        void onFirstItemScrolled(Message message, int index);
     }
 }

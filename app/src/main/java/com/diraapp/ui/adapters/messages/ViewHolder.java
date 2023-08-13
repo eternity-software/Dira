@@ -1,6 +1,5 @@
 package com.diraapp.ui.adapters.messages;
 
-import android.media.Image;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -53,7 +52,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     CardView bubbleContainer;
 
     LinearLayout messageBackground;
-
 
 
     public ViewHolder(@NonNull View itemView) {

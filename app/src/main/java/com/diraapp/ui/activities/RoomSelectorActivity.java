@@ -11,7 +11,6 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -29,7 +28,6 @@ import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
-import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
@@ -318,7 +316,7 @@ public class RoomSelectorActivity extends AppCompatActivity
             Message message = null;
             int index = -1;
 
-            for (Room room: new ArrayList<>(roomList)) {
+            for (Room room : new ArrayList<>(roomList)) {
                 if (room.getSecretName().equals(update.getRoomSecret())) {
                     message = room.getMessage();
                     index = roomList.indexOf(room);

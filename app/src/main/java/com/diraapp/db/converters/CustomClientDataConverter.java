@@ -22,7 +22,7 @@ public class CustomClientDataConverter {
         Gson gson = new Gson();
         CustomClientData clientData = gson.fromJson(string, CustomClientData.class);
 
-        if(clientData.getMessageType() == null) return null;
+        if (clientData.getMessageType() == null) return null;
         if (clientData.getMessageType().equals(MessageType.ROOM_NAME_CHANGE_MESSAGE)) {
             return gson.fromJson(string, RoomNameChangeClientData.class);
         } else if (clientData.getMessageType().equals(MessageType.ROOM_ICON_CHANGE_MESSAGE)) {

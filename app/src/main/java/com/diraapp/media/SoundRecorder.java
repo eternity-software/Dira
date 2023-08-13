@@ -4,96 +4,87 @@ import static com.diraapp.storage.AppStorage.DIRA_FILES_PATH;
 
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.os.Environment;
-
-import com.diraapp.storage.AppStorage;
 
 import java.io.File;
-import java.io.IOException;
 
+/**
+ * Simple instrument that records voice
+ */
 public class SoundRecorder {
-    // This file is used to record voice
     static final private double EMA_FILTER = 0.6;
 
-    private MediaRecorder mRecorder = null;
-    private double mEMA = 0.0;
+    private MediaRecorder mediaRecorder = null;
+    private double ema = 0.0;
 
-    private Context context;
+    private final Context context;
 
     public SoundRecorder(Context context) {
         this.context = context;
     }
 
-    public void start() {
+    public void startRecording() {
 
-        if (mRecorder == null) {
+        if (mediaRecorder == null) {
 
-            mRecorder = new MediaRecorder();
+            mediaRecorder = new MediaRecorder();
 
 
-            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-            mRecorder.setAudioEncodingBitRate(128000);
-            mRecorder.setAudioSamplingRate(32000);
+            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            mediaRecorder.setAudioEncodingBitRate(128000);
+            mediaRecorder.setAudioSamplingRate(32000);
 
-            mRecorder.setOutputFile(getVoiceMessagePath());
+            mediaRecorder.setOutputFile(getVoiceMessagePath());
 
             try {
-                mRecorder.prepare();
+                mediaRecorder.prepare();
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
-            mRecorder.start();
-            mEMA = 0.0;
+            mediaRecorder.start();
+            ema = 0.0;
         }
     }
 
-    public String getVoiceMessagePath(){
-        ContextWrapper cw = new ContextWrapper(context);
+    /**
+     * Get the default voice message path
+     *
+     * @return
+     */
+    public String getVoiceMessagePath() {
+        ContextWrapper contextWrapper = new ContextWrapper(context);
 
-        File directory = cw.getDir(DIRA_FILES_PATH, Context.MODE_PRIVATE);
+        File directory = contextWrapper.getDir(DIRA_FILES_PATH, Context.MODE_PRIVATE);
 
         return new File(directory, "voiceMessage.3gp").getPath();
     }
 
     public void stop() {
-        if (mRecorder != null) {
-            mRecorder.stop();
-            mRecorder.release();
-            mRecorder = null;
-            MediaPlayer mMediaPlayer = new MediaPlayer();
-            try {
-                mMediaPlayer.setDataSource(getVoiceMessagePath());
-                 mMediaPlayer.prepare();
-                // mMediaPlayer.start();
-            } catch (IOException e) {
-
-            }
-
+        if (mediaRecorder != null) {
+            mediaRecorder.stop();
+            mediaRecorder.release();
+            mediaRecorder = null;
         }
     }
 
     public boolean isRunning() {
-        return mRecorder != null;
+        return mediaRecorder != null;
     }
 
     public double getAmplitude() {
-        if (mRecorder != null)
-            return  (mRecorder.getMaxAmplitude()/2700.0);
+        if (mediaRecorder != null)
+            return (mediaRecorder.getMaxAmplitude() / 2700.0);
         else
             return 0;
-
     }
 
     public double getAmplitudeEMA() {
         double amp = getAmplitude();
-        mEMA = EMA_FILTER * amp + (1.0 - EMA_FILTER) * mEMA;
-        return mEMA;
+        ema = EMA_FILTER * amp + (1.0 - EMA_FILTER) * ema;
+        return ema;
     }
 
 }

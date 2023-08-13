@@ -72,7 +72,7 @@ public class SliderActivity {
 
     public SlidrInterface attachSlider(final Activity activity) {
         try {
-         //   setAppTheme(activity, ViewDragHelper.STATE_IDLE);
+            //   setAppTheme(activity, ViewDragHelper.STATE_IDLE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -84,7 +84,7 @@ public class SliderActivity {
                 for (SliderChangeListener sliderChangeListener : sliderChangeListenerList) {
                     sliderChangeListener.onDragging(state);
                 }
-           //     setAppTheme(activity, state);
+                //     setAppTheme(activity, state);
             }
 
             @Override

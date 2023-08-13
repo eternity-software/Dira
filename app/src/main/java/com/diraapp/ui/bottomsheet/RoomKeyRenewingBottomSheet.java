@@ -37,12 +37,10 @@ import java.util.List;
 public class RoomKeyRenewingBottomSheet extends BottomSheetDialogFragment implements UpdateListener {
 
     private final Room room;
-
+    private final List<StatusMember> statusMembers = new ArrayList<>();
     private View v;
     private int readyCount = 0;
     private int renewingMembersCount = 0;
-    private final List<StatusMember> statusMembers = new ArrayList<>();
-
     private StatusMemberAdapter statusMemberAdapter;
 
     public RoomKeyRenewingBottomSheet(Room room) {
@@ -204,8 +202,7 @@ public class RoomKeyRenewingBottomSheet extends BottomSheetDialogFragment implem
                 boolean foundMember = false;
                 for (StatusMember statusMember : statusMembers) {
                     if (baseMember.getId().equals(statusMember.getMember().getId())) {
-                        if(statusMember.getStatus() == MemberStatus.READY)
-                        {
+                        if (statusMember.getStatus() == MemberStatus.READY) {
                             readyCount--;
                         }
                         statusMember.setStatus(MemberStatus.READY);

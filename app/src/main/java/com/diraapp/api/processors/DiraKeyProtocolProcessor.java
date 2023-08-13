@@ -25,7 +25,7 @@ public class DiraKeyProtocolProcessor {
     private final RoomDao roomDao;
     private final CacheUtils cacheUtils;
 
-    private int number = 0;
+    private final int number = 0;
 
     public DiraKeyProtocolProcessor(RoomDao roomDao, CacheUtils cacheUtils) {
         this.roomDao = roomDao;

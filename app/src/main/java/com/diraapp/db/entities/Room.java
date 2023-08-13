@@ -184,12 +184,12 @@ public class Room {
         return unreadMessagesIds;
     }
 
-    public boolean removeFromUnreadMessages(ArrayList<String> list) {
-        return unreadMessagesIds.removeAll(list);
-    }
-
     public void setUnreadMessagesIds(ArrayList<String> unreadMessagesIds) {
         this.unreadMessagesIds = unreadMessagesIds;
+    }
+
+    public boolean removeFromUnreadMessages(ArrayList<String> list) {
+        return unreadMessagesIds.removeAll(list);
     }
 
     public void addNewUnreadMessageId(String id) {

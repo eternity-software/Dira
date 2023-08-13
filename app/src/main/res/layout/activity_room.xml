@@ -235,6 +235,7 @@
             android:id="@+id/status_light"
             android:layout_width="10dp"
             android:layout_height="10dp"
+            android:elevation="20dp"
             android:layout_gravity="bottom"
             android:layout_marginLeft="-10dp"
             android:layout_marginBottom="4dp"
@@ -276,8 +277,6 @@
                 app:cameraFrameProcessingMaxHeight="640"
                 app:cameraFrameProcessingMaxWidth="640"
                 app:cameraPictureSnapshotMetering="true"
-                app:cameraSnapshotMaxHeight="800"
-                app:cameraSnapshotMaxWidth="800"
                 app:cameraVideoBitRate="32000"
                 app:cameraVideoMaxDuration="60000"
                 app:cameraVideoSizeAspectRatio="1:1"
@@ -286,7 +285,7 @@
                 app:cameraVideoSizeMaxWidth="500"
                 app:cameraVideoSizeMinHeight="100"
                 app:cameraVideoSizeMinWidth="100"
-                app:cameraVideoSizeSmallest="true" />
+                app:cameraVideoSizeSmallest="false" />
         </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

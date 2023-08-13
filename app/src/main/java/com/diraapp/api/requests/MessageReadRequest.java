@@ -8,7 +8,7 @@ public class MessageReadRequest extends Request {
 
     private String messageId;
 
-    private String roomSecret;
+    private final String roomSecret;
 
     public MessageReadRequest(String userId, long readTime, String messageId, String roomSecret) {
         super(0, RequestType.MESSAGE_READ);

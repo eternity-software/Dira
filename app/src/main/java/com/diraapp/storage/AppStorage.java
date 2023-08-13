@@ -130,8 +130,7 @@ public class AppStorage {
             if (fileLength > 0) // only if total length is known
             {
                 if (downloadHandler != null) {
-                    if(System.currentTimeMillis() - lastTimeProgressNotified > 500)
-                    {
+                    if (System.currentTimeMillis() - lastTimeProgressNotified > 500) {
                         lastTimeProgressNotified = System.currentTimeMillis();
                         downloadHandler.onProgressChanged(((int) (total * 100 / fileLength)));
                     }

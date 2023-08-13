@@ -19,11 +19,9 @@ import java.util.List;
 
 public class MessageTooltipAdapter extends RecyclerView.Adapter<MessageTooltipAdapter.ViewHolder> {
 
-    private Context context;
-
-    private List<UserReadMessage> users = new ArrayList<>();
-
     private final LayoutInflater layoutInflater;
+    private final Context context;
+    private List<UserReadMessage> users = new ArrayList<>();
 
     public MessageTooltipAdapter(Context context, List<UserReadMessage> list) {
         this.context = context;

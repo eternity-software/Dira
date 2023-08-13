@@ -1,12 +1,10 @@
 package com.diraapp.ui.adapters.messagetooltipread;
 
-import android.graphics.Bitmap;
-
 public class UserReadMessage {
 
-    private String nickName;
+    private final String nickName;
 
-    private String picturePath;
+    private final String picturePath;
 
     public UserReadMessage(String nickName, String picture) {
         this.nickName = nickName;
