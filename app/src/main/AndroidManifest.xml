@@ -37,6 +37,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activities.ChatAppearanceActivity"
+            android:theme="@style/AppSlideTheme"
             android:exported="false" />
         <activity
             android:name=".ui.activities.SettingsActivity"

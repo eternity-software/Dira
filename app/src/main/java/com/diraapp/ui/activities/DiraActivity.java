@@ -1,12 +1,15 @@
 package com.diraapp.ui.activities;
 
+import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.diraapp.R;
 import com.diraapp.utils.CacheUtils;
 
 import java.util.concurrent.ExecutorService;
@@ -16,6 +19,12 @@ import java.util.concurrent.Executors;
  * Base class for activities with utility methods
  */
 public class DiraActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.activity_enter_anim, R.anim.activity_enter_anim);
+    }
 
     private static final ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(4);
     private CacheUtils cacheUtils;
@@ -41,6 +50,12 @@ public class DiraActivity extends AppCompatActivity {
 
         view.startAnimation(scaleOut);
         return scaleOut;
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.activity_exit_anim, R.anim.activity_exit_anim);
     }
 
 }

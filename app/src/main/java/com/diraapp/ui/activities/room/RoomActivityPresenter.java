@@ -166,7 +166,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     @Override
     public void sendStatus(UserStatusType userStatusType) {
-
         if (currentUserStatus != null) {
             if (System.currentTimeMillis() - currentUserStatus.getTime() < UserStatus.REQUEST_DELAY)
                 return;
@@ -181,7 +180,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         } catch (UnablePerformRequestException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override

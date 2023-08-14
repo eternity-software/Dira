@@ -18,7 +18,7 @@ import com.diraapp.utils.SliderActivity;
 
 import java.util.List;
 
-public class MembersActivity extends AppCompatActivity {
+public class MembersActivity extends DiraActivity {
 
     public static final String ROOM_SECRET = "roomSecret";
 

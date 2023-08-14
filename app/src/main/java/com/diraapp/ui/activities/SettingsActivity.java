@@ -15,7 +15,7 @@ import com.diraapp.R;
 import com.diraapp.device.PerformanceTester;
 import com.diraapp.utils.SliderActivity;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends DiraActivity {
 
     private ImageView arrowBack;
 

@@ -24,7 +24,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-public class PreviewActivity extends AppCompatActivity {
+public class PreviewActivity extends DiraActivity {
 
     public static final String URI = "uri";
     public static final String IS_VIDEO = "is_video";

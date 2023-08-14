@@ -14,7 +14,7 @@ import com.diraapp.utils.SliderActivity;
 
 import java.io.File;
 
-public class MemoryManagementActivity extends AppCompatActivity {
+public class MemoryManagementActivity extends DiraActivity {
 
     private long imagesSize = 0;
     private long videosSize = 0;

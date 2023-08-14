@@ -24,7 +24,7 @@ import com.diraapp.utils.SliderActivity;
 
 import java.util.Collections;
 
-public class JoinRoomActivity extends AppCompatActivity implements ServerSelectorBottomSheet.BottomSheetListener {
+public class JoinRoomActivity extends DiraActivity implements ServerSelectorBottomSheet.BottomSheetListener {
 
     private String serverAddress = UpdateProcessor.OFFICIAL_ADDRESS;
 

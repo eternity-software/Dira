@@ -46,7 +46,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomInfoActivity extends AppCompatActivity implements UpdateListener, InvitationCodeBottomSheet.BottomSheetListener {
+public class RoomInfoActivity extends DiraActivity implements UpdateListener, InvitationCodeBottomSheet.BottomSheetListener {
 
     public static final String ROOM_SECRET_EXTRA = "roomSecret";
 

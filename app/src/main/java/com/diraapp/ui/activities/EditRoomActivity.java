@@ -30,7 +30,7 @@ import com.diraapp.utils.SliderActivity;
 import java.io.File;
 import java.io.IOException;
 
-public class EditRoomActivity extends AppCompatActivity implements ServerSelectorBottomSheet.BottomSheetListener {
+public class EditRoomActivity extends DiraActivity implements ServerSelectorBottomSheet.BottomSheetListener {
 
     public static final String ROOM_SECRET_EXTRA = "roomSecret";
 

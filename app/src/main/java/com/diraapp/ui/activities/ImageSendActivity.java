@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class ImageSendActivity extends AppCompatActivity {
+public class ImageSendActivity extends DiraActivity {
 
     public static final int CODE = 11;
     public static final int IMAGE_PURPOSE_SELECT = 1;
