@@ -168,7 +168,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     public void sendStatus(UserStatusType userStatusType) {
 
         if (currentUserStatus != null) {
-            if (currentUserStatus.getUserStatus() == userStatusType) return;
             if (System.currentTimeMillis() - currentUserStatus.getTime() < UserStatus.REQUEST_DELAY)
                 return;
         }
