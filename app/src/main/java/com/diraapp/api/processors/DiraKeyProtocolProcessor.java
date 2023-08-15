@@ -7,6 +7,7 @@ import com.diraapp.api.updates.KeyReceivedUpdate;
 import com.diraapp.api.updates.RenewingCancelUpdate;
 import com.diraapp.api.updates.RenewingConfirmUpdate;
 import com.diraapp.api.views.BaseMember;
+import com.diraapp.api.views.DhInfo;
 import com.diraapp.api.views.DhKey;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Room;

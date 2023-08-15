@@ -181,13 +181,14 @@
     <string name="unsupported_api_title">Your app is outdated</string>
     <string name="unsupported_api_text">Your client app version does not support one of backend server\'s API. App may not work properly. You can try to update to newest version of Dira.</string>
 
-    <!--Transitions -->
-    <string name="transition_image_prepare" translatable="false">img_prepare_transition</string>
-
-    <!-- message tooltip -->
+    <!-- Message tooltip -->
     <string name="message_tooltip_copy">Copy</string>
     <string name="message_tooltip_read_count">%s read</string>
     <string name="message_tooltip_one_read">%s read</string>
     <string name="message_tooltip_zero_read">nobody read</string>
+
+    <!--Transitions -->
+    <string name="transition_image_prepare" translatable="false">img_prepare_transition</string>
+    <string name="transition_image_shared" translatable="false">image_shared_transition</string>
 
 </resources>

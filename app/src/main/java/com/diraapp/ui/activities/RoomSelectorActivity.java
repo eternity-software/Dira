@@ -204,29 +204,35 @@ public class RoomSelectorActivity extends AppCompatActivity
         Thread loadDataThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                roomList = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getAllRoomsByUpdatedTime();
-                roomSelectorAdapter = new RoomSelectorAdapter(RoomSelectorActivity.this);
-                for (Room room : new ArrayList<>(roomList)) {
-                    Message message = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getMessageById(room.getLastMessageId());
-                    room.setMessage(message);
-                    if (updateRooms) {
-                        try {
-                            UpdateProcessor.getInstance().sendRequest(new GetUpdatesRequest(room.getSecretName(), room.getLastUpdateId()), room.getServerAddress());
-                        } catch (Exception ignored) {
-                            ignored.printStackTrace();
+                try {
+
+
+                    roomList = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getAllRoomsByUpdatedTime();
+                    roomSelectorAdapter = new RoomSelectorAdapter(RoomSelectorActivity.this);
+                    for (Room room : new ArrayList<>(roomList)) {
+                        Message message = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getMessageById(room.getLastMessageId());
+                        room.setMessage(message);
+                        if (updateRooms) {
+                            try {
+                                UpdateProcessor.getInstance().sendRequest(new GetUpdatesRequest(room.getSecretName(), room.getLastUpdateId()), room.getServerAddress());
+                            } catch (Exception ignored) {
+                                ignored.printStackTrace();
+                            }
                         }
                     }
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
 
-                        roomSelectorAdapter.setRoomList(roomList);
-                        roomSelectorAdapter.notifyDataSetChanged();
-                        recyclerView.setAdapter(roomSelectorAdapter);
-                        isRoomsUpdating = false;
-                    }
-                });
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            roomSelectorAdapter.setRoomList(roomList);
+                            roomSelectorAdapter.notifyDataSetChanged();
+                            recyclerView.setAdapter(roomSelectorAdapter);
+                            isRoomsUpdating = false;
+                        }
+                    });
+                }
+                catch (Exception ignored) {}
             }
         });
         loadDataThread.start();

@@ -18,29 +18,37 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+
         app:layout_constraintTop_toTopOf="parent">
 
-
-        <com.diraapp.ui.components.PreviewImageView
-            android:id="@+id/image_view"
-            android:layout_width="0dp"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:transitionName="image_shared_transition"
             android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-
-
-            android:scaleType="fitCenter"
-            android:src="@drawable/placeholder"
-            android:transitionName="@string/transition_image_prepare"
+            app:cardCornerRadius="20dp"
+            android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+            <com.diraapp.ui.components.PreviewImageView
+                android:id="@+id/image_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+
+                android:scaleType="fitCenter"
+                android:src="@drawable/placeholder" />
+        </androidx.cardview.widget.CardView>
+
+
 
         <com.diraapp.ui.components.VideoPlayer
             android:id="@+id/video_player"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:elevation="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +67,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/gray_rounded"
-
+        android:elevation="8dp"
         android:onClick="editImageButtonClick"
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/imageContainer"

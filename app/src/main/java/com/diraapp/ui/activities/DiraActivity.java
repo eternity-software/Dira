@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.diraapp.R;
 import com.diraapp.utils.CacheUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -20,10 +22,13 @@ import java.util.concurrent.Executors;
  */
 public class DiraActivity extends AppCompatActivity {
 
+    private List<DiraActivityListener> activityListenerList = new ArrayList<>();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.activity_enter_anim, R.anim.activity_enter_anim);
+       overridePendingTransition(R.anim.activity_enter_anim, R.anim.activity_enter_anim);
+        for(DiraActivityListener listener : activityListenerList) listener.onCreate();
     }
 
     private static final ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(4);
@@ -56,6 +61,28 @@ public class DiraActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.activity_exit_anim, R.anim.activity_exit_anim);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        for(DiraActivityListener listener : activityListenerList) listener.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        for(DiraActivityListener listener : activityListenerList) listener.onResume();
+    }
+
+    public void addListener(DiraActivityListener diraActivityListener)
+    {
+        activityListenerList.add(diraActivityListener);
+    }
+
+    public void removeListener(DiraActivityListener diraActivityListener)
+    {
+        activityListenerList.remove(diraActivityListener);
     }
 
 }

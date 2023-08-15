@@ -29,6 +29,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     VideoPlayer videoPlayer;
     CardView pictureContainer;
     LinearLayout messageContainer;
+    CardView imageContainer;
     LinearLayout sizeContainer;
     LinearLayout loading;
 
@@ -82,5 +83,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         bubbleContainer = itemView.findViewById(R.id.bubble_container);
         bubblePlayer = itemView.findViewById(R.id.bubble_player);
         messageBackground = itemView.findViewById(R.id.message_background);
+        imageContainer = itemView.findViewById(R.id.card_view);
     }
 }

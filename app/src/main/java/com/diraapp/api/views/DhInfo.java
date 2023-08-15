@@ -1,4 +1,4 @@
-package com.diraapp.api.processors;
+package com.diraapp.api.views;
 
 import com.diraapp.api.views.BaseMember;
 

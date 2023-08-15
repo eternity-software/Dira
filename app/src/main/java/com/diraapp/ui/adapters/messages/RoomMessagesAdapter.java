@@ -50,6 +50,7 @@ import com.diraapp.storage.DownloadHandler;
 import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
+import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.PreviewActivity;
 import com.diraapp.ui.adapters.messagetooltipread.MessageTooltipAdapter;
 import com.diraapp.ui.adapters.messagetooltipread.UserReadMessage;
@@ -86,7 +87,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final LayoutInflater layoutInflater;
 
     private final String selfId;
-    private final Activity context;
+    private final DiraActivity context;
     private final List<AttachmentsStorageListener> listeners = new ArrayList<>();
     private final CacheUtils cacheUtils;
     private final HashMap<String, Bitmap> loadedBitmaps = new HashMap<>();
@@ -103,7 +104,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private String firstLoadedId;
 
 
-    public RoomMessagesAdapter(Activity context, RecyclerView recyclerView, String secretName, String serverAddress, Room room, MessageAdapterListener messageAdapterListener) {
+    public RoomMessagesAdapter(DiraActivity context, RecyclerView recyclerView, String secretName, String serverAddress, Room room, MessageAdapterListener messageAdapterListener) {
         this.context = context;
         this.secretName = secretName;
         this.serverAddress = serverAddress;
@@ -271,10 +272,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(context, PreviewActivity.class);
-                            intent.putExtra(PreviewActivity.URI, file.getPath());
-                            intent.putExtra(PreviewActivity.IS_VIDEO, attachment.getAttachmentType() == AttachmentType.VIDEO);
-                            context.startActivity(intent);
+
+
+                            PreviewActivity.open(context, file.getPath(),
+                                    attachment.getAttachmentType() == AttachmentType.VIDEO, holder.imageContainer);
                         }
                     });
                     holder.loading.setVisibility(View.GONE);
@@ -364,10 +365,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                         @Override
                         public void onClick(View v) {
                             if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
-                                Intent intent = new Intent(context, PreviewActivity.class);
-                                intent.putExtra(PreviewActivity.URI, file.getPath());
-                                intent.putExtra(PreviewActivity.IS_VIDEO, attachment.getAttachmentType() == AttachmentType.VIDEO);
-                                context.startActivity(intent);
+
+
+                                PreviewActivity.open(context, file.getPath(),
+                                        attachment.getAttachmentType() == AttachmentType.VIDEO, holder.imageContainer);
                             } else {
 
                                 try {

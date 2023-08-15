@@ -10,6 +10,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 
+/**
+ * Base class for WebSocket connections
+ * Handles raw json
+ */
 public class SocketClient extends WebSocketClient {
 
     private final String address;
