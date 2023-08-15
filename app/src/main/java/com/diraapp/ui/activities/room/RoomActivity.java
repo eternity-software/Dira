@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -99,6 +101,11 @@ public class RoomActivity extends DiraActivity
         TextView nameView = findViewById(R.id.room_name);
         nameView.setText(roomName);
 
+
+        Drawable drawable = binding.userStatusAnimation.getDrawable();
+        if (drawable instanceof Animatable){
+            ((Animatable) drawable).start();
+        }
         UpdateProcessor.getInstance().addProcessorListener(this);
 
         recordComponentsController = new RecordComponentsController(binding.recordButton,
@@ -303,6 +310,7 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void updateUserStatus(String roomSecret, ArrayList<UserStatus> usersUserStatusList) {
+        runOnUiThread(() -> {
         String userId = getCacheUtils().getString(CacheUtils.ID);
         if (!roomSecret.equals(this.roomSecret)) return;
         TextView membersCount = findViewById(R.id.members_count);
@@ -315,12 +323,14 @@ public class RoomActivity extends DiraActivity
         String text;
 
         if (size == 0) {
+            binding.userStatusAnimation.setVisibility(View.GONE);
             membersCount.setTextColor(ContextCompat.getColor(this, R.color.medium_light_light_gray));
             text = getString(R.string.members_count).replace("%s",
                     String.valueOf(roomMessagesAdapter.getMembers().size() + 1));
         } else {
             membersCount.setTextColor(theme.getColorTheme().getAccentColor());
 
+            binding.userStatusAnimation.setVisibility(View.VISIBLE);
             StringBuilder nickNames = new StringBuilder();
             for (int i = 0; i < size; i++) {
                 Member member = roomMessagesAdapter.getMembers().get(usersUserStatusList.get(i).getUserId());
@@ -346,7 +356,7 @@ public class RoomActivity extends DiraActivity
         }
 
         String finalText = text;
-        runOnUiThread(() -> {
+
             membersCount.setText(finalText);
         });
     }

@@ -11,6 +11,8 @@ import com.diraapp.api.processors.UpdateProcessor;
 public class UpdaterService extends Service {
 
 
+    private static final int DEFAULT_RESTART_DELAY_SEC = 120;
+
     public static Runnable runnable = null;
     public static UpdateProcessor updateProcessor;
     public Context context = this;
@@ -31,7 +33,7 @@ public class UpdaterService extends Service {
             public void run() {
                 updateProcessor.reconnectSockets();
 
-                handler.postDelayed(runnable, 10000);
+                handler.postDelayed(runnable, DEFAULT_RESTART_DELAY_SEC * 1000);
             }
         };
 
@@ -51,7 +53,7 @@ public class UpdaterService extends Service {
             public void run() {
                 updateProcessor.reconnectSockets();
 
-                handler.postDelayed(runnable, 10000);
+                handler.postDelayed(runnable, DEFAULT_RESTART_DELAY_SEC * 1000);
             }
         };
         handler.postDelayed(runnable, 15000);
