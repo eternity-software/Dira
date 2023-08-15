@@ -21,7 +21,7 @@ public class ColorTheme {
     private int accentColor;
     private int selfTextColor;
     private int textColor;
-    private int sendButtonColor;
+    private int iconButtonColor;
     private int previewColor;
 
     private int roomLickColor;
@@ -34,6 +34,10 @@ public class ColorTheme {
     private int selfDownloadButtonTextColor;
     private int selfDownButtonColor;
     private int unreadMessageBackground;
+
+    private int selfVoiceMessageColor;
+
+    private int roomVoiceMessageColor;
     private String name;
 
     public static void initColorThemes(Context context) {
@@ -44,7 +48,7 @@ public class ColorTheme {
         main.messageColor = ContextCompat.getColor(context, R.color.accent);
         main.selfTextColor = ContextCompat.getColor(context, R.color.light_gray);
         main.textColor = ContextCompat.getColor(context, R.color.dark);
-        main.sendButtonColor = ContextCompat.getColor(context, R.color.dark);
+        main.iconButtonColor = ContextCompat.getColor(context, R.color.dark);
         main.roomLickColor = ContextCompat.getColor(context, R.color.gray);
         main.selfLinkColor = ContextCompat.getColor(context, R.color.accent_dark);
         main.downloadButtonTextColor = ContextCompat.getColor(context, R.color.white);
@@ -53,6 +57,8 @@ public class ColorTheme {
         main.selfDownButtonColor = ContextCompat.getColor(context, R.color.dark);
         main.roomUpdateMessageColor = ContextCompat.getColor(context, R.color.gray);
         main.unreadMessageBackground = ContextCompat.getColor(context, R.color.unread_message_background);
+        main.selfVoiceMessageColor = ContextCompat.getColor(context, R.color.accent_medium);
+        main.roomVoiceMessageColor = ContextCompat.getColor(context, R.color.light_gray);
         main.name = context.getResources().getString(R.string.theme_main);
         main.type = ColorThemeType.DIRA;
 
@@ -63,7 +69,7 @@ public class ColorTheme {
         kitty.messageColor = ContextCompat.getColor(context, R.color.kitty_message);
         kitty.selfTextColor = ContextCompat.getColor(context, R.color.white);
         kitty.textColor = ContextCompat.getColor(context, R.color.white);
-        kitty.sendButtonColor = ContextCompat.getColor(context, R.color.white);
+        kitty.iconButtonColor = ContextCompat.getColor(context, R.color.white);
         kitty.roomLickColor = ContextCompat.getColor(context, R.color.light_gray);
         kitty.selfLinkColor = ContextCompat.getColor(context, R.color.light_gray);
         kitty.downloadButtonTextColor = ContextCompat.getColor(context, R.color.white);
@@ -72,6 +78,8 @@ public class ColorTheme {
         kitty.selfDownButtonColor = ContextCompat.getColor(context, R.color.dark);
         kitty.roomUpdateMessageColor = ContextCompat.getColor(context, R.color.light_gray);
         kitty.unreadMessageBackground = ContextCompat.getColor(context, R.color.unread_message_background_kitty);
+        kitty.selfVoiceMessageColor = ContextCompat.getColor(context, R.color.unread_message_background_kitty);
+        kitty.roomVoiceMessageColor = ContextCompat.getColor(context, R.color.light_gray);
         kitty.name = context.getResources().getString(R.string.theme_kitty);
         kitty.type = ColorThemeType.KITTY;
 
@@ -82,7 +90,7 @@ public class ColorTheme {
         blue.messageColor = ContextCompat.getColor(context, R.color.blue_message);
         blue.selfTextColor = ContextCompat.getColor(context, R.color.white);
         blue.textColor = ContextCompat.getColor(context, R.color.white);
-        blue.sendButtonColor = ContextCompat.getColor(context, R.color.white);
+        blue.iconButtonColor = ContextCompat.getColor(context, R.color.white);
         blue.roomLickColor = ContextCompat.getColor(context, R.color.blue_accent);
         blue.selfLinkColor = ContextCompat.getColor(context, R.color.light_gray);
         blue.downloadButtonTextColor = ContextCompat.getColor(context, R.color.white);
@@ -91,6 +99,8 @@ public class ColorTheme {
         blue.selfDownButtonColor = ContextCompat.getColor(context, R.color.blue_accent);
         blue.roomUpdateMessageColor = ContextCompat.getColor(context, R.color.light_gray);
         blue.unreadMessageBackground = ContextCompat.getColor(context, R.color.unread_message_background_blue);
+        blue.selfVoiceMessageColor = ContextCompat.getColor(context, R.color.unread_message_background_blue);
+        blue.roomVoiceMessageColor = ContextCompat.getColor(context, R.color.light_gray);
         blue.name = context.getResources().getString(R.string.theme_blue);
         blue.type = ColorThemeType.BLUE;
 
@@ -101,7 +111,7 @@ public class ColorTheme {
         rock.messageColor = ContextCompat.getColor(context, R.color.rock_message);
         rock.selfTextColor = ContextCompat.getColor(context, R.color.white);
         rock.textColor = ContextCompat.getColor(context, R.color.white);
-        rock.sendButtonColor = ContextCompat.getColor(context, R.color.white);
+        rock.iconButtonColor = ContextCompat.getColor(context, R.color.white);
         rock.roomLickColor = ContextCompat.getColor(context, R.color.rock_accent);
         rock.selfLinkColor = ContextCompat.getColor(context, R.color.light_gray);
         rock.downloadButtonTextColor = ContextCompat.getColor(context, R.color.white);
@@ -110,6 +120,8 @@ public class ColorTheme {
         rock.selfDownButtonColor = ContextCompat.getColor(context, R.color.dark);
         rock.roomUpdateMessageColor = ContextCompat.getColor(context, R.color.light_gray);
         rock.unreadMessageBackground = ContextCompat.getColor(context, R.color.unread_message_background_rock);
+        rock.selfVoiceMessageColor = ContextCompat.getColor(context, R.color.unread_message_background_rock);
+        rock.roomVoiceMessageColor = ContextCompat.getColor(context, R.color.light_gray);
         rock.name = context.getResources().getString(R.string.theme_rock);
         rock.type = ColorThemeType.ROCK;
 
@@ -120,7 +132,7 @@ public class ColorTheme {
         green.messageColor = ContextCompat.getColor(context, R.color.green_message);
         green.selfTextColor = ContextCompat.getColor(context, R.color.white);
         green.textColor = ContextCompat.getColor(context, R.color.white);
-        green.sendButtonColor = ContextCompat.getColor(context, R.color.dark);
+        green.iconButtonColor = ContextCompat.getColor(context, R.color.dark);
         green.roomLickColor = ContextCompat.getColor(context, R.color.light_gray);
         green.selfLinkColor = ContextCompat.getColor(context, R.color.light_gray);
         green.downloadButtonTextColor = ContextCompat.getColor(context, R.color.white);
@@ -129,6 +141,8 @@ public class ColorTheme {
         green.selfDownButtonColor = ContextCompat.getColor(context, R.color.dark);
         green.roomUpdateMessageColor = ContextCompat.getColor(context, R.color.light_gray);
         green.unreadMessageBackground = ContextCompat.getColor(context, R.color.unread_message_background_green);
+        green.selfVoiceMessageColor = ContextCompat.getColor(context, R.color.unread_message_background_green);
+        green.roomVoiceMessageColor = ContextCompat.getColor(context, R.color.light_gray);
         green.name = context.getResources().getString(R.string.theme_green);
         green.type = ColorThemeType.GREEN;
 
@@ -191,8 +205,8 @@ public class ColorTheme {
         return textColor;
     }
 
-    public int getSendButtonColor() {
-        return sendButtonColor;
+    public int getIconButtonColor() {
+        return iconButtonColor;
     }
 
     public int getPreviewColor() {
@@ -229,5 +243,13 @@ public class ColorTheme {
 
     public int getUnreadMessageBackground() {
         return unreadMessageBackground;
+    }
+
+    public int getSelfVoiceMessageColor() {
+        return selfVoiceMessageColor;
+    }
+
+    public int getRoomVoiceMessageColor() {
+        return roomVoiceMessageColor;
     }
 }

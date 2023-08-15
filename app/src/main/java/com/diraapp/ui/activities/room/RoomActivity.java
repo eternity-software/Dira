@@ -59,7 +59,6 @@ import com.diraapp.utils.SliderActivity;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -358,7 +357,7 @@ public class RoomActivity extends DiraActivity
 
         ImageView sendButton = findViewById(R.id.send_button);
         sendButton.getBackground().setColorFilter(theme.getColorTheme().getAccentColor(), PorterDuff.Mode.SRC_IN);
-        sendButton.setColorFilter(theme.getColorTheme().getSendButtonColor());
+        sendButton.setColorFilter(theme.getColorTheme().getIconButtonColor());
 
         ImageView backgroundView = findViewById(R.id.room_background);
         theme.getChatBackground().applyBackground(backgroundView);

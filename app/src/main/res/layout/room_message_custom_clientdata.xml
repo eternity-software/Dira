@@ -26,7 +26,6 @@
                 app:tint="@color/dark"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/accent"
                 android:padding="6dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_room_updates" />
