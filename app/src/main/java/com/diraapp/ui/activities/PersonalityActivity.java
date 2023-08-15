@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersonalityActivity extends AppCompatActivity {
+public class PersonalityActivity extends DiraActivity {
 
     private Bitmap userPicture;
     private FilePickerBottomSheet filePickerBottomSheet;

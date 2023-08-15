@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ChatAppearanceActivity extends AppCompatActivity {
+public class ChatAppearanceActivity extends DiraActivity {
 
     private RecyclerView colorRecycler;
 

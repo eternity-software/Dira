@@ -15,7 +15,7 @@ import com.diraapp.utils.SliderActivity;
 
 import java.util.ArrayList;
 
-public class RoomServersActivity extends AppCompatActivity {
+public class RoomServersActivity extends DiraActivity {
 
     private ActivityRoomServersBinding binding;
 
