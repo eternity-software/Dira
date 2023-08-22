@@ -998,6 +998,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private void displayMessageView(ViewHolder holder, boolean isSelfMessage) {
         MessageViewType viewType = holder.getMessageViewType();
 
+
         holder.clearLayouts();
 
         View view = null;
@@ -1007,10 +1008,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         if (viewType.equals(MessageViewType.TEXT_MESSAGE)) {
           return;
         } else if (viewType.equals(MessageViewType.BUBBLE_MESSAGE)) {
-            View bubble  = new BubbleMessageView(context);
+            CardView bubble  = new BubbleMessageView(context);
             holder.bubbleViewContainer.addView(bubble);
+            bubble.setCardBackgroundColor(Color.TRANSPARENT);
+
             holder.messageContainer.setVisibility(View.GONE);
             holder.updateViews();
+            holder.viewsContainer.setVisibility(View.GONE);
             holder.bubblePlayer.setDelay(10);
             bubbleAdded = true;
         } else if (viewType.equals(MessageViewType.VOICE_MESSAGE)) {
@@ -1030,10 +1034,9 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder.viewsContainer.addView(view);
             holder.updateViews();
             if (holder.videoPlayer != null) holder.videoPlayer.setDelay(10);
-        } else {
-            holder.bubbleViewContainer.requestLayout();
         }
-        holder.viewsContainer.requestLayout();
+
+        holder.itemView.requestLayout();
     }
     
 }

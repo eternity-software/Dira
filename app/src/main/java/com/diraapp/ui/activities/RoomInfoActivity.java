@@ -218,7 +218,6 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
 
                 members = DiraRoomDatabase.getDatabase(getApplicationContext()).getMemberDao().getMembersByRoomSecret(room.getSecretName());
 
-
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -293,7 +292,7 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
                     @Override
                     public void run() {
 
-                        gallery.setLayoutManager(new GridLayoutManager(RoomInfoActivity.this, 4));
+                        gallery.setLayoutManager(new GridLayoutManager(RoomInfoActivity.this, 3));
 
 
                         findViewById(R.id.members_button).setOnClickListener(new View.OnClickListener() {

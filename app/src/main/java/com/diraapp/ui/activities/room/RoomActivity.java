@@ -311,53 +311,58 @@ public class RoomActivity extends DiraActivity
     @Override
     public void updateUserStatus(String roomSecret, ArrayList<UserStatus> usersUserStatusList) {
         runOnUiThread(() -> {
-        String userId = getCacheUtils().getString(CacheUtils.ID);
-        if (!roomSecret.equals(this.roomSecret)) return;
-        TextView membersCount = findViewById(R.id.members_count);
+            try {
 
-        for (UserStatus userStatus : new ArrayList<>(usersUserStatusList)) {
-            if (userStatus.getUserId().equals(userId)) usersUserStatusList.remove(userStatus);
-        }
+                String userId = getCacheUtils().getString(CacheUtils.ID);
+                if (!roomSecret.equals(this.roomSecret)) return;
+                TextView membersCount = findViewById(R.id.members_count);
 
-        int size = usersUserStatusList.size();
-        String text;
+                for (UserStatus userStatus : new ArrayList<>(usersUserStatusList)) {
+                    if (userStatus.getUserId().equals(userId))
+                        usersUserStatusList.remove(userStatus);
+                }
 
-        if (size == 0) {
-            binding.userStatusAnimation.setVisibility(View.GONE);
-            membersCount.setTextColor(ContextCompat.getColor(this, R.color.medium_light_light_gray));
-            text = getString(R.string.members_count).replace("%s",
-                    String.valueOf(roomMessagesAdapter.getMembers().size() + 1));
-        } else {
-            membersCount.setTextColor(theme.getColorTheme().getAccentColor());
+                int size = usersUserStatusList.size();
+                String text;
 
-            binding.userStatusAnimation.setVisibility(View.VISIBLE);
-            StringBuilder nickNames = new StringBuilder();
-            for (int i = 0; i < size; i++) {
-                Member member = roomMessagesAdapter.getMembers().get(usersUserStatusList.get(i).getUserId());
-                if (member == null) continue;
-                if (member.getId().equals(userId)) continue;
+                if (size == 0) {
+                    binding.userStatusAnimation.setVisibility(View.GONE);
+                    membersCount.setTextColor(ContextCompat.getColor(this, R.color.medium_light_light_gray));
+                    text = getString(R.string.members_count).replace("%s",
+                            String.valueOf(roomMessagesAdapter.getMembers().size() + 1));
+                } else {
+                    membersCount.setTextColor(theme.getColorTheme().getAccentColor());
 
-                if (i != 0) nickNames.append(", ");
+                    binding.userStatusAnimation.setVisibility(View.VISIBLE);
+                    StringBuilder nickNames = new StringBuilder();
+                    for (int i = 0; i < size; i++) {
+                        Member member = roomMessagesAdapter.getMembers().get(usersUserStatusList.get(i).getUserId());
+                        if (member == null) continue;
+                        if (member.getId().equals(userId)) continue;
 
-                nickNames.append(member.getNickname());
+                        if (i != 0) nickNames.append(", ");
+
+                        nickNames.append(member.getNickname());
+                    }
+
+                    if (nickNames.length() > 22) {
+                        nickNames = new StringBuilder(nickNames.substring(0, 22) + "..");
+                    }
+
+                    if (size == 1) {
+                        text = getString(R.string.user_status_typing);
+                    } else {
+                        text = getString(R.string.users_status_typing);
+                    }
+
+                    text = text.replace("%s", nickNames.toString());
+                }
+
+                String finalText = text;
+
+                membersCount.setText(finalText);
             }
-
-            if (nickNames.length() > 22) {
-                nickNames = new StringBuilder(nickNames.substring(0, 22) + "..");
-            }
-
-            if (size == 1) {
-                text = getString(R.string.user_status_typing);
-            } else {
-                text = getString(R.string.users_status_typing);
-            }
-
-            text = text.replace("%s", nickNames.toString());
-        }
-
-        String finalText = text;
-
-            membersCount.setText(finalText);
+            catch (Exception ignored) { }
         });
     }
 

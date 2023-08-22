@@ -48,7 +48,7 @@
     <string name="you">You</string>
 
     <!-- Room -->
-    <string name="type_message_hint">Type message here</string>
+    <string name="type_message_hint">Message</string>
     <string name="members_count">%s members</string>
     <string name="attachment_large_title">This attachment too large</string>
     <string name="download">Download</string>
