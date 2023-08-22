@@ -1,6 +1,7 @@
 package com.diraapp.db.entities;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
@@ -14,6 +15,9 @@ public class Attachment {
     private String fileName;
     private long size;
     private AttachmentType attachmentType;
+
+    @Ignore
+    private float voiceMessageStopPoint = 0;
 
     public long getId() {
         return id;
@@ -61,5 +65,13 @@ public class Attachment {
 
     public void setAttachmentType(AttachmentType attachmentType) {
         this.attachmentType = attachmentType;
+    }
+
+    public float getVoiceMessageStopPoint() {
+        return voiceMessageStopPoint;
+    }
+
+    public void setVoiceMessageStopProgress(float voiceMessageStopPoint) {
+        this.voiceMessageStopPoint = voiceMessageStopPoint;
     }
 }

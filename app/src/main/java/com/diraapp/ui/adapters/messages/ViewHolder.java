@@ -11,11 +11,16 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.db.entities.AttachmentType;
+import com.diraapp.db.entities.messages.Message;
 import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.ui.components.VideoPlayer;
+import com.diraapp.utils.CacheUtils;
 import com.masoudss.lib.WaveformSeekBar;
 
 public class ViewHolder extends RecyclerView.ViewHolder {
+
+    private MessageViewType messageViewType;
 
     TextView messageText;
     TextView emojiText;
@@ -54,25 +59,66 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     LinearLayout messageBackground;
 
+    LinearLayout viewsContainer;
+
+    LinearLayout bubbleViewContainer;
+
 
     public ViewHolder(@NonNull View itemView) {
         super(itemView);
+        messageViewType = MessageViewType.TEXT_MESSAGE;
+
         messageText = itemView.findViewById(R.id.message_text);
         nicknameText = itemView.findViewById(R.id.nickname_text);
         timeText = itemView.findViewById(R.id.time_view);
-        buttonDownload = itemView.findViewById(R.id.download_button);
-        sizeContainer = itemView.findViewById(R.id.attachment_too_large);
+        attachmentProgressbar = itemView.findViewById(R.id.attachment_progressbar);
+//        buttonDownload = itemView.findViewById(R.id.download_button);
+//        sizeContainer = itemView.findViewById(R.id.attachment_too_large);
         emojiText = itemView.findViewById(R.id.emoji_view);
-        sizeText = itemView.findViewById(R.id.size_view);
+//        sizeText = itemView.findViewById(R.id.size_view);
         dateText = itemView.findViewById(R.id.date_view);
         loading = itemView.findViewById(R.id.loading_attachment_layout);
-        imageView = itemView.findViewById(R.id.image_view);
-        videoPlayer = itemView.findViewById(R.id.video_player);
+//        imageView = itemView.findViewById(R.id.image_view);
+//        videoPlayer = itemView.findViewById(R.id.video_player);
         profilePicture = itemView.findViewById(R.id.profile_picture);
         pictureContainer = itemView.findViewById(R.id.picture_container);
         messageContainer = itemView.findViewById(R.id.message_container);
+//        attachmentTooLargeText = itemView.findViewById(R.id.attachment_too_large_text);
+//        attachmentProgressbar = itemView.findViewById(R.id.attachment_progressbar);
+//        roomUpdatesLayout = itemView.findViewById(R.id.room_updates_layout);
+//        roomUpdatesIcon = itemView.findViewById(R.id.room_updates_icon);
+//        roomUpdatesMainText = itemView.findViewById(R.id.room_updates_main_text);
+//        roomUpdatesText = itemView.findViewById(R.id.room_updates_text);
+//        waveformSeekBar = itemView.findViewById(R.id.waveform_seek_bar);
+//        playButton = itemView.findViewById(R.id.play_button);
+//        voiceLayout = itemView.findViewById(R.id.voice_layout);
+//        bubbleContainer = itemView.findViewById(R.id.bubble_container);
+//        bubblePlayer = itemView.findViewById(R.id.bubble_player);
+        messageBackground = itemView.findViewById(R.id.message_background);
+        imageContainer = itemView.findViewById(R.id.card_view);
+        viewsContainer = itemView.findViewById(R.id.views_container);
+        bubbleViewContainer = itemView.findViewById(R.id.bubble_view_container);
+    }
+
+    public void clearLayouts() {
+        if (viewsContainer.getChildCount() != 0) {
+            viewsContainer.removeAllViewsInLayout();
+        }
+        if (bubbleViewContainer.getChildCount() != 0) {
+            bubbleViewContainer.removeAllViewsInLayout();
+        }
+    }
+
+    public MessageViewType getMessageViewType() {
+        return messageViewType;
+    }
+
+    public void setMessageViewType(MessageViewType messageViewType) {
+        this.messageViewType = messageViewType;
+    }
+
+    public void updateViews() {
         attachmentTooLargeText = itemView.findViewById(R.id.attachment_too_large_text);
-        attachmentProgressbar = itemView.findViewById(R.id.attachment_progressbar);
         roomUpdatesLayout = itemView.findViewById(R.id.room_updates_layout);
         roomUpdatesIcon = itemView.findViewById(R.id.room_updates_icon);
         roomUpdatesMainText = itemView.findViewById(R.id.room_updates_main_text);
@@ -82,7 +128,13 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         voiceLayout = itemView.findViewById(R.id.voice_layout);
         bubbleContainer = itemView.findViewById(R.id.bubble_container);
         bubblePlayer = itemView.findViewById(R.id.bubble_player);
-        messageBackground = itemView.findViewById(R.id.message_background);
-        imageContainer = itemView.findViewById(R.id.card_view);
+
+        imageView = itemView.findViewById(R.id.image_view);
+        videoPlayer = itemView.findViewById(R.id.video_player);
+
+        sizeText = itemView.findViewById(R.id.size_view);
+
+        buttonDownload = itemView.findViewById(R.id.download_button);
+        sizeContainer = itemView.findViewById(R.id.attachment_too_large);
     }
 }

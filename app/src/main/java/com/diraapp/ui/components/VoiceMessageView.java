@@ -35,7 +35,7 @@ public class VoiceMessageView extends LinearLayout {
         if (isInit) return;
 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.room_message_bubble, this);
+        inflater.inflate(R.layout.room_message_voice, this);
 
         ImageView playButton = findViewById(R.id.play_button);
         WaveformSeekBar bar = findViewById(R.id.waveform_seek_bar);
@@ -47,8 +47,8 @@ public class VoiceMessageView extends LinearLayout {
             playButton.setColorFilter(colorTheme.getRoomVoiceMessageColor());
             playButton.getBackground().setColorFilter(colorTheme.getAccentColor(), PorterDuff.Mode.SRC_IN);
         }
-        bar.setBackgroundColor(colorTheme.getUnreadMessageBackground());
-        bar.setWaveProgressColor(colorTheme.getAccentColor());
+//        bar.setBackgroundColor(colorTheme.getUnreadMessageBackground());
+//        bar.setWaveProgressColor(colorTheme.getAccentColor());
         isInit = true;
     }
 }

@@ -66,17 +66,14 @@
 
                 android:textSize="11sp" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/bubble_container"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                app:cardBackgroundColor="@color/gray"
-                app:cardCornerRadius="100dp">
-                <com.diraapp.ui.components.VideoPlayer
-                    android:id="@+id/bubble_player"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp" />
-            </androidx.cardview.widget.CardView>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/bubble_view_container"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/message_container"
                 android:layout_width="wrap_content"
@@ -98,27 +95,13 @@
                         android:layout_gravity="center" />
                 </LinearLayout>
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/card_view"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="@android:color/transparent"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="0dp">
+                    android:id="@+id/views_container"
+                    android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/image_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:visibility="gone" />
-
-                    <com.diraapp.ui.components.VideoPlayer
-                        android:id="@+id/video_player"
-                        android:layout_width="wrap_content"
-                        android:layout_height="200dp"
-                        android:adjustViewBounds="true" />
-                </androidx.cardview.widget.CardView>
+                </LinearLayout>
 
 
                 <com.diraapp.ui.components.MessageTextView
@@ -135,109 +118,11 @@
 
                     android:textIsSelectable="true"
                     android:textSize="15sp" />
-                <LinearLayout
-                    android:id="@+id/voice_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_marginHorizontal="8dp"
-                    android:layout_height="wrap_content">
-
-
-                    <ImageView
-                        android:id="@+id/play_button"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginRight="4dp"
-                        android:layout_weight="0"
-                        android:background="@drawable/light_round"
-                        android:padding="8dp"
-                        android:src="@drawable/ic_play"
-                        app:tint="@color/white" />
-                    <com.masoudss.lib.WaveformSeekBar
-                        android:id="@+id/waveform_seek_bar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        app:wave_progress="0"
-                        app:wave_max_progress="10"
-                        app:wave_width="3dp"
-
-                        app:wave_gap="2dp"
-                        app:wave_min_height="5dp"
-                        app:wave_corner_radius="2dp"
-                        app:wave_background_color="@color/medium_light_gray"
-                        app:wave_progress_color="@color/white"
-                        app:wave_gravity="center"
-                        app:wave_padding_top="4dp"
-                        app:wave_padding_Bottom="8dp"
-                        app:wave_padding_right="2dp"
-                        app:wave_padding_left="2dp"
-
-
-                        app:wave_visible_progress="0"
-                        />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/attachment_too_large"
-                    android:layout_width="wrap_content"
-
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/attachment_too_large_text"
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:autoLink="all"
-
-                        android:fontFamily="@font/montserratsemibold"
-                        android:includeFontPadding="false"
-                        android:text="@string/attachment_large_title"
-                        android:textColor="@color/white"
-
-                        android:textIsSelectable="true"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:id="@+id/size_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="10dp"
-                        android:autoLink="all"
-
-                        android:fontFamily="@font/montserratsemibold"
-                        android:includeFontPadding="false"
-                        android:text="3000 mb"
-                        android:textColor="@color/light_gray"
-
-                        android:textIsSelectable="true"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        android:id="@+id/download_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp"
-
-                        android:layout_marginHorizontal="10dp"
-                        android:layout_marginVertical="10dp"
-                        android:background="@drawable/accent_rounded"
-                        android:fontFamily="@font/montserratsemibold"
-
-
-                        android:gravity="center"
-                        android:text="@string/download"
-                        android:textColor="@color/dark"
-
-
-                        android:textSize="13sp" />
-                </LinearLayout>
-
 
             </LinearLayout>
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/emoji_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

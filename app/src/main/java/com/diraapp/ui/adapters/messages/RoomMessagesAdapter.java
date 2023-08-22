@@ -1,11 +1,9 @@
 package com.diraapp.ui.adapters.messages;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -24,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -56,7 +55,12 @@ import com.diraapp.ui.adapters.messagetooltipread.MessageTooltipAdapter;
 import com.diraapp.ui.adapters.messagetooltipread.UserReadMessage;
 import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.appearance.ColorTheme;
+import com.diraapp.ui.components.BubbleMessageView;
+import com.diraapp.ui.components.MessageAttachmentToLargeView;
+import com.diraapp.ui.components.RoomMessageCustomClientDataView;
+import com.diraapp.ui.components.RoomMessageVideoPlayer;
 import com.diraapp.ui.components.VideoPlayer;
+import com.diraapp.ui.components.VoiceMessageView;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Numbers;
 import com.diraapp.utils.StringFormatter;
@@ -157,26 +161,28 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onViewRecycled(@NonNull ViewHolder holder) {
         super.onViewRecycled(holder);
-        holder.videoPlayer.release();
-        holder.bubblePlayer.release();
+        if (holder.videoPlayer != null) holder.videoPlayer.release();
+        if (holder.bubblePlayer != null) holder.bubblePlayer.release();
     }
 
     @Override
     public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
-        holder.videoPlayer.release();
-        holder.bubblePlayer.release();
+        if (holder.videoPlayer != null) holder.videoPlayer.release();
+        if (holder.bubblePlayer != null) holder.bubblePlayer.release();
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
 
         if (holder.attachmentsStorageListener != null) {
             AttachmentsStorage.removeAttachmentsStorageListener(holder.attachmentsStorageListener);
             listeners.remove(holder.attachmentsStorageListener);
         }
 
+        holder.loading.setVisibility(View.GONE);
+
+        /*
         holder.messageText.setVisibility(View.VISIBLE);
         holder.videoPlayer.release();
         holder.videoPlayer.setRecyclerView(recyclerView);
@@ -190,9 +196,12 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.imageView.setVisibility(View.GONE);
         holder.videoPlayer.setVisibility(View.GONE);
         holder.dateText.setVisibility(View.GONE);
-        holder.bubbleContainer.setVisibility(View.GONE);
+        holder.bubbleContainer.setVisibility(View.GONE); */
 
         Message message = messages.get(position);
+
+        holder.setMessageViewType(defineMessageType(message));
+        displayMessageView(holder, selfId.equals(message.getAuthorId()));
 
         if (position == messages.size() - 1) {
             messageAdapterListener.onFirstItemScrolled(message, position);
@@ -212,12 +221,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             }
         }
 
-
-        if (message.getText() == null) {
-            holder.messageText.setVisibility(View.GONE);
-        } else if (message.getText().length() == 0) {
-            holder.messageText.setVisibility(View.GONE);
-        }
         Message previousMessage = null;
 
         boolean isSameDay = false;
@@ -247,6 +250,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             String dateString = Numbers.getDateFromTimestamp(message.getTime(), !isSameYear);
             holder.dateText.setVisibility(View.VISIBLE);
             holder.dateText.setText(dateString);
+        } else {
+            holder.dateText.setVisibility(View.GONE);
         }
 
         if (message.getCustomClientData() == null) {
@@ -287,12 +292,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                     if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
                         videoPlayer = holder.bubblePlayer;
                         videoPlayer.setLoadingLayerEnabled(true);
-                        holder.messageContainer.setVisibility(View.GONE);
                         holder.bubbleContainer.setVisibility(View.VISIBLE);
 
-                    }
-                    holder.imageView.setVisibility(View.VISIBLE);
-                    if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
+                    } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
+                        holder.imageView.setVisibility(View.VISIBLE);
                         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 
                         int width = 1;
@@ -355,12 +358,11 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                         videoPlayer.play(file.getPath());
 
                         holder.loading.setVisibility(View.GONE);
-                        holder.messageContainer.setVisibility(View.GONE);
+                        // holder.messageContainer.setVisibility(View.GONE);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     VideoPlayer finalVideoPlayer = videoPlayer;
-                    VideoPlayer finalVideoPlayer1 = videoPlayer;
                     videoPlayer.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -386,9 +388,9 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                         @Override
                                         public void onPrepared(MediaPlayer mp) {
                                             diraMediaPlayer.start();
-                                            finalVideoPlayer1.setVolume(0);
-                                            finalVideoPlayer1.setProgress(0);
-                                            finalVideoPlayer1.setSpeed(1f);
+                                            finalVideoPlayer.setVolume(0);
+                                            finalVideoPlayer.setProgress(0);
+                                            finalVideoPlayer.setSpeed(1f);
                                             diraMediaPlayer.setOnPreparedListener(null);
 
                                         }
@@ -432,7 +434,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 } else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
                     holder.loading.setVisibility(View.GONE);
                     holder.waveformSeekBar.setSampleFrom(file);
-                    holder.waveformSeekBar.setProgress(0);
+                    holder.waveformSeekBar.setProgress(attachment.getVoiceMessageStopPoint());
                     holder.voiceLayout.setVisibility(View.VISIBLE);
 
                     holder.playButton.setOnClickListener(new View.OnClickListener() {
@@ -468,8 +470,9 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                                     @Override
                                                     public void run() {
                                                         try {
-
-                                                            holder.waveformSeekBar.setProgress(10 * diraMediaPlayer.getProgress());
+                                                            float progress = 10 * diraMediaPlayer.getProgress();
+                                                            holder.waveformSeekBar.setProgress(progress);
+                                                            attachment.setVoiceMessageStopProgress(progress);
                                                         } catch (Exception ignored) {
                                                         }
                                                     }
@@ -522,12 +525,14 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         boolean isSelfMessage = selfId.equals(
                 message.getAuthorId());
-        if (holder.roomUpdatesLayout != null) {
-            holder.roomUpdatesLayout.setVisibility(View.GONE);
-        }
 
-
-        if (StringFormatter.isEmoji(message.getText()) && StringFormatter.getEmojiCount(message.getText()) < 3) {
+        if (message.getText() == null) {
+            holder.messageText.setVisibility(View.GONE);
+            holder.emojiText.setVisibility(View.GONE);
+        } else if (message.getText().length() == 0) {
+            holder.messageText.setVisibility(View.GONE);
+            holder.emojiText.setVisibility(View.GONE);
+        } else if (StringFormatter.isEmoji(message.getText()) && StringFormatter.getEmojiCount(message.getText()) < 3) {
             holder.messageContainer.setVisibility(View.GONE);
             holder.emojiText.setVisibility(View.VISIBLE);
             holder.emojiText.setText(message.getText());
@@ -535,14 +540,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder.messageContainer.setVisibility(View.VISIBLE);
             holder.emojiText.setVisibility(View.GONE);
             holder.messageText.setText(message.getText());
-
         }
 
         loadMessageAttachment(message, holder);
         if (!isSelfMessage) {
-            holder.nicknameText.setText(message.getAuthorNickname());
-            holder.pictureContainer.setVisibility(View.VISIBLE);
-            holder.nicknameText.setVisibility(View.VISIBLE);
             if (members.containsKey(message.getAuthorId())) {
 
                 Member member = members.get(message.getAuthorId());
@@ -566,6 +567,9 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                     } else {
                         holder.profilePicture.setImageResource(R.drawable.placeholder);
                     }
+                    holder.pictureContainer.setVisibility(View.VISIBLE);
+                    holder.nicknameText.setText(message.getAuthorNickname());
+                    holder.nicknameText.setVisibility(View.VISIBLE);
                 }
 
             }
@@ -591,18 +595,14 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private void bindRoomUpdateMessage(Message message, ViewHolder holder) {
         holder.itemView.setClickable(false);
 
-        holder.roomUpdatesLayout.setVisibility(View.VISIBLE);
-
         holder.nicknameText.setVisibility(View.GONE);
         holder.pictureContainer.setVisibility(View.VISIBLE);
+
+        holder.messageText.setVisibility(View.GONE);
 
         if (room.getImagePath() != null) {
             Picasso.get().load(new File(room.getImagePath())).into(holder.profilePicture);
         }
-
-        holder.emojiText.setVisibility(View.GONE);
-        holder.messageText.setVisibility(View.GONE);
-        holder.roomUpdatesText.setVisibility(View.GONE);
 
         if (message.getCustomClientData() instanceof RoomJoinClientData) {
             holder.roomUpdatesMainText.setText(context.getString(R.string.room_update_new_member)
@@ -653,6 +653,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder.roomUpdatesMainText.setText(context.getString(R.string.key_generate_start));
             holder.roomUpdatesIcon.setImageDrawable(context.getDrawable(R.drawable.ic_encryption));
             applyDefaultIconOnUpdateMessage(holder);
+            holder.roomUpdatesText.setVisibility(View.GONE);
         } else if (message.getCustomClientData() instanceof KeyGeneratedClientData) {
             holder.roomUpdatesMainText.setText(((KeyGeneratedClientData) message.
                     getCustomClientData()).getClientDataText(context));
@@ -664,6 +665,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 holder.roomUpdatesIcon.setImageDrawable(context.getDrawable(R.drawable.ic_encryption));
             }
             applyDefaultIconOnUpdateMessage(holder);
+            holder.roomUpdatesText.setVisibility(View.GONE);
         }
 
         applyRoomUpdateMessagesColorTheme(holder);
@@ -671,14 +673,12 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private void applyRoomUpdateMessagesColorTheme(ViewHolder holder) {
         holder.messageContainer.getBackground().setColorFilter(theme.getMessageColor(), PorterDuff.Mode.SRC_IN);
-        holder.roomUpdatesMainText.setTextColor(theme.getTextColor());
-        holder.roomUpdatesText.setTextColor(theme.getRoomUpdateMessageColor());
     }
 
     private void setImageOnRoomUpdateMessage(ViewHolder holder, String path) {
 
         if (path == null) {
-            holder.roomUpdatesIcon.setImageDrawable(context.getDrawable(R.drawable.placeholder));
+            holder.roomUpdatesIcon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.placeholder));
             holder.roomUpdatesIcon.setImageTintList(null);
             holder.roomUpdatesIcon.getBackground().setColorFilter(context.
                     getResources().getColor(R.color.dark), PorterDuff.Mode.SRC_IN);
@@ -705,23 +705,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder.messageContainer.getBackground().setColorFilter(theme.getMessageColor(), PorterDuff.Mode.SRC_IN);
         }
 
-        if (holder.sizeContainer.getVisibility() == View.VISIBLE) {
-            if (isSelfMessage) {
-                holder.sizeText.setTextColor(theme.getSelfLinkColor());
-                holder.attachmentTooLargeText.setTextColor(theme.getSelfTextColor());
-                holder.buttonDownload.getBackground().setColorFilter(theme.getSelfDownButtonColor(), PorterDuff.Mode.SRC_IN);
-                holder.buttonDownload.setTextColor(theme.getSelfDownloadButtonTextColor());
-            } else {
-                holder.sizeText.setTextColor(theme.getRoomLickColor());
-                holder.attachmentTooLargeText.setTextColor(theme.getTextColor());
-                holder.buttonDownload.getBackground().setColorFilter(theme.getDownloadButtonColor(), PorterDuff.Mode.SRC_IN);
-                holder.buttonDownload.setTextColor(theme.getDownloadButtonTextColor());
-            }
-
-        }
-
         if (holder.loading.getVisibility() == View.VISIBLE) {
-
             holder.attachmentProgressbar.setIndeterminateTintList(ColorStateList.
                     valueOf(theme.getSelfTextColor()));
         }
@@ -798,8 +782,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 } else {
                     long attachmentSize = attachment.getSize();
                     if (attachmentSize > maxAutoLoadSize) {
-                        holder.buttonDownload.setVisibility(View.VISIBLE);
-                        holder.sizeContainer.setVisibility(View.VISIBLE);
                         holder.loading.setVisibility(View.GONE);
                         holder.sizeText.setText(AppStorage.getStringSize(attachmentSize));
                         String finalEncryptionKey = encryptionKey;
@@ -834,7 +816,9 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                                 @Override
                                                 public void run() {
                                                     try {
-                                                        holder.sizeContainer.setVisibility(View.GONE);
+                                                        holder.setMessageViewType(defineMessageType(message));
+                                                        displayMessageView(holder, selfId.equals(message.getAuthorId()));
+
                                                         updateAttachment(holder, attachment, savedFile);
 
                                                     } catch (Exception e) {
@@ -984,4 +968,72 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     public interface MessageAdapterListener {
         void onFirstItemScrolled(Message message, int index);
     }
+
+    private MessageViewType defineMessageType(Message message) {
+        MessageViewType type = null;
+        if (message.getCustomClientData() != null) {
+            type = MessageViewType.CLIENT_DATA_MESSAGE;
+        } else if (message.getAttachments().size() != 0) {
+
+            if (message.getAttachments().get(0).getSize() > maxAutoLoadSize /*&& AttachmentsStorage.
+                    getFileFromAttachment(message.getAttachments().get(0), context, message.getRoomSecret()) == null*/) {
+                type = MessageViewType.ATTACHMENT_TO_LARGE_MESSAGE;
+            } else if (message.getAttachments().size() > 1) {
+                type = MessageViewType.MANY_ATTACHMENTS_MESSAGE;
+            } else if (message.getAttachments().get(0).getAttachmentType() == AttachmentType.BUBBLE) {
+                type = MessageViewType.BUBBLE_MESSAGE;
+            } else if (message.getAttachments().get(0).getAttachmentType() == AttachmentType.VIDEO ||
+                    message.getAttachments().get(0).getAttachmentType() == AttachmentType.IMAGE) {
+                type = MessageViewType.SINGLE_ATTACHMENT_MESSAGE;
+            } else if (message.getAttachments().get(0).getAttachmentType() == AttachmentType.VOICE) {
+                type = MessageViewType.VOICE_MESSAGE;
+            }
+        } else {
+            type = MessageViewType.TEXT_MESSAGE;
+        }
+        
+        return type;
+    }
+
+    private void displayMessageView(ViewHolder holder, boolean isSelfMessage) {
+        MessageViewType viewType = holder.getMessageViewType();
+
+        holder.clearLayouts();
+
+        View view = null;
+
+        boolean bubbleAdded = false;
+
+        if (viewType.equals(MessageViewType.TEXT_MESSAGE)) {
+          return;
+        } else if (viewType.equals(MessageViewType.BUBBLE_MESSAGE)) {
+            View bubble  = new BubbleMessageView(context);
+            holder.bubbleViewContainer.addView(bubble);
+            holder.messageContainer.setVisibility(View.GONE);
+            holder.updateViews();
+            holder.bubblePlayer.setDelay(10);
+            bubbleAdded = true;
+        } else if (viewType.equals(MessageViewType.VOICE_MESSAGE)) {
+            view  = new VoiceMessageView(context, theme, isSelfMessage);
+        } else if (viewType.equals(MessageViewType.ATTACHMENT_TO_LARGE_MESSAGE)) {
+            view  = new MessageAttachmentToLargeView(context, theme, isSelfMessage);
+        } else if (viewType.equals(MessageViewType.SINGLE_ATTACHMENT_MESSAGE)) {
+            view  = new RoomMessageVideoPlayer(context);
+        } else if (viewType.equals(MessageViewType.MANY_ATTACHMENTS_MESSAGE)) {
+            view  = new RoomMessageVideoPlayer(context);
+        } else if (viewType.equals(MessageViewType.CLIENT_DATA_MESSAGE)) {
+            view  = new RoomMessageCustomClientDataView(context, theme);
+        }
+
+        if (!bubbleAdded) {
+            holder.messageContainer.setVisibility(View.VISIBLE);
+            holder.viewsContainer.addView(view);
+            holder.updateViews();
+            if (holder.videoPlayer != null) holder.videoPlayer.setDelay(10);
+        } else {
+            holder.bubbleViewContainer.requestLayout();
+        }
+        holder.viewsContainer.requestLayout();
+    }
+    
 }
