@@ -24,6 +24,7 @@ public class ImagesWorker {
 
     public static Bitmap getCircleCroppedBitmap(Bitmap bitmap, int height, int width) {
         Bitmap output;
+        if (bitmap == null) return null;
         bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
         if (bitmap.getWidth() > bitmap.getHeight()) {
             output = Bitmap.createBitmap(bitmap.getHeight(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);

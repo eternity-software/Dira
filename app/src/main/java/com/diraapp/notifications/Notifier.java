@@ -8,11 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.diraapp.R;
 import com.diraapp.db.DiraRoomDatabase;
@@ -84,7 +87,15 @@ public class Notifier {
         if (room != null) {
             if (!room.isNotificationsEnabled()) return;
 
-            Bitmap bitmap = ImagesWorker.getCircleCroppedBitmap(AppStorage.getBitmapFromPath(room.getImagePath()), 256, 256);
+            Bitmap userPicture;
+            if (room.getImagePath() == null) {
+                userPicture = ((BitmapDrawable) ContextCompat.
+                        getDrawable(context, R.drawable.placeholder)).getBitmap();
+            } else {
+                userPicture = AppStorage.getBitmapFromPath(room.getImagePath());
+            }
+
+            Bitmap bitmap = ImagesWorker.getCircleCroppedBitmap(userPicture, 256, 256);
             if (bitmap != null) {
                 builder.setLargeIcon(bitmap);
             }

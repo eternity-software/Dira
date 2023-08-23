@@ -13,6 +13,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/date_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -93,6 +94,7 @@
                         android:orientation="vertical">
 
                         <LinearLayout
+                            android:visibility="gone"
                             android:id="@+id/loading_attachment_layout"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
@@ -144,6 +146,14 @@
                         android:textSize="42sp"
                         android:visibility="gone" />
 
+                    <LinearLayout
+                        android:id="@+id/bubble_view_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
                     <TextView
                         android:id="@+id/time_view"
                         android:layout_width="wrap_content"
@@ -161,14 +171,6 @@
                         android:text="00:00"
                         android:textColor="@color/white"
                         android:textSize="11sp" />
-
-                    <LinearLayout
-                        android:id="@+id/bubble_view_container"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                    </LinearLayout>
                 </LinearLayout>
 
 

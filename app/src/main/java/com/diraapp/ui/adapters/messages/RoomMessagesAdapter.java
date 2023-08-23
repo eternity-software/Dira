@@ -182,6 +182,11 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         holder.loading.setVisibility(View.GONE);
 
+        if (holder.videoPlayer != null) {
+            if (holder.videoPlayer.getVisibility() == View.VISIBLE) {
+                holder.videoPlayer.release();
+            }
+        }
         /*
         holder.messageText.setVisibility(View.VISIBLE);
         holder.videoPlayer.release();
@@ -271,7 +276,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
                 if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
                     holder.imageView.setVisibility(View.VISIBLE);
-                    holder.videoPlayer.setVisibility(View.GONE);
+
+                    for (int i = 0; i < 5; i++) {
+                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA BLYa" + i);
+                    }
 
                     Picasso.get().load(Uri.fromFile(file)).into(holder.imageView);
                     holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -538,6 +546,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder.emojiText.setText(message.getText());
         } else {
             holder.messageContainer.setVisibility(View.VISIBLE);
+            holder.messageText.setVisibility(View.VISIBLE);
             holder.emojiText.setVisibility(View.GONE);
             holder.messageText.setText(message.getText());
         }
@@ -612,7 +621,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             String path = ((RoomJoinClientData) message.getCustomClientData()).getPath();
             setImageOnRoomUpdateMessage(holder, path);
             holder.roomUpdatesIcon.setImageDrawable(context.getDrawable(R.drawable.ic_room_updates));
-            holder.roomUpdatesText.setVisibility(View.INVISIBLE);
+            holder.roomUpdatesText.setVisibility(View.GONE);
         } else if (message.getCustomClientData() instanceof RoomNameChangeClientData) {
             holder.roomUpdatesMainText.setText(context.getString(R.string.room_update_name_change));
 
@@ -998,7 +1007,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private void displayMessageView(ViewHolder holder, boolean isSelfMessage) {
         MessageViewType viewType = holder.getMessageViewType();
 
-
         holder.clearLayouts();
 
         View view = null;
@@ -1011,6 +1019,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             CardView bubble  = new BubbleMessageView(context);
             holder.bubbleViewContainer.addView(bubble);
             bubble.setCardBackgroundColor(Color.TRANSPARENT);
+            bubble.setCardElevation(0);
 
             holder.messageContainer.setVisibility(View.GONE);
             holder.updateViews();
@@ -1023,8 +1032,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             view  = new MessageAttachmentToLargeView(context, theme, isSelfMessage);
         } else if (viewType.equals(MessageViewType.SINGLE_ATTACHMENT_MESSAGE)) {
             view  = new RoomMessageVideoPlayer(context);
+            ((CardView) view).setCardBackgroundColor(Color.TRANSPARENT);
         } else if (viewType.equals(MessageViewType.MANY_ATTACHMENTS_MESSAGE)) {
             view  = new RoomMessageVideoPlayer(context);
+            ((CardView) view).setCardBackgroundColor(Color.TRANSPARENT);
         } else if (viewType.equals(MessageViewType.CLIENT_DATA_MESSAGE)) {
             view  = new RoomMessageCustomClientDataView(context, theme);
         }
@@ -1036,7 +1047,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             if (holder.videoPlayer != null) holder.videoPlayer.setDelay(10);
         }
 
-        holder.itemView.requestLayout();
+        holder.viewsContainer.requestLayout();
+        holder.bubbleViewContainer.requestLayout();
     }
     
 }

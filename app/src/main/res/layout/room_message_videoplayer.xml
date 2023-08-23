@@ -2,20 +2,20 @@
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardBackgroundColor="@android:color/transparent"
     app:cardCornerRadius="14dp"
     app:cardElevation="0dp"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:visibility="gone">
+    android:layout_height="wrap_content">
 
     <ImageView
+        android:visibility="gone"
         android:id="@+id/image_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true" />
 
     <com.diraapp.ui.components.VideoPlayer
+        android:visibility="gone"
         android:id="@+id/video_player"
         android:layout_width="wrap_content"
         android:layout_height="200dp" />
