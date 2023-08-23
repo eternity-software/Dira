@@ -100,13 +100,17 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         bubbleViewContainer = itemView.findViewById(R.id.bubble_view_container);
     }
 
-    public void clearLayouts() {
+    public boolean clearLayouts() {
+        boolean bool = false;
         if (viewsContainer.getChildCount() != 0) {
             viewsContainer.removeAllViewsInLayout();
+            bool = true;
         }
         if (bubbleViewContainer.getChildCount() != 0) {
             bubbleViewContainer.removeAllViewsInLayout();
+            bool = true;
         }
+        return bool;
     }
 
     public MessageViewType getMessageViewType() {

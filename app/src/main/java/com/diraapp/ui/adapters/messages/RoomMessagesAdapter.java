@@ -1007,15 +1007,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private void displayMessageView(ViewHolder holder, boolean isSelfMessage) {
         MessageViewType viewType = holder.getMessageViewType();
 
-        holder.clearLayouts();
+        boolean cleared = holder.clearLayouts();
 
         View view = null;
 
         boolean bubbleAdded = false;
 
-        if (viewType.equals(MessageViewType.TEXT_MESSAGE)) {
-          return;
-        } else if (viewType.equals(MessageViewType.BUBBLE_MESSAGE)) {
+        if (viewType.equals(MessageViewType.BUBBLE_MESSAGE)) {
             CardView bubble  = new BubbleMessageView(context);
             holder.bubbleViewContainer.addView(bubble);
             bubble.setCardBackgroundColor(Color.TRANSPARENT);
@@ -1025,6 +1023,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder.updateViews();
             holder.viewsContainer.setVisibility(View.GONE);
             holder.bubblePlayer.setDelay(10);
+
             bubbleAdded = true;
         } else if (viewType.equals(MessageViewType.VOICE_MESSAGE)) {
             view  = new VoiceMessageView(context, theme, isSelfMessage);
@@ -1040,15 +1039,17 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             view  = new RoomMessageCustomClientDataView(context, theme);
         }
 
-        if (!bubbleAdded) {
+        if (!bubbleAdded & view != null) {
             holder.messageContainer.setVisibility(View.VISIBLE);
             holder.viewsContainer.addView(view);
             holder.updateViews();
             if (holder.videoPlayer != null) holder.videoPlayer.setDelay(10);
         }
 
-        holder.viewsContainer.requestLayout();
-        holder.bubbleViewContainer.requestLayout();
+        if (cleared | bubbleAdded | view != null) {
+            holder.bubbleViewContainer.requestLayout();
+            holder.viewsContainer.requestLayout();
+        }
     }
-    
+
 }
