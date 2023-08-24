@@ -63,6 +63,7 @@
     <string name="your_id_hint">Оочень длинный случайный текст</string>
     <string name="permissions_request_title">Dira нуждается во внимании</string>
     <string name="permissions_request_text">Фоновое подключение и другие разрешения необходимы для правильной работы приложения.</string>
+    <string name="user_status_voice">%s записывает голосовое</string>
     <string name="members_title">Участники</string>
     <string name="delete_member_title">Забыть участника</string>
     <string name="delete_member_text">Вы можете забыть этого участника локально. Если участник активен, он появится снова.</string>
@@ -122,4 +123,5 @@
     <string name="message_tooltip_one_read">%s просмотрел</string>
     <string name="message_tooltip_zero_read">Не прочитано</string>
     <string name="room_last_not_read">" (Не прочитано)"</string>
+    <string name="user_status_bubble">%s записывает пузырёк...</string>
 </resources>

@@ -121,6 +121,7 @@ public class RecordComponentsController {
                             if (!isVoiceRecord) {
                                 recordBubble();
                             }
+                            recordListener.onMediaMessageRecordingStart(AttachmentType.VOICE);
                             initVoiceIndicator();
 
                         }
@@ -160,6 +161,7 @@ public class RecordComponentsController {
     }
 
     public void recordBubble() {
+
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.CAMERA},
@@ -169,6 +171,10 @@ public class RecordComponentsController {
         ContextWrapper cw = new ContextWrapper(context);
 
         File directory = cw.getDir(DIRA_FILES_PATH, Context.MODE_PRIVATE);
+
+        if (recordListener != null) {
+            recordListener.onMediaMessageRecordingStart(AttachmentType.BUBBLE);
+        }
 
         recordBubbleLayout.setVisibility(View.VISIBLE);
         context.preformScaleAnimation(0.5f, 1, bubbleContainer);
@@ -322,6 +328,7 @@ public class RecordComponentsController {
          * @param attachmentType BUBBLE or VOICE
          */
         void onMediaMessageRecorded(String path, AttachmentType attachmentType);
+        default void onMediaMessageRecordingStart(AttachmentType attachmentType){};
 
     }
 }

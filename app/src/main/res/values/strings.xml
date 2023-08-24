@@ -54,6 +54,8 @@
     <string name="download">Download</string>
     <string name="user_status_typing">%s is typing…</string>
     <string name="users_status_typing">%s are typing…</string>
+    <string name="user_status_voice">%s is recording voice…</string>
+    <string name="user_status_bubble">%s is recording bubble…</string>
 
     <!-- Room info -->
 

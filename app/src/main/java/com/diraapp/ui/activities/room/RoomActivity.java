@@ -159,13 +159,12 @@ public class RoomActivity extends DiraActivity
             public void onClick(View v) {
                 filePickerBottomSheet = new FilePickerBottomSheet();
                 filePickerBottomSheet.show(getSupportFragmentManager(), "blocked");
+                presenter.sendStatus(UserStatusType.PICKING_FILE);
                 filePickerBottomSheet.setRunnable(new MediaGridItemListener() {
                     @Override
                     public void onItemClick(int pos, final View view) {
                         ImageSendActivity.open(RoomActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(), "",
                                 (FilePreview) view, ImageSendActivity.IMAGE_PURPOSE_MESSAGE);
-
-
                     }
 
                     @Override
@@ -218,6 +217,7 @@ public class RoomActivity extends DiraActivity
 
 
                 try {
+                    presenter.sendStatus(UserStatusType.SENDING_FILE);
                     if (FileClassifier.isVideoFile(fileUri)) {
                         presenter.uploadAttachmentAndSendMessage(AttachmentType.VIDEO, fileUri, messageText);
                     } else {
@@ -241,7 +241,6 @@ public class RoomActivity extends DiraActivity
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA},
                     1);
         }
-
     }
 
     @Override
@@ -343,6 +342,15 @@ public class RoomActivity extends DiraActivity
                         if (i != 0) nickNames.append(", ");
 
                         nickNames.append(member.getNickname());
+                        UserStatusType userStatusType = usersUserStatusList.get(i).getUserStatus();
+                        if(userStatusType == UserStatusType.RECORDING_VOICE)
+                        {
+                            membersCount.setText(getString(R.string.user_status_voice));
+                        }
+                        else if(userStatusType == UserStatusType.RECORDING_BUBBLE)
+                        {
+                            membersCount.setText(getString(R.string.user_status_bubble));
+                        }
                     }
 
                     if (nickNames.length() > 22) {
@@ -381,6 +389,16 @@ public class RoomActivity extends DiraActivity
     @Override
     public void onMediaMessageRecorded(String path, AttachmentType attachmentType) {
         presenter.uploadAttachmentAndSendMessage(attachmentType, path, "");
+    }
+
+    @Override
+    public void onMediaMessageRecordingStart(AttachmentType attachmentType) {
+        if(attachmentType == AttachmentType.VOICE)
+        {
+            presenter.sendStatus(UserStatusType.RECORDING_VOICE);
+            return;
+        }
+        presenter.sendStatus(UserStatusType.RECORDING_BUBBLE);
     }
 
     @Override

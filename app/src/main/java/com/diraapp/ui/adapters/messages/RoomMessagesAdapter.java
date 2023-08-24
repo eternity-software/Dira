@@ -65,6 +65,7 @@ import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Numbers;
 import com.diraapp.utils.StringFormatter;
 import com.diraapp.utils.TimeConverter;
+import com.diraapp.utils.Timer;
 import com.masoudss.lib.SeekBarOnProgressChanged;
 import com.masoudss.lib.WaveformSeekBar;
 import com.skydoves.balloon.Balloon;
@@ -187,6 +188,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
+        Message message = messages.get(position);
+        Timer timer = new Timer("Main Binder " + message.getText());
         if (holder.attachmentsStorageListener != null) {
             AttachmentsStorage.removeAttachmentsStorageListener(holder.attachmentsStorageListener);
             listeners.remove(holder.attachmentsStorageListener);
@@ -215,7 +218,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.dateText.setVisibility(View.GONE);
         holder.bubbleContainer.setVisibility(View.GONE); */
 
-        Message message = messages.get(position);
+
 
         if (position == messages.size() - 1) {
             messageAdapterListener.onFirstItemScrolled(message, position);
@@ -269,12 +272,17 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
 
         if (message.getCustomClientData() == null) {
+            Timer userTimer = new Timer("userTime");
             bindUserMessage(message, previousMessage, isSameDay, isSameYear, holder);
+            userTimer.reportTime();
         } else {
+            Timer roomTimer = new Timer("roomTime");
             bindRoomUpdateMessage(message, holder);
+            roomTimer.reportTime();
         }
 
         holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime(), context));
+        timer.reportTime();
     }
 
     public void updateAttachment(ViewHolder holder, Attachment attachment, File file) {
