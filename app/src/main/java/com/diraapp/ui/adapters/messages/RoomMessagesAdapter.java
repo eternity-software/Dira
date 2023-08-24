@@ -197,10 +197,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         holder.loading.setVisibility(View.GONE);
 
-        if (holder.videoPlayer != null) {
-            if (holder.videoPlayer.getVisibility() == View.VISIBLE) {
-                holder.videoPlayer.release();
-            }
+        if (holder.imageContainer != null) {
+            holder.videoPlayer.release();
+            holder.imageView.setVisibility(View.GONE);
+            holder.videoPlayer.setVisibility(View.GONE);
         }
 
         timer.reportTime();
@@ -631,7 +631,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
             String path = ((RoomJoinClientData) message.getCustomClientData()).getPath();
             setImageOnRoomUpdateMessage(holder, path);
-            holder.roomUpdatesIcon.setImageDrawable(context.getDrawable(R.drawable.ic_room_updates));
+            holder.roomUpdatesIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_room_updates));
             holder.roomUpdatesText.setVisibility(View.GONE);
         } else if (message.getCustomClientData() instanceof RoomNameChangeClientData) {
             holder.roomUpdatesMainText.setText(context.getString(R.string.room_update_name_change));
@@ -641,7 +641,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 //                            message.getCustomClientData()).getOldName())
 //                    .replace("%p", ((RoomNameChangeClientData)
 //                            message.getCustomClientData()).getNewName()));
-            holder.roomUpdatesIcon.setImageDrawable(context.getDrawable(R.drawable.ic_room_updates));
+            holder.roomUpdatesIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_room_updates));
             holder.roomUpdatesText.setText(((RoomNameChangeClientData) message.getCustomClientData()).getOldName());
 
             applyDefaultIconOnUpdateMessage(holder);
@@ -671,7 +671,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder.roomUpdatesText.setVisibility(View.VISIBLE);
         } else if (message.getCustomClientData() instanceof KeyGenerateStartClientData) {
             holder.roomUpdatesMainText.setText(context.getString(R.string.key_generate_start));
-            holder.roomUpdatesIcon.setImageDrawable(context.getDrawable(R.drawable.ic_encryption));
+            holder.roomUpdatesIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_encryption));
             applyDefaultIconOnUpdateMessage(holder);
             holder.roomUpdatesText.setVisibility(View.GONE);
         } else if (message.getCustomClientData() instanceof KeyGeneratedClientData) {
@@ -680,9 +680,9 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
             if (Objects.equals(((KeyGeneratedClientData) message.
                     getCustomClientData()).getResult(), KeyGeneratedClientData.RESULT_CANCELLED)) {
-                holder.roomUpdatesIcon.setImageDrawable(context.getDrawable(R.drawable.ic_encryption_disabled));
+                holder.roomUpdatesIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_encryption_disabled));
             } else {
-                holder.roomUpdatesIcon.setImageDrawable(context.getDrawable(R.drawable.ic_encryption));
+                holder.roomUpdatesIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_encryption));
             }
             applyDefaultIconOnUpdateMessage(holder);
             holder.roomUpdatesText.setVisibility(View.GONE);
@@ -691,13 +691,14 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private void applyRoomUpdateMessagesColorTheme(ViewHolder holder) {
         holder.messageContainer.getBackground().setColorFilter(theme.getMessageColor(), PorterDuff.Mode.SRC_IN);
+        holder.pictureContainer.setVisibility(View.INVISIBLE);
     }
 
     private void setImageOnRoomUpdateMessage(ViewHolder holder, String path) {
 
         if (path == null) {
             holder.roomUpdatesIcon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.placeholder));
-            holder.roomUpdatesIcon.setImageTintList(null);
+            holder.roomUpdatesIcon.setColorFilter(ContextCompat.getColor(context, R.color.accent));
             holder.roomUpdatesIcon.getBackground().setColorFilter(context.
                     getResources().getColor(R.color.dark), PorterDuff.Mode.SRC_IN);
         } else {
