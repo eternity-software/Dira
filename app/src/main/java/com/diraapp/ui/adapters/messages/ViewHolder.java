@@ -91,7 +91,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 //        bubbleContainer = itemView.findViewById(R.id.bubble_container);
 //        bubblePlayer = itemView.findViewById(R.id.bubble_player);
         messageBackground = itemView.findViewById(R.id.message_background);
-        imageContainer = itemView.findViewById(R.id.card_view);
         viewsContainer = itemView.findViewById(R.id.views_container);
         bubbleViewContainer = itemView.findViewById(R.id.bubble_view_container);
     }
@@ -115,5 +114,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
         buttonDownload = itemView.findViewById(R.id.download_button);
         sizeContainer = itemView.findViewById(R.id.attachment_too_large);
+
+        imageContainer = itemView.findViewById(R.id.image_container);
     }
 }

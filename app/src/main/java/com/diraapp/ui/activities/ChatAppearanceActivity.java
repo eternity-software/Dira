@@ -44,6 +44,8 @@ public class ChatAppearanceActivity extends DiraActivity {
 
     private FilePickerBottomSheet bottomSheet;
 
+    private int rand = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,8 +83,7 @@ public class ChatAppearanceActivity extends DiraActivity {
         colorThemeAdapter.setListener(new ColorThemeAdapter.SelectorListener() {
             @Override
             public void onSelectorClicked() {
-                roomMessagesAdapter.setTheme(AppTheme.getInstance().getColorTheme());
-                roomMessagesAdapter.notifyDataSetChanged();
+                initExample();
             }
         });
         colorRecycler.setAdapter(colorThemeAdapter);
@@ -113,8 +114,10 @@ public class ChatAppearanceActivity extends DiraActivity {
 
         Message senderMessage = new Message();
 
-        int rand = new Random().nextInt(2);
-        rand++;
+        if (rand == -1) {
+            rand = new Random().nextInt(2);
+            rand++;
+        }
 
         senderMessage.setText(this.getResources().getString(AppStorage.getResId("chat_appearance_example_message_self_" + rand, R.string.class)));
         senderMessage.setAuthorId(authorName);
