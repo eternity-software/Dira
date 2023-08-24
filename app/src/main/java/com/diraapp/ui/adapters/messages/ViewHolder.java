@@ -20,8 +20,6 @@ import com.masoudss.lib.WaveformSeekBar;
 
 public class ViewHolder extends RecyclerView.ViewHolder {
 
-    private MessageViewType messageViewType;
-
     TextView messageText;
     TextView emojiText;
     TextView nicknameText;
@@ -66,8 +64,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     public ViewHolder(@NonNull View itemView) {
         super(itemView);
-        messageViewType = MessageViewType.TEXT_MESSAGE;
-
         messageText = itemView.findViewById(R.id.message_text);
         nicknameText = itemView.findViewById(R.id.nickname_text);
         timeText = itemView.findViewById(R.id.time_view);
@@ -98,27 +94,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         imageContainer = itemView.findViewById(R.id.card_view);
         viewsContainer = itemView.findViewById(R.id.views_container);
         bubbleViewContainer = itemView.findViewById(R.id.bubble_view_container);
-    }
-
-    public boolean clearLayouts() {
-        boolean bool = false;
-        if (viewsContainer.getChildCount() != 0) {
-            viewsContainer.removeAllViewsInLayout();
-            bool = true;
-        }
-        if (bubbleViewContainer.getChildCount() != 0) {
-            bubbleViewContainer.removeAllViewsInLayout();
-            bool = true;
-        }
-        return bool;
-    }
-
-    public MessageViewType getMessageViewType() {
-        return messageViewType;
-    }
-
-    public void setMessageViewType(MessageViewType messageViewType) {
-        this.messageViewType = messageViewType;
     }
 
     public void updateViews() {
