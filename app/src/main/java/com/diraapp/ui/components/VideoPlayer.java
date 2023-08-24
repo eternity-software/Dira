@@ -254,40 +254,32 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
     public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
         final Surface s = new Surface(surface);
 
-
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
+        try {
 
 
-                    mediaPlayer = new MediaPlayer();
-                    setVolume(0);
+            mediaPlayer = new MediaPlayer();
 
-                    mediaPlayer.setSurface(s);
-                    mediaPlayer.setLooping(true);
+            mediaPlayer.setSurface(s);
+            mediaPlayer.setLooping(true);
 
 
-                    if (currentPlaying != null) {
-                        play(currentPlaying);
-                    }
+            if (currentPlaying != null) {
+                play(currentPlaying);
 
-                    adjustAspectRatio(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
+            }
+            setVolume(0);
+
+            adjustAspectRatio(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
 
 //            mediaPlayer.setOnBufferingUpdateListener(this);
 //            mediaPlayer.setOnCompletionListener(this);
 
-                    if (videoPlayerListener != null)
-                        videoPlayerListener.onReady(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
-                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, delay);
-
-
+            if (videoPlayerListener != null)
+                videoPlayerListener.onReady(mediaPlayer.getVideoWidth(), mediaPlayer.getVideoHeight());
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setVolume(float volume) {

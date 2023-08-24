@@ -202,6 +202,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 holder.videoPlayer.release();
             }
         }
+
+        timer.reportTime();
         /*
         holder.messageText.setVisibility(View.VISIBLE);
         holder.videoPlayer.release();
@@ -238,6 +240,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             }
         }
 
+        timer.reportTime();
+
         Message previousMessage = null;
 
         boolean isSameDay = false;
@@ -262,6 +266,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             }
         }
 
+
+        timer.reportTime();
         if (!isSameDay || !isSameYear) {
 
             String dateString = Numbers.getDateFromTimestamp(message.getTime(), !isSameYear);
@@ -286,10 +292,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     public void updateAttachment(ViewHolder holder, Attachment attachment, File file) {
-
-        context.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
 
                 if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
                     holder.imageView.setVisibility(View.VISIBLE);
@@ -450,6 +452,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                 e.printStackTrace();
                             }
                             holder.loading.setVisibility(View.GONE);
+                            finalVideoPlayer2.setVideoPlayerListener(null);
                         }
                     });
                 }  else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
@@ -511,8 +514,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                     });
 
                 }
-            }
-        });
     }
 
     public void release() {

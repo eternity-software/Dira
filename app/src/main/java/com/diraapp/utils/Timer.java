@@ -5,7 +5,7 @@ import android.util.Log;
 public class Timer {
 
 
-    private static final long WARN_TIME = 10;
+    private static final long WARN_TIME = 1;
     private long startTime = 0;
 
     private String name;
