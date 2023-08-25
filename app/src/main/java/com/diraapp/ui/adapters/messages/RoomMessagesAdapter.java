@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -321,27 +322,29 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                         holder.imageView.setVisibility(View.VISIBLE);
                         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 
-                        int width = 1;
-                        int height = 1;
+                        int width = attachment.getWidth();
+                        int height = attachment.getHeight();
                         int rotation = 0;
-                        try {
-                            retriever.setDataSource(file.getPath());
-                            width = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
-                            height = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
-                            rotation = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
+                        if (width <= 0 & height <= 0) {
+                            try {
+                                retriever.setDataSource(file.getPath());
+                                width = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+                                height = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+                                rotation = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
 
-                            if (rotation != 0) {
-                                width = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
-                                height = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+                                if (rotation != 0) {
+                                    width = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+                                    height = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, false,
+                                        attachment, secretName);
+                                AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, serverAddress);
+                                file.delete();
+                                return;
                             }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, false,
-                                    attachment, secretName);
-                            AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, serverAddress);
-                            file.delete();
-                            return;
                         }
 
                         if (height > width * 3) {
@@ -362,9 +365,9 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                         holder.imageView.post(new Runnable() {
                             @Override
                             public void run() {
-                                finalVideoPlayer.getLayoutParams().height = holder.imageView.getMeasuredHeight();
-                                finalVideoPlayer.getLayoutParams().width = holder.imageView.getMeasuredWidth();
-                                finalVideoPlayer.requestLayout();
+                                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams
+                                        (holder.imageView.getMeasuredWidth(), holder.imageView.getMeasuredHeight());
+                                finalVideoPlayer.setLayoutParams(params);
 
                                 finalVideoPlayer.setVolume(0);
 
@@ -458,7 +461,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 }  else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
                     holder.loading.setVisibility(View.GONE);
                     holder.waveformSeekBar.setSampleFrom(file);
-                    holder.waveformSeekBar.setProgress(attachment.getVoiceMessageStopPoint());
+                    holder.waveformSeekBar.setProgress(attachment.getVoiceMessageStopProgress());
                     holder.voiceLayout.setVisibility(View.VISIBLE);
 
                     holder.playButton.setOnClickListener(new View.OnClickListener() {
@@ -565,6 +568,24 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder.messageText.setText(message.getText());
         }
 
+
+        if (holder.imageContainer != null) {
+            if (message.getAttachments().size() == 1) {
+                Attachment attachment = message.getAttachments().get(0);
+
+                if (attachment.getWidth() > 0 & attachment.getHeight() > 0) {
+                    System.out.println("LOL HOW?");
+                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams
+                            (attachment.getWidth(), attachment.getHeight());
+
+                    if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
+                        holder.videoPlayer.setLayoutParams(params);
+                    } else if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
+                        holder.imageView.setLayoutParams(params);
+                    }
+                }
+            }
+        }
         loadMessageAttachment(message, holder);
         if (!isSelfMessage) {
             if (members.containsKey(message.getAuthorId())) {
