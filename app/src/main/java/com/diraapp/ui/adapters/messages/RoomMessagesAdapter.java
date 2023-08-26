@@ -650,6 +650,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             setImageOnRoomUpdateMessage(holder, path);
             holder.roomUpdatesIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_room_updates));
             holder.roomUpdatesText.setVisibility(View.GONE);
+            applyDefaultIconOnUpdateMessage(holder);
         } else if (message.getCustomClientData() instanceof RoomNameChangeClientData) {
             holder.roomUpdatesMainText.setText(context.getString(R.string.room_update_name_change));
 
@@ -669,6 +670,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             setImageOnRoomUpdateMessage(holder, path);
 
             holder.roomUpdatesText.setVisibility(View.GONE);
+            applyDefaultIconOnUpdateMessage(holder);
         } else if (message.getCustomClientData() instanceof RoomNameAndIconChangeClientData) {
             holder.roomUpdatesMainText.setText(context.getString(R.string.room_update_name_and_picture_change));
 

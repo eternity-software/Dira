@@ -177,14 +177,11 @@ public class Theme {
 
         ColorThemeType colorThemeType = ColorThemeType.valueOf(cacheUtils.getString(CacheUtils.COLOR_THEME));
 
-        if(colorThemeType == ColorThemeType.KITTY)
-        {
-            int resId = context.getResources().getIdentifier(
+        int resId = context.getResources().getIdentifier(
                     colorThemeType.name().toLowerCase() + "_theme", "raw", context.getPackageName());
 
-            applyXml(readTextFile(context, resId));
+        applyXml(readTextFile(context, resId));
 
-        }
     }
 
     public static String readTextFile(Context context,@RawRes int id){

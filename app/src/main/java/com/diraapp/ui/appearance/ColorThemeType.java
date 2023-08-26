@@ -10,5 +10,6 @@ public enum ColorThemeType {
 
     ROCK,
 
-    GREEN
+    GREEN,
+    PINK
 }
