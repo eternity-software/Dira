@@ -64,18 +64,20 @@ public class FilesUploader {
                 int maxFrameSize = 800;
 
                 if (bitmap.getHeight() * bitmap.getWidth() > maxFrameSize * maxFrameSize) {
+                    int height;
+                    int width;
                     if (bitmap.getHeight() > bitmap.getWidth()) {
                         float r = bitmap.getHeight() / (float) bitmap.getWidth();
-                        bitmap.setWidth(maxFrameSize);
-                        bitmap.setHeight((int) r * maxFrameSize);
+                        width = maxFrameSize;
+                        height = (int) r * maxFrameSize;
                     } else {
                         float r = bitmap.getWidth() / (float) bitmap.getHeight();
-                        bitmap.setHeight(maxFrameSize);
-                        bitmap.setWidth((int) r * maxFrameSize);
+                        height = maxFrameSize;
+                        width = (int) r * maxFrameSize;
                     }
 
-                    bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(),
-                            bitmap.getHeight(), true);
+                    bitmap = Bitmap.createScaledBitmap(bitmap, width,
+                            height, true);
 
                 }
 
