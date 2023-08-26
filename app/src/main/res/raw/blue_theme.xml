@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Main colors !-->
-    <color name="accent">#BE5DE0</color>
-    <color name="accent_dark">#A249C1</color>
-    <color name="accent_medium">#82399C</color>
+    <color name="accent">#388BD7</color>
+    <color name="accent_dark">#2D74B5</color>
+    <color name="accent_medium">#22619A</color>
     <color name="unread_message_background">#6A556E7E</color>
     <color name="dark">#202020</color>
     <color name="light_gray">#CDCDCD</color>
@@ -40,16 +40,16 @@
     <color name="dark_message_attributes_background">@color/gray_trans</color>
 
     <color name="self_message_color">#FFFFFF</color>
-    <color name="self_message_background">#9D34C2</color>
-    <color name="self_message_color_link">#4E275C</color>
+    <color name="self_message_background">#388BD7</color>
+    <color name="self_message_color_link">#313131</color>
 
     <color name="message_background">#424242</color>
     <color name="message_color">@color/white</color>
-    <color name="message_color_link">#9D34C2</color>
+    <color name="message_color_link">#388BD7</color>
 
     <color name="author_color">@color/white</color>
     <color name="subtitle_color">@color/medium_light_light_gray</color>
-    <color name="subtitle_color_accent">@color/accent</color>
+    <color name="subtitle_color_accent">#54A3EC</color>
 
     <color name="client_data_title_color">@color/white</color>
     <color name="client_data_text_color">@color/light_gray</color>
@@ -61,8 +61,8 @@
     <color name="atl_button_text_color">@color/white</color>
 
     <color name="self_atl_title_color">@color/white</color>
-    <color name="self_atl_text_color">#D1A4E1</color>
-    <color name="self_atl_button_color">#BE5DE0</color>
+    <color name="self_atl_text_color">#E5E1FE</color>
+    <color name="self_atl_button_color">#54A3EC</color>
     <color name="self_atl_button_text_color">@color/white</color>
 
 
@@ -75,13 +75,13 @@
     <color name="self_message_waves">@color/white</color>
     <color name="message_waves">@color/white</color>
 
-    <color name="self_message_waves_background">#8321A6</color>
+    <color name="self_message_waves_background">#156DBE</color>
     <color name="message_waves_background">#727272</color>
 
     <color name="self_message_voice_play">@color/white</color>
     <color name="message_voice_play">@color/white</color>
 
-    <color name="self_message_voice_play_background">#8321A6</color>
+    <color name="self_message_voice_play_background">#307CC1</color>
     <color name="message_voice_play_background">#727272</color>
 
     <!-- Paint colors !-->

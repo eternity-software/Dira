@@ -45,11 +45,16 @@ public class ColorTheme {
         green.name = context.getResources().getString(R.string.theme_green);
         green.type = ColorThemeType.GREEN;
 
+        ColorTheme pink = new ColorTheme();
+        pink.previewColor = ContextCompat.getColor(context, R.color.green_accent);
+        pink.name = context.getResources().getString(R.string.theme_green);
+        pink.type = ColorThemeType.GREEN;
+
         colorThemes.put(ColorThemeType.DIRA, main);
         colorThemes.put(ColorThemeType.KITTY, kitty);
         colorThemes.put(ColorThemeType.BLUE, blue);
         colorThemes.put(ColorThemeType.ROCK, rock);
-        colorThemes.put(ColorThemeType.GREEN, green);
+        colorThemes.put(ColorThemeType.GREEN, pink);
     }
 
     public static List<ColorTheme> getColorThemeList() {
