@@ -17,6 +17,7 @@
     <color name="black">#000000</color>
 
     <color name="kitty_accent">#5A4BB9</color>
+    <color name="pink_accent">#CF4FEC</color>
     <color name="kitty_message">#474169</color>
     <color name="unread_message_background_kitty">#433F5F</color>
 

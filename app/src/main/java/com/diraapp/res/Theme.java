@@ -170,18 +170,23 @@ public class Theme {
 
     public static void loadCurrentTheme(Context context) throws LanguageParsingException {
 
-        CacheUtils cacheUtils = new CacheUtils(context);
-        if (!cacheUtils.hasKey(CacheUtils.COLOR_THEME)) {
-            cacheUtils.setString(CacheUtils.COLOR_THEME, ColorThemeType.DIRA.toString());
-        }
+        try {
+            CacheUtils cacheUtils = new CacheUtils(context);
+            if (!cacheUtils.hasKey(CacheUtils.COLOR_THEME)) {
+                cacheUtils.setString(CacheUtils.COLOR_THEME, ColorThemeType.DIRA.toString());
+            }
 
-        ColorThemeType colorThemeType = ColorThemeType.valueOf(cacheUtils.getString(CacheUtils.COLOR_THEME));
+            ColorThemeType colorThemeType = ColorThemeType.valueOf(cacheUtils.getString(CacheUtils.COLOR_THEME));
 
-        int resId = context.getResources().getIdentifier(
+            int resId = context.getResources().getIdentifier(
                     colorThemeType.name().toLowerCase() + "_theme", "raw", context.getPackageName());
 
-        applyXml(readTextFile(context, resId));
-
+            applyXml(readTextFile(context, resId));
+        }
+        catch (Exception e)
+        {
+            
+        }
     }
 
     public static String readTextFile(Context context,@RawRes int id){
