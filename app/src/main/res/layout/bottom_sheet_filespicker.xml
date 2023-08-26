@@ -52,7 +52,8 @@
                         android:layout_gravity="center_vertical"
                         android:background="@drawable/gray_rounded"
                         android:paddingHorizontal="8dp"
-                        app:themeImageColor="accent_image_button_color"
+                        app:themeImageColor="light_gray"
+                        app:themeBackgroundTint="gray"
                         app:srcCompat="@drawable/ic_camera" />
 
                     <com.diraapp.ui.components.dynamic.ThemeImageView
@@ -63,7 +64,8 @@
                         android:layout_marginLeft="16dp"
                         android:background="@drawable/gray_rounded"
                         android:paddingHorizontal="8dp"
-                        app:themeImageColor="accent_image_button_color"
+                        app:themeBackgroundTint="gray"
+                        app:themeImageColor="light_gray"
                         app:srcCompat="@drawable/ic_image" />
                 </LinearLayout>
 

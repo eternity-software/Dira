@@ -47,7 +47,7 @@ public class ColorTheme {
 
         ColorTheme pink = new ColorTheme();
         pink.previewColor = ContextCompat.getColor(context, R.color.pink_accent);
-        pink.name = context.getResources().getString(R.string.theme_green);
+        pink.name = "Pink";
         pink.type = ColorThemeType.PINK;
 
         colorThemes.put(ColorThemeType.DIRA, main);

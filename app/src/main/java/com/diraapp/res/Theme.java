@@ -185,7 +185,7 @@ public class Theme {
         }
         catch (Exception e)
         {
-            
+            stringsRepository = new StringsRepository();
         }
     }
 
