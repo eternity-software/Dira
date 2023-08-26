@@ -151,7 +151,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ViewHolder holder;
-        if (viewType >= VIEW_TYPE_ROOM_MESSAGE) {
+        if (viewType >= VIEW_TYPE_ROOM_MESSAGE)
+        {
             holder = new ViewHolder(layoutInflater.inflate(R.layout.room_message, parent, false));
         } else {
             holder = new ViewHolder(layoutInflater.inflate(R.layout.self_message, parent, false));
@@ -190,7 +191,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         Message message = messages.get(position);
-        Timer timer = new Timer("Main Binder " + message.getText());
+
         if (holder.attachmentsStorageListener != null) {
             AttachmentsStorage.removeAttachmentsStorageListener(holder.attachmentsStorageListener);
             listeners.remove(holder.attachmentsStorageListener);
@@ -204,7 +205,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder.videoPlayer.setVisibility(View.GONE);
         }
 
-        timer.reportTime();
         /*
         holder.messageText.setVisibility(View.VISIBLE);
         holder.videoPlayer.release();
@@ -241,7 +241,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             }
         }
 
-        timer.reportTime();
 
         Message previousMessage = null;
 
@@ -267,8 +266,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             }
         }
 
-
-        timer.reportTime();
         if (!isSameDay || !isSameYear) {
 
             String dateString = Numbers.getDateFromTimestamp(message.getTime(), !isSameYear);
@@ -279,17 +276,12 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
 
         if (message.getCustomClientData() == null) {
-            Timer userTimer = new Timer("userTime");
             bindUserMessage(message, previousMessage, isSameDay, isSameYear, holder);
-            userTimer.reportTime();
         } else {
-            Timer roomTimer = new Timer("roomTime");
             bindRoomUpdateMessage(message, holder);
-            roomTimer.reportTime();
         }
 
         holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime(), context));
-        timer.reportTime();
     }
 
     public void updateAttachment(ViewHolder holder, Attachment attachment, File file) {
