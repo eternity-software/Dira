@@ -267,12 +267,32 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
         private final String messageText;
         private final AttachmentType attachmentType;
+
+        private int height;
+        private int width;
         private String fileUri;
 
         public RoomAttachmentCallback(String fileUri, String messageText, AttachmentType attachmentType) {
             this.fileUri = fileUri;
             this.messageText = messageText;
             this.attachmentType = attachmentType;
+        }
+
+        public AttachmentType getAttachmentType() {
+            return attachmentType;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public void setWidthAndHeight(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
+
+        public int getWidth() {
+            return width;
         }
 
         public RoomAttachmentCallback setFileUri(String fileUri) {
@@ -297,12 +317,17 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
                 attachment.setAttachmentType(attachmentType);
 
-
                 attachment.setFileCreatedTime(System.currentTimeMillis());
                 attachment.setFileName("attachment");
                 System.out.println("uploaded url " + fileTempName);
                 attachment.setFileUrl(fileTempName);
                 attachment.setSize(new File(fileUri).length());
+
+                if (attachment.getAttachmentType() == AttachmentType.VIDEO ||
+                    attachment.getAttachmentType() == AttachmentType.IMAGE) {
+                    attachment.setHeight(this.height);
+                    attachment.setWidth(this.width);
+                }
 
                 Message message = Message.generateMessage(view.getCacheUtils(), roomSecret);
 

@@ -3,6 +3,7 @@ package com.diraapp.storage.images;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Handler;
 import android.widget.Toast;
@@ -10,8 +11,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
+import com.diraapp.ui.activities.room.RoomActivityPresenter;
 import com.diraapp.utils.CryptoUtils;
 import com.diraapp.utils.ImageRotationFix;
 
@@ -63,18 +66,42 @@ public class FilesUploader {
                 if (bitmap.getHeight() * bitmap.getWidth() > maxFrameSize * maxFrameSize) {
                     if (bitmap.getHeight() > bitmap.getWidth()) {
                         float r = bitmap.getHeight() / (float) bitmap.getWidth();
-                        bitmap = Bitmap.createScaledBitmap(bitmap, maxFrameSize, (int) (r * maxFrameSize), true);
+                        bitmap.setWidth(maxFrameSize);
+                        bitmap.setHeight((int) r * maxFrameSize);
                     } else {
                         float r = bitmap.getWidth() / (float) bitmap.getHeight();
-                        bitmap = Bitmap.createScaledBitmap(bitmap, (int) (r * maxFrameSize), maxFrameSize, true);
+                        bitmap.setHeight(maxFrameSize);
+                        bitmap.setWidth((int) r * maxFrameSize);
                     }
 
+                    bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(),
+                            bitmap.getHeight(), true);
 
                 }
+
+                if (callback instanceof RoomActivityPresenter.RoomAttachmentCallback) {
+                    ((RoomActivityPresenter.RoomAttachmentCallback) callback).
+                            setWidthAndHeight(bitmap.getWidth(), bitmap.getHeight());
+                }
+
                 deleteAfterUpload = true;
 
                 sourceFileUri = AppStorage.saveToInternalStorage(bitmap,
                         null, context);
+            } else if (callback instanceof RoomActivityPresenter.RoomAttachmentCallback) {
+                RoomActivityPresenter.RoomAttachmentCallback roomAttachmentCallback =
+                        (RoomActivityPresenter.RoomAttachmentCallback) callback;
+                if (roomAttachmentCallback.getAttachmentType() == AttachmentType.VIDEO) {
+                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                    retriever.setDataSource(sourceFileUri);
+                    int width = Integer.parseInt(retriever.
+                            extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+                    int height = Integer.parseInt(retriever.
+                            extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+                    retriever.release();
+
+                    roomAttachmentCallback.setWidthAndHeight(width, height);
+                }
             }
 
             if (!encryptionKey.equals("")) {
