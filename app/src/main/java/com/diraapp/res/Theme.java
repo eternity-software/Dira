@@ -108,7 +108,7 @@ public class Theme {
 // finally change the color
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-            window.setStatusBarColor(getColor(activity, R.color.colorBackground));
+            //window.setStatusBarColor(getColor(activity, R.color.colorBackground));
         }
     }
 
@@ -152,7 +152,7 @@ public class Theme {
     }
 
     public static void applyBackground(View view) {
-        view.setBackgroundColor(getColor(view.getContext(), R.color.colorBackground));
+        //view.setBackgroundColor(getColor(view.getContext(), R.color.colorBackground));
         notifyUpdate();
     }
 
