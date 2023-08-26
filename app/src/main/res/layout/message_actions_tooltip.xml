@@ -27,7 +27,6 @@
             android:text="@string/message_tooltip_copy"
             android:textColor="@color/white"
 
-            android:textIsSelectable="true"
             android:textSize="13sp" />
 
 
@@ -69,12 +68,6 @@
                 android:src="@drawable/placeholder" />
         </androidx.cardview.widget.CardView>
 
-        <ImageView
-            android:id="@+id/count_row_arrow"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_short_arrow"/>
-
         <TextView
             android:maxLines="1"
             android:ellipsize="end"
@@ -87,25 +80,9 @@
             android:text="@string/message_tooltip_read_count"
             android:textColor="@color/white"
 
-            android:textIsSelectable="true"
             android:textSize="13sp" />
 
     </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/recycler_layout">
-
-        <androidx.recyclerview.widget.RecyclerView
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/message_tooltip_recycler">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-    </RelativeLayout>
 
 
 </LinearLayout>

@@ -111,7 +111,6 @@
                 android:text="самсой"
                 android:textColor="@color/light_gray"
 
-                android:textIsSelectable="true"
                 android:textSize="15sp" />
 
         </LinearLayout>

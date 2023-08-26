@@ -155,6 +155,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             try {
                 MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
                 List<Message> oldMessages = messageDao.getLastMessagesInRoom(roomSecret, message.getTime());
+                if (oldMessages.size() == 0) return;
                 messageList.addAll(oldMessages);
                 view.notifyMessagesChanged();
             } catch (Exception e) {
