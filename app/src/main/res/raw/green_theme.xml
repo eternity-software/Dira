@@ -67,7 +67,7 @@
 
 
     <color name="accent_button_background">@color/accent</color>
-    <color name="accent_button_color">#41C5B5</color>
+    <color name="accent_button_color">@color/white</color>
     <color name="accent_button_text_color">@color/white</color>
     <color name="accent_image_button_color">@color/accent</color>
     <color name="accent_text">@color/accent</color>
@@ -79,7 +79,7 @@
     <color name="message_waves_background">@color/accent_medium</color>
 
     <color name="self_message_voice_play">@color/white</color>
-    <color name="message_voice_play">#1C534C</color>
+    <color name="message_voice_play">@color/white</color>
 
     <color name="self_message_voice_play_background">@color/accent</color>
     <color name="message_voice_play_background">#25A495</color>
