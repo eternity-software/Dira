@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.res.Theme;
 import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.appearance.ChatBackground;
 
@@ -46,16 +47,16 @@ public class ChatBackgroundAdapter extends RecyclerView.Adapter<ChatBackgroundAd
         holder.imageView.setImageDrawable(background.getDrawable(context));
 
         if (background.equals(AppTheme.getInstance().getChatBackground())) {
-            holder.layout.getBackground().setTint(context.getResources().getColor(R.color.accent));
+            holder.layout.getBackground().setTint(Theme.getColor(context, R.color.accent));
         } else {
-            holder.layout.getBackground().setTint(context.getResources().getColor(R.color.gray));
+            holder.layout.getBackground().setTint(Theme.getColor(context, R.color.gray));
         }
 
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 holder.layout.getBackground().setTint(
-                        context.getResources().getColor(R.color.accent));
+                        Theme.getColor(context, R.color.accent));
 
                 int i = list.indexOf(AppTheme.getInstance().getChatBackground());
                 notifyItemChanged(i);

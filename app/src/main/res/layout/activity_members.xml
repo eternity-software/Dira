@@ -7,7 +7,7 @@
     android:background="@color/dark"
     tools:context=".ui.activities.MembersActivity">
 
-    <ImageView
+    <com.diraapp.ui.components.dynamic.ThemeImageView
         android:id="@+id/button_back"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -15,6 +15,7 @@
         android:layout_marginTop="20dp"
         android:background="?actionBarItemBackground"
         android:padding="10dp"
+        app:themeImageColor="accent_image_button_color"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

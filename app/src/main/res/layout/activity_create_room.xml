@@ -8,7 +8,8 @@
     android:background="@color/dark"
     tools:context=".ui.activities.createroom.CreateRoomActivity">
 
-    <ImageView
+    <com.diraapp.ui.components.dynamic.ThemeImageView
+        app:themeImageColor="accent_image_button_color"
         android:id="@+id/button_back"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -223,7 +224,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <ImageView
+    <com.diraapp.ui.components.dynamic.ThemeImageView
         android:id="@+id/button_create_new"
         android:layout_width="90dp"
         android:layout_height="50dp"
@@ -233,6 +234,10 @@
         android:background="@drawable/accent_rounded"
         android:padding="16dp"
         android:src="@drawable/ic_next"
+
+        app:themeImageColor="accent_button_color"
+        app:themeBackgroundTint="accent_button_background"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

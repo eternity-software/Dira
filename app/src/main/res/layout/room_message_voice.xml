@@ -36,7 +36,7 @@
         app:wave_padding_right="2dp"
         app:wave_padding_top="4dp"
         app:wave_progress="0"
-        app:wave_progress_color="@color/gray"
+        app:wave_progress_color="@color/red"
         app:wave_visible_progress="0"
         app:wave_width="3dp"
         android:layout_width="wrap_content"

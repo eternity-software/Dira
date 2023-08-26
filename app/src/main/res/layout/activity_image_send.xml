@@ -82,7 +82,7 @@
 
             android:textSize="15sp" />
 
-        <ImageView
+        <com.diraapp.ui.components.dynamic.ThemeImageView
             android:id="@+id/editButton"
             android:layout_width="38dp"
             android:layout_height="38dp"
@@ -93,10 +93,12 @@
             android:background="@drawable/gray_rounded"
             android:onClick="editImageButtonClick"
             android:padding="8dp"
+            app:themeImageColor="accent_image_button_color"
+            app:themeBackgroundTint="gray"
 
             app:srcCompat="@drawable/ic_brush" />
 
-        <ImageView
+        <com.diraapp.ui.components.dynamic.ThemeImageView
             android:id="@+id/sendButton"
             android:layout_width="38dp"
             android:layout_height="38dp"
@@ -106,6 +108,9 @@
             android:layout_marginRight="7dp"
             android:background="@drawable/accent_rounded"
             android:onClick="sendButtonClick"
+
+            app:themeImageColor="accent_button_color"
+            app:themeBackgroundTint="accent_button_background"
 
             android:padding="8dp"
             app:srcCompat="@drawable/ic_send" />

@@ -23,6 +23,6 @@ public class CustomLanguage {
     }
 
     public static void reset(Context context) {
-        //CachedValues.removeCustomLanguage(context);
+
     }
 }

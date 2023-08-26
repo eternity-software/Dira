@@ -88,19 +88,19 @@
                         android:src="@drawable/ic_plus"
                         app:tint="@color/white" />
 
-                    <RelativeLayout
+                    <com.diraapp.ui.components.dynamic.ThemeLinearLayout
                         android:id="@+id/personality_button"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
                         android:layout_margin="12dp"
+                        app:themeBackgroundColor="accent"
                         android:background="@drawable/outline_circle">
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_margin="4dp"
-                            app:cardBackgroundColor="@color/accent"
+                            android:layout_margin="2dp"
                             app:cardCornerRadius="50dp">
 
                             <ImageView
@@ -111,7 +111,7 @@
                                 android:src="@drawable/placeholder" />
                         </androidx.cardview.widget.CardView>
 
-                    </RelativeLayout>
+                    </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
 
 
                 </LinearLayout>

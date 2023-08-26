@@ -122,7 +122,7 @@
                 android:textColor="@color/red"
                 android:textSize="16sp" />
 
-            <TextView
+            <com.diraapp.ui.components.dynamic.DynamicTextView
                 android:id="@+id/button_action"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -130,6 +130,8 @@
                 android:layout_marginStart="12dp"
 
 
+                app:themeColorBackground="accent_button_background"
+                app:themeColor="accent_button_text_color"
                 android:background="@drawable/accent_rounded"
                 android:fontFamily="@font/montserratsemibold"
                 android:gravity="center"

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.res.Theme;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.components.DiraPopup;
 
@@ -50,10 +51,10 @@ public class RoomServerAdapter extends RecyclerView.Adapter<RoomServerAdapter.Vi
         if (serverAddress.equals(UpdateProcessor.OFFICIAL_ADDRESS)) {
             holder.deleteButton.setVisibility(View.GONE);
             holder.serverAddressView.setText(context.getString(R.string.room_servers_official));
-            holder.serverAddressView.setTextColor(context.getResources().getColor(R.color.accent));
+            holder.serverAddressView.setTextColor(Theme.getColor(context, R.color.accent));
         } else {
             holder.deleteButton.setVisibility(View.VISIBLE);
-            holder.serverAddressView.setTextColor(context.getResources().getColor(R.color.white));
+            holder.serverAddressView.setTextColor(Theme.getColor(context, R.color.white));
             holder.serverAddressView.setText(serverAddress);
         }
 

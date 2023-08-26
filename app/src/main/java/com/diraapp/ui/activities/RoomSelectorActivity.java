@@ -31,7 +31,9 @@ import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
+import com.diraapp.exceptions.LanguageParsingException;
 import com.diraapp.notifications.Notifier;
+import com.diraapp.res.Theme;
 import com.diraapp.services.UpdaterService;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.room.RoomActivity;
@@ -81,6 +83,12 @@ public class RoomSelectorActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            Theme.loadCurrentTheme(this);
+        } catch (LanguageParsingException e) {
+
+        }
+
         setContentView(R.layout.activity_main);
 
         new AppTheme(getApplicationContext());
@@ -93,6 +101,7 @@ public class RoomSelectorActivity extends AppCompatActivity
                 startActivity(notificationIntent);
             }
         }
+
 
         cacheUtils = new CacheUtils(getApplicationContext());
 
@@ -259,10 +268,10 @@ public class RoomSelectorActivity extends AppCompatActivity
                 ImageView imageView = findViewById(R.id.status_light);
                 if (percentOpened != 1) {
                     if (percentOpened == 0) {
-                        imageView.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
+                        imageView.setColorFilter(Theme.getColor(getApplicationContext(), R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
                         UpdateProcessor.getInstance(getApplicationContext()).reconnectSockets();
                     } else {
-                        imageView.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+                        imageView.setColorFilter(Theme.getColor(getApplicationContext(), R.color.yellow), android.graphics.PorterDuff.Mode.SRC_IN);
 
                     }
                     imageView.setVisibility(View.VISIBLE);

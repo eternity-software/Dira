@@ -34,8 +34,6 @@ public class MembersActivity extends DiraActivity {
 
         String roomSecret = getIntent().getExtras().getString(ROOM_SECRET);
 
-        applyColorTheme();
-
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -64,10 +62,4 @@ public class MembersActivity extends DiraActivity {
         });
     }
 
-    private void applyColorTheme() {
-        ColorTheme theme = AppTheme.getInstance().getColorTheme();
-
-        ImageView button_back = findViewById(R.id.button_back);
-        button_back.setColorFilter(theme.getAccentColor());
-    }
 }

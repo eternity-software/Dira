@@ -16,6 +16,7 @@
         android:layout_marginTop="20dp"
         android:background="?actionBarItemBackground"
         android:padding="10dp"
+        app:themeImageColor="accent_image_button_color"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -81,8 +82,8 @@
                 android:paddingHorizontal="18dp"
                 android:paddingVertical="14dp">
 
-                <TextView
-
+                <com.diraapp.ui.components.dynamic.DynamicTextView
+                    app:themeColor="accent_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserratsemibold"
@@ -91,6 +92,7 @@
                     android:textSize="18sp" />
 
                 <TextView
+
                     android:id="@+id/image_size_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -113,8 +115,8 @@
                 android:paddingHorizontal="18dp"
                 android:paddingVertical="14dp">
 
-                <TextView
-
+                <com.diraapp.ui.components.dynamic.DynamicTextView
+                    app:themeColor="accent_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
@@ -124,6 +126,7 @@
                     android:textSize="18sp" />
 
                 <TextView
+
                     android:id="@+id/video_size_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

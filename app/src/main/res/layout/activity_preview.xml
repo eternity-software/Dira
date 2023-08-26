@@ -26,7 +26,8 @@
             android:layout_width="match_parent"
             android:transitionName="image_shared_transition"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="20dp"
+            app:cardCornerRadius="0dp"
+            android:elevation="0dp"
             android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -73,6 +74,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/imageContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_add_image"
-        app:tint="@color/accent" />
+        app:tint="@color/light_gray" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

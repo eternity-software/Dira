@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.res.Theme;
 import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.appearance.ColorTheme;
 
@@ -49,9 +50,9 @@ public class ColorThemeAdapter extends RecyclerView.Adapter<ColorThemeAdapter.Vi
 
         if (theme.equals(AppTheme.getInstance().getColorTheme())) {
             holder.layout.getBackground().setTint(AppTheme.getInstance().
-                    getColorTheme().getAccentColor());
+                    getColorTheme().getPreviewColor());
         } else {
-            holder.layout.getBackground().setTint(context.getResources().getColor(R.color.gray));
+            holder.layout.getBackground().setTint(Theme.getColor(context, R.color.gray));
         }
 
         holder.layout.setOnClickListener(new View.OnClickListener() {

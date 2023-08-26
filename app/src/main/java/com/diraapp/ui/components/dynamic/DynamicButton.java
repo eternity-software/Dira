@@ -1,6 +1,7 @@
 package com.diraapp.ui.components.dynamic;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
@@ -39,8 +40,10 @@ public class DynamicButton extends AppCompatButton {
         initialize(context, attrs);
     }
 
+    @SuppressLint("ResourceType")
     private void initialize(Context context, AttributeSet attrs) {
         int[] sets = {R.attr.localizableButtonKey, R.attr.themeButtonBackground, R.attr.themeButtonText};
+
         TypedArray typedArray = context.obtainStyledAttributes(attrs, sets);
         CharSequence locId = typedArray.getText(0);
         String themeButtonBackground = String.valueOf(typedArray.getText(1));

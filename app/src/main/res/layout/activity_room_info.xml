@@ -8,10 +8,11 @@
     android:background="@color/dark"
     tools:context=".ui.activities.RoomInfoActivity">
 
-    <ImageView
+    <com.diraapp.ui.components.dynamic.ThemeImageView
         android:id="@+id/button_back"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        app:themeImageColor="accent_image_button_color"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:background="?actionBarItemBackground"
@@ -19,6 +20,8 @@
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
 
     <ImageView
         android:id="@+id/encryption_button"

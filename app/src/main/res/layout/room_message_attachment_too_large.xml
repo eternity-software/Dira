@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/attachment_too_large"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
+    <com.diraapp.ui.components.dynamic.DynamicTextView
         android:id="@+id/attachment_too_large_text"
 
         android:layout_width="wrap_content"
@@ -18,16 +19,18 @@
         android:text="@string/attachment_large_title"
         android:textColor="@color/dark"
 
+
+        app:themeColor="atl_title_color"
         android:textIsSelectable="true"
         android:textSize="15sp" />
 
-    <TextView
+    <com.diraapp.ui.components.dynamic.DynamicTextView
         android:id="@+id/size_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
         android:layout_marginBottom="8dp"
-
+        app:themeColor="atl_text_color"
         android:autoLink="all"
         android:fontFamily="@font/montserratsemibold"
         android:includeFontPadding="false"
@@ -38,7 +41,7 @@
         android:textIsSelectable="true"
         android:textSize="13sp" />
 
-    <TextView
+    <com.diraapp.ui.components.dynamic.DynamicTextView
         android:id="@+id/download_button"
         android:layout_width="match_parent"
         android:layout_height="30dp"
@@ -48,6 +51,8 @@
         android:background="@drawable/gray_rounded"
         android:backgroundTint="@color/dark"
         android:fontFamily="@font/montserratsemibold"
+        app:themeColor="atl_button_text_color"
+        app:themeColorBackground="atl_button_color"
 
 
         android:gravity="center"

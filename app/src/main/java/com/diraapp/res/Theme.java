@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.annotation.RawRes;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.diraapp.R;
@@ -15,8 +16,13 @@ import com.diraapp.exceptions.LanguageParsingException;
 import com.diraapp.exceptions.NoSuchValueException;
 import com.diraapp.exceptions.NotCachedException;
 import com.diraapp.res.lang.StringsRepository;
+import com.diraapp.ui.appearance.ColorTheme;
+import com.diraapp.ui.appearance.ColorThemeType;
 import com.diraapp.utils.CacheUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +114,9 @@ public class Theme {
 // finally change the color
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-            //window.setStatusBarColor(getColor(activity, R.color.colorBackground));
+
+            window.setStatusBarColor(getColor(activity, R.color.background));
+
         }
     }
 
@@ -152,8 +160,47 @@ public class Theme {
     }
 
     public static void applyBackground(View view) {
+
         //view.setBackgroundColor(getColor(view.getContext(), R.color.colorBackground));
+
+        view.setBackgroundColor(getColor(view.getContext(), R.color.background));
+
         notifyUpdate();
+    }
+
+    public static void loadCurrentTheme(Context context) throws LanguageParsingException {
+
+        CacheUtils cacheUtils = new CacheUtils(context);
+        if (!cacheUtils.hasKey(CacheUtils.COLOR_THEME)) {
+            cacheUtils.setString(CacheUtils.COLOR_THEME, ColorThemeType.DIRA.toString());
+        }
+
+        ColorThemeType colorThemeType = ColorThemeType.valueOf(cacheUtils.getString(CacheUtils.COLOR_THEME));
+
+        if(colorThemeType == ColorThemeType.KITTY)
+        {
+            int resId = context.getResources().getIdentifier(
+                    colorThemeType.name().toLowerCase() + "_theme", "raw", context.getPackageName());
+
+            applyXml(readTextFile(context, resId));
+
+        }
+    }
+
+    public static String readTextFile(Context context,@RawRes int id){
+        InputStream inputStream = context.getResources().openRawResource(id);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        byte buffer[] = new byte[1024];
+        int size;
+        try {
+            while ((size = inputStream.read(buffer)) != -1)
+                outputStream.write(buffer, 0, size);
+            outputStream.close();
+            inputStream.close();
+        } catch (IOException e) {
+
+        }
+        return outputStream.toString();
     }
 
     public static void notifyUpdate() {

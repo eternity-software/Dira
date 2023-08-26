@@ -1,5 +1,6 @@
 package com.diraapp.ui.components.dynamic;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
@@ -28,10 +29,8 @@ public class ThemeImageView extends androidx.appcompat.widget.AppCompatImageView
         initialize(context, attrs);
     }
 
+    @SuppressLint("ResourceType")
     private void initialize(Context context, AttributeSet attrs) {
-
-
-
 
         try {
             int[] sets = { R.attr.themeBackgroundTint, R.attr.themeImageColor};

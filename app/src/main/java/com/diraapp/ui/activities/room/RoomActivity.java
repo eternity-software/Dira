@@ -39,6 +39,7 @@ import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.notifications.Notifier;
+import com.diraapp.res.Theme;
 import com.diraapp.storage.FileClassifier;
 import com.diraapp.storage.images.FilesUploader;
 import com.diraapp.ui.activities.DiraActivity;
@@ -115,8 +116,6 @@ public class RoomActivity extends DiraActivity
         recordComponentsController.setRecordListener(this);
 
         theme = AppTheme.getInstance();
-        applyColorTheme();
-
         binding.buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -259,9 +258,9 @@ public class RoomActivity extends DiraActivity
             ImageView imageView = findViewById(R.id.status_light);
             if (percentOpened != 1) {
                 if (percentOpened == 0) {
-                    imageView.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
+                    imageView.setColorFilter(Theme.getColor(getApplicationContext(), R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
                 } else {
-                    imageView.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+                    imageView.setColorFilter(Theme.getColor(getApplicationContext(), R.color.yellow), android.graphics.PorterDuff.Mode.SRC_IN);
 
                 }
                 imageView.setVisibility(View.VISIBLE);
@@ -326,11 +325,11 @@ public class RoomActivity extends DiraActivity
 
                 if (size == 0) {
                     binding.userStatusAnimation.setVisibility(View.GONE);
-                    membersCount.setTextColor(ContextCompat.getColor(this, R.color.medium_light_light_gray));
+                    membersCount.setTextColor(Theme.getColor(this, R.color.subtitle_color));
                     text = getString(R.string.members_count).replace("%s",
                             String.valueOf(roomMessagesAdapter.getMembers().size() + 1));
                 } else {
-                    membersCount.setTextColor(theme.getColorTheme().getAccentColor());
+                    membersCount.setTextColor(Theme.getColor(this, R.color.subtitle_color_accent));
 
                     binding.userStatusAnimation.setVisibility(View.VISIBLE);
                     StringBuilder nickNames = new StringBuilder();
@@ -374,18 +373,6 @@ public class RoomActivity extends DiraActivity
         });
     }
 
-    private void applyColorTheme() {
-        ImageView buttonBack = findViewById(R.id.button_back);
-        buttonBack.setColorFilter(theme.getColorTheme().getAccentColor());
-
-        ImageView sendButton = findViewById(R.id.send_button);
-        sendButton.getBackground().setColorFilter(theme.getColorTheme().getAccentColor(), PorterDuff.Mode.SRC_IN);
-        sendButton.setColorFilter(theme.getColorTheme().getIconButtonColor());
-
-        ImageView backgroundView = findViewById(R.id.room_background);
-        theme.getChatBackground().applyBackground(backgroundView);
-    }
-
     @Override
     public void onMediaMessageRecorded(String path, AttachmentType attachmentType) {
         presenter.uploadAttachmentAndSendMessage(attachmentType, path, "");
@@ -409,7 +396,6 @@ public class RoomActivity extends DiraActivity
             }
 
             TextView roomName = findViewById(R.id.room_name);
-            applyColorTheme();
             roomName.setText(room.getName());
             if (roomMessagesAdapter != null) return;
             roomMessagesAdapter = new RoomMessagesAdapter(RoomActivity.this, binding.recyclerView, roomSecret, room.getServerAddress(), room, new RoomMessagesAdapter.MessageAdapterListener() {

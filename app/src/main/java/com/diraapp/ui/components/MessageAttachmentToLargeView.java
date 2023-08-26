@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.diraapp.R;
+import com.diraapp.res.Theme;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DownloadHandler;
 import com.diraapp.storage.attachments.AttachmentsStorage;
@@ -17,7 +18,6 @@ import java.io.File;
 
 public class MessageAttachmentToLargeView extends LinearLayout {
 
-    private ColorTheme theme;
 
     private boolean isInit = false;
 
@@ -29,9 +29,8 @@ public class MessageAttachmentToLargeView extends LinearLayout {
 
     TextView buttonDownload;
 
-    public MessageAttachmentToLargeView(Context context, ColorTheme theme, boolean isSelfMessage) {
+    public MessageAttachmentToLargeView(Context context, boolean isSelfMessage) {
         super(context);
-        this.theme = theme;
         this.isSelfMessage = isSelfMessage;
         initLayout();
     }
@@ -46,23 +45,29 @@ public class MessageAttachmentToLargeView extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.room_message_attachment_too_large, this);
 
+
+        int titleColor = Theme.getColor(getContext(), R.color.atl_title_color);
+        int textColor = Theme.getColor(getContext(), R.color.atl_text_color);
+        int buttonColor = Theme.getColor(getContext(), R.color.atl_button_color);
+        int buttonTextColor = Theme.getColor(getContext(), R.color.atl_button_text_color);
+
+        if(isSelfMessage)
+        {
+            titleColor = Theme.getColor(getContext(), R.color.self_atl_title_color);
+            textColor = Theme.getColor(getContext(), R.color.self_atl_text_color);
+            buttonColor = Theme.getColor(getContext(), R.color.self_atl_button_color);
+            buttonTextColor = Theme.getColor(getContext(), R.color.self_atl_button_text_color);
+        }
+
         sizeText = findViewById(R.id.size_view);
         attachmentTooLargeText = findViewById(R.id.attachment_too_large_text);
         buttonDownload = findViewById(R.id.download_button);
 
-        if (isSelfMessage) {
-            sizeText.setTextColor(theme.getSelfLinkColor());
-            attachmentTooLargeText.setTextColor(theme.getSelfTextColor());
-            buttonDownload.getBackground().setColorFilter(theme.getSelfDownButtonColor(), PorterDuff.Mode.SRC_IN);
-            buttonDownload.setTextColor(theme.getSelfDownloadButtonTextColor());
-        } else {
-            sizeText.setTextColor(theme.getRoomLickColor());
-            attachmentTooLargeText.setTextColor(theme.getTextColor());
-            buttonDownload.getBackground().setColorFilter(theme.getDownloadButtonColor(), PorterDuff.Mode.SRC_IN);
-            buttonDownload.setTextColor(theme.getDownloadButtonTextColor());
-        }
+        buttonDownload.getBackground().setColorFilter(buttonColor, PorterDuff.Mode.SRC_ATOP);
+        buttonDownload.setTextColor(buttonTextColor);
 
-
+        sizeText.setTextColor(textColor);
+        attachmentTooLargeText.setTextColor(titleColor);
 
         isInit = true;
     }

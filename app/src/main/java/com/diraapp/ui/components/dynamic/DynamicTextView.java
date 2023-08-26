@@ -13,9 +13,10 @@ import com.diraapp.R;
 import com.diraapp.exceptions.NoSuchValueException;
 import com.diraapp.res.Theme;
 import com.diraapp.res.lang.CustomLanguage;
+import com.diraapp.ui.components.TightTextView;
 
 
-public class DynamicTextView extends AppCompatTextView {
+public class DynamicTextView extends TightTextView {
 
     @StyleableRes
     int localizableKey = 0;

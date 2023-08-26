@@ -65,8 +65,6 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
         SliderActivity sliderActivity = new SliderActivity();
         sliderActivity.attachSlider(this);
 
-        applyColorTheme();
-
         findViewById(R.id.button_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -324,12 +322,6 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
         }
     }
 
-    private void applyColorTheme() {
-        ColorTheme theme = AppTheme.getInstance().getColorTheme();
-
-        ImageView buttonBack = findViewById(R.id.button_back);
-        buttonBack.setColorFilter(theme.getAccentColor());
-    }
 
     private void initNotificationButton() {
         LinearLayout button = findViewById(R.id.notification_button);

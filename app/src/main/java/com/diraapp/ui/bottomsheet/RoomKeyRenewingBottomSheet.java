@@ -1,6 +1,7 @@
 package com.diraapp.ui.bottomsheet;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.exceptions.UnablePerformRequestException;
+import com.diraapp.res.Theme;
 import com.diraapp.ui.adapters.MemberStatus;
 import com.diraapp.ui.adapters.StatusMember;
 import com.diraapp.ui.adapters.StatusMemberAdapter;
@@ -181,7 +183,8 @@ public class RoomKeyRenewingBottomSheet extends BottomSheetDialogFragment implem
             if (readyCount >= statusMembers.size()) {
                 TextView button = v.findViewById(R.id.button_start_renewing);
                 button.setBackground(getContext().getResources().getDrawable(R.drawable.accent_rounded));
-                button.setTextColor(getContext().getResources().getColor(R.color.dark));
+                button.getBackground().setColorFilter(Theme.getColor(getContext(), R.color.accent_button_background), PorterDuff.Mode.SRC_IN);
+                button.setTextColor(Theme.getColor(getContext(), R.color.dark));
 
             }
         } catch (Exception e) {

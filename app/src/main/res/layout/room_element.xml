@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.diraapp.ui.components.dynamic.DynamicTextView
                     android:id="@+id/author_text"
                     android:layout_width="wrap_content"
 
@@ -90,6 +90,7 @@
                     android:fontFamily="@font/montserratsemibold"
                     android:gravity="center_vertical"
                     android:text=""
+                    app:themeColor="accent"
                     android:textColor="@color/accent"
                     android:textSize="14sp" />
 
@@ -107,7 +108,7 @@
                     android:textColor="@color/white"
                     android:textSize="14sp" />
 
-                <TextView
+                <com.diraapp.ui.components.dynamic.DynamicTextView
                     android:id="@+id/unread_messages_count"
                     android:layout_width="wrap_content"
                     android:minWidth="12dp"
@@ -115,6 +116,8 @@
                     android:paddingHorizontal="6dp"
                     android:background="@drawable/rounded_accent_rectangle"
 
+                    app:themeColorBackground="accent_button_background"
+                    app:themeColor="accent_button_text_color"
                     android:layout_height="18dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="4dp"

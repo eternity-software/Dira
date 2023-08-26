@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diraapp.R;
 import com.diraapp.device.PerformanceClass;
 import com.diraapp.device.PerformanceTester;
+import com.diraapp.res.Theme;
 import com.diraapp.storage.images.WaterfallBalancer;
 import com.diraapp.ui.bottomsheet.filepicker.FileInfo;
 import com.diraapp.ui.components.FilePreview;
@@ -106,7 +107,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
         try {
 
-            picturesView.getFileParingImageView().setBackgroundColor(context.getResources().getColor(R.color.dark));
+            picturesView.getFileParingImageView().setBackgroundColor(Theme.getColor(context, R.color.dark));
             picturesView.getFileParingImageView().setImageDrawable(null);
 
             waterfallBalancer.add(picturesView);

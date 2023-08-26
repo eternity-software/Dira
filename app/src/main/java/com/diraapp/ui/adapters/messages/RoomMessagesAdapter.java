@@ -47,6 +47,7 @@ import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeCl
 import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.media.DiraMediaPlayer;
+import com.diraapp.res.Theme;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DownloadHandler;
 import com.diraapp.storage.attachments.AttachmentsStorage;
@@ -115,7 +116,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final DiraMediaPlayer diraMediaPlayer = new DiraMediaPlayer();
     private final MessageAdapterListener messageAdapterListener;
     private Room room;
-    private ColorTheme theme;
     private List<Message> messages = new ArrayList<>();
     private HashMap<String, Member> members = new HashMap<>();
     private String firstLoadedId;
@@ -134,7 +134,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         selfId = cacheUtils.getString(CacheUtils.ID);
         maxAutoLoadSize = cacheUtils.getLong(CacheUtils.AUTO_LOAD_SIZE);
-        theme = AppTheme.getInstance().getColorTheme();
     }
 
     public Room getRoom() {
@@ -582,22 +581,23 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
         loadMessageAttachment(message, holder);
         if (!isSelfMessage) {
+            boolean showProfilePicture = true;
+            if (previousMessage != null) {
+                if (previousMessage.getAuthorId() != null) {
+                    if (previousMessage.getAuthorId().equals(message.getAuthorId()) && isSameDay
+                            && isSameYear) {
+                        holder.pictureContainer.setVisibility(View.INVISIBLE);
+                        holder.nicknameText.setVisibility(View.GONE);
+                        showProfilePicture = false;
+                    }
+                }
+            }
             if (members.containsKey(message.getAuthorId())) {
 
                 Member member = members.get(message.getAuthorId());
                 holder.nicknameText.setText(member.getNickname());
 
-                boolean showProfilePicture = true;
-                if (previousMessage != null) {
-                    if (previousMessage.getAuthorId() != null) {
-                        if (previousMessage.getAuthorId().equals(message.getAuthorId()) && isSameDay
-                                && isSameYear) {
-                            holder.pictureContainer.setVisibility(View.INVISIBLE);
-                            holder.nicknameText.setVisibility(View.GONE);
-                            showProfilePicture = false;
-                        }
-                    }
-                }
+
 
                 if (showProfilePicture) {
                     if (member.getImagePath() != null) {
@@ -606,24 +606,26 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                         holder.profilePicture.setImageResource(R.drawable.placeholder);
                     }
                     holder.pictureContainer.setVisibility(View.VISIBLE);
-                    holder.nicknameText.setText(message.getAuthorNickname());
-                    holder.nicknameText.setVisibility(View.VISIBLE);
+
                 }
 
             }
-        } else {
-            if (message.getMessageReadingList() != null) {
-                if (message.getMessageReadingList().size() == 0) {
-                    holder.messageBackground.getBackground().setColorFilter(
-                            theme.getUnreadMessageBackground(), PorterDuff.Mode.SRC_IN);
-                    holder.messageBackground.getBackground().setAlpha((int) (255 * 0.18));
-                } else {
-                    holder.messageBackground.getBackground().setColorFilter(
-                            Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
-                }
+            if (showProfilePicture) {
+
+                holder.nicknameText.setText(message.getAuthorNickname());
+                holder.nicknameText.setVisibility(View.VISIBLE);
             }
 
+        } else if (message.getMessageReadingList() != null) {
+            if (message.getMessageReadingList().size() == 0) {
+                holder.messageBackground.getBackground().setColorFilter(
+                        Theme.getColor(context, R.color.unread_message_background), PorterDuff.Mode.SRC_IN);
+            } else {
+                holder.messageBackground.getBackground().setColorFilter(
+                        Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
+            }
         }
+
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -658,9 +660,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 //                            message.getCustomClientData()).getNewName()));
             holder.roomUpdatesIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_room_updates));
             holder.roomUpdatesText.setText(((RoomNameChangeClientData) message.getCustomClientData()).getOldName());
-
             applyDefaultIconOnUpdateMessage(holder);
-
             holder.roomUpdatesText.setVisibility(View.VISIBLE);
         } else if (message.getCustomClientData() instanceof RoomIconChangeClientData) {
             holder.roomUpdatesMainText.setText(context.getString(R.string.room_update_picture_change));
@@ -687,8 +687,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         } else if (message.getCustomClientData() instanceof KeyGenerateStartClientData) {
             holder.roomUpdatesMainText.setText(context.getString(R.string.key_generate_start));
             holder.roomUpdatesIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_encryption));
-            applyDefaultIconOnUpdateMessage(holder);
             holder.roomUpdatesText.setVisibility(View.GONE);
+            applyDefaultIconOnUpdateMessage(holder);
         } else if (message.getCustomClientData() instanceof KeyGeneratedClientData) {
             holder.roomUpdatesMainText.setText(((KeyGeneratedClientData) message.
                     getCustomClientData()).getClientDataText(context));
@@ -699,48 +699,29 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             } else {
                 holder.roomUpdatesIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_encryption));
             }
-            applyDefaultIconOnUpdateMessage(holder);
             holder.roomUpdatesText.setVisibility(View.GONE);
+            applyDefaultIconOnUpdateMessage(holder);
         }
     }
 
-    private void applyRoomUpdateMessagesColorTheme(ViewHolder holder) {
-        holder.messageContainer.getBackground().setColorFilter(theme.getMessageColor(), PorterDuff.Mode.SRC_IN);
-        holder.pictureContainer.setVisibility(View.INVISIBLE);
+    private void applyDefaultIconOnUpdateMessage(ViewHolder holder) {
+        holder.roomUpdatesIcon.setImageTintList(ColorStateList.valueOf(
+                Theme.getColor(context, R.color.client_data_icon_color)));
+        holder.roomUpdatesIcon.getBackground().setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
     }
 
     private void setImageOnRoomUpdateMessage(ViewHolder holder, String path) {
 
         if (path == null) {
             holder.roomUpdatesIcon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.placeholder));
-            holder.roomUpdatesIcon.setColorFilter(ContextCompat.getColor(context, R.color.accent));
-            holder.roomUpdatesIcon.getBackground().setColorFilter(context.
-                    getResources().getColor(R.color.dark), PorterDuff.Mode.SRC_IN);
+            holder.roomUpdatesIcon.setColorFilter(Theme.getColor(context, R.color.accent));
+            holder.roomUpdatesIcon.getBackground().setColorFilter(
+                    Theme.getColor(context, R.color.dark), PorterDuff.Mode.SRC_IN);
         } else {
             Picasso.get().load(new File(path)).into(holder.roomUpdatesIcon);
             holder.roomUpdatesIcon.setImageTintList(null);
+            holder.roomUpdatesIcon.setColorFilter(null);
         }
-    }
-
-    private void applyDefaultIconOnUpdateMessage(ViewHolder holder) {
-        holder.roomUpdatesIcon.setImageTintList(ColorStateList.valueOf(
-                AppTheme.getInstance().getColorTheme().getTextColor()));
-        holder.roomUpdatesIcon.getBackground().setColorFilter(AppTheme.getInstance().getColorTheme().getMessageColor(), PorterDuff.Mode.SRC_IN);
-    }
-
-    private void applyUserMessageColorTheme(ViewHolder holder, boolean isSelfMessage) {
-        if (isSelfMessage) {
-            holder.messageText.setTextColor(theme.getSelfTextColor());
-            holder.messageText.setLinkTextColor(theme.getSelfLinkColor());
-            holder.messageContainer.getBackground().setColorFilter(theme.getSelfMessageColor(), PorterDuff.Mode.SRC_IN);
-        } else {
-            holder.messageText.setTextColor(theme.getTextColor());
-            holder.messageText.setLinkTextColor(theme.getRoomLickColor());
-            holder.messageContainer.getBackground().setColorFilter(theme.getMessageColor(), PorterDuff.Mode.SRC_IN);
-        }
-
-        holder.attachmentProgressbar.setIndeterminateTintList(ColorStateList.
-                valueOf(theme.getSelfTextColor()));
     }
 
     private void loadMessageAttachment(Message message, ViewHolder holder) {
@@ -884,11 +865,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-    public void setTheme(ColorTheme theme) {
-        this.theme = theme;
-    }
+
 
     private void createBalloon(Message message, View view) {
+        if(message.getMessageReadingList() == null) return;
         ArrayList<UserReadMessage> userReadMessages = new ArrayList<>(
                 message.getMessageReadingList().size());
 
@@ -1084,14 +1064,14 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
             bubbleAdded = true;
         } else if (viewType == VIEW_TYPE_ROOM_MESSAGE_VOICE) {
-            view  = new VoiceMessageView(context, theme, isSelfMessage);
+            view  = new VoiceMessageView(context, isSelfMessage);
         } else if (viewType == VIEW_TYPE_ROOM_MESSAGE_ATTACHMENTS_TOO_LARGE) {
-            view  = new MessageAttachmentToLargeView(context, theme, isSelfMessage);
+            view  = new MessageAttachmentToLargeView(context, isSelfMessage);
         } else if (viewType == VIEW_TYPE_ROOM_MESSAGE_ATTACHMENTS) {
             view  = new RoomMessageVideoPlayer(context);
             ((CardView) view).setCardBackgroundColor(Color.TRANSPARENT);
         }  else if (viewType == VIEW_TYPE_CLIENT_DATA) {
-            view  = new RoomMessageCustomClientDataView(context, theme);
+            view  = new RoomMessageCustomClientDataView(context);
         }
 
         if (!bubbleAdded & view != null) {
@@ -1101,11 +1081,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             if (holder.videoPlayer != null) holder.videoPlayer.setDelay(10);
         }
 
-        if (viewType != VIEW_TYPE_CLIENT_DATA) {
-            applyUserMessageColorTheme(holder, isSelfMessage);
-        } else {
-            applyRoomUpdateMessagesColorTheme(holder);
-        }
+
 
         return holder;
     }

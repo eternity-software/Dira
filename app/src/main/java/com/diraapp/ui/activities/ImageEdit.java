@@ -25,6 +25,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.ImageViewCompat;
 
 import com.diraapp.R;
+import com.diraapp.res.Theme;
 import com.diraapp.ui.components.BorderScaleView;
 import com.diraapp.ui.components.DrawingView;
 import com.diraapp.utils.ImageRotationFix;
@@ -202,15 +203,15 @@ public class ImageEdit extends DiraActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     public void setupBrushEditor() {
-        colors = new int[]{getResources().getColor(R.color.paintWhite),
-                getResources().getColor(R.color.paintBlack),
-                getResources().getColor(R.color.paintRed),
-                getResources().getColor(R.color.paintOrange),
-                getResources().getColor(R.color.paintYellow),
-                getResources().getColor(R.color.paintGreen),
-                getResources().getColor(R.color.paintLightBlue),
-                getResources().getColor(R.color.paintBlue),
-                getResources().getColor(R.color.paintPurple)};
+        colors = new int[]{Theme.getColor(this, R.color.paintWhite),
+                Theme.getColor(this, R.color.paintBlack),
+                Theme.getColor(this, R.color.paintRed),
+                Theme.getColor(this, R.color.paintOrange),
+                Theme.getColor(this, R.color.paintYellow),
+                Theme.getColor(this, R.color.paintGreen),
+                Theme.getColor(this, R.color.paintLightBlue),
+                Theme.getColor(this, R.color.paintBlue),
+                Theme.getColor(this, R.color.paintPurple)};
         final LinearLayout brushEditor = findViewById(R.id.brushEditor);
         final ImageView colorPreview = findViewById(R.id.colorPreview);
         final DrawingView drawingView = findViewById(R.id.drawingView);

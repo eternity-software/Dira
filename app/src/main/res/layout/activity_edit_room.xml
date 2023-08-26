@@ -8,7 +8,7 @@
     android:background="@color/dark"
     tools:context=".ui.activities.EditRoomActivity">
 
-    <ImageView
+    <com.diraapp.ui.components.dynamic.ThemeImageView
         android:id="@+id/button_back"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -17,6 +17,9 @@
         android:background="?actionBarItemBackground"
         android:padding="10dp"
         android:src="@drawable/ic_back"
+
+        app:themeImageColor="accent_image_button_color"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -148,7 +151,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <ImageView
+    <com.diraapp.ui.components.dynamic.ThemeImageView
         android:id="@+id/button_save"
         android:layout_width="90dp"
         android:layout_height="50dp"
@@ -156,8 +159,12 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="18dp"
         android:background="@drawable/accent_rounded"
-        android:padding="16dp"
-        android:src="@drawable/ic_next"
+        android:padding="10dp"
+
+        app:themeImageColor="accent_button_color"
+        app:themeBackgroundTint="accent_button_background"
+
+        android:src="@drawable/ic_check"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

@@ -1,5 +1,6 @@
 package com.diraapp.ui.components.dynamic;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
@@ -56,6 +57,7 @@ public class DynamicCardView extends CardView {
         }
     }
 
+    @SuppressLint("ResourceType")
     private void initialize(Context context, AttributeSet attrs) {
         int[] sets = {R.attr.themeBackgroundCardTint};
         TypedArray typedArray = context.obtainStyledAttributes(attrs, sets);
