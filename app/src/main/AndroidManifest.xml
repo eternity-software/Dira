@@ -10,12 +10,13 @@
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION " />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES  " />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:name=".utils.DiraApplication"
+        android:name=".DiraApplication"
+        android:clearTaskOnLaunch="true"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -28,6 +29,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.activities.CrashActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.ImageEdit"
             android:exported="true" />
         <activity
@@ -37,8 +41,8 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activities.ChatAppearanceActivity"
-            android:theme="@style/AppSlideTheme"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppSlideTheme" />
         <activity
             android:name=".ui.activities.SettingsActivity"
             android:exported="false"
@@ -127,7 +131,8 @@
 
         <activity
             android:name=".ui.activities.RoomSelectorActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

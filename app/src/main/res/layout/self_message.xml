@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="4dp">
+    android:paddingVertical="2dp">
 
     <com.diraapp.ui.components.dynamic.DynamicTextView
         android:id="@+id/date_view"
@@ -40,7 +40,6 @@
         android:background="@drawable/unread_message_background_drawable"
         android:gravity="end"
         android:orientation="horizontal"
-        android:paddingVertical="5dp"
         android:paddingLeft="60dp"
         android:paddingRight="4dp">
 
@@ -100,6 +99,7 @@
                 android:id="@+id/views_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
                 android:orientation="horizontal">
 
             </LinearLayout>

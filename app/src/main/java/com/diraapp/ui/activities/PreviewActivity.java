@@ -1,6 +1,10 @@
 package com.diraapp.ui.activities;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.animation.TimeInterpolator;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.ContentResolver;
@@ -15,13 +19,20 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
+import android.transition.AutoTransition;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
+import android.transition.TransitionPropagation;
+import android.transition.TransitionValues;
+import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -44,7 +55,7 @@ import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Objects;
 
-public class PreviewActivity extends DiraActivity {
+public class PreviewActivity extends AppCompatActivity {
 
     public static final String URI = "uri";
     public static final String IS_VIDEO = "is_video";
@@ -71,6 +82,8 @@ public class PreviewActivity extends DiraActivity {
         Transition transition =
                 TransitionInflater.from(this)
                         .inflateTransition(R.transition.image_shared_transition);
+       // getWindow().setSharedElementsUseOverlay(false);
+
         getWindow().setSharedElementEnterTransition(transition);
 
         final String transitionName = getString(R.string.transition_image_shared);
@@ -117,7 +130,7 @@ public class PreviewActivity extends DiraActivity {
         previewImageView.setActionsListener(new PreviewImageView.ImageActionsListener() {
             @Override
             public void onSlideDown() {
-                previewImageView.returnToDefaultPos();
+                onBackPressed();
             }
 
             @Override
@@ -150,6 +163,8 @@ public class PreviewActivity extends DiraActivity {
 
             }
         });
+
+
         getWindow().getSharedElementEnterTransition()
                 .addListener(new Transition.TransitionListener() {
                     @Override
@@ -235,6 +250,7 @@ public class PreviewActivity extends DiraActivity {
 
     }
 
+
     public static void open(final DiraActivity from, String filePath, boolean isVideo, View transitionSource) {
         Intent intent = new Intent(from, PreviewActivity.class);
         intent.putExtra(PreviewActivity.URI, filePath);
@@ -258,6 +274,7 @@ public class PreviewActivity extends DiraActivity {
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
                 from,
                 Pair.create(transitionSource, from.getString(R.string.transition_image_shared)));
+
         from.startActivity(intent, options.toBundle());
     }
 
@@ -316,5 +333,10 @@ public class PreviewActivity extends DiraActivity {
     protected void onDestroy() {
         super.onDestroy();
         videoPlayer.release();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

@@ -15,7 +15,7 @@
         android:layout_marginBottom="-20dp"
         android:alpha="0.4"
         android:scaleType="centerCrop"
-        android:src="@drawable/background_pattern_love"
+        android:src="@drawable/background_love"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -122,13 +122,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <ImageView
+                <com.diraapp.ui.components.dynamic.ThemeImageView
                     android:id="@+id/user_status_animation"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:visibility="gone"
                     android:layout_marginRight="2dp"
                     android:src="@drawable/typing_anim"
+                    app:themeImageColor="accent"
                     app:tint="@color/accent" />
                 <TextView
                     android:id="@+id/members_count"
@@ -150,7 +151,7 @@
 
     </LinearLayout>
 
-    <ImageView
+    <com.diraapp.ui.components.dynamic.ThemeImageView
         android:id="@+id/record_ripple"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -165,6 +166,9 @@
 
         android:background="@drawable/accent_rounded"
         android:elevation="2dp"
+
+        app:themeImageColor="accent"
+        app:themeBackgroundTint="accent"
 
         android:padding="8dp"
         android:scaleX="2"
@@ -289,6 +293,8 @@
             android:layout_width="300dp"
             android:layout_height="300dp"
             app:cardCornerRadius="300dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -299,6 +305,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
+
                 android:keepScreenOn="true"
                 app:cameraEngine="camera2"
                 app:cameraExperimental="false"

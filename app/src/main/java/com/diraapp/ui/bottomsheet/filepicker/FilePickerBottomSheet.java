@@ -1,6 +1,7 @@
 package com.diraapp.ui.bottomsheet.filepicker;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 import com.diraapp.storage.images.WaterfallBalancer;
+import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.MediaGridAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.utils.Numbers;
@@ -33,6 +35,9 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     private ArrayList<String> images;
     private MediaGridAdapter mediaGridAdapter;
     private MediaGridItemListener onItemClickListener;
+    private Runnable onDismiss;
+
+    private boolean onlyImages = false;
 
     public ArrayList<FileInfo> getMedia() {
         return mediaGridAdapter.getMediaElements();
@@ -42,6 +47,10 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     public void show(@NonNull FragmentManager manager, @Nullable String tag) {
         super.show(manager, tag);
 
+    }
+
+    public void setOnlyImages(boolean onlyImages) {
+        this.onlyImages = onlyImages;
     }
 
     @Nullable
@@ -75,6 +84,10 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
         // Пустой фон
         setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
+    }
+
+    public void setOnDismiss(Runnable onDismiss) {
+        this.onDismiss = onDismiss;
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -124,7 +137,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
 
         final TextView debugText = view.findViewById(R.id.debugText);
-        mediaGridAdapter = new MediaGridAdapter(getActivity(), onItemClickListener, gallery);
+        mediaGridAdapter = new MediaGridAdapter(getActivity(), onItemClickListener, gallery, onlyImages);
         mediaGridAdapter.setBalancerCallback(new WaterfallBalancer.BalancerCallback() {
             @Override
             public void onActiveWaterfallsCountChange(final int count) {
@@ -147,5 +160,15 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
     }
 
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        super.onCancel(dialog);
+        if(onDismiss != null) onDismiss.run();
+    }
 
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if(onDismiss != null) onDismiss.run();
+    }
 }

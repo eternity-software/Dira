@@ -196,8 +196,7 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
             }
         });
 
-
-        loadData();
+        loadAttachments();
         UpdateProcessor.getInstance().addUpdateListener(this);
 
     }
@@ -208,8 +207,78 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
         UpdateProcessor.getInstance().removeUpdateListener(this);
     }
 
+    private void loadAttachments()
+    {
+        runBackground(() -> {
+            ArrayList<FileInfo> attachments = new ArrayList<>();
+
+            for (Message message : DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getAllMessages(roomSecret)) {
+                if (message.getAttachments() != null) {
+                    if (message.getAttachments().size() > 0) {
+                        Attachment attachment = message.getAttachments().get(0);
+                        if (attachment.getAttachmentType() == AttachmentType.IMAGE ||
+                                attachment.getAttachmentType() == AttachmentType.VIDEO) {
+                            File file = AttachmentsStorage.getFileFromAttachment(attachment, getApplicationContext(), message.getRoomSecret());
+
+                            String mimeType = "image";
+
+                            if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
+                                mimeType = "video";
+                            }
+
+                            if (file != null) {
+                                attachments.add(new FileInfo(file.getName(), file.getPath(), mimeType));
+                            }
+                        }
+                    }
+                }
+
+            }
+            RecyclerView gallery = findViewById(R.id.gridView);
+            mediaGridAdapter = new MediaGridAdapter(RoomInfoActivity.this, attachments, new MediaGridItemListener() {
+                @Override
+                public void onItemClick(int pos, View view) {
+                    FileInfo fileInfo = attachments.get(pos);
+                    Intent intent = new Intent(getApplicationContext(), PreviewActivity.class);
+                    intent.putExtra(PreviewActivity.URI, fileInfo.getFilePath());
+                    intent.putExtra(PreviewActivity.IS_VIDEO, fileInfo.isVideo());
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onLastItemLoaded(int pos, View view) {
+
+                }
+            }, gallery);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    gallery.setLayoutManager(new GridLayoutManager(RoomInfoActivity.this, 3));
+
+
+                    findViewById(R.id.members_button).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getApplicationContext(), MembersActivity.class);
+                            intent.putExtra(MembersActivity.ROOM_SECRET, roomSecret);
+                            startActivity(intent);
+                        }
+                    });
+
+
+                    gallery.setAdapter(mediaGridAdapter);
+                    mediaGridAdapter.notifyDataSetChanged();
+
+
+                }
+            });
+        });
+    }
+
     private void loadData() {
-        Thread thread = new Thread(new Runnable() {
+       runBackground(new Runnable() {
             @Override
             public void run() {
                 RoomInfoActivity.this.room = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getRoomBySecretName(roomSecret);
@@ -243,76 +312,13 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
 
                     }
                 });
-                ArrayList<FileInfo> attachments = new ArrayList<>();
-
-                for (Message message : DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getAllMessages(roomSecret)) {
-                    if (message.getAttachments() != null) {
-                        if (message.getAttachments().size() > 0) {
-                            Attachment attachment = message.getAttachments().get(0);
-                            if (attachment.getAttachmentType() == AttachmentType.IMAGE ||
-                                    attachment.getAttachmentType() == AttachmentType.VIDEO) {
-                                File file = AttachmentsStorage.getFileFromAttachment(attachment, getApplicationContext(), message.getRoomSecret());
-
-                                String mimeType = "image";
-
-                                if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
-                                    mimeType = "video";
-                                }
-
-                                if (file != null) {
-                                    attachments.add(new FileInfo(file.getName(), file.getPath(), mimeType));
-                                }
-                            }
-                        }
-                    }
-
-                }
 
 
-                RecyclerView gallery = findViewById(R.id.gridView);
-                mediaGridAdapter = new MediaGridAdapter(RoomInfoActivity.this, attachments, new MediaGridItemListener() {
-                    @Override
-                    public void onItemClick(int pos, View view) {
-                        FileInfo fileInfo = attachments.get(pos);
-                        Intent intent = new Intent(getApplicationContext(), PreviewActivity.class);
-                        intent.putExtra(PreviewActivity.URI, fileInfo.getFilePath());
-                        intent.putExtra(PreviewActivity.IS_VIDEO, fileInfo.isVideo());
-                        startActivity(intent);
-                    }
 
-                    @Override
-                    public void onLastItemLoaded(int pos, View view) {
-
-                    }
-                }, gallery);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        gallery.setLayoutManager(new GridLayoutManager(RoomInfoActivity.this, 3));
-
-
-                        findViewById(R.id.members_button).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(getApplicationContext(), MembersActivity.class);
-                                intent.putExtra(MembersActivity.ROOM_SECRET, roomSecret);
-                                startActivity(intent);
-                            }
-                        });
-
-
-                        gallery.setAdapter(mediaGridAdapter);
-                        mediaGridAdapter.notifyDataSetChanged();
-
-
-                    }
-                });
 
             }
         });
-        thread.start();
+
     }
 
     @Override

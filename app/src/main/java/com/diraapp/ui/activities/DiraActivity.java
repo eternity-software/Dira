@@ -80,6 +80,12 @@ public class DiraActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        for(DiraActivityListener listener : activityListenerList) listener.onPause();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         for(DiraActivityListener listener : activityListenerList) listener.onDestroy();

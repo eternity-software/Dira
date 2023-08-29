@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -19,7 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
@@ -40,6 +39,7 @@ import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.res.Theme;
+import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
 import com.diraapp.storage.images.FilesUploader;
 import com.diraapp.ui.activities.DiraActivity;
@@ -50,6 +50,7 @@ import com.diraapp.ui.activities.resizer.FluidContentResizer;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.adapters.messages.RoomMessagesAdapter;
 import com.diraapp.ui.appearance.AppTheme;
+import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.FilePreview;
 import com.diraapp.ui.components.RecordComponentsController;
@@ -102,6 +103,7 @@ public class RoomActivity extends DiraActivity
         TextView nameView = findViewById(R.id.room_name);
         nameView.setText(roomName);
 
+        setBackground();
 
         Drawable drawable = binding.userStatusAnimation.getDrawable();
         if (drawable instanceof Animatable){
@@ -112,6 +114,7 @@ public class RoomActivity extends DiraActivity
         recordComponentsController = new RecordComponentsController(binding.recordButton,
                 binding.recordRipple, this,
                 binding.camera, binding.bubbleRecordingLayout, binding.bubbleFrame);
+
 
         recordComponentsController.setRecordListener(this);
 
@@ -157,7 +160,14 @@ public class RoomActivity extends DiraActivity
             @Override
             public void onClick(View v) {
                 filePickerBottomSheet = new FilePickerBottomSheet();
+                filePickerBottomSheet.setOnDismiss(new Runnable() {
+                    @Override
+                    public void run() {
+                        onResume();
+                    }
+                });
                 filePickerBottomSheet.show(getSupportFragmentManager(), "blocked");
+
                 presenter.sendStatus(UserStatusType.PICKING_FILE);
                 filePickerBottomSheet.setRunnable(new MediaGridItemListener() {
                     @Override
@@ -171,6 +181,7 @@ public class RoomActivity extends DiraActivity
 
                     }
                 });
+                onPause();
             }
         });
 
@@ -181,6 +192,27 @@ public class RoomActivity extends DiraActivity
 
 
         UserStatusHandler.getInstance().addListener(this);
+
+    }
+
+    private void setBackground() {
+        ImageView backgroundView = findViewById(R.id.room_background);
+        CacheUtils cacheUtils = getCacheUtils();
+
+        if (!cacheUtils.hasKey(CacheUtils.BACKGROUND)) {
+            cacheUtils.setString(CacheUtils.BACKGROUND, BackgroundType.LOVE.toString());
+        }
+        if (cacheUtils.hasKey(CacheUtils.BACKGROUND_PATH)) {
+            ImageViewCompat.setImageTintList(backgroundView, null);
+            backgroundView.setImageBitmap(AppStorage.getBitmapFromPath(
+                    cacheUtils.getString(CacheUtils.BACKGROUND_PATH)));
+            return;
+        }
+        int drawableResourceId = this.getResources().getIdentifier(
+                "background_" + cacheUtils.getString(CacheUtils.BACKGROUND).toLowerCase(),
+                "drawable", this.getPackageName());
+        backgroundView.setColorFilter(Theme.getColor(this, R.color.gray));
+        backgroundView.setImageDrawable(getDrawable(drawableResourceId));
 
     }
 
@@ -439,8 +471,10 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void setMembers(HashMap<String, Member> members) {
-        runOnUiThread(() -> updateUserStatus(roomSecret, new ArrayList<>()));
+        if(roomMessagesAdapter == null) return;
         roomMessagesAdapter.setMembers(members);
+        runOnUiThread(() -> updateUserStatus(roomSecret, new ArrayList<>()));
+
     }
 
     @Override

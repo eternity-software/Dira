@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.diraapp.DiraApplication;
 import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.ProcessorListener;
@@ -79,6 +80,7 @@ public class RoomSelectorActivity extends AppCompatActivity
 
     private List<Room> roomList = new ArrayList<>();
     private CacheUtils cacheUtils;
+    protected DiraApplication diraApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

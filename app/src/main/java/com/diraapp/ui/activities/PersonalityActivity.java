@@ -188,6 +188,7 @@ public class PersonalityActivity extends DiraActivity {
         intent.putExtra("return-data", true);
         startActivityForResult(intent, 1);*/
         filePickerBottomSheet = new FilePickerBottomSheet();
+        filePickerBottomSheet.setOnlyImages(true);
         filePickerBottomSheet.show(getSupportFragmentManager(), "blocked");
         filePickerBottomSheet.setRunnable(new MediaGridItemListener() {
             @Override

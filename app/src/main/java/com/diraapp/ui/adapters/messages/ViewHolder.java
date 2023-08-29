@@ -11,11 +11,8 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
-import com.diraapp.db.entities.AttachmentType;
-import com.diraapp.db.entities.messages.Message;
 import com.diraapp.storage.attachments.AttachmentsStorageListener;
-import com.diraapp.ui.components.VideoPlayer;
-import com.diraapp.utils.CacheUtils;
+import com.diraapp.ui.components.QuickVideoPlayer;
 import com.masoudss.lib.WaveformSeekBar;
 
 public class ViewHolder extends RecyclerView.ViewHolder {
@@ -29,7 +26,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     TextView dateText;
     ImageView profilePicture;
     ImageView imageView;
-    VideoPlayer videoPlayer;
+    QuickVideoPlayer videoPlayer;
     CardView pictureContainer;
     LinearLayout messageContainer;
     CardView imageContainer;
@@ -52,7 +49,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     WaveformSeekBar waveformSeekBar;
     LinearLayout voiceLayout;
     ImageView playButton;
-    VideoPlayer bubblePlayer;
+    QuickVideoPlayer bubblePlayer;
     CardView bubbleContainer;
 
     LinearLayout messageBackground;
@@ -74,7 +71,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 //        sizeText = itemView.findViewById(R.id.size_view);
         dateText = itemView.findViewById(R.id.date_view);
         loading = itemView.findViewById(R.id.loading_attachment_layout);
-//        imageView = itemView.findViewById(R.id.image_view);
+        imageView = itemView.findViewById(R.id.image_view);
 //        videoPlayer = itemView.findViewById(R.id.video_player);
         profilePicture = itemView.findViewById(R.id.profile_picture);
         pictureContainer = itemView.findViewById(R.id.picture_container);

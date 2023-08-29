@@ -69,15 +69,18 @@ public class RecordComponentsController {
         this.recordBubbleLayout = recordBubbleLayout;
         this.bubbleContainer = bubbleContainer;
 
+        camera.setEnabled(false);
         soundRecorder = new SoundRecorder(context);
 
-        camera.setLifecycleOwner(context);
+        camera.setLifecycleOwner(null);
         camera.addCameraListener(new CameraListener() {
             @Override
             public void onVideoTaken(VideoResult result) {
                 System.out.println("Bubble captured");
                 if (recordListener != null) {
                     recordListener.onMediaMessageRecorded(result.getFile().getPath(), AttachmentType.BUBBLE);
+                    camera.close();
+                    camera.setLifecycleOwner(null);
                 }
             }
 
@@ -142,6 +145,7 @@ public class RecordComponentsController {
                         if (!isVoiceRecord) {
                             camera.stopVideo();
                             camera.close();
+                            camera.setEnabled(false);
 
                             recordBubbleLayout.setVisibility(View.GONE);
                         } else {
@@ -168,6 +172,7 @@ public class RecordComponentsController {
                     1);
             return;
         }
+        camera.setEnabled(true);
         ContextWrapper cw = new ContextWrapper(context);
 
         File directory = cw.getDir(DIRA_FILES_PATH, Context.MODE_PRIVATE);
@@ -179,7 +184,9 @@ public class RecordComponentsController {
         recordBubbleLayout.setVisibility(View.VISIBLE);
         context.preformScaleAnimation(0.5f, 1, bubbleContainer);
         camera.close();
+        camera.setLifecycleOwner(context);
         camera.open();
+
 
 
         camera.addCameraListener(new CameraListener() {

@@ -40,7 +40,7 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.utils.CacheUtils;
-import com.diraapp.utils.DiraApplication;
+import com.diraapp.DiraApplication;
 import com.diraapp.utils.EncryptionUtil;
 import com.google.gson.Gson;
 
@@ -314,6 +314,27 @@ public class UpdateProcessor {
         for (ProcessorListener processorListener : processorListeners) {
             processorListener.onSocketsCountChange(percent);
         }
+    }
+
+
+    /**
+     * Force to disconnect all sockets
+     */
+    public void disconnectSockets() {
+        Log.d("UpdateProcessor", "Reconnecting sockets..");
+        try {
+            for (String address : new HashSet<>(socketClients.keySet())) {
+                SocketClient socketClient = socketClients.get(address);
+                if (socketClient != null) {
+                    if (!socketClient.isClosed()) {
+                        socketClient.close();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**

@@ -24,7 +24,9 @@
             android:dividerHeight="0dp"
             android:footerDividersEnabled="false"
             android:visibility="visible"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" >
+
+        </androidx.recyclerview.widget.RecyclerView>
 
 
     </FrameLayout>
@@ -80,12 +82,12 @@
 
                     <ImageView
                         android:id="@+id/button_new_room"
-                        android:layout_width="40dp"
+                        android:layout_width="60dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
                         android:background="@drawable/dark_rect"
-                        android:padding="8dp"
-                        android:src="@drawable/ic_plus"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_add_room"
                         app:tint="@color/white" />
 
                     <com.diraapp.ui.components.dynamic.ThemeLinearLayout
@@ -101,6 +103,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_margin="2dp"
+                            app:cardElevation="0dp"
+                            app:cardBackgroundColor="@android:color/transparent"
                             app:cardCornerRadius="50dp">
 
                             <ImageView

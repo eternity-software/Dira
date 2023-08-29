@@ -142,10 +142,9 @@
     <string name="room_encryption_cancel">Renewing has been cancelled</string>
 
 
-
     <!-- Room updates -->
     <string name="room_update_picture_change">Room picture changed</string>
-    <string name="room_update_name_change" >Room name changed</string>
+    <string name="room_update_name_change">Room name changed</string>
     <string name="room_update_name_and_picture_change">Room name and picture changed</string>
     <string name="room_update_new_member">%s joins room</string>
     <string name="key_generate_start">Encryption key renewing started</string>
@@ -189,6 +188,12 @@
     <string name="message_tooltip_one_read">%s read</string>
     <string name="message_tooltip_zero_read">Nobody read</string>
     <string name="message_tooltip_only_you_read">Only you\'ve read</string>
+
+    <!-- Crash -->
+    <string name="crash_title">We’re sorry, but...</string>
+    <string name="crash_text">Fried chicken created an unexpected error</string>
+    <string name="crash_button_reopen">Reopen app</string>
+    <string name="crash_button_copy">Copy stack trace</string>
 
     <!--Transitions -->
     <string name="transition_image_prepare" translatable="false">img_prepare_transition</string>

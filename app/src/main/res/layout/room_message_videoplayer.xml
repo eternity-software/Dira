@@ -5,6 +5,9 @@
     android:id="@+id/image_container"
     app:cardCornerRadius="14dp"
     app:cardElevation="0dp"
+    android:elevation="0dp"
+    app:cardBackgroundColor="@color/gray"
+
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
@@ -13,11 +16,13 @@
         android:id="@+id/image_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="0dp"
         android:adjustViewBounds="true" />
 
-    <com.diraapp.ui.components.VideoPlayer
+    <com.diraapp.ui.components.QuickVideoPlayer
         android:visibility="gone"
         android:id="@+id/video_player"
         android:layout_width="wrap_content"
+        android:elevation="0dp"
         android:layout_height="200dp" />
 </androidx.cardview.widget.CardView>

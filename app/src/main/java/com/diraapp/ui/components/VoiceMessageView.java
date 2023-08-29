@@ -17,7 +17,7 @@ public class VoiceMessageView extends LinearLayout {
 
     private boolean isSelfMessage;
 
-    private boolean isInit = false;
+
 
 
     public VoiceMessageView(Context context, boolean isSelfMessage) {
@@ -63,6 +63,5 @@ public class VoiceMessageView extends LinearLayout {
             e.printStackTrace();
         }
 
-        isInit = true;
     }
 }

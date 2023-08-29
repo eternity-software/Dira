@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 
+import com.diraapp.DiraApplication;
 import com.diraapp.api.processors.UpdateProcessor;
 
 public class UpdaterService extends Service {
@@ -32,6 +33,26 @@ public class UpdaterService extends Service {
         runnable = new Runnable() {
             public void run() {
                 updateProcessor.reconnectSockets();
+
+
+                    // Delay for receiving updates and sleep for battery economy
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(DiraApplication.isBackgrounded())
+                            {
+                                try {
+                                    Thread.sleep(10000);
+                                    updateProcessor.disconnectSockets();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }
+                    });
+                    thread.start();
+
 
                 handler.postDelayed(runnable, DEFAULT_RESTART_DELAY_SEC * 1000);
             }

@@ -19,7 +19,7 @@ import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
 import com.diraapp.notifications.Notifier;
-import com.diraapp.utils.DiraApplication;
+import com.diraapp.DiraApplication;
 
 public class ClientMessageProcessor {
 

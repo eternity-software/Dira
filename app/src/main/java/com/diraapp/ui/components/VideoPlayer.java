@@ -3,6 +3,7 @@ package com.diraapp.ui.components;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
@@ -52,29 +53,7 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
     }
 
 
-    public void setRecyclerView(RecyclerView recyclerView) {
-        if (this.recyclerView != null) return;
-        this.recyclerView = recyclerView;
 
-        this.recyclerView.addOnScrollListener(new OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (PerformanceTester.measureDevicePerformanceClass(getContext()) != PerformanceClass.POTATO)
-                    return;
-                try {
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        play();
-                    } else {
-                        pause();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
-    }
 
     public void setVideoPlayerListener(VideoPlayerListener videoPlayerListener) {
         this.videoPlayerListener = videoPlayerListener;
@@ -258,7 +237,6 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
 
 
             mediaPlayer = new MediaPlayer();
-
             mediaPlayer.setSurface(s);
             mediaPlayer.setLooping(true);
 

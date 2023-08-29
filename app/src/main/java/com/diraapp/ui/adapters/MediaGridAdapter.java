@@ -64,11 +64,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
      * @param itemClickListener
      * @param recyclerView
      */
-    public MediaGridAdapter(final Activity context, MediaGridItemListener itemClickListener, RecyclerView recyclerView) {
+    public MediaGridAdapter(final Activity context, MediaGridItemListener itemClickListener, RecyclerView recyclerView,
+                            boolean onlyImages) {
         this.mInflater = LayoutInflater.from(context);
         this.itemClickListener = itemClickListener;
         this.context = context;
-        mediaElements = getAllShownImagesPath();
+        mediaElements = getGallery(onlyImages);
         //   Collections.reverse(images);
         waterfallBalancer = new WaterfallBalancer(context, getHardwareDependBalancerCount(), recyclerView);
 
@@ -170,7 +171,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         }
     }
 
-    private ArrayList<FileInfo> getAllShownImagesPath() {
+    private ArrayList<FileInfo> getGallery(boolean onlyImages) {
 //            Uri uri;
 //            Cursor cursor;
 //            int column_index_data, column_index_folder_name;
@@ -219,6 +220,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
                 + " OR "
                 + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                 + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+
+        if(onlyImages)
+        {
+            selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                    + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
+        }
 
 
         Uri queryUri = MediaStore.Files.getContentUri("external");
