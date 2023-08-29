@@ -13,10 +13,9 @@ import java.io.StringReader;
 import java.util.HashMap;
 
 
-
 public class StringsRepository {
 
-    private HashMap<String, String> values = new HashMap<>();
+    private final HashMap<String, String> values = new HashMap<>();
 
     public void applyXml(String xmlString) throws LanguageParsingException {
         try {

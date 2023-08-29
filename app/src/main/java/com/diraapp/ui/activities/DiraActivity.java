@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 
 /**
  * Base class for activities with utility methods
- *
+ * <p>
  * ⢀⡴⠑⡄⠀⠀⠀⠀⠀⠀⠀⣀⣀⣤⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
  * ⠸⡇⠀⠿⡀⠀⠀⠀⣀⡴⢿⣿⣿⣿⣿⣿⣿⣿⣷⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
  * ⠀⠀⠀⠀⠑⢄⣠⠾⠁⣀⣄⡈⠙⣿⣿⣿⣿⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀
@@ -38,17 +38,16 @@ import java.util.concurrent.Executors;
  */
 public class DiraActivity extends AppCompatActivity {
 
-    private List<DiraActivityListener> activityListenerList = new ArrayList<>();
+    private static final ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(4);
+    private final List<DiraActivityListener> activityListenerList = new ArrayList<>();
+    private CacheUtils cacheUtils;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       overridePendingTransition(R.anim.activity_enter_anim, R.anim.activity_enter_anim);
-        for(DiraActivityListener listener : activityListenerList) listener.onCreate();
+        overridePendingTransition(R.anim.activity_enter_anim, R.anim.activity_enter_anim);
+        for (DiraActivityListener listener : activityListenerList) listener.onCreate();
     }
-
-    private static final ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(4);
-    private CacheUtils cacheUtils;
 
     public void runBackground(Runnable runnable) {
         threadPoolExecutor.execute(runnable);
@@ -82,28 +81,26 @@ public class DiraActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        for(DiraActivityListener listener : activityListenerList) listener.onPause();
+        for (DiraActivityListener listener : activityListenerList) listener.onPause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        for(DiraActivityListener listener : activityListenerList) listener.onDestroy();
+        for (DiraActivityListener listener : activityListenerList) listener.onDestroy();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        for(DiraActivityListener listener : activityListenerList) listener.onResume();
+        for (DiraActivityListener listener : activityListenerList) listener.onResume();
     }
 
-    public void addListener(DiraActivityListener diraActivityListener)
-    {
+    public void addListener(DiraActivityListener diraActivityListener) {
         activityListenerList.add(diraActivityListener);
     }
 
-    public void removeListener(DiraActivityListener diraActivityListener)
-    {
+    public void removeListener(DiraActivityListener diraActivityListener) {
         activityListenerList.remove(diraActivityListener);
     }
 

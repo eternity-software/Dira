@@ -1,7 +1,5 @@
 package com.diraapp.ui.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -10,12 +8,10 @@ import android.os.Bundle;
 
 import com.diraapp.R;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 public class CrashActivity extends DiraActivity {
 
     public static Throwable PENDING_ERROR;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

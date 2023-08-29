@@ -83,7 +83,7 @@ public class Attachment {
     }
 
     public int getHeight() {
-        if(height <= 0) return 200;
+        if (height <= 0) return 200;
         return height;
     }
 
@@ -92,7 +92,7 @@ public class Attachment {
     }
 
     public int getWidth() {
-        if(width <= 0) return 200;
+        if (width <= 0) return 200;
         return width;
     }
 

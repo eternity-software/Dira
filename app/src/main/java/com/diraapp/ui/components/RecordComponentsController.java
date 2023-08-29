@@ -188,7 +188,6 @@ public class RecordComponentsController {
         camera.open();
 
 
-
         camera.addCameraListener(new CameraListener() {
             @Override
             public void onCameraOpened(@NonNull CameraOptions options) {
@@ -335,7 +334,9 @@ public class RecordComponentsController {
          * @param attachmentType BUBBLE or VOICE
          */
         void onMediaMessageRecorded(String path, AttachmentType attachmentType);
-        default void onMediaMessageRecordingStart(AttachmentType attachmentType){};
+
+        default void onMediaMessageRecordingStart(AttachmentType attachmentType) {
+        }
 
     }
 }

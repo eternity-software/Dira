@@ -3,13 +3,9 @@ package com.diraapp.ui.components;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
-import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -22,7 +18,6 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
 
 import com.diraapp.R;
 import com.diraapp.device.PerformanceClass;
@@ -51,8 +46,6 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
         super(context, attrs);
         initViews();
     }
-
-
 
 
     public void setVideoPlayerListener(VideoPlayerListener videoPlayerListener) {

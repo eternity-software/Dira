@@ -2,15 +2,10 @@ package com.diraapp.ui.components;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.text.Layout;
 import android.util.AttributeSet;
 
 import androidx.appcompat.widget.TintTypedArray;
-
-import com.diraapp.R;
-
-import org.w3c.dom.Attr;
 
 public class TightTextView extends androidx.appcompat.widget.AppCompatTextView {
 
@@ -28,8 +23,7 @@ public class TightTextView extends androidx.appcompat.widget.AppCompatTextView {
         super(context, attrs, defStyle);
     }
 
-    private void init(Context context, AttributeSet attributeSet, int defStyleAttr)
-    {
+    private void init(Context context, AttributeSet attributeSet, int defStyleAttr) {
 
         @SuppressLint("RestrictedApi")
         TintTypedArray a = TintTypedArray.obtainStyledAttributes(context, attributeSet,

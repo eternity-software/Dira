@@ -2,6 +2,7 @@ package com.diraapp.api.processors;
 
 import android.content.Context;
 
+import com.diraapp.DiraApplication;
 import com.diraapp.api.updates.DhInitUpdate;
 import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
@@ -19,7 +20,6 @@ import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
 import com.diraapp.notifications.Notifier;
-import com.diraapp.DiraApplication;
 
 public class ClientMessageProcessor {
 

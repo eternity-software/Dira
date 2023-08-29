@@ -3,7 +3,6 @@ package com.diraapp.ui.components;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -37,14 +36,13 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         setSurfaceTextureListener(this);
     }
 
     public void attachDiraActivity(DiraActivity diraActivity) {
 
-        if(attachedActivity) return;
+        if (attachedActivity) return;
         attachedActivity = true;
         diraActivity.addListener(new DiraActivityListener() {
             @Override
@@ -58,9 +56,10 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
             }
         });
     }
+
     public void attachRecyclerView(RecyclerView recyclerView) {
 
-        if(attachedRecycler) return;
+        if (attachedRecycler) return;
         attachedRecycler = true;
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -83,32 +82,27 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
 
     }
 
-    private void pause()
-    {
-        if(mediaPlayer == null) return;
+    private void pause() {
+        if (mediaPlayer == null) return;
         try {
             mediaPlayer.pause();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    private void play()
-    {
-        if(mediaPlayer == null) return;
+
+    private void play() {
+        if (mediaPlayer == null) return;
         try {
             mediaPlayer.start();
-            mediaPlayer.setVolume(0,0);
-        }
-        catch (Exception e)
-        {
+            mediaPlayer.setVolume(0, 0);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public void play(String source)
-    {
-        if(mediaPlayer == null) recreateMediaPlayer();
+
+    public void play(String source) {
+        if (mediaPlayer == null) recreateMediaPlayer();
         playingNow = source;
         try {
             mediaPlayer.setDataSource(source);
@@ -118,7 +112,7 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     mediaPlayer.start();
-                    mediaPlayer.setVolume(0,0);
+                    mediaPlayer.setVolume(0, 0);
                 }
             });
 
@@ -134,9 +128,9 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
             mediaPlayer.seekTo((int) (progress * mediaPlayer.getDuration()));
         }
     }
-    public void release()
-    {
-        if(mediaPlayer == null) return;
+
+    public void release() {
+        if (mediaPlayer == null) return;
         mediaPlayer.reset();
         playingNow = null;
         mediaPlayer = null;
@@ -152,14 +146,12 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
     @Override
     public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
         try {
-            if(mediaPlayer == null)
+            if (mediaPlayer == null)
                 recreateMediaPlayer();
             Surface surface = new Surface(surfaceTexture);
             mediaPlayer.setSurface(surface);
             play(playingNow);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             recreateMediaPlayer();
         }
@@ -167,8 +159,7 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
 
     }
 
-    private void recreateMediaPlayer()
-    {
+    private void recreateMediaPlayer() {
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setVolume(0, 0);
 

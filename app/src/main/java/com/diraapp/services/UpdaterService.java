@@ -35,23 +35,22 @@ public class UpdaterService extends Service {
                 updateProcessor.reconnectSockets();
 
 
-                    // Delay for receiving updates and sleep for battery economy
-                    Thread thread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(DiraApplication.isBackgrounded())
-                            {
-                                try {
-                                    Thread.sleep(10000);
-                                    updateProcessor.disconnectSockets();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
+                // Delay for receiving updates and sleep for battery economy
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (DiraApplication.isBackgrounded()) {
+                            try {
+                                Thread.sleep(10000);
+                                updateProcessor.disconnectSockets();
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
+
                         }
-                    });
-                    thread.start();
+                    }
+                });
+                thread.start();
 
 
                 handler.postDelayed(runnable, DEFAULT_RESTART_DELAY_SEC * 1000);

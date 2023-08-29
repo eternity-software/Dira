@@ -74,13 +74,12 @@ public class RoomSelectorActivity extends AppCompatActivity
             new Intent().setComponent(new ComponentName("com.htc.pitroad", "com.htc.pitroad.landingpage.activity.LandingPageActivity")),
             new Intent().setComponent(new ComponentName("com.asus.mobilemanager", "com.asus.mobilemanager.MainActivity"))
     };
+    protected DiraApplication diraApplication;
     private boolean canBackPress = true;
     private RoomSelectorAdapter roomSelectorAdapter;
     private boolean isRoomsUpdating = false;
-
     private List<Room> roomList = new ArrayList<>();
     private CacheUtils cacheUtils;
-    protected DiraApplication diraApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,8 +241,8 @@ public class RoomSelectorActivity extends AppCompatActivity
                             isRoomsUpdating = false;
                         }
                     });
+                } catch (Exception ignored) {
                 }
-                catch (Exception ignored) {}
             }
         });
         loadDataThread.start();

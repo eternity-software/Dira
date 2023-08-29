@@ -45,13 +45,10 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
 
     private final String roomSecret;
+    private final String selfId;
     private Room room;
     private List<Message> messageList;
-
     private RoomActivityContract.View view;
-
-    private final String selfId;
-
     private UserStatus currentUserStatus;
 
     public RoomActivityPresenter(String roomSecret, String selfId) {
@@ -329,7 +326,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 attachment.setSize(new File(fileUri).length());
 
                 if (attachment.getAttachmentType() == AttachmentType.VIDEO ||
-                    attachment.getAttachmentType() == AttachmentType.IMAGE) {
+                        attachment.getAttachmentType() == AttachmentType.IMAGE) {
                     attachment.setHeight(this.height);
                     attachment.setWidth(this.width);
                 }

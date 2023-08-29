@@ -2,9 +2,7 @@ package com.diraapp.ui.activities;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
@@ -12,8 +10,6 @@ import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.ui.adapters.MembersAdapter;
-import com.diraapp.ui.appearance.AppTheme;
-import com.diraapp.ui.appearance.ColorTheme;
 import com.diraapp.utils.SliderActivity;
 
 import java.util.List;

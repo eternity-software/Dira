@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
 import com.diraapp.R;
-import com.diraapp.ui.appearance.ColorTheme;
 
 public class BubbleMessageView extends CardView {
 

@@ -10,14 +10,11 @@ import androidx.annotation.NonNull;
 
 import com.diraapp.R;
 import com.diraapp.res.Theme;
-import com.diraapp.ui.appearance.ColorTheme;
 import com.masoudss.lib.WaveformSeekBar;
 
 public class VoiceMessageView extends LinearLayout {
 
     private boolean isSelfMessage;
-
-
 
 
     public VoiceMessageView(Context context, boolean isSelfMessage) {
@@ -44,12 +41,11 @@ public class VoiceMessageView extends LinearLayout {
         int playColor = Theme.getColor(getContext(), R.color.message_voice_play);
         int playColorBackground = Theme.getColor(getContext(), R.color.message_voice_play_background);
 
-        if(isSelfMessage)
-        {
-             waveBackgroundColor = Theme.getColor(getContext(), R.color.self_message_waves_background);
-             wavesColor = Theme.getColor(getContext(), R.color.self_message_waves);
-             playColor = Theme.getColor(getContext(), R.color.self_message_voice_play);
-             playColorBackground = Theme.getColor(getContext(), R.color.self_message_voice_play_background);
+        if (isSelfMessage) {
+            waveBackgroundColor = Theme.getColor(getContext(), R.color.self_message_waves_background);
+            wavesColor = Theme.getColor(getContext(), R.color.self_message_waves);
+            playColor = Theme.getColor(getContext(), R.color.self_message_voice_play);
+            playColorBackground = Theme.getColor(getContext(), R.color.self_message_voice_play_background);
         }
 
         try {
@@ -57,9 +53,7 @@ public class VoiceMessageView extends LinearLayout {
             playButton.setColorFilter(playColor);
             bar.setWaveBackgroundColor(waveBackgroundColor);
             bar.setWaveProgressColor(wavesColor);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

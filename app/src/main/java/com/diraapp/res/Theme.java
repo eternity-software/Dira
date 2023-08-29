@@ -9,14 +9,11 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.annotation.RawRes;
-import androidx.appcompat.app.AppCompatDelegate;
 
 import com.diraapp.R;
 import com.diraapp.exceptions.LanguageParsingException;
 import com.diraapp.exceptions.NoSuchValueException;
-import com.diraapp.exceptions.NotCachedException;
 import com.diraapp.res.lang.StringsRepository;
-import com.diraapp.ui.appearance.ColorTheme;
 import com.diraapp.ui.appearance.ColorThemeType;
 import com.diraapp.utils.CacheUtils;
 
@@ -32,7 +29,7 @@ public class Theme {
 
     private final static String DARK_THEME = "APP_THEME_NIGHT";
     private static StringsRepository stringsRepository = new StringsRepository();
-    private static List<ThemeChangeHandler> themeChangeHandlers = new ArrayList<>();
+    private static final List<ThemeChangeHandler> themeChangeHandlers = new ArrayList<>();
 
     public static List<ThemeChangeHandler> getThemeChangeHandlers() {
         return themeChangeHandlers;
@@ -63,9 +60,7 @@ public class Theme {
         } catch (Exception e) {
             try {
                 return context.getResources().getColor(resId);
-            }
-            catch (Exception exception)
-            {
+            } catch (Exception exception) {
 
                 return Color.RED;
             }
@@ -74,18 +69,15 @@ public class Theme {
 
     public static int getColor(String name) throws NoSuchValueException {
 
-        if(name.startsWith("@")) name = name.split("/")[1];
-        if(name == null) return Color.MAGENTA;
+        if (name.startsWith("@")) name = name.split("/")[1];
+        if (name == null) return Color.MAGENTA;
         String colorHex = stringsRepository.getValue(name);
 
 
         if (colorHex.startsWith("#")) {
-            try
-            {
+            try {
                 return Color.parseColor(colorHex);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 System.out.println("Unknown color: " + colorHex);
                 e.printStackTrace();
                 return Color.RED;
@@ -99,9 +91,7 @@ public class Theme {
     }
 
 
-
-    public static void applyThemeToActivity(Activity activity)
-    {
+    public static void applyThemeToActivity(Activity activity) {
         Window window = activity.getWindow();
 
 // clear FLAG_TRANSLUCENT_STATUS flag:
@@ -182,17 +172,15 @@ public class Theme {
                     colorThemeType.name().toLowerCase() + "_theme", "raw", context.getPackageName());
 
             applyXml(readTextFile(context, resId));
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             stringsRepository = new StringsRepository();
         }
     }
 
-    public static String readTextFile(Context context,@RawRes int id){
+    public static String readTextFile(Context context, @RawRes int id) {
         InputStream inputStream = context.getResources().openRawResource(id);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        byte buffer[] = new byte[1024];
+        byte[] buffer = new byte[1024];
         int size;
         try {
             while ((size = inputStream.read(buffer)) != -1)

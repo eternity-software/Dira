@@ -2,8 +2,6 @@ package com.diraapp;
 
 import android.app.Application;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.lifecycle.Lifecycle;
@@ -13,7 +11,6 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.ui.activities.CrashActivity;
-import com.diraapp.ui.activities.RoomSelectorActivity;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -34,7 +31,7 @@ public class DiraApplication extends Application implements LifecycleObserver {
         Thread.setDefaultUncaughtExceptionHandler(
                 new Thread.UncaughtExceptionHandler() {
                     @Override
-                    public void uncaughtException (Thread thread, Throwable e) {
+                    public void uncaughtException(Thread thread, Throwable e) {
 
                         Log.i("DiraApp", "1");
                         Log.i("DiraApp", "2");
@@ -50,7 +47,8 @@ public class DiraApplication extends Application implements LifecycleObserver {
                         System.exit(1);
                         CrashActivity.PENDING_ERROR = e;
 
-                    }});
+                    }
+                });
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -62,12 +60,9 @@ public class DiraApplication extends Application implements LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     void onAppForegrounded() {
         isBackgrounded = false;
-        try
-        {
+        try {
             UpdateProcessor.getInstance(getApplicationContext()).reconnectSockets();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         Log.d("Dira", "App in foreground");

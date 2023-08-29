@@ -53,14 +53,15 @@ public class DynamicButton extends AppCompatButton {
         try {
             backgroundShape.setColorFilter(Theme.getColor(themeButtonBackground), PorterDuff.Mode.SRC);
         } catch (NoSuchValueException e) {
-            if(getBackground() != null) getBackground().setColorFilter(Theme.getColor(getContext(), Theme.getResId(String.valueOf(themeButtonBackground), R.color.class)), PorterDuff.Mode.SRC_ATOP);
+            if (getBackground() != null)
+                getBackground().setColorFilter(Theme.getColor(getContext(), Theme.getResId(themeButtonBackground, R.color.class)), PorterDuff.Mode.SRC_ATOP);
         }
 
-        if(typedArray.getText(2) != null) {
+        if (typedArray.getText(2) != null) {
             try {
-                setTextColor(Theme.getColor(String.valueOf(textColor)));
+                setTextColor(Theme.getColor(textColor));
             } catch (NoSuchValueException e) {
-                setTextColor(Theme.getColor(getContext(), Theme.getResId(String.valueOf(textColor), R.color.class)));
+                setTextColor(Theme.getColor(getContext(), Theme.getResId(textColor, R.color.class)));
             }
         }
         try {

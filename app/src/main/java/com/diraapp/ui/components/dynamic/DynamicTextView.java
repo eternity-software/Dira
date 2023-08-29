@@ -7,7 +7,6 @@ import android.graphics.PorterDuff;
 import android.util.AttributeSet;
 
 import androidx.annotation.StyleableRes;
-import androidx.appcompat.widget.AppCompatTextView;
 
 import com.diraapp.R;
 import com.diraapp.exceptions.NoSuchValueException;
@@ -22,6 +21,7 @@ public class DynamicTextView extends TightTextView {
     int localizableKey = 0;
     @StyleableRes
     int themeColor = 0;
+    CharSequence backgroundTint, textLinkColor, textColor, locId;
     private CharSequence localId;
 
     public DynamicTextView(Context context) {
@@ -33,11 +33,11 @@ public class DynamicTextView extends TightTextView {
         initialize(context, attrs);
     }
 
+
     public DynamicTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initialize(context, attrs);
     }
-
 
     @Override
     public void setText(CharSequence text, BufferType type) {
@@ -51,8 +51,7 @@ public class DynamicTextView extends TightTextView {
         setupTheme();
     }
 
-    public void setupTheme()
-    {
+    public void setupTheme() {
         try {
             setTextColor(Theme.getColor(String.valueOf(textColor)));
         } catch (NoSuchValueException e) {
@@ -70,7 +69,7 @@ public class DynamicTextView extends TightTextView {
 
         }
 
-        if(getBackground() != null) {
+        if (getBackground() != null) {
             try {
                 getBackground().setColorFilter(null);
                 getBackground().setColorFilter(Theme.getColor(String.valueOf(backgroundTint)), PorterDuff.Mode.SRC_ATOP);
@@ -82,17 +81,15 @@ public class DynamicTextView extends TightTextView {
         }
     }
 
-
-    CharSequence backgroundTint, textLinkColor, textColor, locId;
     @SuppressLint("ResourceType")
     private void initialize(Context context, AttributeSet attrs) {
         int[] sets = {R.attr.localizableKey, R.attr.themeColor, R.attr.themeColorBackground, R.attr.themeColorLink};
         TypedArray typedArray = context.obtainStyledAttributes(attrs, sets);
-         locId = typedArray.getText(0);
-         textColor = typedArray.getText(1);
-         textLinkColor = typedArray.getText(3);
-         backgroundTint = typedArray.getText(2);
-         setupTheme();
+        locId = typedArray.getText(0);
+        textColor = typedArray.getText(1);
+        textLinkColor = typedArray.getText(3);
+        backgroundTint = typedArray.getText(2);
+        setupTheme();
         localId = locId;
 
         typedArray.recycle();

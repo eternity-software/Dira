@@ -3,8 +3,6 @@ package com.diraapp.ui.activities;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.databinding.ActivityRoomServersBinding;

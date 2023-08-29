@@ -9,8 +9,7 @@ import com.diraapp.exceptions.NotCachedException;
 
 public class CustomLanguage {
 
-    private static StringsRepository stringsRepository = new StringsRepository();
-
+    private static final StringsRepository stringsRepository = new StringsRepository();
 
 
     public static StringsRepository getStringsRepository() {

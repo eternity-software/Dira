@@ -9,7 +9,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,8 +32,6 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.ui.adapters.MediaGridAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
-import com.diraapp.ui.appearance.AppTheme;
-import com.diraapp.ui.appearance.ColorTheme;
 import com.diraapp.ui.bottomsheet.InvitationCodeBottomSheet;
 import com.diraapp.ui.bottomsheet.RoomEncryptionBottomSheet;
 import com.diraapp.ui.bottomsheet.filepicker.FileInfo;
@@ -207,8 +204,7 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
         UpdateProcessor.getInstance().removeUpdateListener(this);
     }
 
-    private void loadAttachments()
-    {
+    private void loadAttachments() {
         runBackground(() -> {
             ArrayList<FileInfo> attachments = new ArrayList<>();
 
@@ -278,7 +274,7 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
     }
 
     private void loadData() {
-       runBackground(new Runnable() {
+        runBackground(new Runnable() {
             @Override
             public void run() {
                 RoomInfoActivity.this.room = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getRoomBySecretName(roomSecret);
@@ -312,8 +308,6 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
 
                     }
                 });
-
-
 
 
             }

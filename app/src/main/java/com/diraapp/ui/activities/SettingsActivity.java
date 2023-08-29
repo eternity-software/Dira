@@ -8,8 +8,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.diraapp.BuildConfig;
 import com.diraapp.R;
 import com.diraapp.device.PerformanceTester;

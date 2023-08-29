@@ -3,6 +3,7 @@ package com.diraapp.api.processors;
 import android.content.Context;
 import android.util.Log;
 
+import com.diraapp.DiraApplication;
 import com.diraapp.api.SocketClient;
 import com.diraapp.api.processors.listeners.ProcessorListener;
 import com.diraapp.api.processors.listeners.SocketListener;
@@ -40,7 +41,6 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.utils.CacheUtils;
-import com.diraapp.DiraApplication;
 import com.diraapp.utils.EncryptionUtil;
 import com.google.gson.Gson;
 

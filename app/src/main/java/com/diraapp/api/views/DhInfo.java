@@ -1,7 +1,5 @@
 package com.diraapp.api.views;
 
-import com.diraapp.api.views.BaseMember;
-
 import java.util.List;
 
 public class DhInfo {

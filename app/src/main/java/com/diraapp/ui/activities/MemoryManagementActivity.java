@@ -3,8 +3,6 @@ package com.diraapp.ui.activities;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.diraapp.R;
 import com.diraapp.databinding.ActivityMemoryManagementBinding;
 import com.diraapp.db.entities.AttachmentType;

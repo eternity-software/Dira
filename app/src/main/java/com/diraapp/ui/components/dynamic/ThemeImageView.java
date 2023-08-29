@@ -33,29 +33,27 @@ public class ThemeImageView extends androidx.appcompat.widget.AppCompatImageView
     private void initialize(Context context, AttributeSet attrs) {
 
         try {
-            int[] sets = { R.attr.themeBackgroundTint, R.attr.themeImageColor};
+            int[] sets = {R.attr.themeBackgroundTint, R.attr.themeImageColor};
             TypedArray typedArray = context.obtainStyledAttributes(attrs, sets);
             String backgroundTint = String.valueOf(typedArray.getText(0));
             String color = String.valueOf(typedArray.getText(1));
 
             try {
-                setColorFilter(Theme.getColor(String.valueOf(color)));
+                setColorFilter(Theme.getColor(color));
             } catch (NoSuchValueException e) {
-                setColorFilter(Theme.getColor(getContext(), Theme.getResId(String.valueOf(color), R.color.class)));
+                setColorFilter(Theme.getColor(getContext(), Theme.getResId(color, R.color.class)));
             }
 
             try {
                 System.out.println("Getting background tint " + backgroundTint + " " + color);
-                getBackground().setColorFilter(Theme.getColor(String.valueOf(backgroundTint)), PorterDuff.Mode.SRC_ATOP);
+                getBackground().setColorFilter(Theme.getColor(backgroundTint), PorterDuff.Mode.SRC_ATOP);
             } catch (NoSuchValueException e) {
 
                 if (getBackground() != null)
-                    getBackground().setColorFilter(Theme.getColor(getContext(), Theme.getResId(String.valueOf(backgroundTint), R.color.class)), PorterDuff.Mode.SRC_ATOP);
+                    getBackground().setColorFilter(Theme.getColor(getContext(), Theme.getResId(backgroundTint, R.color.class)), PorterDuff.Mode.SRC_ATOP);
             }
             typedArray.recycle();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

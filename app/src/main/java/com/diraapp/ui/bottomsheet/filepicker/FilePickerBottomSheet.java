@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 import com.diraapp.storage.images.WaterfallBalancer;
-import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.MediaGridAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.utils.Numbers;
@@ -163,12 +162,12 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
         super.onCancel(dialog);
-        if(onDismiss != null) onDismiss.run();
+        if (onDismiss != null) onDismiss.run();
     }
 
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
-        if(onDismiss != null) onDismiss.run();
+        if (onDismiss != null) onDismiss.run();
     }
 }

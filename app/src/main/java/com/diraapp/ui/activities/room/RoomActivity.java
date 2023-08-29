@@ -106,7 +106,7 @@ public class RoomActivity extends DiraActivity
         setBackground();
 
         Drawable drawable = binding.userStatusAnimation.getDrawable();
-        if (drawable instanceof Animatable){
+        if (drawable instanceof Animatable) {
             ((Animatable) drawable).start();
         }
         UpdateProcessor.getInstance().addProcessorListener(this);
@@ -374,12 +374,9 @@ public class RoomActivity extends DiraActivity
 
                         nickNames.append(member.getNickname());
                         UserStatusType userStatusType = usersUserStatusList.get(i).getUserStatus();
-                        if(userStatusType == UserStatusType.RECORDING_VOICE)
-                        {
+                        if (userStatusType == UserStatusType.RECORDING_VOICE) {
                             membersCount.setText(getString(R.string.user_status_voice));
-                        }
-                        else if(userStatusType == UserStatusType.RECORDING_BUBBLE)
-                        {
+                        } else if (userStatusType == UserStatusType.RECORDING_BUBBLE) {
                             membersCount.setText(getString(R.string.user_status_bubble));
                         }
                     }
@@ -400,8 +397,8 @@ public class RoomActivity extends DiraActivity
                 String finalText = text;
 
                 membersCount.setText(finalText);
+            } catch (Exception ignored) {
             }
-            catch (Exception ignored) { }
         });
     }
 
@@ -412,8 +409,7 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void onMediaMessageRecordingStart(AttachmentType attachmentType) {
-        if(attachmentType == AttachmentType.VOICE)
-        {
+        if (attachmentType == AttachmentType.VOICE) {
             presenter.sendStatus(UserStatusType.RECORDING_VOICE);
             return;
         }
@@ -471,7 +467,7 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void setMembers(HashMap<String, Member> members) {
-        if(roomMessagesAdapter == null) return;
+        if (roomMessagesAdapter == null) return;
         roomMessagesAdapter.setMembers(members);
         runOnUiThread(() -> updateUserStatus(roomSecret, new ArrayList<>()));
 

@@ -13,8 +13,8 @@ object KeyboardVisibilityDetector {
     }
 
     private class Detector(
-        val viewHolder: ActivityViewHolder,
-        val listener: (KeyboardVisibilityChanged) -> Unit
+            val viewHolder: ActivityViewHolder,
+            val listener: (KeyboardVisibilityChanged) -> Unit
     ) : ViewTreeObserver.OnPreDrawListener {
 
         private var previousHeight: Int = -1
@@ -36,14 +36,14 @@ object KeyboardVisibilityDetector {
 
             val statusBarHeight = viewHolder.resizableLayout.top
             val isKeyboardVisible =
-                contentHeight < viewHolder.nonResizableLayout.height - statusBarHeight
+                    contentHeight < viewHolder.nonResizableLayout.height - statusBarHeight
 
             listener(
-                KeyboardVisibilityChanged(
-                    visible = isKeyboardVisible,
-                    contentHeight = contentHeight,
-                    contentHeightBeforeResize = previousHeight
-                )
+                    KeyboardVisibilityChanged(
+                            visible = isKeyboardVisible,
+                            contentHeight = contentHeight,
+                            contentHeightBeforeResize = previousHeight
+                    )
             )
 
 

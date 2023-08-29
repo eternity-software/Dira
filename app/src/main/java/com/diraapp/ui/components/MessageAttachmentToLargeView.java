@@ -3,31 +3,20 @@ package com.diraapp.ui.components;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.diraapp.R;
 import com.diraapp.res.Theme;
-import com.diraapp.storage.AppStorage;
-import com.diraapp.storage.DownloadHandler;
-import com.diraapp.storage.attachments.AttachmentsStorage;
-import com.diraapp.ui.appearance.ColorTheme;
-
-import java.io.File;
 
 public class MessageAttachmentToLargeView extends LinearLayout {
 
 
-    private boolean isInit = false;
-
-    private boolean isSelfMessage;
-
     TextView sizeText;
-
     TextView attachmentTooLargeText;
-
     TextView buttonDownload;
+    private boolean isInit = false;
+    private boolean isSelfMessage;
 
     public MessageAttachmentToLargeView(Context context, boolean isSelfMessage) {
         super(context);
@@ -51,8 +40,7 @@ public class MessageAttachmentToLargeView extends LinearLayout {
         int buttonColor = Theme.getColor(getContext(), R.color.atl_button_color);
         int buttonTextColor = Theme.getColor(getContext(), R.color.atl_button_text_color);
 
-        if(isSelfMessage)
-        {
+        if (isSelfMessage) {
             titleColor = Theme.getColor(getContext(), R.color.self_atl_title_color);
             textColor = Theme.getColor(getContext(), R.color.self_atl_text_color);
             buttonColor = Theme.getColor(getContext(), R.color.self_atl_button_color);

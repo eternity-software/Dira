@@ -221,8 +221,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
                 + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                 + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 
-        if(onlyImages)
-        {
+        if (onlyImages) {
             selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                     + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
         }

@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import android.view.Window
 
 data class ActivityViewHolder(
-    val nonResizableLayout: ViewGroup,
-    val resizableLayout: ViewGroup,
-    val contentView: ViewGroup
+        val nonResizableLayout: ViewGroup,
+        val resizableLayout: ViewGroup,
+        val contentView: ViewGroup
 ) {
 
     companion object {
@@ -29,16 +29,16 @@ data class ActivityViewHolder(
             val resizableLayout = actionBarRootLayout.parent as ViewGroup
 
             return ActivityViewHolder(
-                nonResizableLayout = decorView,
-                resizableLayout = resizableLayout,
-                contentView = contentView
+                    nonResizableLayout = decorView,
+                    resizableLayout = resizableLayout,
+                    contentView = contentView
             )
         }
     }
 
     fun onDetach(onDetach: () -> Unit) {
         nonResizableLayout.addOnAttachStateChangeListener(object :
-            View.OnAttachStateChangeListener {
+                View.OnAttachStateChangeListener {
 
 
             override fun onViewAttachedToWindow(v: View) {

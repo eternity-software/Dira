@@ -62,13 +62,13 @@ public class FilesUploader {
                 }
 
                 int maxFrameSize = 2000;
-                int height  = bitmap.getHeight();
+                int height = bitmap.getHeight();
                 int width = bitmap.getWidth();
                 if (bitmap.getHeight() * bitmap.getWidth() > maxFrameSize * maxFrameSize) {
 
-                    float scaleFactor =  (bitmap.getHeight() * bitmap.getWidth()) / (float)(maxFrameSize * maxFrameSize);
+                    float scaleFactor = (bitmap.getHeight() * bitmap.getWidth()) / (float) (maxFrameSize * maxFrameSize);
 
-                    System.out.println(scaleFactor + " scale "  + (maxFrameSize * maxFrameSize) + " " + (bitmap.getHeight() * bitmap.getWidth()));
+                    System.out.println(scaleFactor + " scale " + (maxFrameSize * maxFrameSize) + " " + (bitmap.getHeight() * bitmap.getWidth()));
 
                     bitmap = Bitmap.createScaledBitmap(bitmap, (int) (width / scaleFactor),
                             (int) (height / scaleFactor), true);
