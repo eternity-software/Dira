@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 import com.diraapp.storage.attachments.AttachmentsStorageListener;
+import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.QuickVideoPlayer;
 import com.masoudss.lib.WaveformSeekBar;
 
@@ -101,7 +102,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         waveformSeekBar = itemView.findViewById(R.id.waveform_seek_bar);
         playButton = itemView.findViewById(R.id.play_button);
         voiceLayout = itemView.findViewById(R.id.voice_layout);
-        bubbleContainer = itemView.findViewById(R.id.bubble_container);
+        bubbleContainer = itemView.findViewById(BubbleMessageView.BUBBLE_CONTAINER_ID);
         bubblePlayer = itemView.findViewById(R.id.bubble_player);
 
         imageView = itemView.findViewById(R.id.image_view);

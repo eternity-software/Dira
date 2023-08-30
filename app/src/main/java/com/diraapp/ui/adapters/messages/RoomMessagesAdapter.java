@@ -309,7 +309,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
             if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
                 videoPlayer = holder.bubblePlayer;
-                holder.bubbleContainer.setVisibility(View.VISIBLE);
 
             } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
                 holder.imageView.setVisibility(View.VISIBLE);
@@ -1015,13 +1014,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         if (viewType == VIEW_TYPE_ROOM_MESSAGE_BUBBLE) {
             CardView bubble = new BubbleMessageView(context);
             holder.bubbleViewContainer.addView(bubble);
-            bubble.setCardBackgroundColor(Color.TRANSPARENT);
-            bubble.setCardElevation(0);
 
             holder.messageContainer.setVisibility(View.GONE);
-            holder.updateViews();
             holder.viewsContainer.setVisibility(View.GONE);
-
+            holder.updateViews();
 
             bubbleAdded = true;
         } else if (viewType == VIEW_TYPE_ROOM_MESSAGE_VOICE) {
@@ -1030,8 +1026,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             view = new MessageAttachmentToLargeView(context, isSelfMessage);
         } else if (viewType == VIEW_TYPE_ROOM_MESSAGE_ATTACHMENTS) {
             view = new RoomMessageVideoPlayer(context);
-            ((CardView) view).setCardBackgroundColor(Color.TRANSPARENT);
-            ((CardView) view).setCardElevation(0);
         } else if (viewType == VIEW_TYPE_CLIENT_DATA) {
             view = new RoomMessageCustomClientDataView(context);
         }

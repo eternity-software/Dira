@@ -2,13 +2,14 @@ package com.diraapp.ui.components;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
 import com.diraapp.R;
 
-public class RoomMessageVideoPlayer extends CardView {
+public class RoomMessageVideoPlayer extends LinearLayout {
 
     private boolean isInit = false;
 
