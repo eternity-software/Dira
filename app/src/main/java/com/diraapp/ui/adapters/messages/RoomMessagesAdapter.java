@@ -185,6 +185,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
+
         Message message = messages.get(position);
 
         if (holder.attachmentsStorageListener != null) {
