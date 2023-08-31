@@ -12,7 +12,7 @@ import com.diraapp.api.processors.UpdateProcessor;
 public class UpdaterService extends Service {
 
 
-    private static final int DEFAULT_RESTART_DELAY_SEC = 120;
+    private static final int DEFAULT_RESTART_DELAY_SEC = 10;
 
     public static Runnable runnable = null;
     public static UpdateProcessor updateProcessor;
@@ -41,7 +41,7 @@ public class UpdaterService extends Service {
                     public void run() {
                         if (DiraApplication.isBackgrounded()) {
                             try {
-                                Thread.sleep(20000);
+                                Thread.sleep(3000);
                                 updateProcessor.disconnectSockets();
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -78,7 +78,7 @@ public class UpdaterService extends Service {
                     public void run() {
                         if (DiraApplication.isBackgrounded()) {
                             try {
-                                Thread.sleep(20000);
+                                Thread.sleep(3000);
                                 updateProcessor.disconnectSockets();
                             } catch (Exception e) {
                                 e.printStackTrace();
