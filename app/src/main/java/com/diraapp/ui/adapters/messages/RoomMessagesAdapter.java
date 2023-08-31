@@ -391,7 +391,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 
 
-            context.runBackground(() -> {
+           /* context.runBackground(() -> {
                 Amplituda amplituda = new Amplituda(context);
                 amplituda.processAudio(file)
                         .get(result -> {
@@ -412,7 +412,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                             }
                         });
             });
-
+*/
 
 
             holder.waveformSeekBar.setProgress(attachment.getVoiceMessageStopProgress());

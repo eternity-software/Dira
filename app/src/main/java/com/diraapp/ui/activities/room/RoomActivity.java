@@ -100,7 +100,7 @@ public class RoomActivity extends DiraActivity
         presenter = new RoomActivityPresenter(roomSecret, getCacheUtils().getString(CacheUtils.ID));
         presenter.attachView(this);
 
-        binding.recyclerView.setItemViewCacheSize(150);
+        binding.recyclerView.setItemViewCacheSize(30);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setNestedScrollingEnabled(false);
 

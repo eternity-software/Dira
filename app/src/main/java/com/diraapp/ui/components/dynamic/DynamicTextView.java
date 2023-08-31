@@ -24,6 +24,7 @@ public class DynamicTextView extends androidx.appcompat.widget.AppCompatTextView
     int themeColor = 0;
     CharSequence backgroundTint, textLinkColor, textColor, locId;
     private CharSequence localId;
+    private boolean isInit = false;
 
     public DynamicTextView(Context context) {
         super(context);
@@ -82,6 +83,8 @@ public class DynamicTextView extends androidx.appcompat.widget.AppCompatTextView
 
     @SuppressLint("ResourceType")
     private void initialize(Context context, AttributeSet attrs) {
+        if(isInit) return;
+        isInit = true;
         int[] sets = {R.attr.localizableKey, R.attr.themeColor, R.attr.themeColorBackground, R.attr.themeColorLink};
         TypedArray typedArray = context.obtainStyledAttributes(attrs, sets);
         locId = typedArray.getText(0);

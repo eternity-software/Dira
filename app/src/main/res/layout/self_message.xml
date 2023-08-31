@@ -19,13 +19,12 @@
         android:fontFamily="@font/montserratsemibold"
 
         android:gravity="center"
-        android:includeFontPadding="false"
+
         android:paddingHorizontal="10dp"
         android:paddingVertical="5dp"
         android:text="05 december, 2004"
 
         android:textColor="@color/attributes_text_color"
-        android:textIsSelectable="true"
 
         android:textSize="11sp"
         android:visibility="gone"
@@ -113,7 +112,6 @@
                 android:autoLink="all"
 
                 android:fontFamily="@font/montserratsemibold"
-                android:includeFontPadding="false"
                 android:text="самсой"
                 android:textColor="@color/self_message_color"
                 android:textColorLink="@color/self_message_color_link"
