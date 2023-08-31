@@ -18,6 +18,7 @@ import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -30,6 +31,7 @@ import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.ui.components.PreviewImageView;
 import com.diraapp.ui.components.VideoPlayer;
 import com.diraapp.utils.Numbers;
+import com.diraapp.utils.StringFormatter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -80,6 +82,7 @@ public class PreviewActivity extends AppCompatActivity {
 
         String uri = getIntent().getExtras().getString(URI);
         boolean isVideo = getIntent().getExtras().getBoolean(IS_VIDEO);
+
 
         previewImageView = findViewById(R.id.image_view);
 
@@ -191,7 +194,7 @@ public class PreviewActivity extends AppCompatActivity {
 
                         }
 
-                        animator.setDuration(100);
+                        animator.setDuration(200);
                         animator.start();
                     }
 
@@ -217,6 +220,8 @@ public class PreviewActivity extends AppCompatActivity {
                 });
 
 
+        TextView sizeView = findViewById(R.id.size_view);
+        sizeView.setText(AppStorage.getStringSize(new File(uri).length()));
         if (isVideo) {
             videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
                 @Override

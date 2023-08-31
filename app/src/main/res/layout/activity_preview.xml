@@ -10,6 +10,7 @@
     tools:context=".ui.activities.PreviewActivity">
 
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/imageContainer"
         android:layout_width="match_parent"
@@ -24,16 +25,17 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/card_view"
             android:layout_width="match_parent"
-            android:transitionName="image_shared_transition"
             android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:transitionName="image_shared_transition"
+            app:cardBackgroundColor="@android:color/transparent"
             app:cardCornerRadius="0dp"
             app:cardElevation="0dp"
-            android:clipChildren="false"
-            app:cardBackgroundColor="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
             <com.diraapp.ui.components.PreviewImageView
                 android:id="@+id/image_view"
                 android:layout_width="match_parent"
@@ -43,7 +45,6 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/placeholder" />
         </androidx.cardview.widget.CardView>
-
 
 
         <com.diraapp.ui.components.VideoPlayer
@@ -76,5 +77,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_add_image"
         app:tint="@color/light_gray" />
+
+    <TextView
+
+        android:id="@+id/size_view"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:fontFamily="@font/montserratsemibold"
+        android:gravity="center"
+        android:text="0 KB"
+        android:textColor="@color/light_gray"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/save_button"
+        app:layout_constraintEnd_toStartOf="@+id/save_button"
+        app:layout_constraintTop_toTopOf="@+id/save_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

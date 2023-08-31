@@ -12,6 +12,7 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -201,6 +202,7 @@ public class RoomSelectorActivity extends AppCompatActivity
             if(ContextCompat.checkSelfPermission(this, permission)
                     != PackageManager.PERMISSION_GRANTED)
             {
+                System.out.println("Not granted " + permission);
                 return false;
             }
         }
@@ -210,6 +212,7 @@ public class RoomSelectorActivity extends AppCompatActivity
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public List<String> getPermissions()
     {
         List<String> permissions = new ArrayList<>();
@@ -218,7 +221,7 @@ public class RoomSelectorActivity extends AppCompatActivity
             permissions.add(Manifest.permission.READ_MEDIA_IMAGES);
             permissions.add(Manifest.permission.READ_MEDIA_VIDEO);
             permissions.add(Manifest.permission.POST_NOTIFICATIONS);
-
+            permissions.add(Manifest.permission.ACCESS_MEDIA_LOCATION);
         }
 
 
@@ -226,9 +229,8 @@ public class RoomSelectorActivity extends AppCompatActivity
         permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         permissions.add(Manifest.permission.RECORD_AUDIO);
         permissions.add(Manifest.permission.CAMERA);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            permissions.add(Manifest.permission.ACCESS_MEDIA_LOCATION);
-        }
+
+
         return permissions;
 
     }
