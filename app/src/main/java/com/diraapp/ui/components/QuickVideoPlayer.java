@@ -133,7 +133,7 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
         if (mediaPlayer == null) return;
         mediaPlayer.reset();
         playingNow = null;
-        mediaPlayer = null;
+       // mediaPlayer = null;
     }
 
     public void setSpeed(float speed) {
@@ -177,6 +177,7 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
 
     @Override
     public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surfaceTexture) {
+
         return false;
     }
 

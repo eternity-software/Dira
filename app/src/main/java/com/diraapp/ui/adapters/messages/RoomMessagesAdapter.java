@@ -63,6 +63,7 @@ import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Numbers;
 import com.diraapp.utils.StringFormatter;
 import com.diraapp.utils.TimeConverter;
+import com.diraapp.utils.Timer;
 import com.masoudss.lib.SeekBarOnProgressChanged;
 import com.masoudss.lib.WaveformSeekBar;
 import com.skydoves.balloon.Balloon;
@@ -147,6 +148,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Timer timer = new Timer("OnCreateViewHolder");
         ViewHolder holder;
         if (viewType >= VIEW_TYPE_ROOM_MESSAGE) {
             holder = new ViewHolder(layoutInflater.inflate(R.layout.room_message, parent, false));
@@ -154,7 +156,9 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder = new ViewHolder(layoutInflater.inflate(R.layout.self_message, parent, false));
         }
 
-        return displayMessageView(holder, viewType);
+        ViewHolder viewHolder = displayMessageView(holder, viewType);
+        timer.reportTime();
+        return viewHolder;
     }
 
     @Override
