@@ -25,9 +25,9 @@ public interface RoomActivityContract {
     interface View {
         void fillRoomInfo(Bitmap picture, Room name);
 
-        void notifyRecyclerMessage();
+        void notifyRecyclerMessage(Message message, boolean needUpdateList);
 
-        void notifyMessagesChanged();
+        void notifyMessagesChanged(int start, int last, int scrollPosition);
 
         void notifyAdapterChanged(int index);
 
@@ -75,6 +75,8 @@ public interface RoomActivityContract {
         void initMembers();
 
         void loadMessagesBefore(Message message, int index);
+
+        void loadNewerMessage(Message message, int index);
 
         void sendStatus(UserStatusType userStatusType);
 

@@ -71,6 +71,10 @@ import okhttp3.Callback;
 
 public class RoomActivity extends DiraActivity
         implements RoomActivityContract.View, ProcessorListener, UserStatusListener, RecordComponentsController.RecordListener {
+
+    public static final int doNotNeedToScroll = -1;
+
+    public static final int isRoomOpen = -1;
     private String roomSecret;
     private RoomMessagesAdapter roomMessagesAdapter;
     private FilePickerBottomSheet filePickerBottomSheet;
@@ -438,6 +442,11 @@ public class RoomActivity extends DiraActivity
                 public void onFirstItemScrolled(Message message, int index) {
                     presenter.loadMessagesBefore(message, index);
                 }
+
+                @Override
+                public void onLastLoadedScrolled(Message message, int index) {
+                    presenter.loadNewerMessage(message, index);
+                }
             });
 
             binding.recyclerView.setAdapter(roomMessagesAdapter);
@@ -447,24 +456,46 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
-    public void notifyRecyclerMessage() {
+    public void notifyRecyclerMessage(Message message, boolean needUpdateList) {
         binding.recyclerView.post(new Runnable() {
             @Override
             public void run() {
+                roomMessagesAdapter.getRoom().setLastMessageId(message.getId());
+                if (message.getAuthorId() != null) {
+                    if (!message.getAuthorId().equals(roomMessagesAdapter.getSelfId())) {
+                        roomMessagesAdapter.getRoom().addNewUnreadMessageId(message.getId());
+                    }
+                }
 
-                roomMessagesAdapter.notifyItemInserted(0);
-                int lastVisiblePos = ((LinearLayoutManager) binding.recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                if (needUpdateList) {
+                    roomMessagesAdapter.notifyItemInserted(0);
+                    int lastVisiblePos = ((LinearLayoutManager) binding.recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
 
-                if (lastVisiblePos < 3) {
-                    binding.recyclerView.scrollToPosition(0);
+                    if (lastVisiblePos < 3) {
+                        binding.recyclerView.scrollToPosition(0);
+                    }
+                } else {
+                    for (int i = 0; i < 10; i++) {
+                        System.out.println("PENIS + " + i);
+                    }
                 }
             }
         });
     }
 
     @Override
-    public void notifyMessagesChanged() {
-        runOnUiThread(() -> roomMessagesAdapter.notifyDataSetChanged());
+    public void notifyMessagesChanged(int start, int last, int scrollPosition) {
+        runOnUiThread(() -> {
+            if (start == isRoomOpen) {
+                roomMessagesAdapter.notifyDataSetChanged();
+            } else {
+                roomMessagesAdapter.notifyItemRangeInserted(start, last);
+            }
+
+            if (scrollPosition != doNotNeedToScroll) {
+                binding.recyclerView.scrollToPosition(scrollPosition);
+            }
+        });
     }
 
     @Override

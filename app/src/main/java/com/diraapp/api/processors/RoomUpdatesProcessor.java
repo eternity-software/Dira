@@ -34,6 +34,9 @@ public class RoomUpdatesProcessor {
     private final MemberDao memberDao;
     private final MessageDao messageDao;
     private final Context context;
+
+    private final CacheUtils cacheUtils;
+
     private final HashMap<Request, String> retMessages = new HashMap<>(30);
 
     public RoomUpdatesProcessor(RoomDao roomDao, MemberDao memberDao, MessageDao messageDao, Context context) {
@@ -41,6 +44,8 @@ public class RoomUpdatesProcessor {
         this.memberDao = memberDao;
         this.messageDao = messageDao;
         this.context = context;
+
+        cacheUtils = new CacheUtils(context);
     }
 
 
@@ -171,7 +176,11 @@ public class RoomUpdatesProcessor {
                     room.setLastUpdatedTime(newMessage.getTime());
                     room.setUpdatedRead(false);
                     if (!newMessage.isRead()) {
-                        room.addNewUnreadMessageId(newMessage.getId());
+                        if (newMessage.getAuthorId() != null) {
+                            if (!newMessage.getAuthorId().equals(cacheUtils.getString(CacheUtils.ID))) {
+                                room.addNewUnreadMessageId(newMessage.getId());
+                            }
+                        }
                     }
                     messageDao.insertAll(newMessage);
                 }
@@ -248,6 +257,14 @@ public class RoomUpdatesProcessor {
 
         MessageReading messageReading = new MessageReading(update.getUserId(), update.getReadTime());
 
+        if (message == null) {
+            System.out.println("HUUUUUUUUUUUUUUUUUUUUUUY 100");
+
+            System.out.println(update.getUserId());
+            System.out.println("" + update.getUpdateId());
+            System.out.println("" + update.toString());
+            return;
+        }
         if (message.getMessageReadingList().contains(messageReading)) return;
         if (message.getAuthorId().equals(update.getUserId())) return;
 

@@ -62,13 +62,19 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             NewMessageUpdate newMessageUpdate = (NewMessageUpdate) update;
             if (!newMessageUpdate.getMessage().getRoomSecret().equals(roomSecret)) return;
 
-            room = view.getRoomDatabase().getRoomDao().getRoomBySecretName(roomSecret);
-            room.setUpdatedRead(true);
-            view.getRoomDatabase().getRoomDao().update(room);
+            boolean needUpdateList = true;
+            if (room.getLastMessageId() != null) {
+                if (messageList.size() > 0) {
+                    needUpdateList = messageList.get(0).getId().
+                            equals(room.getLastMessageId());
+                }
+            }
 
-            messageList.add(0, newMessageUpdate.getMessage());
+            if (needUpdateList) {
+                messageList.add(0, newMessageUpdate.getMessage());
+            }
 
-            view.notifyRecyclerMessage();
+            view.notifyRecyclerMessage(newMessageUpdate.getMessage(), needUpdateList);
         } else if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
             initRoomInfo();
         } else if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
@@ -154,12 +160,62 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 List<Message> oldMessages = messageDao.getLastMessagesInRoom(roomSecret, message.getTime());
                 if (oldMessages.size() == 0) return;
                 messageList.addAll(oldMessages);
-                view.notifyMessagesChanged();
+                view.notifyMessagesChanged(index + 1, index + oldMessages.size(),
+                        RoomActivity.doNotNeedToScroll);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
 
+    }
+
+    public void loadNewerMessage(Message message, int index) {
+        view.runBackground(() -> {
+            System.out.println("HUUUUUUUUUUUUUUUUUUUUUUY");
+            int size = room.getUnreadMessagesIds().size();
+            if (size == 0) return;
+
+            String newestId;
+
+            if (size <= 50) {
+                newestId = room.getUnreadMessagesIds().get(size - 1);
+                System.out.println("HUUUUUUUUUUUUUUUUUUUUUUY 2");
+            } else {
+                newestId = room.getUnreadMessagesIds().get(49);
+                System.out.println("HUUUUUUUUUUUUUUUUUUUUUUY 3");
+            }
+
+            try {
+                MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
+                Message newestMessage = messageDao.getMessageById(newestId);
+
+                if (newestMessage == null) {
+                    System.out.println("Cant find unread message " + newestId + " in MessageDatabase!");
+                    return;
+                }
+
+                List<Message> newMessages = messageDao.getNewerMessages(roomSecret,
+                        newestMessage.getTime(), message.getTime());
+
+                if (newMessages.size() == 0)  {
+                    System.out.println(newestMessage.toString());
+                    System.out.println(message.toString());
+                    System.out.println("HUUUUUUUUUUUUUUUUUUUUUUY 27");
+                    return;
+                }
+
+                for (Message m: newMessages) {
+                    messageList.add(0, m);
+                }
+                System.out.println("HUUUUUUUUUUUUUUUUUUUUUUY 4");
+                for (Message message1: newMessages) {
+                    System.out.println(message1.getId());
+                }
+                view.notifyMessagesChanged(0, newMessages.size(), newMessages.size());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override
@@ -183,10 +239,31 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     @Override
     public void loadMessages() {
         view.runBackground(() -> {
-            messageList = view.getMessagesDatabase().getMessageDao().getLastMessagesInRoom(roomSecret);
+            MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
+
+            int scrollTo = RoomActivity.doNotNeedToScroll;
+
+            int size = room.getUnreadMessagesIds().size();
+            if (size == 0) {
+                messageList = messageDao.getLastMessagesInRoom(roomSecret);
+            } else {
+                String id;
+                if (size <= 25) {
+                    id = room.getUnreadMessagesIds().get(size - 1);
+                    scrollTo = size - 1;
+                } else {
+                    id = room.getUnreadMessagesIds().get(24);
+                    scrollTo = 24;
+                }
+
+                Message newestMessage = messageDao.getMessageById(id);
+
+                messageList = messageDao.getMessageOnRoomOpen(roomSecret, newestMessage.getTime());
+            }
+
             initMembers();
             view.setMessages(messageList);
-            view.notifyMessagesChanged();
+            view.notifyMessagesChanged(RoomActivity.isRoomOpen, 0, scrollTo);
         });
 
     }

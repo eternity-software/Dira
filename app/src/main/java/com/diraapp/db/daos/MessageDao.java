@@ -34,4 +34,10 @@ public interface MessageDao {
     @Query("SELECT * FROM message WHERE id = :messageId")
     Message getMessageById(String messageId);
 
+    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret AND time <= :time ORDER BY time DESC LIMIT 50")
+    List<Message> getMessageOnRoomOpen(String roomSecret, long time);
+
+    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret AND time <= :time AND time > :newestLoadedTime ORDER BY time")
+    List<Message> getNewerMessages(String roomSecret, long time, long newestLoadedTime);
+
 }

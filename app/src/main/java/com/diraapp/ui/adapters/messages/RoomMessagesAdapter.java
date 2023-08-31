@@ -141,6 +141,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         this.room = room;
     }
 
+    public String getSelfId() {
+        return selfId;
+    }
+
     public void setMessages(List<Message> messages) {
         this.messages = messages;
     }
@@ -225,6 +229,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         if (position == messages.size() - 1) {
             messageAdapterListener.onFirstItemScrolled(message, position);
+        } else if (position == 0) {
+            messageAdapterListener.onLastLoadedScrolled(message, position);
         }
         if (!message.isRead() && message.getCustomClientData() == null) {
             if (message.getAuthorId() == null) return;
@@ -407,7 +413,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                 try {
                                     holder.waveformSeekBar.setSampleFrom(array);
                                 }
-                                catch (Exception e)
+                                catch (Exception ignored)
                                 {}
                             });
                         }, exception -> {
@@ -1056,6 +1062,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     public interface MessageAdapterListener {
         void onFirstItemScrolled(Message message, int index);
+
+        default void onLastLoadedScrolled(Message message, int index) {};
     }
 
 }
