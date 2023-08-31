@@ -171,7 +171,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     public void loadNewerMessage(Message message, int index) {
         view.runBackground(() -> {
-            System.out.println("HUUUUUUUUUUUUUUUUUUUUUUY");
             int size = room.getUnreadMessagesIds().size();
             if (size == 0) return;
 
@@ -179,10 +178,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
             if (size <= 50) {
                 newestId = room.getUnreadMessagesIds().get(size - 1);
-                System.out.println("HUUUUUUUUUUUUUUUUUUUUUUY 2");
             } else {
                 newestId = room.getUnreadMessagesIds().get(49);
-                System.out.println("HUUUUUUUUUUUUUUUUUUUUUUY 3");
             }
 
             try {
@@ -198,18 +195,15 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                         newestMessage.getTime(), message.getTime());
 
                 if (newMessages.size() == 0)  {
-                    System.out.println(newestMessage.toString());
-                    System.out.println(message.toString());
-                    System.out.println("HUUUUUUUUUUUUUUUUUUUUUUY 27");
+                    System.out.println("Cant find messages newer, then " + newestId +
+                            ", but they should exist");
+                    System.out.println(newestMessage.getId());
+                    System.out.println(message.getId());
                     return;
                 }
 
                 for (Message m: newMessages) {
                     messageList.add(0, m);
-                }
-                System.out.println("HUUUUUUUUUUUUUUUUUUUUUUY 4");
-                for (Message message1: newMessages) {
-                    System.out.println(message1.getId());
                 }
                 view.notifyMessagesChanged(0, newMessages.size(), newMessages.size());
             } catch (Exception e) {
