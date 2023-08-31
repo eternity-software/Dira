@@ -139,8 +139,10 @@ public class RoomSelectorActivity extends AppCompatActivity
         UpdateProcessor.getInstance(getApplicationContext()).addUpdateListener(this);
 
         updateRooms(true);
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
+
+
+
+        if (!hasAllPermissions()) {
             askForPermissions();
         }
 
@@ -161,19 +163,7 @@ public class RoomSelectorActivity extends AppCompatActivity
                 null, new Runnable() {
                     @Override
                     public void run() {
-                        List<String> permissions = new ArrayList<>();
-                        if (Build.VERSION.SDK_INT >= 33) {
-                            permissions.add(Manifest.permission.ACCESS_NOTIFICATION_POLICY);
-                            permissions.add(Manifest.permission.READ_MEDIA_IMAGES);
-                            permissions.add(Manifest.permission.READ_MEDIA_VIDEO);
-                        }
-
-
-                        permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-                        permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                            permissions.add(Manifest.permission.ACCESS_MEDIA_LOCATION);
-                        }
+                        List<String> permissions = getPermissions();
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
@@ -202,6 +192,47 @@ public class RoomSelectorActivity extends AppCompatActivity
                 });
 
     }
+
+    private boolean hasAllPermissions()
+    {
+
+        for(String permission : getPermissions())
+        {
+            if(ContextCompat.checkSelfPermission(this, permission)
+                    != PackageManager.PERMISSION_GRANTED)
+            {
+                return false;
+            }
+        }
+
+        return true;
+
+    }
+
+
+    public List<String> getPermissions()
+    {
+        List<String> permissions = new ArrayList<>();
+        if (Build.VERSION.SDK_INT >= 33) {
+            permissions.add(Manifest.permission.ACCESS_NOTIFICATION_POLICY);
+            permissions.add(Manifest.permission.READ_MEDIA_IMAGES);
+            permissions.add(Manifest.permission.READ_MEDIA_VIDEO);
+            permissions.add(Manifest.permission.POST_NOTIFICATIONS);
+
+        }
+
+
+        permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        permissions.add(Manifest.permission.RECORD_AUDIO);
+        permissions.add(Manifest.permission.CAMERA);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            permissions.add(Manifest.permission.ACCESS_MEDIA_LOCATION);
+        }
+        return permissions;
+
+    }
+
 
     private void updateRooms() {
         updateRooms(false);

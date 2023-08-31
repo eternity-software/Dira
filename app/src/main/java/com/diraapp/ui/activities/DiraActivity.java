@@ -49,6 +49,10 @@ public class DiraActivity extends AppCompatActivity {
         for (DiraActivityListener listener : activityListenerList) listener.onCreate();
     }
 
+    public static void runGlobalBackground(Runnable runnable) {
+        threadPoolExecutor.execute(runnable);
+    }
+
     public void runBackground(Runnable runnable) {
         threadPoolExecutor.execute(runnable);
     }

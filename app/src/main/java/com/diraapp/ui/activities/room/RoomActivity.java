@@ -222,6 +222,7 @@ public class RoomActivity extends DiraActivity
 
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {

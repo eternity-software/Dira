@@ -337,9 +337,9 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 });
 
             }
-
             videoPlayer.attachRecyclerView(recyclerView);
             videoPlayer.attachDiraActivity(context);
+
             try {
                 videoPlayer.play(file.getPath());
 

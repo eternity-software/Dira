@@ -165,7 +165,7 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
     }
 
     private void recreateMediaPlayer() {
-        activity.runBackground(() -> {
+        DiraActivity.runGlobalBackground(() -> {
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setVolume(0, 0);
 
