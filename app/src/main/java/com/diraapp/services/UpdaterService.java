@@ -26,8 +26,6 @@ public class UpdaterService extends Service {
 
     @Override
     public void onCreate() {
-        // Toast.makeText(this, "Service created!", Toast.LENGTH_LONG).show();
-
 
         handler = new Handler();
         runnable = new Runnable() {

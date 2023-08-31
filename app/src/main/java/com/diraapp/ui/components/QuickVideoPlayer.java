@@ -23,6 +23,7 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
     private MediaPlayer mediaPlayer;
     private String playingNow;
 
+    private DiraActivity activity;
     private boolean attachedActivity = false;
     private boolean attachedRecycler = false;
 
@@ -43,6 +44,7 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
     public void attachDiraActivity(DiraActivity diraActivity) {
 
         if (attachedActivity) return;
+        activity = diraActivity;
         attachedActivity = true;
         diraActivity.addListener(new DiraActivityListener() {
             @Override
@@ -103,6 +105,7 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
 
     public void play(String source) {
         if (mediaPlayer == null) recreateMediaPlayer();
+        if(source == null) return;
         playingNow = source;
         try {
             mediaPlayer.setDataSource(source);
@@ -133,7 +136,7 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
         if (mediaPlayer == null) return;
         mediaPlayer.reset();
         playingNow = null;
-       // mediaPlayer = null;
+        mediaPlayer = null;
     }
 
     public void setSpeed(float speed) {
@@ -148,6 +151,8 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
         try {
             if (mediaPlayer == null)
                 recreateMediaPlayer();
+
+
             Surface surface = new Surface(surfaceTexture);
             mediaPlayer.setSurface(surface);
             play(playingNow);
@@ -160,14 +165,16 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
     }
 
     private void recreateMediaPlayer() {
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setVolume(0, 0);
+        activity.runBackground(() -> {
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setVolume(0, 0);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            mediaPlayer.setAudioAttributes(
-                    new AudioAttributes.Builder().setFlags(AudioAttributes.ALLOW_CAPTURE_BY_NONE).build());
-        }
-        mediaPlayer.setLooping(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                mediaPlayer.setAudioAttributes(
+                        new AudioAttributes.Builder().setFlags(AudioAttributes.ALLOW_CAPTURE_BY_NONE).build());
+            }
+            mediaPlayer.setLooping(true);
+        });
     }
 
     @Override

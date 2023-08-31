@@ -10,6 +10,7 @@ import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.notifications.Notifier;
 import com.diraapp.ui.activities.CrashActivity;
 
 import java.io.PrintWriter;
@@ -61,6 +62,7 @@ public class DiraApplication extends Application implements LifecycleObserver {
     void onAppForegrounded() {
         isBackgrounded = false;
         try {
+            Notifier.cancelAllNotifications(getApplicationContext());
             UpdateProcessor.getInstance(getApplicationContext()).reconnectSockets();
         } catch (Exception e) {
             e.printStackTrace();
