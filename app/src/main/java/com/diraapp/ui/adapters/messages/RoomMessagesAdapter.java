@@ -388,23 +388,31 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         } else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
             holder.loading.setVisibility(View.GONE);
-            Amplituda amplituda = new Amplituda(context);
 
 
-            amplituda.processAudio(file)
-                    .get(result -> {
-                        List<Integer> amplitudesData = result.amplitudesAsList();
-                        int[] array = new int[amplitudesData.size()];
-                        for (int i = 0; i < amplitudesData.size(); i++)
-                            array[i] = amplitudesData.get(i);
-                        context.runOnUiThread(() -> {
-                            holder.waveformSeekBar.setSampleFrom(array);
+
+            context.runBackground(() -> {
+                Amplituda amplituda = new Amplituda(context);
+                amplituda.processAudio(file)
+                        .get(result -> {
+                            List<Integer> amplitudesData = result.amplitudesAsList();
+                            int[] array = new int[amplitudesData.size()];
+                            for (int i = 0; i < amplitudesData.size(); i++)
+                                array[i] = amplitudesData.get(i);
+                            context.runOnUiThread(() -> {
+                                try {
+                                    holder.waveformSeekBar.setSampleFrom(array);
+                                }
+                                catch (Exception e)
+                                {}
+                            });
+                        }, exception -> {
+                            if (exception instanceof AmplitudaIOException) {
+                                System.out.println("IO Exception!");
+                            }
                         });
-                    }, exception -> {
-                        if (exception instanceof AmplitudaIOException) {
-                            System.out.println("IO Exception!");
-                        }
-                    });
+            });
+
 
 
             holder.waveformSeekBar.setProgress(attachment.getVoiceMessageStopProgress());
@@ -445,6 +453,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                                 try {
                                                     float progress = 10 * diraMediaPlayer.getProgress();
                                                     holder.waveformSeekBar.setProgress(progress);
+
                                                     attachment.setVoiceMessageStopProgress(progress);
                                                 } catch (Exception ignored) {
                                                 }

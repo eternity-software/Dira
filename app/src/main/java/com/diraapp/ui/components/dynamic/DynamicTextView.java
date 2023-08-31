@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.util.AttributeSet;
+import android.widget.TextView;
 
 import androidx.annotation.StyleableRes;
 
@@ -15,7 +16,7 @@ import com.diraapp.res.lang.CustomLanguage;
 import com.diraapp.ui.components.TightTextView;
 
 
-public class DynamicTextView extends TightTextView {
+public class DynamicTextView extends androidx.appcompat.widget.AppCompatTextView {
 
     @StyleableRes
     int localizableKey = 0;
@@ -42,13 +43,11 @@ public class DynamicTextView extends TightTextView {
     @Override
     public void setText(CharSequence text, BufferType type) {
         super.setText(text, type);
-        setupTheme();
     }
 
     @Override
     public void setVisibility(int visibility) {
         super.setVisibility(visibility);
-        setupTheme();
     }
 
     public void setupTheme() {
