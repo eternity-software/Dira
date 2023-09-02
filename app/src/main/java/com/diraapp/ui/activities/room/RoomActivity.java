@@ -474,10 +474,6 @@ public class RoomActivity extends DiraActivity
                     if (lastVisiblePos < 3) {
                         binding.recyclerView.scrollToPosition(0);
                     }
-                } else {
-                    for (int i = 0; i < 10; i++) {
-                        System.out.println("PENIS + " + i);
-                    }
                 }
             }
         });

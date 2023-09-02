@@ -258,11 +258,6 @@ public class RoomUpdatesProcessor {
         MessageReading messageReading = new MessageReading(update.getUserId(), update.getReadTime());
 
         if (message == null) {
-            System.out.println("HUUUUUUUUUUUUUUUUUUUUUUY 100");
-
-            System.out.println(update.getUserId());
-            System.out.println("" + update.getUpdateId());
-            System.out.println("" + update.toString());
             return;
         }
         if (message.getMessageReadingList().contains(messageReading)) return;
@@ -288,8 +283,6 @@ public class RoomUpdatesProcessor {
             message.getMessageReadingList().add(messageReading);
         }
         messageDao.update(message);
-
-        UpdateProcessor.getInstance().notifyUpdateListeners(update);
     }
 
 }

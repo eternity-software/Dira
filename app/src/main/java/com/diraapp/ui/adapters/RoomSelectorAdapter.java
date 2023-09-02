@@ -90,9 +90,11 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
                     CacheUtils cacheUtils = new CacheUtils(context);
                     if (cacheUtils.getString(CacheUtils.ID).equals(message.getAuthorId())) {
                         authorPrefix = context.getString(R.string.you);
-                        if (message.getMessageReadingList().size() == 0) {
-                            authorPrefix = authorPrefix + context.
-                                    getString(R.string.room_last_not_read);
+                        if (message.getMessageReadingList() != null) {
+                            if (message.getMessageReadingList().size() == 0) {
+                                authorPrefix = authorPrefix + context.
+                                        getString(R.string.room_last_not_read);
+                            }
                         }
                     }
                     holder.messageText.setText(message.getText());
