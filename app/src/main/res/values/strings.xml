@@ -52,10 +52,14 @@
     <string name="members_count">%s members</string>
     <string name="attachment_large_title">This attachment too large</string>
     <string name="download">Download</string>
-    <string name="user_status_typing">%s is typing…</string>
-    <string name="users_status_typing">%s are typing…</string>
-    <string name="user_status_voice">%s is recording voice…</string>
-    <string name="user_status_bubble">%s is recording bubble…</string>
+    <string name="user_status_typing">%s is typing</string>
+    <string name="users_status_typing">%s are typing</string>
+    <string name="user_status_voice">%s is recording voice</string>
+    <string name="users_status_voice">%s are recording voice</string>
+    <string name="user_status_bubble">%s is recording bubble</string>
+    <string name="users_status_bubble">%s are recording bubble</string>
+    <string name="user_status_file">%s are sending bubble</string>
+    <string name="users_status_file">%s are sending bubble</string>
 
     <!-- Room info -->
 

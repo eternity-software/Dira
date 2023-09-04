@@ -8,12 +8,17 @@ import com.diraapp.api.updates.UserStatusUpdate;
 import com.diraapp.exceptions.SingletonException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class UserStatusHandler implements UpdateListener {
     private static UserStatusHandler instance;
 
     private final ArrayList<UserStatus> userUserStatuses = new ArrayList<>();
     private final ArrayList<UserStatusListener> listenerList = new ArrayList<>();
+
+    private int currentMaxTypeIndex = -1;
+
+    private int currentTypeIndex = -1;
     private Thread statusThread;
 
     public UserStatusHandler() throws SingletonException {
@@ -38,21 +43,31 @@ public class UserStatusHandler implements UpdateListener {
     }
 
     public ArrayList<UserStatus> getUserStatuses(String secretName) {
-        ArrayList<String> usersIds = new ArrayList<>();
+        int maxIndex = -1;
+        HashMap<String, UserStatus> userStatusHashMap = new HashMap<>();
         ArrayList<UserStatus> list = new ArrayList<>();
 
         int size = userUserStatuses.size();
         if (size > 0) {
-            int stop = 3;
 
             for (int i = size - 1; i >= 0; i--) {
                 UserStatus userStatus = userUserStatuses.get(i);
                 if (userStatus.getSecretName().equals(secretName)) {
-                    if (!usersIds.contains(userStatus.getUserId())) {
-                        list.add(userStatus);
-                        usersIds.add(userStatus.getUserId());
-                        if (list.size() == stop) break;
+                    int ord = userStatus.getUserStatus().ordinal();
+                    if (ord >= maxIndex) {
+                        userStatusHashMap.put(userStatus.getUserId(), userStatus);
+                        maxIndex = ord;
                     }
+                }
+            }
+
+            int stop = 3;
+            int a = 0;
+            for (UserStatus status: userStatusHashMap.values()) {
+                if (status.getUserStatus().ordinal() == maxIndex) {
+                    list.add(status);
+                    a++;
+                    if (a > stop) break;
                 }
             }
         }
@@ -78,8 +93,9 @@ public class UserStatusHandler implements UpdateListener {
     }
 
     private void notifyListeners(String secretName) {
+        ArrayList<UserStatus> userStatuses = getUserStatuses(secretName);
         for (UserStatusListener listener : listenerList) {
-            listener.updateUserStatus(secretName, getUserStatuses(secretName));
+            listener.updateUserStatus(secretName, userStatuses);
         }
     }
 
@@ -132,6 +148,7 @@ public class UserStatusHandler implements UpdateListener {
             userStatus.setTime(System.currentTimeMillis() + UserStatus.VISIBLE_TIME_MILLIS);
             userUserStatuses.add(userStatus);
             notifyListeners(userStatus.getSecretName());
+
             startThread();
         }
     }

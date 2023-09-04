@@ -18,6 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -361,7 +362,7 @@ public class RoomActivity extends DiraActivity
                 }
 
                 int size = usersUserStatusList.size();
-                String text;
+                String text = "";
 
                 if (size == 0) {
                     binding.userStatusAnimation.setVisibility(View.GONE);
@@ -371,32 +372,72 @@ public class RoomActivity extends DiraActivity
                 } else {
                     membersCount.setTextColor(Theme.getColor(this, R.color.subtitle_color_accent));
 
+                    ArrayList<UserStatus> bubbleStatuses = new ArrayList<>(size);
+                    ArrayList<UserStatus> pickingFileStatuses = new ArrayList<>(size);
+                    ArrayList<UserStatus> voiceStatuses = new ArrayList<>(size);
+                    ArrayList<UserStatus> writingStatuses = new ArrayList<>(size);
+
                     binding.userStatusAnimation.setVisibility(View.VISIBLE);
-                    StringBuilder nickNames = new StringBuilder();
                     for (int i = 0; i < size; i++) {
-                        Member member = roomMessagesAdapter.getMembers().get(usersUserStatusList.get(i).getUserId());
+                        UserStatus status = usersUserStatusList.get(i);
+                        Member member = roomMessagesAdapter.getMembers().get(status.getUserId());
                         if (member == null) continue;
                         if (member.getId().equals(userId)) continue;
 
+                        if (status.getUserStatus() == UserStatusType.TYPING) {
+                            writingStatuses.add(status);
+                        } else if (status.getUserStatus() == UserStatusType.PICKING_FILE) {
+                            pickingFileStatuses.add(status);
+                        } else if (status.getUserStatus() == UserStatusType.RECORDING_VOICE) {
+                            voiceStatuses.add(status);
+                        } else if (status.getUserStatus() == UserStatusType.RECORDING_BUBBLE) {
+                            bubbleStatuses.add(status);
+                        }
+                    }
+
+                    ArrayList<UserStatus> statuses = new ArrayList<>(size);
+
+                    if (bubbleStatuses.size() > 0) {
+                        statuses = bubbleStatuses;
+                        if (statuses.size() == 1) {
+                            text = getString(R.string.user_status_bubble);
+                        } else {
+                            text = getString(R.string.users_status_bubble);
+                        }
+                    } else if (voiceStatuses.size() > 0) {
+                        statuses = voiceStatuses;
+                        if (statuses.size() == 1) {
+                            text = getString(R.string.user_status_voice);
+                        } else {
+                            text = getString(R.string.users_status_voice);
+                        }
+                    } else if (pickingFileStatuses.size() > 0) {
+                        statuses = pickingFileStatuses;
+                        if (statuses.size() == 1) {
+                            text = getString(R.string.user_status_file);
+                        } else {
+                            text = getString(R.string.users_status_file);
+                        }
+                    } else if (writingStatuses.size() > 0) {
+                        statuses = writingStatuses;
+                        if (statuses.size() == 1) {
+                            text = getString(R.string.user_status_typing);
+                        } else {
+                            text = getString(R.string.users_status_typing);
+                        }
+                    }
+
+                    StringBuilder nickNames = new StringBuilder();
+                    for (int i = 0; i < size; i++) {
+                        UserStatus status = statuses.get(i);
+                        Member member = roomMessagesAdapter.getMembers().get(status.getUserId());
                         if (i != 0) nickNames.append(", ");
 
                         nickNames.append(member.getNickname());
-                        UserStatusType userStatusType = usersUserStatusList.get(i).getUserStatus();
-                        if (userStatusType == UserStatusType.RECORDING_VOICE) {
-                            membersCount.setText(getString(R.string.user_status_voice));
-                        } else if (userStatusType == UserStatusType.RECORDING_BUBBLE) {
-                            membersCount.setText(getString(R.string.user_status_bubble));
-                        }
                     }
 
                     if (nickNames.length() > 22) {
                         nickNames = new StringBuilder(nickNames.substring(0, 22) + "..");
-                    }
-
-                    if (size == 1) {
-                        text = getString(R.string.user_status_typing);
-                    } else {
-                        text = getString(R.string.users_status_typing);
                     }
 
                     text = text.replace("%s", nickNames.toString());
