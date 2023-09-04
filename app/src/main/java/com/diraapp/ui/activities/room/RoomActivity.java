@@ -79,8 +79,6 @@ public class RoomActivity extends DiraActivity
     private RoomMessagesAdapter roomMessagesAdapter;
     private FilePickerBottomSheet filePickerBottomSheet;
     private ActivityRoomBinding binding;
-
-    private AppTheme theme;
     private RecordComponentsController recordComponentsController;
     private RoomActivityContract.Presenter presenter;
 
@@ -128,7 +126,6 @@ public class RoomActivity extends DiraActivity
 
         recordComponentsController.setRecordListener(this);
 
-        theme = AppTheme.getInstance();
         binding.buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -457,19 +454,18 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void notifyRecyclerMessage(Message message, boolean needUpdateList) {
+        if (message.getAuthorId() != null) {
+            if (!message.getAuthorId().equals(roomMessagesAdapter.getSelfId())) {
+                roomMessagesAdapter.getRoom().addNewUnreadMessageId(message.getId());
+            }
+        }
         binding.recyclerView.post(new Runnable() {
             @Override
             public void run() {
-                roomMessagesAdapter.getRoom().setLastMessageId(message.getId());
-                if (message.getAuthorId() != null) {
-                    if (!message.getAuthorId().equals(roomMessagesAdapter.getSelfId())) {
-                        roomMessagesAdapter.getRoom().addNewUnreadMessageId(message.getId());
-                    }
-                }
-
                 if (needUpdateList) {
                     roomMessagesAdapter.notifyItemInserted(0);
-                    int lastVisiblePos = ((LinearLayoutManager) binding.recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                    int lastVisiblePos = ((LinearLayoutManager)
+                            binding.recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
 
                     if (lastVisiblePos < 3) {
                         binding.recyclerView.scrollToPosition(0);

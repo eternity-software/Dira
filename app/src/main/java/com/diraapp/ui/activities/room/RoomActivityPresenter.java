@@ -62,6 +62,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             NewMessageUpdate newMessageUpdate = (NewMessageUpdate) update;
             if (!newMessageUpdate.getMessage().getRoomSecret().equals(roomSecret)) return;
 
+            Message message = newMessageUpdate.getMessage();
+
             boolean needUpdateList = true;
             if (room.getLastMessageId() != null) {
                 if (messageList.size() > 0) {
@@ -71,8 +73,10 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             }
 
             if (needUpdateList) {
-                messageList.add(0, newMessageUpdate.getMessage());
+                messageList.add(0, message);
             }
+
+            room.setLastMessageId(message.getId());
 
             view.notifyRecyclerMessage(newMessageUpdate.getMessage(), needUpdateList);
         } else if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
