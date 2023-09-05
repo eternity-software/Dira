@@ -55,6 +55,7 @@ import com.diraapp.ui.adapters.messagetooltipread.MessageTooltipAdapter;
 import com.diraapp.ui.adapters.messagetooltipread.UserReadMessage;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.MessageAttachmentToLargeView;
+import com.diraapp.ui.components.MultiAttachmentMessageView;
 import com.diraapp.ui.components.QuickVideoPlayer;
 import com.diraapp.ui.components.RoomMessageCustomClientDataView;
 import com.diraapp.ui.components.RoomMessageVideoPlayer;
@@ -93,11 +94,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     public static final int VIEW_TYPE_SELF_MESSAGE_VOICE = 2;
     public static final int VIEW_TYPE_SELF_MESSAGE_ATTACHMENTS = 3;
     public static final int VIEW_TYPE_SELF_MESSAGE_ATTACHMENTS_TOO_LARGE = 4;
+    public static final int VIEW_TYPE_SELF_MESSAGE_MULTI_ATTACHMENTS = 5;
     public static final int VIEW_TYPE_ROOM_MESSAGE = 20;
     public static final int VIEW_TYPE_ROOM_MESSAGE_BUBBLE = 21;
     public static final int VIEW_TYPE_ROOM_MESSAGE_VOICE = 22;
     public static final int VIEW_TYPE_ROOM_MESSAGE_ATTACHMENTS = 23;
     public static final int VIEW_TYPE_ROOM_MESSAGE_ATTACHMENTS_TOO_LARGE = 24;
+    public static final int VIEW_TYPE_ROOM_MESSAGE_MULTI_ATTACHMENTS = 25;
     private static Thread thread;
     private final LayoutInflater layoutInflater;
 
@@ -1000,7 +1003,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
             if (!isAttachmentTooLarge) {
                 if (message.getAttachments().size() > 1) {
-                    type = VIEW_TYPE_SELF_MESSAGE_ATTACHMENTS;
+                    type = VIEW_TYPE_SELF_MESSAGE_MULTI_ATTACHMENTS;
                 } else if (message.getAttachments().get(0).getAttachmentType() == AttachmentType.BUBBLE) {
                     type = VIEW_TYPE_SELF_MESSAGE_BUBBLE;
                 } else if (message.getAttachments().get(0).getAttachmentType() == AttachmentType.VIDEO ||
@@ -1047,6 +1050,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             view = new RoomMessageVideoPlayer(context);
         } else if (viewType == VIEW_TYPE_CLIENT_DATA) {
             view = new RoomMessageCustomClientDataView(context);
+        } else if (viewType == VIEW_TYPE_ROOM_MESSAGE_MULTI_ATTACHMENTS) {
+            view = MultiAttachmentMessageView.createNewMultiAttachmentView(context);
         }
 
         if (!bubbleAdded & view != null) {
