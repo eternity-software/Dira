@@ -17,6 +17,7 @@ import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -51,6 +52,7 @@ import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.PreviewActivity;
+import com.diraapp.ui.activities.room.RoomActivityContract;
 import com.diraapp.ui.adapters.messagetooltipread.MessageTooltipAdapter;
 import com.diraapp.ui.adapters.messagetooltipread.UserReadMessage;
 import com.diraapp.ui.components.BubbleMessageView;
@@ -65,6 +67,7 @@ import com.diraapp.utils.Numbers;
 import com.diraapp.utils.StringFormatter;
 import com.diraapp.utils.TimeConverter;
 import com.diraapp.utils.Timer;
+import com.felipecsl.asymmetricgridview.library.model.AsymmetricItem;
 import com.masoudss.lib.SeekBarOnProgressChanged;
 import com.masoudss.lib.WaveformSeekBar;
 import com.skydoves.balloon.Balloon;
@@ -293,13 +296,28 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime(), context));
     }
 
-    public void updateAttachment(ViewHolder holder, Attachment attachment, File file) {
+    // probably is will be better if it will need input arrays of files and attachments!
+    public void updateAttachment(ViewHolder holder, Attachment attachment, File file, Message message) {
 
-        if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
+        int attachmentsCount  = message.getAttachments().size();
+        if (message.getAttachments().size() > 1) {
+
+            int position = 0;
+            for (Attachment attachment1: message.getAttachments()) {
+                if (attachment.equals(attachment1)) {
+                    position = message.getAttachments().indexOf(attachment1);
+                    break;
+                }
+            }
+
+            // renew bitmap
+
+        } else if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
             holder.imageView.setVisibility(View.VISIBLE);
 
 
-            holder.imageView.setImageBitmap(AppStorage.getBitmapFromPath(file.getPath()));
+            //holder.imageView.setImageBitmap(AppStorage.getBitmapFromPath(file.getPath()));
+            Picasso.get().load(file).into(holder.imageView);
 
 
             // Causing "blink"
@@ -727,7 +745,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                     File file = AttachmentsStorage.getFileFromAttachment(attachment, context, message.getRoomSecret());
 
                                     if (file != null) {
-                                        updateAttachment(holder, attachment, file);
+                                        updateAttachment(holder, attachment, file, message);
                                     } else {
                                         holder.loading.setVisibility(View.VISIBLE);
 
@@ -760,91 +778,123 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 AttachmentsStorage.addAttachmentsStorageListener(holder.attachmentsStorageListener);
                 listeners.add(holder.attachmentsStorageListener);
 
-                Attachment attachment = message.getAttachments().get(0);
-
-
-                if (holder.imageView != null) {
-                    holder.loading.setVisibility(View.GONE);
-                    holder.imageView.setVisibility(View.VISIBLE);
-                    Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-                    Bitmap bmp = Bitmap.createBitmap(attachment.getWidth(), attachment.getHeight(), conf);
-                    holder.imageView.setImageBitmap(bmp);
-                } else {
-                    holder.loading.setVisibility(View.VISIBLE);
+                long attachmentSize = 0;
+                for (Attachment attachment: message.getAttachments()) {
+                    attachmentSize += attachment.getSize();
                 }
 
+                int attachmentCount = message.getAttachments().size();
+                for (int i = 0; i < attachmentCount; i++) {
+                    Attachment attachment = message.getAttachments().get(i);
 
-                File file = AttachmentsStorage.getFileFromAttachment(attachment, context, message.getRoomSecret());
-
-                if (file != null && !AttachmentsStorage.isAttachmentSaving(attachment)) {
-
-                    updateAttachment(holder, attachment, file);
-                } else {
-                    long attachmentSize = attachment.getSize();
-                    if (attachmentSize > maxAutoLoadSize) {
+                    if (holder.imageView != null) {
                         holder.loading.setVisibility(View.GONE);
-                        holder.sizeText.setText(AppStorage.getStringSize(attachmentSize));
-                        String finalEncryptionKey = encryptionKey;
-                        holder.buttonDownload.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                        holder.imageView.setVisibility(View.VISIBLE);
+                        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+                        Bitmap bmp = Bitmap.createBitmap(attachment.getWidth(), attachment.getHeight(), conf);
+                        holder.imageView.setImageBitmap(bmp);
+                    } else if (i == 0 & attachmentCount > 1) {
+                        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
 
-                                holder.buttonDownload.setVisibility(View.GONE);
-                                //   holder.sizeContainer.setVisibility(View.GONE);
-                                holder.loading.setVisibility(View.VISIBLE);
+                        final ArrayList<AsymmetricItem> items = new ArrayList<>(attachmentCount);
+                        for (int j = 0; j < attachmentCount; j++) {
+                            Attachment attachment1 = message.getAttachments().get(j);
+                            Bitmap bmp = Bitmap.createBitmap(attachment1.getWidth(),
+                                    attachment1.getHeight(), conf);
 
-                                // TODO: handle if view changed
+                            // items.add()
 
-                                thread = new Thread(new Runnable() {
+                            //here need to inputBitmap into AsymmetricGridView
+                        }
+
+                        // there need to setup adapter
+                        //ListAdapter adapter = new ListAdapter() {}
+                    } else {
+                        holder.loading.setVisibility(View.VISIBLE);
+                    }
+
+
+                    File file = AttachmentsStorage.getFileFromAttachment(attachment, context, message.getRoomSecret());
+
+                    if (file != null && !AttachmentsStorage.isAttachmentSaving(attachment)) {
+
+                        updateAttachment(holder, attachment, file, message);
+                    } else {
+                        if (attachmentSize > maxAutoLoadSize) {
+                            if (i == 0) {
+                                holder.loading.setVisibility(View.GONE);
+                                holder.sizeText.setText(AppStorage.getStringSize(attachmentSize));
+                                String finalEncryptionKey = encryptionKey;
+                                long finalAttachmentSize = attachmentSize;
+                                holder.buttonDownload.setOnClickListener(new View.OnClickListener() {
                                     @Override
-                                    public void run() {
-                                        try {
+                                    public void onClick(View v) {
 
-                                            File savedFile = AttachmentsStorage.saveAttachment(context, attachment, message.getRoomSecret(), false, new DownloadHandler() {
-                                                @Override
-                                                public void onProgressChanged(int progress) {
-                                                    context.runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            holder.sizeText.setText(AppStorage.getStringSize(attachmentSize) + " (" + progress + "%)");
-                                                        }
-                                                    });
+                                        holder.buttonDownload.setVisibility(View.GONE);
+                                        //   holder.sizeContainer.setVisibility(View.GONE);
+                                        holder.loading.setVisibility(View.VISIBLE);
 
-                                                }
-                                            }, serverAddress, finalEncryptionKey);
-                                            context.runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
+                                        // TODO: handle if view changed
+
+                                        thread = new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                for (Attachment attachment1: message.getAttachments()) {
                                                     try {
-                                                        int type = defineMessageType(message, selfId.equals(message.getAuthorId()));
-                                                        displayMessageView(holder, type);
 
-                                                        if (type == VIEW_TYPE_SELF_MESSAGE_BUBBLE || type == VIEW_TYPE_ROOM_MESSAGE_BUBBLE) {
-                                                            holder.bubbleViewContainer.requestLayout();
-                                                        } else {
-                                                            holder.viewsContainer.requestLayout();
-                                                        }
+                                                        //need to make input/output as array
+                                                        File savedFile = AttachmentsStorage.saveAttachment(context, attachment1, message.getRoomSecret(), false, new DownloadHandler() {
+                                                            // here need to make progress calculation algorithm
+                                                            @Override
+                                                            public void onProgressChanged(int progress) {
+                                                                context.runOnUiThread(new Runnable() {
+                                                                    @Override
+                                                                    public void run() {
+                                                                        holder.sizeText.setText(AppStorage.getStringSize(finalAttachmentSize) + " (" + progress + "%)");
+                                                                    }
+                                                                });
 
-                                                        updateAttachment(holder, attachment, savedFile);
+                                                            }
+                                                        }, serverAddress, finalEncryptionKey);
+                                                        context.runOnUiThread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                try {
+                                                                    int type = defineMessageType(message, selfId.equals(message.getAuthorId()));
 
+                                                                    holder.viewsContainer.removeAllViews();
+                                                                    displayMessageView(holder, type);
+                                                                    holder.viewsContainer.requestLayout();
+
+                                                                    if (type == VIEW_TYPE_SELF_MESSAGE_BUBBLE || type == VIEW_TYPE_ROOM_MESSAGE_BUBBLE) {
+                                                                        holder.bubbleViewContainer.requestLayout();
+                                                                    }
+
+                                                                    // maybe also
+                                                                    updateAttachment(holder, attachment1, savedFile, message);
+
+                                                                } catch (Exception e) {
+                                                                    e.printStackTrace();
+                                                                }
+                                                            }
+                                                        });
                                                     } catch (Exception e) {
                                                         e.printStackTrace();
                                                     }
                                                 }
-                                            });
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
+                                            }
+                                        });
+                                        thread.start();
                                     }
                                 });
-                                thread.start();
                             }
-                        });
-                    } else {
-                        if (!AttachmentsStorage.isAttachmentSaving(attachment)) {
-                            SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment, message.getRoomSecret());
-                            AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, serverAddress);
+                        } else {
+                            if (!AttachmentsStorage.isAttachmentSaving(attachment)) {
+                                SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment, message.getRoomSecret());
+                                AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, serverAddress);
+                            }
                         }
+
                     }
 
                 }
@@ -993,11 +1043,15 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         } else if (message.getAttachments().size() != 0) {
 
             boolean isAttachmentTooLarge = false;
-            if (message.getAttachments().get(0).getSize() > maxAutoLoadSize) {
-                if (AttachmentsStorage.getFileFromAttachment(message.getAttachments().get(0),
-                        context, message.getRoomSecret()) == null) {
-                    type = VIEW_TYPE_SELF_MESSAGE_ATTACHMENTS_TOO_LARGE;
-                    isAttachmentTooLarge = true;
+            long attachmentsSize = 0;
+            for (Attachment attachment: message.getAttachments()) {
+                attachmentsSize += attachment.getSize();
+                if (attachmentsSize > maxAutoLoadSize) {
+                    if (AttachmentsStorage.getFileFromAttachment(attachment,
+                            context, message.getRoomSecret()) == null) {
+                        type = VIEW_TYPE_SELF_MESSAGE_ATTACHMENTS_TOO_LARGE;
+                        isAttachmentTooLarge = true;
+                    }
                 }
             }
 

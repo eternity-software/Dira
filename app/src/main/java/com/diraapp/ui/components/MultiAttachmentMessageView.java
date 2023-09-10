@@ -10,7 +10,7 @@ import com.otaliastudios.cameraview.video.encoding.TextureMediaEncoder;
 
 public class MultiAttachmentMessageView extends AsymmetricGridView {
 
-    private static final int MULTI_ATTACHMENT_MESSAGE_VIEW_ID = 732987529;
+    public static final int MULTI_ATTACHMENT_MESSAGE_VIEW_ID = 732987529;
 
     private boolean isInit = false;
 
