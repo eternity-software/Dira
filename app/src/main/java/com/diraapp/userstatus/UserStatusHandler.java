@@ -15,10 +15,6 @@ public class UserStatusHandler implements UpdateListener {
 
     private final ArrayList<UserStatus> userUserStatuses = new ArrayList<>();
     private final ArrayList<UserStatusListener> listenerList = new ArrayList<>();
-
-    private int currentMaxTypeIndex = -1;
-
-    private int currentTypeIndex = -1;
     private Thread statusThread;
 
     public UserStatusHandler() throws SingletonException {
