@@ -296,14 +296,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime(), context));
     }
 
-    // probably is will be better if it will need input arrays of files and attachments!
     public void updateAttachment(ViewHolder holder, Attachment attachment, File file, Message message) {
 
-        int attachmentsCount  = message.getAttachments().size();
+        int attachmentsCount = message.getAttachments().size();
         if (message.getAttachments().size() > 1) {
 
             int position = 0;
-            for (Attachment attachment1: message.getAttachments()) {
+            for (Attachment attachment1 : message.getAttachments()) {
                 if (attachment.equals(attachment1)) {
                     position = message.getAttachments().indexOf(attachment1);
                     break;
@@ -316,8 +315,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder.imageView.setVisibility(View.VISIBLE);
 
 
-            //holder.imageView.setImageBitmap(AppStorage.getBitmapFromPath(file.getPath()));
-            Picasso.get().load(file).into(holder.imageView);
+            holder.imageView.setImageBitmap(AppStorage.getBitmapFromPath(file.getPath()));
 
 
             // Causing "blink"
@@ -371,7 +369,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 videoPlayer.play(file.getPath());
 
                 holder.loading.setVisibility(View.GONE);
-                // holder.messageContainer.setVisibility(View.GONE);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -645,11 +642,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         } else if (message.getCustomClientData() instanceof RoomNameChangeClientData) {
             holder.roomUpdatesMainText.setText(context.getString(R.string.room_update_name_change));
 
-//            holder.roomUpdatesText.setText(context.getString(R.string.room_update_name)
-//                    .replace("%s", ((RoomNameChangeClientData)
-//                            message.getCustomClientData()).getOldName())
-//                    .replace("%p", ((RoomNameChangeClientData)
-//                            message.getCustomClientData()).getNewName()));
             holder.roomUpdatesIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_room_updates));
             holder.roomUpdatesText.setText(((RoomNameChangeClientData) message.getCustomClientData()).getOldName());
             applyDefaultIconOnUpdateMessage(holder);
@@ -664,12 +656,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             applyDefaultIconOnUpdateMessage(holder);
         } else if (message.getCustomClientData() instanceof RoomNameAndIconChangeClientData) {
             holder.roomUpdatesMainText.setText(context.getString(R.string.room_update_name_and_picture_change));
-
-//            holder.roomUpdatesText.setText(context.getString(R.string.room_update_name)
-//                    .replace("%s", ((RoomNameAndIconChangeClientData)
-//                            message.getCustomClientData()).getOldName())
-//                    .replace("%p", ((RoomNameAndIconChangeClientData)
-//                            message.getCustomClientData()).getNewName()));
 
             holder.roomUpdatesText.setText(((RoomNameAndIconChangeClientData) message.getCustomClientData()).getOldName());
 
@@ -779,7 +765,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 listeners.add(holder.attachmentsStorageListener);
 
                 long attachmentSize = 0;
-                for (Attachment attachment: message.getAttachments()) {
+                for (Attachment attachment : message.getAttachments()) {
                     attachmentSize += attachment.getSize();
                 }
 
@@ -831,26 +817,33 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                     public void onClick(View v) {
 
                                         holder.buttonDownload.setVisibility(View.GONE);
-                                        //   holder.sizeContainer.setVisibility(View.GONE);
                                         holder.loading.setVisibility(View.VISIBLE);
-
-                                        // TODO: handle if view changed
 
                                         thread = new Thread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                for (Attachment attachment1: message.getAttachments()) {
-                                                    try {
 
-                                                        //need to make input/output as array
+                                                final int[] finalProgress = {0};
+                                                for (Attachment attachment1 : message.getAttachments()) {
+                                                    try {
                                                         File savedFile = AttachmentsStorage.saveAttachment(context, attachment1, message.getRoomSecret(), false, new DownloadHandler() {
-                                                            // here need to make progress calculation algorithm
                                                             @Override
                                                             public void onProgressChanged(int progress) {
+
+                                                                double thisAttachmentPart = (double) attachment.getSize() / finalAttachmentSize;
+
                                                                 context.runOnUiThread(new Runnable() {
                                                                     @Override
                                                                     public void run() {
-                                                                        holder.sizeText.setText(AppStorage.getStringSize(finalAttachmentSize) + " (" + progress + "%)");
+                                                                        int currentDownloaded = ((int) (((double) progress) * thisAttachmentPart));
+
+                                                                        currentDownloaded += finalProgress[0];
+
+                                                                        if (progress == 100) {
+                                                                            finalProgress[0] += ((int) 100d * thisAttachmentPart);
+                                                                        }
+
+                                                                        holder.sizeText.setText(AppStorage.getStringSize(finalAttachmentSize) + " (" + currentDownloaded + "%)");
                                                                     }
                                                                 });
 
@@ -1044,7 +1037,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
             boolean isAttachmentTooLarge = false;
             long attachmentsSize = 0;
-            for (Attachment attachment: message.getAttachments()) {
+            for (Attachment attachment : message.getAttachments()) {
                 attachmentsSize += attachment.getSize();
                 if (attachmentsSize > maxAutoLoadSize) {
                     if (AttachmentsStorage.getFileFromAttachment(attachment,
@@ -1122,7 +1115,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     public interface MessageAdapterListener {
         void onFirstItemScrolled(Message message, int index);
 
-        default void onLastLoadedScrolled(Message message, int index) {};
+        default void onLastLoadedScrolled(Message message, int index) {
+        }
+
+        ;
     }
 
 }
