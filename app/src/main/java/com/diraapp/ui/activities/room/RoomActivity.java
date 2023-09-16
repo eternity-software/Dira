@@ -526,6 +526,11 @@ public class RoomActivity extends DiraActivity
             }
 
             if (scrollPosition != doNotNeedToScroll) {
+                if (start == isRoomOpen) {
+                    ((LinearLayoutManager) binding.recyclerView.getLayoutManager())
+                            .scrollToPositionWithOffset(scrollPosition, 20);
+                    return;
+                }
                 binding.recyclerView.scrollToPosition(scrollPosition);
             }
         });

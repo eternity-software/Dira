@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 
@@ -88,8 +89,9 @@ public class Notifier {
 
             Bitmap userPicture;
             if (room.getImagePath() == null) {
-                userPicture = ((BitmapDrawable) ContextCompat.
-                        getDrawable(context, R.drawable.placeholder)).getBitmap();
+//                userPicture = ((BitmapDrawable) ContextCompat.
+//                        getDrawable(context, R.drawable.placeholder)).getBitmap();
+                userPicture = BitmapFactory.decodeResource(context.getResources(), R.drawable.placeholder);
             } else {
                 userPicture = AppStorage.getBitmapFromPath(room.getImagePath());
             }
