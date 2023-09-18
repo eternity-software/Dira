@@ -14,7 +14,7 @@ import com.diraapp.R;
 import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.MultiAttachmentMessageView;
-import com.diraapp.ui.components.QuickVideoPlayer;
+import com.diraapp.ui.components.quickvideoplayer.QuickVideoPlayer;
 import com.felipecsl.asymmetricgridview.library.widget.AsymmetricGridView;
 import com.masoudss.lib.WaveformSeekBar;
 

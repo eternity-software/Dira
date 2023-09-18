@@ -17,7 +17,6 @@ import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -52,13 +51,12 @@ import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.PreviewActivity;
-import com.diraapp.ui.activities.room.RoomActivityContract;
 import com.diraapp.ui.adapters.messagetooltipread.MessageTooltipAdapter;
 import com.diraapp.ui.adapters.messagetooltipread.UserReadMessage;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.MessageAttachmentToLargeView;
 import com.diraapp.ui.components.MultiAttachmentMessageView;
-import com.diraapp.ui.components.QuickVideoPlayer;
+import com.diraapp.ui.components.quickvideoplayer.QuickVideoPlayer;
 import com.diraapp.ui.components.RoomMessageCustomClientDataView;
 import com.diraapp.ui.components.RoomMessageVideoPlayer;
 import com.diraapp.ui.components.VoiceMessageView;
@@ -84,9 +82,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-
-import linc.com.amplituda.Amplituda;
-import linc.com.amplituda.exceptions.io.AmplitudaIOException;
 
 public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
@@ -411,8 +406,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                     }
                 }
             });
-
-            videoPlayer.play(file.getPath());
 
         } else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
             holder.loading.setVisibility(View.GONE);
