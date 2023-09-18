@@ -105,7 +105,7 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
 
     public void play(String source) {
         if (mediaPlayer == null) recreateMediaPlayer();
-        if(source == null) return;
+        if (source == null) return;
         playingNow = source;
         try {
             mediaPlayer.setDataSource(source);

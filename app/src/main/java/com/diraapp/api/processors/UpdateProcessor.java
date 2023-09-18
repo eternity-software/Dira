@@ -24,6 +24,7 @@ import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateDeserializer;
 import com.diraapp.api.updates.UpdateType;
 import com.diraapp.api.views.BaseMember;
+import com.diraapp.api.views.RoomInfo;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.daos.MemberDao;
@@ -32,7 +33,6 @@ import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
-import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.exceptions.SingletonException;
 import com.diraapp.exceptions.UnablePerformRequestException;
@@ -382,47 +382,56 @@ public class UpdateProcessor {
      * After subscription server will begin sending updates
      */
     public void sendSubscribeRequest() {
-
-        updatedRoomsCount = 0;
-
         List<Room> rooms = roomDao.getAllRoomsByUpdatedTime();
 
+        HashMap<String, GetUpdatesRequest> requestHashMap = createGetUpdatesRequests(rooms);
 
-        for (Room room : new ArrayList<>(rooms)) {
-            Message message = DiraMessageDatabase.getDatabase(context).getMessageDao().getMessageById(room.getLastMessageId());
-            room.setMessage(message);
+        for (String serverAddress: requestHashMap.keySet()) {
             try {
-                UpdateProcessor.getInstance().sendRequest(new GetUpdatesRequest(room.getSecretName(), room.getLastUpdateId()),
+                UpdateProcessor.getInstance().sendRequest(requestHashMap.get(serverAddress),
                         new UpdateListener() {
                             @Override
                             public void onUpdate(Update update) {
-                                updatedRoomsCount++;
+                                SubscribeRequest subscribeRequest = new SubscribeRequest();
 
-                                if (updatedRoomsCount == rooms.size()) {
-                                    SubscribeRequest subscribeRequest = new SubscribeRequest();
+                                List<String> roomSecrets = new ArrayList<>();
 
-                                    List<String> roomSecrets = new ArrayList<>();
+                                for (Room room : roomDao.getAllRoomsByUpdatedTime()) {
+                                    roomSecrets.add(room.getSecretName());
+                                }
 
-                                    for (Room room : roomDao.getAllRoomsByUpdatedTime()) {
-                                        roomSecrets.add(room.getSecretName());
-                                    }
-
-                                    subscribeRequest.setRoomSecrets(roomSecrets);
-                                    try {
-                                        sendRequest(subscribeRequest, room.getServerAddress());
-                                    } catch (UnablePerformRequestException e) {
-                                        e.printStackTrace();
-                                    }
+                                subscribeRequest.setRoomSecrets(roomSecrets);
+                                try {
+                                    sendRequest(subscribeRequest, serverAddress);
+                                } catch (UnablePerformRequestException e) {
+                                    e.printStackTrace();
                                 }
                             }
-                        }, room.getServerAddress());
+                        }, serverAddress);
             } catch (Exception ignored) {
                 ignored.printStackTrace();
 
             }
         }
 
+    }
 
+    public HashMap<String, GetUpdatesRequest> createGetUpdatesRequests(List<Room> rooms) {
+        HashMap<String, GetUpdatesRequest> requestHashMap = new HashMap<>();
+
+        for (Room room: rooms) {
+            GetUpdatesRequest request = requestHashMap.get(room.getServerAddress());
+
+            if (request == null) {
+                request = new GetUpdatesRequest();
+                requestHashMap.put(room.getServerAddress(), request);
+            }
+
+            request.getRoomInfoList().add(
+                    new RoomInfo(room.getSecretName(), room.getLastUpdateId()));
+        }
+
+        return requestHashMap;
     }
 
     private void setupSocketClient(SocketClient socketClient) {

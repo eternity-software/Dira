@@ -30,6 +30,7 @@ import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
+import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
@@ -49,6 +50,7 @@ import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.KeyGenerator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -142,7 +144,6 @@ public class RoomSelectorActivity extends AppCompatActivity
         updateRooms(true);
 
 
-
         if (!hasAllPermissions()) {
             askForPermissions();
         }
@@ -194,14 +195,11 @@ public class RoomSelectorActivity extends AppCompatActivity
 
     }
 
-    private boolean hasAllPermissions()
-    {
+    private boolean hasAllPermissions() {
 
-        for(String permission : getPermissions())
-        {
-            if(ContextCompat.checkSelfPermission(this, permission)
-                    != PackageManager.PERMISSION_GRANTED)
-            {
+        for (String permission : getPermissions()) {
+            if (ContextCompat.checkSelfPermission(this, permission)
+                    != PackageManager.PERMISSION_GRANTED) {
                 System.out.println("Not granted " + permission);
                 return false;
             }
@@ -213,8 +211,7 @@ public class RoomSelectorActivity extends AppCompatActivity
 
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
-    public List<String> getPermissions()
-    {
+    public List<String> getPermissions() {
         List<String> permissions = new ArrayList<>();
         if (Build.VERSION.SDK_INT >= 33) {
             permissions.add(Manifest.permission.ACCESS_NOTIFICATION_POLICY);
@@ -248,21 +245,28 @@ public class RoomSelectorActivity extends AppCompatActivity
             @Override
             public void run() {
                 try {
-
-
                     roomList = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getAllRoomsByUpdatedTime();
                     roomSelectorAdapter = new RoomSelectorAdapter(RoomSelectorActivity.this);
+
+                    MessageDao messageDao = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao();
                     for (Room room : new ArrayList<>(roomList)) {
-                        Message message = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getMessageById(room.getLastMessageId());
+                        Message message = messageDao.getMessageById(room.getLastMessageId());
                         room.setMessage(message);
-                        if (updateRooms) {
+                    }
+
+                    if (updateRooms) {
+                        HashMap<String, GetUpdatesRequest> requests = UpdateProcessor.getInstance().
+                                createGetUpdatesRequests(roomList);
+
+                        for (String serverAddress : requests.keySet()) {
                             try {
-                                UpdateProcessor.getInstance().sendRequest(new GetUpdatesRequest(room.getSecretName(), room.getLastUpdateId()), room.getServerAddress());
+                                UpdateProcessor.getInstance().sendRequest(requests.get(serverAddress), serverAddress);
                             } catch (Exception ignored) {
                                 ignored.printStackTrace();
                             }
                         }
                     }
+
 
                     runOnUiThread(new Runnable() {
                         @Override
