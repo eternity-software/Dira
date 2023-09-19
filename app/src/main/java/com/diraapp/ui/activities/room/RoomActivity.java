@@ -27,6 +27,7 @@ import com.abedelazizshe.lightcompressorlibrary.VideoCompressor;
 import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
 import com.abedelazizshe.lightcompressorlibrary.config.AppSpecificStorageConfiguration;
 import com.abedelazizshe.lightcompressorlibrary.config.Configuration;
+import com.diraapp.DiraApplication;
 import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.ProcessorListener;
@@ -82,6 +83,8 @@ public class RoomActivity extends DiraActivity
     private ActivityRoomBinding binding;
     private RecordComponentsController recordComponentsController;
     private RoomActivityContract.Presenter presenter;
+
+    private int lastVisiblePosition = 0;
 
     public static void putRoomExtrasInIntent(Intent intent, String roomSecret, String roomName) {
         intent.putExtra(RoomSelectorActivity.PENDING_ROOM_SECRET, roomSecret);
@@ -316,6 +319,11 @@ public class RoomActivity extends DiraActivity
     protected void onResume() {
         super.onResume();
         presenter.initRoomInfo();
+
+        if (lastVisiblePosition != 0) {
+            binding.recyclerView.scrollToPosition(lastVisiblePosition);
+            lastVisiblePosition = 0;
+        }
     }
 
     private void setupMessageTextInputListener() {
@@ -508,7 +516,12 @@ public class RoomActivity extends DiraActivity
                     int lastVisiblePos = ((LinearLayoutManager)
                             binding.recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
 
-                    if (lastVisiblePos < 3) {
+                    if (DiraApplication.isBackgrounded()) {
+                        if (lastVisiblePosition == 0) {
+                            lastVisiblePosition = lastVisiblePos;
+                        }
+                        lastVisiblePosition++;
+                    } else if (lastVisiblePos < 3) {
                         binding.recyclerView.scrollToPosition(0);
                     }
                 }

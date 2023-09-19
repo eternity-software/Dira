@@ -7,6 +7,7 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 
 import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
+import com.diraapp.DiraApplication;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.SendMessageRequest;
