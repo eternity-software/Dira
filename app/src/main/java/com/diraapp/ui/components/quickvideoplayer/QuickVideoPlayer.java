@@ -6,6 +6,8 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.Surface;
@@ -168,9 +170,25 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
     @Override
     public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
         try {
-            if (mediaPlayer == null)
-                recreateMediaPlayer();
+            if (mediaPlayer == null) {
+                recreateMediaPlayer(new PlayerRecreatedCallback() {
+                    @Override
+                    public void onRecreated() {
+                        setSurfaceOnMediaPlayer(surfaceTexture);
+                    }
+                });
+                return;
+            }
 
+            setSurfaceOnMediaPlayer(surfaceTexture);
+        } catch (Exception e) {
+            e.printStackTrace();
+            recreateMediaPlayer();
+        }
+    }
+
+    private void setSurfaceOnMediaPlayer(@NonNull SurfaceTexture surfaceTexture) {
+        try {
             Surface surface = new Surface(surfaceTexture);
             mediaPlayer.setSurface(surface);
             play(playingNow);
@@ -178,8 +196,6 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
             e.printStackTrace();
             recreateMediaPlayer();
         }
-
-
     }
 
     private void recreateMediaPlayer() {
@@ -200,7 +216,7 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
             mediaPlayer.setLooping(true);
 
             if (callback != null) {
-                activity.runOnUiThread(callback::onRecreated);
+                new Handler(Looper.getMainLooper()).post(callback::onRecreated);
             }
         });
     }
