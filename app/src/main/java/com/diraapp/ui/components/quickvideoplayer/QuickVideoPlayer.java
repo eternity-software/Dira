@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.TextureView;
 
@@ -21,13 +20,10 @@ import com.diraapp.device.PerformanceClass;
 import com.diraapp.device.PerformanceTester;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.DiraActivityListener;
-import com.diraapp.ui.components.VideoPlayer;
-
-import javax.security.auth.callback.Callback;
 
 public class QuickVideoPlayer extends TextureView implements TextureView.SurfaceTextureListener {
 
-    private MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer = new MediaPlayer();
     private String playingNow;
 
     private DiraActivity activity;
@@ -130,30 +126,34 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
 
     private void playMediaPlayerSource(String source) {
         playingNow = source;
+        DiraActivity.runGlobalBackground(() -> {
         try {
-            if (source == null) return;
-            if(!isReadyToPlay)
-            {
-                mediaPlayer.reset();
-                setupMediaPlayer();
-            }
 
-            isReadyToPlay = false;
-            mediaPlayer.setDataSource(source);
-            mediaPlayer.prepareAsync();
+                if (source == null) return;
+                if (!isReadyToPlay) {
+                    mediaPlayer.reset();
+                    setupMediaPlayer();
+                }
 
+                isReadyToPlay = false;
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     mediaPlayer.start();
                     mediaPlayer.setVolume(0, 0);
+
                 }
             });
+                mediaPlayer.setDataSource(source);
+                mediaPlayer.prepare();
+
+
 
         } catch (Exception e) {
             e.printStackTrace();
 
         }
+        });
     }
 
     public void setProgress(float progress) {
@@ -162,12 +162,20 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
         }
     }
 
-    public void release() {
+    public void reset() {
         if (mediaPlayer == null) return;
-        mediaPlayer.reset();
+        MediaPlayer destroyMediaPlayer = mediaPlayer;
+        mediaPlayer = null;
+
+        DiraActivity.runGlobalBackground(() -> {
+            destroyMediaPlayer.reset();
+            destroyMediaPlayer.release();
+
+        });
+
         isReadyToPlay = true;
         playingNow = null;
-      //  mediaPlayer = null;
+
     }
 
     public void setSpeed(float speed) {
@@ -224,7 +232,7 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
             setupMediaPlayer();
 
             if (callback != null) {
-                new Handler(Looper.getMainLooper()).post(callback::onRecreated);
+                callback.onRecreated();
             }
         });
     }
@@ -249,6 +257,7 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
 
     @Override
     public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surfaceTexture) {
+
 
         return false;
     }

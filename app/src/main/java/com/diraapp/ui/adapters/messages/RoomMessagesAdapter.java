@@ -186,15 +186,20 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onViewRecycled(@NonNull ViewHolder holder) {
         super.onViewRecycled(holder);
-        if (holder.videoPlayer != null) holder.videoPlayer.release();
-        if (holder.bubblePlayer != null) holder.bubblePlayer.release();
+
     }
 
+    @Override
+    public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+
+    }
 
     @Override
     public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
-
+      //  if (holder.videoPlayer != null) holder.videoPlayer.reset();
+        //if (holder.bubblePlayer != null) holder.bubblePlayer.reset();
     }
 
     @Override
@@ -211,7 +216,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.loading.setVisibility(View.GONE);
 
         if (holder.imageContainer != null) {
-            holder.videoPlayer.release();
+            holder.videoPlayer.reset();
             holder.imageView.setVisibility(View.GONE);
             holder.videoPlayer.setVisibility(View.GONE);
         }
