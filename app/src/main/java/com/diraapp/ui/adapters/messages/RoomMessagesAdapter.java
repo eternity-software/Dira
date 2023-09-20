@@ -83,6 +83,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+import linc.com.amplituda.Amplituda;
+import linc.com.amplituda.exceptions.io.AmplitudaIOException;
+
 public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 
@@ -106,8 +109,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final DiraActivity context;
     private final List<AttachmentsStorageListener> listeners = new ArrayList<>();
     private final CacheUtils cacheUtils;
-    private final HashMap<String, Bitmap> loadedBitmaps = new HashMap<>();
-    private final String secretName;
     private final String serverAddress;
     private final RecyclerView recyclerView;
     private final long maxAutoLoadSize;
@@ -116,18 +117,22 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private Room room;
     private List<Message> messages = new ArrayList<>();
     private HashMap<String, Member> members = new HashMap<>();
-    private String firstLoadedId;
+    private Amplituda amplituda;
 
 
-    public RoomMessagesAdapter(DiraActivity context, RecyclerView recyclerView, String secretName, String serverAddress, Room room, MessageAdapterListener messageAdapterListener) {
+    public RoomMessagesAdapter(DiraActivity context,
+                               RecyclerView recyclerView,
+                               String serverAddress,
+                               Room room,
+                               MessageAdapterListener messageAdapterListener) {
         this.context = context;
-        this.secretName = secretName;
         this.serverAddress = serverAddress;
         this.messageAdapterListener = messageAdapterListener;
         this.room = room;
         this.recyclerView = recyclerView;
         layoutInflater = LayoutInflater.from(context);
         cacheUtils = new CacheUtils(context);
+        amplituda = new Amplituda(context);
 
 
         selfId = cacheUtils.getString(CacheUtils.ID);
@@ -412,8 +417,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 
 
-           /* context.runBackground(() -> {
-                Amplituda amplituda = new Amplituda(context);
+            context.runBackground(() -> {
+
                 amplituda.processAudio(file)
                         .get(result -> {
                             List<Integer> amplitudesData = result.amplitudesAsList();
@@ -433,7 +438,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                             }
                         });
             });
-*/
 
 
             holder.waveformSeekBar.setProgress(attachment.getVoiceMessageStopProgress());
