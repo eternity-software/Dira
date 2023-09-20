@@ -317,12 +317,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 VideoQuality videoQuality = VideoQuality.VERY_LOW;
 
                 if (attachmentType == AttachmentType.BUBBLE) {
-                    view.uploadFile(fileUri,
-                            new RoomAttachmentCallback(fileUri, messageText, attachmentType),
-                            false,
-                            room.getServerAddress(),
-                            room.getEncryptionKey());
-                    return;
+                   videoHeight = 512D;
+                   videoWidth =  512D;
                 }
 
                 view.compressVideo(urisToCompress, fileUri, videoQuality,
