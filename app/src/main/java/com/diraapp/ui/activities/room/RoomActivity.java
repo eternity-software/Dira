@@ -8,6 +8,7 @@ import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -20,6 +21,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
@@ -165,33 +168,24 @@ public class RoomActivity extends DiraActivity
                 }
             }
         });
-
+        filePickerBottomSheet = new FilePickerBottomSheet();
+        filePickerBottomSheet.setRunnable(mediaGridItemListener);
 
         binding.attachButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filePickerBottomSheet = new FilePickerBottomSheet();
+
                 filePickerBottomSheet.setOnDismiss(new Runnable() {
                     @Override
                     public void run() {
                         onResume();
                     }
                 });
-                filePickerBottomSheet.show(getSupportFragmentManager(), "blocked");
+
 
                 presenter.sendStatus(UserStatusType.PICKING_FILE);
-                filePickerBottomSheet.setRunnable(new MediaGridItemListener() {
-                    @Override
-                    public void onItemClick(int pos, final View view) {
-                        ImageSendActivity.open(RoomActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(), "",
-                                (FilePreview) view, ImageSendActivity.IMAGE_PURPOSE_MESSAGE);
-                    }
 
-                    @Override
-                    public void onLastItemLoaded(int pos, View view) {
-
-                    }
-                });
+                filePickerBottomSheet.show(getSupportFragmentManager(), "blocked");
                 onPause();
             }
         });
@@ -205,6 +199,8 @@ public class RoomActivity extends DiraActivity
         UserStatusHandler.getInstance().addListener(this);
 
     }
+
+
 
     private void setBackground() {
         ImageView backgroundView = findViewById(R.id.room_background);
@@ -279,6 +275,7 @@ public class RoomActivity extends DiraActivity
 
     @Override
     protected void onStart() {
+
         super.onStart();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA},
@@ -318,6 +315,7 @@ public class RoomActivity extends DiraActivity
     @Override
     protected void onResume() {
         super.onResume();
+        filePickerBottomSheet.setRunnable(mediaGridItemListener);
         presenter.initRoomInfo();
 
         if (lastVisiblePosition != 0) {
@@ -483,7 +481,7 @@ public class RoomActivity extends DiraActivity
             TextView roomName = findViewById(R.id.room_name);
             roomName.setText(room.getName());
             if (roomMessagesAdapter != null) return;
-            roomMessagesAdapter = new RoomMessagesAdapter(RoomActivity.this, binding.recyclerView, roomSecret, room.getServerAddress(), room, new RoomMessagesAdapter.MessageAdapterListener() {
+            roomMessagesAdapter = new RoomMessagesAdapter(RoomActivity.this, binding.recyclerView, room.getServerAddress(), room, new RoomMessagesAdapter.MessageAdapterListener() {
                 @Override
                 public void onFirstItemScrolled(Message message, int index) {
                     presenter.loadMessagesBefore(message, index);
@@ -643,5 +641,17 @@ public class RoomActivity extends DiraActivity
         return DiraMessageDatabase.getDatabase(getApplicationContext());
     }
 
+    private MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
+        @Override
+        public void onItemClick(int pos, final View view) {
+            ImageSendActivity.open(RoomActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(), "",
+                    (FilePreview) view, ImageSendActivity.IMAGE_PURPOSE_MESSAGE);
+        }
+
+        @Override
+        public void onLastItemLoaded(int pos, View view) {
+
+        }
+    };
 
 }

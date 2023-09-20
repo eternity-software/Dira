@@ -6,6 +6,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="8dp"
+    android:paddingTop="2dp"
+    android:paddingBottom="4dp"
     android:visibility="visible">
 
 
@@ -30,8 +32,9 @@
         app:wave_gravity="center"
         app:wave_max_progress="10"
 
+        android:paddingVertical="2dp"
+
         app:wave_min_height="5dp"
-        app:wave_padding_Bottom="8dp"
         app:wave_padding_left="2dp"
         app:wave_padding_right="2dp"
         app:wave_padding_top="4dp"

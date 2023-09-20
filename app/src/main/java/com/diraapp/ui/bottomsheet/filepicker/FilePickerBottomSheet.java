@@ -1,6 +1,7 @@
 package com.diraapp.ui.bottomsheet.filepicker;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,14 +30,20 @@ import java.util.ArrayList;
 
 
 public class FilePickerBottomSheet extends BottomSheetDialogFragment {
-    private final boolean isShown = false;
     private View view;
     private ArrayList<String> images;
     private MediaGridAdapter mediaGridAdapter;
+
+    /**
+     * This will not work properly with FragmentManager
+     *
+     * Must be initialized onAttach as context
+     */
     private MediaGridItemListener onItemClickListener;
     private Runnable onDismiss;
 
     private boolean onlyImages = false;
+
 
     public ArrayList<FileInfo> getMedia() {
         return mediaGridAdapter.getMediaElements();
@@ -45,7 +52,6 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     @Override
     public void show(@NonNull FragmentManager manager, @Nullable String tag) {
         super.show(manager, tag);
-
     }
 
     public void setOnlyImages(boolean onlyImages) {
@@ -94,6 +100,14 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     public void onActivityCreated(Bundle arg0) {
         super.onActivityCreated(arg0);
 
+
+
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
 
         getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
 
@@ -155,8 +169,6 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         });
 
         gallery.setAdapter(mediaGridAdapter);
-
-
     }
 
     @Override
@@ -168,6 +180,9 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
+
         if (onDismiss != null) onDismiss.run();
+
+
     }
 }
