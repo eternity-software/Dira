@@ -1,11 +1,15 @@
 package com.diraapp.storage.images;
 
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -41,21 +45,9 @@ public class FilesUploader {
         try {
 
             if (FileClassifier.isImageFile(sourceFileUri)) {
-                Bitmap bitmap = null;
-                try {
-                    bitmap = ImageRotationFix.rotateImageIfRequired(context, AppStorage.getBitmapFromUrl(sourceFileUri), Uri.fromFile(new File(sourceFileUri)));
-                } catch (IOException e) {
-                    Handler mainHandler = new Handler(context.getMainLooper());
+                Bitmap bitmap = AppStorage.getBitmapFromPath(sourceFileUri, context);
 
-                    Runnable myRunnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    };
-                    mainHandler.post(myRunnable);
-
-                }
+                //bitmap = ImageRotationFix.rotateImageIfRequired(context, AppStorage.getBitmapFromUrl(sourceFileUri), Uri.fromFile(new File(sourceFileUri)));
 
                 if (bitmap == null) {
                     bitmap = AppStorage.getBitmapFromPath(sourceFileUri);
@@ -146,6 +138,5 @@ public class FilesUploader {
         }
         return false;
     }
-
 
 }

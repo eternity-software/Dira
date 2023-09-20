@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.os.Build;
 import android.provider.MediaStore;
 
 import java.io.ByteArrayInputStream;
@@ -32,6 +33,11 @@ public class ImagesWorker {
             output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getWidth(), Bitmap.Config.ARGB_8888);
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (bitmap.getConfig() == Bitmap.Config.HARDWARE) {
+                bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
+            }
+        }
         Canvas canvas = new Canvas(output);
 
         final int color = 0xff424242;

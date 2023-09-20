@@ -17,6 +17,7 @@ import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Room;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
+import com.diraapp.storage.images.FilesUploader;
 import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
@@ -159,15 +160,16 @@ public class PersonalityActivity extends DiraActivity {
 
 
     public void updateProfilePhoto(String path) {
-        userPicture = ImagesWorker.getCircleCroppedBitmap(AppStorage.getBitmapFromPath(path), 256, 256);
+        userPicture = ImagesWorker.getCircleCroppedBitmap(AppStorage.
+                getBitmapFromPath(path, this), 256, 256);
         userPicture = ImagesWorker.compressBitmap(userPicture);
 
 
-        try {
-            userPicture = ImageRotationFix.rotateImageIfRequired(getApplicationContext(), userPicture, Uri.parse(path));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            userPicture = ImageRotationFix.rotateImageIfRequired(getApplicationContext(), userPicture, Uri.parse(path));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         ImageView imageView = findViewById(R.id.profile_picture);
         imageView.setImageBitmap(userPicture);
 
