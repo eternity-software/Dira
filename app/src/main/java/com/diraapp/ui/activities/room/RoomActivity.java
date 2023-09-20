@@ -113,7 +113,8 @@ public class RoomActivity extends DiraActivity
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setNestedScrollingEnabled(false);
 
-
+//        binding.recyclerView.getRecycledViewPool().setMaxRecycledViews(1, 4);
+//        binding.recyclerView.getRecycledViewPool().setMaxRecycledViews(21, 4);
 
         TextView nameView = findViewById(R.id.room_name);
         nameView.setText(roomName);

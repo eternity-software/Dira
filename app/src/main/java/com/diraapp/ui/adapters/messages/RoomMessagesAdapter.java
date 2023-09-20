@@ -60,6 +60,7 @@ import com.diraapp.ui.components.quickvideoplayer.QuickVideoPlayer;
 import com.diraapp.ui.components.RoomMessageCustomClientDataView;
 import com.diraapp.ui.components.RoomMessageVideoPlayer;
 import com.diraapp.ui.components.VoiceMessageView;
+import com.diraapp.ui.components.quickvideoplayer.QuickVideoPlayerState;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Numbers;
 import com.diraapp.utils.StringFormatter;
@@ -186,20 +187,40 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onViewRecycled(@NonNull ViewHolder holder) {
         super.onViewRecycled(holder);
+        QuickVideoPlayer player = null;
+        if (holder.videoPlayer != null) player = holder.videoPlayer;
+        if (holder.bubblePlayer != null) player = holder.bubblePlayer;
 
+        if (player != null) {
+            player.reset();
+        }
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        QuickVideoPlayer player = null;
+        if (holder.videoPlayer != null) player = holder.videoPlayer;
+        if (holder.bubblePlayer != null) player = holder.bubblePlayer;
+
+        if (player != null) {
+            player.pause();
+        }
     }
 
     @Override
     public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
         super.onViewAttachedToWindow(holder);
 
-    }
+        QuickVideoPlayer player = null;
+        if (holder.videoPlayer != null) player = holder.videoPlayer;
+        if (holder.bubblePlayer != null) player = holder.bubblePlayer;
 
-    @Override
-    public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-      //  if (holder.videoPlayer != null) holder.videoPlayer.reset();
-        //if (holder.bubblePlayer != null) holder.bubblePlayer.reset();
+        if (player != null) {
+            if (player.getState() == QuickVideoPlayerState.PAUSED) {
+                player.play();
+            }
+        }
     }
 
     @Override
