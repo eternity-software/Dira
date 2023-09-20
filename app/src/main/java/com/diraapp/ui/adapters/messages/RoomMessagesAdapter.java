@@ -413,6 +413,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 }
             });
 
+         //   videoPlayer.play(file.getPath());
+
         } else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
             holder.loading.setVisibility(View.GONE);
 

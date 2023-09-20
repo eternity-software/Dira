@@ -34,6 +34,8 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
     private boolean attachedActivity = false;
     private boolean attachedRecycler = false;
 
+    private boolean isReadyToPlay = true;
+
     public QuickVideoPlayer(@NonNull Context context) {
         super(context);
         init();
@@ -130,6 +132,13 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
         playingNow = source;
         try {
             if (source == null) return;
+            if(!isReadyToPlay)
+            {
+                mediaPlayer.reset();
+                setupMediaPlayer();
+            }
+
+            isReadyToPlay = false;
             mediaPlayer.setDataSource(source);
             mediaPlayer.prepareAsync();
 
@@ -156,8 +165,9 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
     public void release() {
         if (mediaPlayer == null) return;
         mediaPlayer.reset();
+        isReadyToPlay = true;
         playingNow = null;
-        mediaPlayer = null;
+      //  mediaPlayer = null;
     }
 
     public void setSpeed(float speed) {
@@ -211,19 +221,25 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
     private void recreateMediaPlayer(PlayerRecreatedCallback callback) {
         DiraActivity.runGlobalBackground(() -> {
             mediaPlayer = new MediaPlayer();
-            mediaPlayer.setVolume(0, 0);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setFlags(
-                                AudioAttributes.ALLOW_CAPTURE_BY_SYSTEM).build());
-            }
-            mediaPlayer.setAudioStreamType(AudioManager.USE_DEFAULT_STREAM_TYPE);
-            mediaPlayer.setLooping(true);
+            setupMediaPlayer();
 
             if (callback != null) {
                 new Handler(Looper.getMainLooper()).post(callback::onRecreated);
             }
         });
+    }
+
+    private void setupMediaPlayer()
+    {
+        if(mediaPlayer == null) return;
+        mediaPlayer.setVolume(0, 0);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setFlags(
+                    AudioAttributes.ALLOW_CAPTURE_BY_SYSTEM).build());
+        }
+        mediaPlayer.setAudioStreamType(AudioManager.USE_DEFAULT_STREAM_TYPE);
+        mediaPlayer.setLooping(true);
     }
 
     @Override
