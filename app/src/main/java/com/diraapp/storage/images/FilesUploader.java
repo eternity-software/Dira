@@ -1,16 +1,9 @@
 package com.diraapp.storage.images;
 
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.ImageDecoder;
 import android.media.MediaMetadataRetriever;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Handler;
-import android.provider.MediaStore;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -20,7 +13,6 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
 import com.diraapp.ui.activities.room.RoomActivityPresenter;
 import com.diraapp.utils.CryptoUtils;
-import com.diraapp.utils.ImageRotationFix;
 
 import java.io.File;
 import java.io.IOException;

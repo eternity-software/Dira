@@ -17,16 +17,13 @@ import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Room;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
-import com.diraapp.storage.images.FilesUploader;
 import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.FilePreview;
 import com.diraapp.utils.CacheUtils;
-import com.diraapp.utils.ImageRotationFix;
 import com.diraapp.utils.SliderActivity;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -29,7 +29,7 @@ public interface RoomActivityContract {
 
         void notifyMessagesChanged(int start, int last, int scrollPosition);
 
-        void notifyAdapterChanged(int index);
+        void notifyAdapterItemChanged(int index);
 
         void setMembers(HashMap<String, Member> members);
 

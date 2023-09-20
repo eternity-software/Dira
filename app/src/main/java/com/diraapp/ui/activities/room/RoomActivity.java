@@ -8,7 +8,6 @@ import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -19,10 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
@@ -54,7 +50,6 @@ import com.diraapp.ui.activities.RoomSelectorActivity;
 import com.diraapp.ui.activities.resizer.FluidContentResizer;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.adapters.messages.RoomMessagesAdapter;
-import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.FilePreview;
@@ -549,7 +544,7 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
-    public void notifyAdapterChanged(int index) {
+    public void notifyAdapterItemChanged(int index) {
         runOnUiThread(() -> roomMessagesAdapter.notifyItemChanged(index));
     }
 

@@ -31,7 +31,6 @@ import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.ui.components.PreviewImageView;
 import com.diraapp.ui.components.VideoPlayer;
 import com.diraapp.utils.Numbers;
-import com.diraapp.utils.StringFormatter;
 
 import java.io.File;
 import java.io.FileInputStream;

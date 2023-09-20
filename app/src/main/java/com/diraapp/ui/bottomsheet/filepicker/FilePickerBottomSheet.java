@@ -1,7 +1,6 @@
 package com.diraapp.ui.bottomsheet.filepicker;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;

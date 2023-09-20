@@ -13,6 +13,10 @@ import java.util.List;
 @Dao
 public interface MessageDao {
 
+    static final int LOADING_COUNT = 50;
+
+    static final int LOADING_COUNT_HALF = LOADING_COUNT / 2;
+
     @Insert
     void insertAll(Message... messages);
 
@@ -25,19 +29,23 @@ public interface MessageDao {
     @Query("SELECT * FROM message WHERE roomSecret = :roomSecret ORDER BY time DESC")
     List<Message> getAllMessages(String roomSecret);
 
-    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret ORDER BY time DESC LIMIT 50")
-    List<Message> getLastMessagesInRoom(String roomSecret);
+    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret AND time < :beforeTime ORDER BY time DESC LIMIT " + LOADING_COUNT)
+    List<Message> getBeforeMessagesInRoom(String roomSecret, Long beforeTime);
 
-    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret AND time < :beforeTime ORDER BY time DESC LIMIT 50")
-    List<Message> getLastMessagesInRoom(String roomSecret, Long beforeTime);
+    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret AND time > :time ORDER BY time LIMIT " + LOADING_COUNT)
+    List<Message> getNewerMessages(String roomSecret, long time);
 
     @Query("SELECT * FROM message WHERE id = :messageId")
     Message getMessageById(String messageId);
 
-    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret AND time <= :time ORDER BY time DESC LIMIT 50")
-    List<Message> getMessageOnRoomOpen(String roomSecret, long time);
+    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret ORDER BY time DESC LIMIT " + LOADING_COUNT)
+    List<Message> getLatestMessagesInRoom(String roomSecret);
 
-    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret AND time <= :time AND time > :newestLoadedTime ORDER BY time")
-    List<Message> getNewerMessages(String roomSecret, long time, long newestLoadedTime);
+    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret AND time < :beforeTime ORDER BY time DESC LIMIT " + LOADING_COUNT_HALF)
+    List<Message> getBeforePartOnRoomLoading(String roomSecret, Long beforeTime);
+
+    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret AND time >= :time ORDER BY time LIMIT " + LOADING_COUNT_HALF)
+    List<Message> getNewerPartOnRoomLoading(String roomSecret, long time);
+
 
 }

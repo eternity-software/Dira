@@ -7,7 +7,6 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 
 import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
-import com.diraapp.DiraApplication;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.SendMessageRequest;
@@ -35,6 +34,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,10 +47,12 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     private final String roomSecret;
     private final String selfId;
-    private Room room;
+
     private List<Message> messageList;
     private RoomActivityContract.View view;
     private UserStatus currentUserStatus;
+    private Room room;
+    private boolean isNewestMessagesLoaded = false;
 
     public RoomActivityPresenter(String roomSecret, String selfId) {
         this.roomSecret = roomSecret;
@@ -112,7 +114,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
             thisMessage.getMessageReadingList().add(thisReading);
 
-            view.notifyAdapterChanged(index);
+            view.notifyAdapterItemChanged(index);
         }
     }
 
@@ -162,11 +164,15 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         view.runBackground(() -> {
             try {
                 MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
-                List<Message> oldMessages = messageDao.getLastMessagesInRoom(roomSecret, message.getTime());
+                List<Message> oldMessages = messageDao.getBeforeMessagesInRoom(roomSecret, message.getTime());
                 if (oldMessages.size() == 0) return;
+                int notifyingIndex = messageList.size() - 1;
                 messageList.addAll(oldMessages);
                 view.notifyMessagesChanged(index + 1, index + oldMessages.size(),
                         RoomActivity.doNotNeedToScroll);
+
+                view.notifyAdapterItemChanged(notifyingIndex);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -176,36 +182,23 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     public void loadNewerMessage(Message message, int index) {
         view.runBackground(() -> {
-            int size = room.getUnreadMessagesIds().size();
-            if (size == 0) return;
-
-            String newestId;
-
-            if (size <= 50) {
-                newestId = room.getUnreadMessagesIds().get(size - 1);
-            } else {
-                newestId = room.getUnreadMessagesIds().get(49);
-            }
+            if (messageList.size() == 0) return;
+            if (isNewestMessagesLoaded) return;
 
             try {
                 MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
-                Message newestMessage = messageDao.getMessageById(newestId);
 
-                if (newestMessage == null) {
-                    System.out.println("Cant find unread message " + newestId + " in MessageDatabase!");
-                    return;
-                }
+                Message newestLoaded =  messageList.get(0);
 
                 List<Message> newMessages = messageDao.getNewerMessages(roomSecret,
-                        newestMessage.getTime(), message.getTime());
+                        newestLoaded.getTime());
 
                 if (newMessages.size() == 0)  {
-                    System.out.println("Cant find messages newer, then " + newestId +
-                            ", but they should exist");
-                    System.out.println(newestMessage.getId());
-                    System.out.println(message.getId());
+                    System.out.println("No newer messages were loaded!");
+                    isNewestMessagesLoaded = true;
                     return;
                 }
+                System.out.println("Newer messages loaded!");
 
                 for (Message m: newMessages) {
                     messageList.add(0, m);
@@ -244,20 +237,23 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
             int size = room.getUnreadMessagesIds().size();
             if (size == 0) {
-                messageList = messageDao.getLastMessagesInRoom(roomSecret);
+                messageList = messageDao.getLatestMessagesInRoom(roomSecret);
             } else {
-                String id;
-                if (size <= 25) {
-                    id = room.getUnreadMessagesIds().get(size - 1);
+                Message message = messageDao.getMessageById(room.getUnreadMessagesIds().get(0));
+
+                messageList = messageDao.getBeforePartOnRoomLoading(roomSecret, message.getTime());
+
+                List<Message> newerPart = messageDao.getNewerPartOnRoomLoading(roomSecret,
+                        message.getTime());
+
+                Collections.reverse(newerPart);
+                messageList.addAll(0, newerPart);
+
+                if (size < MessageDao.LOADING_COUNT_HALF) {
                     scrollTo = size - 1;
                 } else {
-                    id = room.getUnreadMessagesIds().get(24);
-                    scrollTo = 24;
+                    scrollTo = MessageDao.LOADING_COUNT_HALF - 1;
                 }
-
-                Message newestMessage = messageDao.getMessageById(id);
-
-                messageList = messageDao.getMessageOnRoomOpen(roomSecret, newestMessage.getTime());
             }
 
             initMembers();
