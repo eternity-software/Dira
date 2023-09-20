@@ -45,6 +45,7 @@ import okhttp3.Response;
 public class RoomActivityPresenter implements RoomActivityContract.Presenter, UpdateListener {
 
 
+    private static final int MAX_ADAPTER_MESSAGES_COUNT = 200;
     private final String roomSecret;
     private final String selfId;
 
@@ -173,6 +174,12 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
                 view.notifyAdapterItemChanged(notifyingIndex);
 
+                if (messageList.size() > MAX_ADAPTER_MESSAGES_COUNT) {
+                    messageList.subList(0, MessageDao.LOADING_COUNT).clear();
+                    view.notifyAdapterItemsDeleted(0, MessageDao.LOADING_COUNT);
+
+                    isNewestMessagesLoaded = false;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -204,6 +211,13 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     messageList.add(0, m);
                 }
                 view.notifyMessagesChanged(0, newMessages.size(), newMessages.size());
+
+                if (messageList.size() > MAX_ADAPTER_MESSAGES_COUNT) {
+                    int size = messageList.size();
+                    messageList.subList(size - MessageDao.LOADING_COUNT + 1, size).clear();
+                    view.notifyAdapterItemsDeleted(size - MessageDao.LOADING_COUNT,
+                            MessageDao.LOADING_COUNT);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

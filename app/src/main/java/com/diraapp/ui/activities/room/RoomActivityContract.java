@@ -31,6 +31,8 @@ public interface RoomActivityContract {
 
         void notifyAdapterItemChanged(int index);
 
+        void notifyAdapterItemsDeleted(int start, int last);
+
         void setMembers(HashMap<String, Member> members);
 
         void setRoom(Room room);

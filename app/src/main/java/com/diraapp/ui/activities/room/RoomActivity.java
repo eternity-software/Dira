@@ -549,6 +549,15 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
+    public void notifyAdapterItemsDeleted(int start, int count) {
+        runOnUiThread(() -> {
+            roomMessagesAdapter.notifyItemRangeRemoved(start, count);
+        });
+        System.out.println("Deleted items from start - " + start + " to " + (count - 1) +
+                " size is " + roomMessagesAdapter.getItemCount());
+    }
+
+    @Override
     public void setMembers(HashMap<String, Member> members) {
         if (roomMessagesAdapter == null) return;
         roomMessagesAdapter.setMembers(members);
