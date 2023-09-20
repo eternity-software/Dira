@@ -18,6 +18,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class DiraKeyProtocolProcessor {
 
@@ -36,7 +37,10 @@ public class DiraKeyProtocolProcessor {
     public void onDiffieHellmanInit(DhInitUpdate dhInitUpdate) {
         Room room = roomDao.getRoomBySecretName(dhInitUpdate.getRoomSecret());
         if (room != null) {
-            room.setClientSecret(BigInteger.probablePrime(2048, new SecureRandom()).toString());
+            Random random = new Random();
+            BigInteger mainBigint = new BigInteger(2048, random);
+            BigInteger bigIntegerTwo = BigInteger.valueOf(2);
+            room.setClientSecret(mainBigint.add(bigIntegerTwo).toString());
             roomDao.update(room);
             DhInfo dhInfo = new DhInfo(dhInitUpdate.getMemberList(), dhInitUpdate.getG(), dhInitUpdate.getP());
 

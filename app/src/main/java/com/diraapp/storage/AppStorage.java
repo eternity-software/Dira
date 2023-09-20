@@ -1,11 +1,14 @@
 package com.diraapp.storage;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.util.Base64;
 
@@ -212,6 +215,27 @@ public class AppStorage {
         return directory.getAbsolutePath() + "/" + fileName;
     }
 
+    public static Bitmap getBitmapFromPath(String sourceFileUri, Context context) {
+        try {
+            ContentResolver contentResolver = context.getContentResolver();
+            Bitmap bitmap = null;
+
+            if (Build.VERSION.SDK_INT < 28) {
+                bitmap = MediaStore.Images.Media.getBitmap(contentResolver,
+                        Uri.fromFile(new File(sourceFileUri)));
+            } else {
+                ImageDecoder.Source source = ImageDecoder.createSource(contentResolver,
+                        Uri.fromFile(new File(sourceFileUri)));
+                bitmap = ImageDecoder.decodeBitmap(source);
+            }
+
+            return bitmap;
+        } catch (IOException exception) {
+            return getBitmapFromPath(sourceFileUri);
+        }
+    }
+
+    @Deprecated
     public static Bitmap getBitmapFromPath(String path) {
 
         try {
