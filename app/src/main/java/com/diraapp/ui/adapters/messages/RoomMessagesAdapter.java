@@ -190,6 +190,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         if (holder.bubblePlayer != null) holder.bubblePlayer.release();
     }
 
+
     @Override
     public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
