@@ -3,6 +3,7 @@ package com.diraapp.storage.images;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 
 import androidx.annotation.NonNull;
@@ -14,7 +15,9 @@ import com.diraapp.storage.FileClassifier;
 import com.diraapp.ui.activities.room.RoomActivityPresenter;
 import com.diraapp.utils.CryptoUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -26,6 +29,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class FilesUploader {
+
+    private static final long MAX_SIZE_BITES = 800000;
 
     public static boolean uploadFile(String sourceFileUri,
                                      Callback callback,
@@ -56,8 +61,9 @@ public class FilesUploader {
 
                     bitmap = Bitmap.createScaledBitmap(bitmap, (int) (width / scaleFactor),
                             (int) (height / scaleFactor), true);
-
                 }
+
+                bitmap = compressBitmap(bitmap);
 
                 if (callback instanceof RoomActivityPresenter.RoomAttachmentCallback) {
                     ((RoomActivityPresenter.RoomAttachmentCallback) callback).
@@ -129,6 +135,23 @@ public class FilesUploader {
             // Handle the error
         }
         return false;
+    }
+
+    private static Bitmap compressBitmap(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        int currSize;
+        int currQuality = 75;
+
+        bitmap.compress(Bitmap.CompressFormat.JPEG, currQuality, stream);
+        currSize = stream.toByteArray().length;
+
+        while (currSize > MAX_SIZE_BITES) {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, currQuality, stream);
+            currSize = stream.toByteArray().length;
+            currQuality -= 5;
+        }
+
+        return BitmapFactory.decodeByteArray(stream.toByteArray(), 0, currSize);
     }
 
 }
