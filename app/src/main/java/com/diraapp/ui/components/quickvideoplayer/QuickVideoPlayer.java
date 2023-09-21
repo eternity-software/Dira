@@ -147,7 +147,7 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
                         state = QuickVideoPlayerState.PLAYING;
                     }
                 });
-               // mediaPlayer.setDataSource(source);
+                mediaPlayer.setDataSource(source);
                 state = QuickVideoPlayerState.PREPARING;
                 mediaPlayer.prepare();
             } catch (Exception e) {
