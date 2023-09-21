@@ -58,6 +58,7 @@ import com.diraapp.userstatus.UserStatus;
 import com.diraapp.userstatus.UserStatusHandler;
 import com.diraapp.userstatus.UserStatusListener;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.Logger;
 import com.diraapp.utils.SliderActivity;
 
 import java.io.File;
@@ -553,8 +554,10 @@ public class RoomActivity extends DiraActivity
         runOnUiThread(() -> {
             roomMessagesAdapter.notifyItemRangeRemoved(start, count);
         });
-        System.out.println("Deleted items from start - " + start + " to " + (count - 1) +
-                " size is " + roomMessagesAdapter.getItemCount());
+        Logger.logDebug(this.getClass().getSimpleName(),
+                "Deleted items from start - " + start + " to " + (count - 1) +
+                        " size is " + roomMessagesAdapter.getItemCount());
+
     }
 
     @Override
@@ -621,17 +624,20 @@ public class RoomActivity extends DiraActivity
 
                     @Override
                     public void onFailure(int i, @NonNull String s) {
-                        System.out.println("compression fail " + s);
+                        Logger.logDebug(this.getClass().getSimpleName(),
+                                "Compression fail: " + s);
                     }
 
                     @Override
                     public void onProgress(int i, float v) {
-                        System.out.println("compression progress " + i + "  " + v);
+                        Logger.logDebug(this.getClass().getSimpleName(),
+                                "Compression progress: " + i + " " + v);
                     }
 
                     @Override
                     public void onCancelled(int i) {
-                        System.out.println("compression canceled");
+                        Logger.logDebug(this.getClass().getSimpleName(),
+                                "Compression cancelled: " + i);
                     }
                 });
     }

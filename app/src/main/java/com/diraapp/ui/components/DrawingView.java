@@ -90,7 +90,6 @@ public class DrawingView extends View {
     public void setSizePercentage(double percent) {
 
         int newSize = (int) (maxSize * (1 + percent));
-        System.out.println("new size " + newSize);
         this.size = newSize;
         setBrush();
     }

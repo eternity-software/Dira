@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.diraapp.R;
+import com.diraapp.res.Theme;
 import com.diraapp.utils.CacheUtils;
 
 import java.util.ArrayList;

@@ -57,8 +57,6 @@ public class FilesUploader {
 
                     float scaleFactor = (bitmap.getHeight() * bitmap.getWidth()) / (float) (maxFrameSize * maxFrameSize);
 
-                    System.out.println(scaleFactor + " scale " + (maxFrameSize * maxFrameSize) + " " + (bitmap.getHeight() * bitmap.getWidth()));
-
                     bitmap = Bitmap.createScaledBitmap(bitmap, (int) (width / scaleFactor),
                             (int) (height / scaleFactor), true);
                 }
@@ -92,10 +90,9 @@ public class FilesUploader {
 
             if (!encryptionKey.equals("")) {
                 File rawFile = new File(sourceFileUri);
-                File outputFile = new File(rawFile.getPath() + "enctypted_" + rawFile.getName());
+                File outputFile = new File(rawFile.getPath() + "encrypted_" + rawFile.getName());
                 CryptoUtils.encrypt(encryptionKey, rawFile, outputFile);
                 sourceFileUri = outputFile.getAbsolutePath();
-                System.out.println("encrypted " + sourceFileUri);
                 deleteAfterUpload = true;
             }
 

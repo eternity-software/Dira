@@ -13,6 +13,7 @@ import android.view.animation.DecelerateInterpolator;
 import com.diraapp.ui.bottomsheet.filepicker.FileInfo;
 import com.diraapp.ui.components.FilePreview;
 import com.diraapp.utils.ImageRotationFix;
+import com.diraapp.utils.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -232,7 +233,8 @@ public class WaterfallImageLoader {
 
     private static class WaterfallLogger {
         public static void log(String message) {
-            System.out.println("WATERFALL LOADER >> " + message);
+            Logger.logDebug("Waterfall",
+                   message);
         }
     }
 

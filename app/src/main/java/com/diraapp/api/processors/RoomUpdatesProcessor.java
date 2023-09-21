@@ -66,7 +66,7 @@ public class RoomUpdatesProcessor {
             room.setLastUpdateId(0);
 
             for (RoomMember roomMember : inviteRoom.getMemberList()) {
-                System.out.println("Memers invited");
+
                 Member member = memberDao.getMemberByIdAndRoomSecret(roomMember.getId(), roomMember.getRoomSecret());
 
                 boolean hasMemberInDatabase = true;
@@ -77,7 +77,6 @@ public class RoomUpdatesProcessor {
                         imagePath = AppStorage.saveToInternalStorage(
                                 AppStorage.getBitmapFromBase64(roomMember.getImageBase64()), room.getSecretName(), context);
                     }
-                    System.out.println("Member: " + roomMember.getNickname());
                     member = new Member(roomMember.getId(), roomMember.getNickname(),
                             imagePath, roomMember.getRoomSecret(), roomMember.getLastTimeUpdated());
                 }

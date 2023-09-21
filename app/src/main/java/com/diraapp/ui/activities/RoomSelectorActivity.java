@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.RequiresApi;
@@ -48,6 +49,7 @@ import com.diraapp.userstatus.UserStatusHandler;
 import com.diraapp.userstatus.UserStatusListener;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.KeyGenerator;
+import com.diraapp.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,6 +96,7 @@ public class RoomSelectorActivity extends AppCompatActivity
         }
 
         setContentView(R.layout.activity_main);
+
 
         new AppTheme(getApplicationContext());
 
@@ -200,7 +203,8 @@ public class RoomSelectorActivity extends AppCompatActivity
         for (String permission : getPermissions()) {
             if (ContextCompat.checkSelfPermission(this, permission)
                     != PackageManager.PERMISSION_GRANTED) {
-                System.out.println("Not granted " + permission);
+                Logger.logDebug(this.getClass().getSimpleName(),
+                        "Permission not granted: " + permission);
                 return false;
             }
         }
@@ -210,7 +214,7 @@ public class RoomSelectorActivity extends AppCompatActivity
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
+
     public List<String> getPermissions() {
         List<String> permissions = new ArrayList<>();
         if (Build.VERSION.SDK_INT >= 33) {

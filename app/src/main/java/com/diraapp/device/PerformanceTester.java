@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 public class PerformanceTester {
 
+    public static PerformanceClass measuredClass;
     private static final int[] LOW_SOC = {
             -1775228513, // EXYNOS 850
             802464304,  // EXYNOS 7872
@@ -25,7 +26,6 @@ public class PerformanceTester {
             2067361998, // MSM8917
             -1853602818 // SDM439
     };
-    private static PerformanceClass measuredClass;
 
     public static PerformanceClass measureDevicePerformanceClass(Context context) {
         if (measuredClass != null) return measuredClass;

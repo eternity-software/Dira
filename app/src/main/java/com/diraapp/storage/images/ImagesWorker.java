@@ -19,7 +19,7 @@ public class ImagesWorker {
 
 
     public static void saveBitmapToGallery(Bitmap finalBitmap, Activity activity) {
-        String fname = "CuteSaved-" + System.currentTimeMillis() + ".jpg";
+        String fname = "DiraSaved-" + System.currentTimeMillis() + ".jpg";
         MediaStore.Images.Media.insertImage(activity.getContentResolver(), finalBitmap, fname, "DiraApp");
     }
 

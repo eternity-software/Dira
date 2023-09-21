@@ -14,6 +14,7 @@ import android.util.Base64;
 
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.Logger;
 import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
@@ -196,6 +197,7 @@ public class AppStorage {
 
 
         String fileName = System.currentTimeMillis() + name + ".png";
+
         File imagePath = new File(directory, fileName);
 
         FileOutputStream fos = null;
@@ -239,7 +241,8 @@ public class AppStorage {
     public static Bitmap getBitmapFromPath(String path) {
 
         try {
-            System.out.println(path);
+            Logger.logDebug("AppStorage",
+                    "Getting bitmap from file " + path);
             File f = new File(path);
             return BitmapFactory.decodeStream(new FileInputStream(f));
 

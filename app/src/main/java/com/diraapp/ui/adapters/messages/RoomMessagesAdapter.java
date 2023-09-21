@@ -62,6 +62,7 @@ import com.diraapp.ui.components.RoomMessageVideoPlayer;
 import com.diraapp.ui.components.VoiceMessageView;
 import com.diraapp.ui.components.quickvideoplayer.QuickVideoPlayerState;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.Logger;
 import com.diraapp.utils.Numbers;
 import com.diraapp.utils.StringFormatter;
 import com.diraapp.utils.TimeConverter;
@@ -463,7 +464,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                             });
                         }, exception -> {
                             if (exception instanceof AmplitudaIOException) {
-                                System.out.println("IO Exception!");
+
                             }
                         });
             });
@@ -774,7 +775,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                     @Override
                     public void onAttachmentDownloadFailed(Attachment attachment) {
                         if (attachment.getFileUrl().equals(message.getAttachments().get(0).getFileUrl())) {
-                            System.out.println("failed");
+                            Logger.logDebug(this.getClass().getSimpleName(),
+                                    "Attachment failed to download! Url:" + attachment.getFileUrl());
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

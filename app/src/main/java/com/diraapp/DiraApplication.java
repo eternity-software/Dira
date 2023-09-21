@@ -34,8 +34,7 @@ public class DiraApplication extends Application implements LifecycleObserver {
                     @Override
                     public void uncaughtException(Thread thread, Throwable e) {
 
-                        Log.i("DiraApp", "1");
-                        Log.i("DiraApp", "2");
+
                         Intent intent = new Intent(getApplicationContext(), CrashActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         StringWriter sw = new StringWriter();

@@ -21,9 +21,14 @@ import com.diraapp.device.PerformanceTester;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.DiraActivityListener;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class QuickVideoPlayer extends TextureView implements TextureView.SurfaceTextureListener {
 
     private MediaPlayer mediaPlayer = new MediaPlayer();
+
+    private static final ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(1);
 
     private Surface surface = null;
     private QuickVideoPlayerState state = QuickVideoPlayerState.IDLE;
@@ -126,7 +131,7 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
 
     private void playMediaPlayerSource(String source) {
         playingNow = source;
-        DiraActivity.runGlobalBackground(() -> {
+        threadPoolExecutor.execute(() -> {
             try {
                 if (source == null) return;
                 if (state != QuickVideoPlayerState.READY) {
@@ -142,7 +147,7 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
                         state = QuickVideoPlayerState.PLAYING;
                     }
                 });
-                mediaPlayer.setDataSource(source);
+               // mediaPlayer.setDataSource(source);
                 state = QuickVideoPlayerState.PREPARING;
                 mediaPlayer.prepare();
             } catch (Exception e) {
@@ -163,7 +168,7 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
         MediaPlayer destroyMediaPlayer = mediaPlayer;
         mediaPlayer = null;
 
-        DiraActivity.runGlobalBackground(() -> {
+        threadPoolExecutor.execute(() -> {
             destroyMediaPlayer.reset();
             destroyMediaPlayer.release();
         });
@@ -222,7 +227,7 @@ public class QuickVideoPlayer extends TextureView implements TextureView.Surface
     }
 
     private void recreateMediaPlayer(PlayerRecreatedCallback callback) {
-        DiraActivity.runGlobalBackground(() -> {
+        threadPoolExecutor.execute(() -> {
             // need to take from pool
             mediaPlayer = new MediaPlayer();
             setupMediaPlayer();

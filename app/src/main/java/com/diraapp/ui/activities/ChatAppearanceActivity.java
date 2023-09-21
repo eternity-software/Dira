@@ -220,7 +220,6 @@ public class ChatAppearanceActivity extends DiraActivity {
 
         chatBackgroundAdapter.notifyDataSetChanged();
 
-        System.out.println(path);
         ImageView backgroundView = findViewById(R.id.example_background);
         AppTheme.getInstance().getChatBackground().applyBackground(backgroundView);
     }
