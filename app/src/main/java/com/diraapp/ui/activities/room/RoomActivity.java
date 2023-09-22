@@ -598,9 +598,10 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void compressVideo(List<Uri> urisToCompress, String fileUri, VideoQuality videoQuality, Double videoHeight,
-                              Double videoWidth, RoomActivityPresenter.RoomAttachmentCallback callback, String serverAddress, String encryptionKey) {
+                              Double videoWidth, RoomActivityPresenter.RoomAttachmentCallback callback, String serverAddress, String encryptionKey, int
+                              bitrate) {
         VideoCompressor.start(getApplicationContext(), urisToCompress,
-                false,
+                true,
                 null,
                 new AppSpecificStorageConfiguration(
                         new File(fileUri).getName() + "temp_compressed", null), // => required name

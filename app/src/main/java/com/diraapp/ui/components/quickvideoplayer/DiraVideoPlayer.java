@@ -62,7 +62,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
             int threadsCount = 1;
             switch (PerformanceTester.measureDevicePerformanceClass(context)) {
                 case HIGH:
-                    threadsCount = 5;
+                    threadsCount = 6;
                     break;
                 case MEDIUM:
                     threadsCount = 3;

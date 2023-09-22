@@ -323,6 +323,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 Logger.logDebug(this.getClass().getSimpleName(),
                         "Compression started.. ");
 
+                int bitrate = 2;
 
                 Double videoHeight = null;
                 Double videoWidth = null;
@@ -330,14 +331,15 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 VideoQuality videoQuality = VideoQuality.VERY_LOW;
 
                 if (attachmentType == AttachmentType.BUBBLE) {
-                    videoHeight = 512D;
-                    videoWidth = 512D;
+                    videoHeight = 340D;
+                    videoWidth = 340D;
+                    bitrate = 1;
                 }
 
                 view.compressVideo(urisToCompress, fileUri, videoQuality,
                         videoHeight, videoWidth,
                         new RoomActivityPresenter.RoomAttachmentCallback(null, messageText, attachmentType),
-                        room.getServerAddress(), room.getEncryptionKey());
+                        room.getServerAddress(), room.getEncryptionKey(), bitrate);
 
             } else {
                 view.uploadFile(fileUri,
