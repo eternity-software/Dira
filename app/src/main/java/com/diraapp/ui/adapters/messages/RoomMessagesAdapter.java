@@ -56,11 +56,11 @@ import com.diraapp.ui.adapters.messagetooltipread.UserReadMessage;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.MessageAttachmentToLargeView;
 import com.diraapp.ui.components.MultiAttachmentMessageView;
-import com.diraapp.ui.components.quickvideoplayer.QuickVideoPlayer;
+import com.diraapp.ui.components.quickvideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.RoomMessageCustomClientDataView;
 import com.diraapp.ui.components.RoomMessageVideoPlayer;
 import com.diraapp.ui.components.VoiceMessageView;
-import com.diraapp.ui.components.quickvideoplayer.QuickVideoPlayerState;
+import com.diraapp.ui.components.quickvideoplayer.DiraVideoPlayerState;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.Numbers;
@@ -188,7 +188,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onViewRecycled(@NonNull ViewHolder holder) {
         super.onViewRecycled(holder);
-        QuickVideoPlayer player = null;
+        DiraVideoPlayer player = null;
         if (holder.videoPlayer != null) player = holder.videoPlayer;
         if (holder.bubblePlayer != null) player = holder.bubblePlayer;
 
@@ -200,7 +200,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
-        QuickVideoPlayer player = null;
+        DiraVideoPlayer player = null;
         if (holder.videoPlayer != null) player = holder.videoPlayer;
         if (holder.bubblePlayer != null) player = holder.bubblePlayer;
 
@@ -213,12 +213,12 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
         super.onViewAttachedToWindow(holder);
 
-        QuickVideoPlayer player = null;
+        DiraVideoPlayer player = null;
         if (holder.videoPlayer != null) player = holder.videoPlayer;
         if (holder.bubblePlayer != null) player = holder.bubblePlayer;
 
         if (player != null) {
-            if (player.getState() == QuickVideoPlayerState.PAUSED) {
+            if (player.getState() == DiraVideoPlayerState.PAUSED) {
                 player.play();
             }
         }
@@ -361,18 +361,18 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         } else if (attachment.getAttachmentType() == AttachmentType.VIDEO || attachment.getAttachmentType() == AttachmentType.BUBBLE) {
 
 
-            QuickVideoPlayer videoPlayer = holder.videoPlayer;
+            DiraVideoPlayer videoPlayer = holder.videoPlayer;
 
 
             if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
                 videoPlayer = holder.bubblePlayer;
-
+                videoPlayer.attachDebugIndicator(holder.bubbleViewContainer);
             } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
                 holder.imageView.setVisibility(View.VISIBLE);
 
-
+                videoPlayer.attachDebugIndicator(holder.viewsContainer);
                 videoPlayer.setVisibility(View.VISIBLE);
-                QuickVideoPlayer finalVideoPlayer = videoPlayer;
+                DiraVideoPlayer finalVideoPlayer = videoPlayer;
                 holder.imageView.post(new Runnable() {
                     @Override
                     public void run() {
@@ -393,6 +393,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             videoPlayer.attachRecyclerView(recyclerView);
             videoPlayer.attachDiraActivity(context);
 
+
+
             try {
                 videoPlayer.play(file.getPath());
 
@@ -400,7 +402,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            QuickVideoPlayer finalVideoPlayer = videoPlayer;
+            DiraVideoPlayer finalVideoPlayer = videoPlayer;
             videoPlayer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
