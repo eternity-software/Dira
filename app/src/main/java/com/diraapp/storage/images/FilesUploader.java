@@ -17,7 +17,6 @@ import com.diraapp.utils.CryptoUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import okhttp3.Call;

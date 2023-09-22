@@ -2,11 +2,9 @@ package com.diraapp.ui.components;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.felipecsl.asymmetricgridview.library.widget.AsymmetricGridView;
-import com.otaliastudios.cameraview.video.encoding.TextureMediaEncoder;
 
 public class MultiAttachmentMessageView extends AsymmetricGridView {
 
@@ -14,26 +12,14 @@ public class MultiAttachmentMessageView extends AsymmetricGridView {
 
     private boolean isInit = false;
 
-    public static MultiAttachmentMessageView createNewMultiAttachmentView(Context context) {
-        AttributeSet attributeSet = createAttrSet();
-        return new MultiAttachmentMessageView(context, attributeSet);
-    }
-
     public MultiAttachmentMessageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    private void init() {
-        if (isInit) return;
-
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-        this.setLayoutParams(params);
-        this.setAllowReordering(true);
-        this.setId(MULTI_ATTACHMENT_MESSAGE_VIEW_ID);
-
-        isInit = true;
+    public static MultiAttachmentMessageView createNewMultiAttachmentView(Context context) {
+        AttributeSet attributeSet = createAttrSet();
+        return new MultiAttachmentMessageView(context, attributeSet);
     }
 
     private static AttributeSet createAttrSet() {
@@ -149,5 +135,17 @@ public class MultiAttachmentMessageView extends AsymmetricGridView {
             }
         };
         return attributeSet;
+    }
+
+    private void init() {
+        if (isInit) return;
+
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+        this.setLayoutParams(params);
+        this.setAllowReordering(true);
+        this.setId(MULTI_ATTACHMENT_MESSAGE_VIEW_ID);
+
+        isInit = true;
     }
 }

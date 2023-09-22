@@ -56,10 +56,10 @@ import com.diraapp.ui.adapters.messagetooltipread.UserReadMessage;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.MessageAttachmentToLargeView;
 import com.diraapp.ui.components.MultiAttachmentMessageView;
-import com.diraapp.ui.components.quickvideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.RoomMessageCustomClientDataView;
 import com.diraapp.ui.components.RoomMessageVideoPlayer;
 import com.diraapp.ui.components.VoiceMessageView;
+import com.diraapp.ui.components.quickvideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.quickvideoplayer.DiraVideoPlayerState;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
@@ -119,7 +119,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private Room room;
     private List<Message> messages = new ArrayList<>();
     private HashMap<String, Member> members = new HashMap<>();
-    private Amplituda amplituda;
+    private final Amplituda amplituda;
 
 
     public RoomMessagesAdapter(DiraActivity context,
@@ -394,7 +394,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             videoPlayer.attachDiraActivity(context);
 
 
-
             try {
                 videoPlayer.play(file.getPath());
 
@@ -442,11 +441,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 }
             });
 
-         //   videoPlayer.play(file.getPath());
+            //   videoPlayer.play(file.getPath());
 
         } else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
             holder.loading.setVisibility(View.GONE);
-
 
 
             context.runBackground(() -> {
@@ -460,9 +458,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                             context.runOnUiThread(() -> {
                                 try {
                                     holder.waveformSeekBar.setSampleFrom(array);
+                                } catch (Exception ignored) {
                                 }
-                                catch (Exception ignored)
-                                {}
                             });
                         }, exception -> {
                             if (exception instanceof AmplitudaIOException) {
@@ -1148,7 +1145,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         default void onLastLoadedScrolled(Message message, int index) {
         }
 
-        ;
     }
 
 }

@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.diraapp.R;
-import com.diraapp.res.Theme;
 import com.diraapp.utils.CacheUtils;
 
 import java.util.ArrayList;
@@ -43,15 +42,15 @@ public class DiraActivity extends AppCompatActivity {
     private final List<DiraActivityListener> activityListenerList = new ArrayList<>();
     private CacheUtils cacheUtils;
 
+    public static void runGlobalBackground(Runnable runnable) {
+        threadPoolExecutor.execute(runnable);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.activity_enter_anim, R.anim.activity_enter_anim);
         for (DiraActivityListener listener : activityListenerList) listener.onCreate();
-    }
-
-    public static void runGlobalBackground(Runnable runnable) {
-        threadPoolExecutor.execute(runnable);
     }
 
     public void runBackground(Runnable runnable) {

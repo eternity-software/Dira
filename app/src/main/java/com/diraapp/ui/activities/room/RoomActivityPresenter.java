@@ -196,19 +196,19 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             try {
                 MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
 
-                Message newestLoaded =  messageList.get(0);
+                Message newestLoaded = messageList.get(0);
 
                 List<Message> newMessages = messageDao.getNewerMessages(roomSecret,
                         newestLoaded.getTime());
 
-                if (newMessages.size() == 0)  {
+                if (newMessages.size() == 0) {
 
                     isNewestMessagesLoaded = true;
                     return;
                 }
 
 
-                for (Message m: newMessages) {
+                for (Message m : newMessages) {
                     messageList.add(0, m);
                 }
                 view.notifyMessagesChanged(0, newMessages.size(), newMessages.size());
@@ -330,8 +330,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 VideoQuality videoQuality = VideoQuality.VERY_LOW;
 
                 if (attachmentType == AttachmentType.BUBBLE) {
-                   videoHeight = 512D;
-                   videoWidth =  512D;
+                    videoHeight = 512D;
+                    videoWidth = 512D;
                 }
 
                 view.compressVideo(urisToCompress, fileUri, videoQuality,
@@ -407,7 +407,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 attachment.setFileCreatedTime(System.currentTimeMillis());
                 attachment.setFileName("attachment");
                 Logger.logDebug(this.getClass().getSimpleName(),
-                        "Uploaded! Url " +  fileTempName);
+                        "Uploaded! Url " + fileTempName);
                 attachment.setFileUrl(fileTempName);
                 attachment.setSize(new File(fileUri).length());
 

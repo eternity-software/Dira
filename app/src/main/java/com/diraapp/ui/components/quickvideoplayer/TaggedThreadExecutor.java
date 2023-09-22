@@ -1,20 +1,15 @@
 package com.diraapp.ui.components.quickvideoplayer;
 
-import com.diraapp.device.PerformanceClass;
-import com.diraapp.device.PerformanceTester;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 public class TaggedThreadExecutor {
 
-    private HashMap<String, Runnable> tasks = new HashMap<>();
+    private final HashMap<String, Runnable> tasks = new HashMap<>();
 
 
-    public TaggedThreadExecutor()
-    {
+    public TaggedThreadExecutor() {
         Thread thread = new Thread(() -> {
             while (true) {
                 try {
@@ -31,16 +26,15 @@ public class TaggedThreadExecutor {
                         }
 
                     }
-                }
-                catch (Exception ignored) {
+                } catch (Exception ignored) {
 
                 }
             }
         });
         thread.start();
     }
-    public void execute(Runnable runnable, String tag)
-    {
+
+    public void execute(Runnable runnable, String tag) {
         tasks.remove(tag);
         tasks.put(tag, runnable);
     }

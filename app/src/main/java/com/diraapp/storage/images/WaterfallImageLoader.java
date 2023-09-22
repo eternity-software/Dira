@@ -234,7 +234,7 @@ public class WaterfallImageLoader {
     private static class WaterfallLogger {
         public static void log(String message) {
             Logger.logDebug("Waterfall",
-                   message);
+                    message);
         }
     }
 

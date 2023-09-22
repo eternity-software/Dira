@@ -7,11 +7,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 
-import com.diraapp.DiraApplication;
 import com.diraapp.api.processors.UpdateProcessor;
 
 public class UpdaterService extends Service {
@@ -38,7 +36,6 @@ public class UpdaterService extends Service {
                 updateProcessor.reconnectSockets();
 
 
-
                 handler.postDelayed(runnable, DEFAULT_RESTART_DELAY_SEC * 1000);
             }
         };
@@ -52,10 +49,10 @@ public class UpdaterService extends Service {
 
             @Override
             public void onReceive(Context context, Intent intent) {
-                if(isOnline(context))
-                {
+                if (isOnline(context)) {
 
-                }  updateProcessor.reconnectSockets();
+                }
+                updateProcessor.reconnectSockets();
             }
         };
 

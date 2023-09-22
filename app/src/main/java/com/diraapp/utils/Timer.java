@@ -6,9 +6,8 @@ public class Timer {
 
 
     private static final long WARN_TIME = 1;
-    private long startTime = 0;
-
     private final String name;
+    private long startTime = 0;
 
     public Timer(String name) {
         this.name = name;

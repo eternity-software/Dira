@@ -59,7 +59,7 @@ public class UserStatusHandler implements UpdateListener {
 
             int stop = 3;
             int a = 0;
-            for (UserStatus status: userStatusHashMap.values()) {
+            for (UserStatus status : userStatusHashMap.values()) {
                 if (status.getUserStatus().ordinal() == maxIndex) {
                     list.add(status);
                     a++;

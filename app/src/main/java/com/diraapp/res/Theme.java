@@ -29,8 +29,8 @@ import java.util.List;
 public class Theme {
 
     private final static String DARK_THEME = "APP_THEME_NIGHT";
-    private static StringsRepository stringsRepository = new StringsRepository();
     private static final List<ThemeChangeHandler> themeChangeHandlers = new ArrayList<>();
+    private static StringsRepository stringsRepository = new StringsRepository();
 
     public static List<ThemeChangeHandler> getThemeChangeHandlers() {
         return themeChangeHandlers;

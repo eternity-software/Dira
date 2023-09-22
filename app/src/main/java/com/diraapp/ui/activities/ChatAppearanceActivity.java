@@ -141,7 +141,7 @@ public class ChatAppearanceActivity extends DiraActivity {
         messages.add(senderMessage);
 
         RecyclerView recycler = findViewById(R.id.example_messages);
-        roomMessagesAdapter = new RoomMessagesAdapter(this, recycler,  null, room, new RoomMessagesAdapter.MessageAdapterListener() {
+        roomMessagesAdapter = new RoomMessagesAdapter(this, recycler, null, room, new RoomMessagesAdapter.MessageAdapterListener() {
             @Override
             public void onFirstItemScrolled(Message message, int index) {
 

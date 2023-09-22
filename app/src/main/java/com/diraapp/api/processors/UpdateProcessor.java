@@ -390,7 +390,7 @@ public class UpdateProcessor {
 
         HashMap<String, GetUpdatesRequest> requestHashMap = createGetUpdatesRequests(rooms);
 
-        for (String serverAddress: requestHashMap.keySet()) {
+        for (String serverAddress : requestHashMap.keySet()) {
             try {
                 UpdateProcessor.getInstance().sendRequest(requestHashMap.get(serverAddress),
                         new UpdateListener() {
@@ -423,7 +423,7 @@ public class UpdateProcessor {
     public HashMap<String, GetUpdatesRequest> createGetUpdatesRequests(List<Room> rooms) {
         HashMap<String, GetUpdatesRequest> requestHashMap = new HashMap<>();
 
-        for (Room room: rooms) {
+        for (Room room : rooms) {
             GetUpdatesRequest request = requestHashMap.get(room.getServerAddress());
 
             if (request == null) {

@@ -148,7 +148,7 @@ public class DiraKeyProtocolProcessor {
         List<Member> realMembers = memberDao.getMembersByRoomSecret(roomSecret);
         HashSet<String> realMembersIds = new HashSet<>(size);
 
-        for (Member member: realMembers) {
+        for (Member member : realMembers) {
             realMembersIds.add(member.getId());
         }
         realMembersIds.add(cacheUtils.getString(CacheUtils.ID));
@@ -165,7 +165,7 @@ public class DiraKeyProtocolProcessor {
         }
 
         if (newMembers.size() != 0) {
-            for (Member newMember: newMembers) {
+            for (Member newMember : newMembers) {
                 memberDao.insertAll(newMember);
             }
         }

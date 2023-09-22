@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import androidx.annotation.StyleableRes;
 
@@ -13,7 +12,6 @@ import com.diraapp.R;
 import com.diraapp.exceptions.NoSuchValueException;
 import com.diraapp.res.Theme;
 import com.diraapp.res.lang.CustomLanguage;
-import com.diraapp.ui.components.TightTextView;
 
 
 public class DynamicTextView extends androidx.appcompat.widget.AppCompatTextView {
@@ -83,7 +81,7 @@ public class DynamicTextView extends androidx.appcompat.widget.AppCompatTextView
 
     @SuppressLint("ResourceType")
     private void initialize(Context context, AttributeSet attrs) {
-        if(isInit) return;
+        if (isInit) return;
         isInit = true;
         int[] sets = {R.attr.localizableKey, R.attr.themeColor, R.attr.themeColorBackground, R.attr.themeColorLink};
         TypedArray typedArray = context.obtainStyledAttributes(attrs, sets);

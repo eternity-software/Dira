@@ -13,9 +13,9 @@ import java.util.List;
 @Dao
 public interface MessageDao {
 
-    static final int LOADING_COUNT = 50;
+    int LOADING_COUNT = 50;
 
-    static final int LOADING_COUNT_HALF = LOADING_COUNT / 2;
+    int LOADING_COUNT_HALF = LOADING_COUNT / 2;
 
     @Insert
     void insertAll(Message... messages);

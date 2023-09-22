@@ -13,9 +13,8 @@ import com.diraapp.utils.Numbers;
 
 public class BubbleMessageView extends CardView {
 
-    private boolean isInit = false;
-
     public static final int BUBBLE_CONTAINER_ID = 642376;
+    private boolean isInit = false;
 
     public BubbleMessageView(@NonNull Context context) {
         super(context);

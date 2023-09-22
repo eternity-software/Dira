@@ -84,6 +84,18 @@ public class RoomActivity extends DiraActivity
     private RoomActivityContract.Presenter presenter;
 
     private int lastVisiblePosition = 0;
+    private final MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
+        @Override
+        public void onItemClick(int pos, final View view) {
+            ImageSendActivity.open(RoomActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(), "",
+                    (FilePreview) view, ImageSendActivity.IMAGE_PURPOSE_MESSAGE);
+        }
+
+        @Override
+        public void onLastItemLoaded(int pos, View view) {
+
+        }
+    };
 
     public static void putRoomExtrasInIntent(Intent intent, String roomSecret, String roomName) {
         intent.putExtra(RoomSelectorActivity.PENDING_ROOM_SECRET, roomSecret);
@@ -197,8 +209,6 @@ public class RoomActivity extends DiraActivity
 
     }
 
-
-
     private void setBackground() {
         ImageView backgroundView = findViewById(R.id.room_background);
         CacheUtils cacheUtils = getCacheUtils();
@@ -219,7 +229,6 @@ public class RoomActivity extends DiraActivity
         backgroundView.setImageDrawable(getDrawable(drawableResourceId));
 
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -288,7 +297,6 @@ public class RoomActivity extends DiraActivity
         UpdateProcessor.getInstance().removeProcessorListener(this);
         UserStatusHandler.getInstance().removeListener(this);
     }
-
 
     @Override
     public void onSocketsCountChange(float percentOpened) {
@@ -651,18 +659,5 @@ public class RoomActivity extends DiraActivity
     public DiraMessageDatabase getMessagesDatabase() {
         return DiraMessageDatabase.getDatabase(getApplicationContext());
     }
-
-    private MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
-        @Override
-        public void onItemClick(int pos, final View view) {
-            ImageSendActivity.open(RoomActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(), "",
-                    (FilePreview) view, ImageSendActivity.IMAGE_PURPOSE_MESSAGE);
-        }
-
-        @Override
-        public void onLastItemLoaded(int pos, View view) {
-
-        }
-    };
 
 }
