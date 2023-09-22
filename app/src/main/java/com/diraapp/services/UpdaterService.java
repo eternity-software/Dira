@@ -50,9 +50,9 @@ public class UpdaterService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (isOnline(context)) {
-
+                    updateProcessor.reconnectSockets();
                 }
-                updateProcessor.reconnectSockets();
+
             }
         };
 

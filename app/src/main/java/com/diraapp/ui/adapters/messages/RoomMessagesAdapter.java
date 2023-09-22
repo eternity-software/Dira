@@ -41,6 +41,8 @@ import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientDat
 import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
+import com.diraapp.device.PerformanceClass;
+import com.diraapp.device.PerformanceTester;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.res.Theme;
@@ -217,10 +219,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         if (holder.videoPlayer != null) player = holder.videoPlayer;
         if (holder.bubblePlayer != null) player = holder.bubblePlayer;
 
+
+
         if (player != null) {
             if (player.getState() == DiraVideoPlayerState.PAUSED) {
                 player.play();
             }
+
         }
     }
 
@@ -370,6 +375,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
                 holder.imageView.setVisibility(View.VISIBLE);
 
+
                 videoPlayer.attachDebugIndicator(holder.viewsContainer);
                 videoPlayer.setVisibility(View.VISIBLE);
                 DiraVideoPlayer finalVideoPlayer = videoPlayer;
@@ -390,18 +396,28 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 });
 
             }
+            DiraVideoPlayer finalVideoPlayer = videoPlayer;
+
             videoPlayer.attachRecyclerView(recyclerView);
             videoPlayer.attachDiraActivity(context);
 
+            videoPlayer.addSelfDestroyListener(diraVideoPlayerState -> {
+                if(diraVideoPlayerState == DiraVideoPlayerState.READY) {
+                    finalVideoPlayer.play(file.getPath());
+                    return true;
+                }
+                return false;
+            });
+
 
             try {
-                videoPlayer.play(file.getPath());
+
 
                 holder.loading.setVisibility(View.GONE);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            DiraVideoPlayer finalVideoPlayer = videoPlayer;
+
             videoPlayer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -427,7 +443,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                 @Override
                                 public void onPrepared(MediaPlayer mp) {
                                     diraMediaPlayer.start();
-
+                                    holder.timeText.setText(AppStorage.getStringSize(attachment.getSize()));
                                     finalVideoPlayer.setProgress(0);
                                     finalVideoPlayer.setSpeed(1f);
                                     diraMediaPlayer.setOnPreparedListener(null);

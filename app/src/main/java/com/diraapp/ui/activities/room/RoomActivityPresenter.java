@@ -361,6 +361,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         private int width;
         private String fileUri;
 
+        private long fileSize;
+
         public RoomAttachmentCallback(String fileUri, String messageText, AttachmentType attachmentType) {
             this.fileUri = fileUri;
             this.messageText = messageText;
@@ -386,6 +388,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
         public RoomAttachmentCallback setFileUri(String fileUri) {
             this.fileUri = fileUri;
+            fileSize = new File(fileUri).length();
             return this;
         }
 
@@ -412,6 +415,9 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                         "Uploaded! Url " + fileTempName);
                 attachment.setFileUrl(fileTempName);
                 attachment.setSize(new File(fileUri).length());
+
+                if(attachment.getSize() == 0) attachment.setSize(fileSize);
+
 
                 if (attachment.getAttachmentType() == AttachmentType.VIDEO ||
                         attachment.getAttachmentType() == AttachmentType.IMAGE) {
