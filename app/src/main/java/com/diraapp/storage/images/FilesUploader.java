@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 
@@ -17,7 +18,6 @@ import com.diraapp.utils.CryptoUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -30,7 +30,7 @@ import okhttp3.Response;
 
 public class FilesUploader {
 
-    private static final long MAX_SIZE_BITES = 800000;
+    private static final long MAX_SIZE_BYTES = 800000;
 
     public static boolean uploadFile(String sourceFileUri,
                                      Callback callback,
@@ -140,13 +140,15 @@ public class FilesUploader {
     private static Bitmap compressBitmap(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         int currSize;
-        int currQuality = 75;
+        int currQuality = 25;
 
         bitmap.compress(Bitmap.CompressFormat.JPEG, currQuality, stream);
         currSize = stream.toByteArray().length;
 
-        while (currSize > MAX_SIZE_BITES) {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, currQuality, stream);
+        while (currSize > MAX_SIZE_BYTES && currQuality > 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                bitmap.compress(Bitmap.CompressFormat.PNG, currQuality, stream);
+            }
             currSize = stream.toByteArray().length;
             currQuality -= 5;
         }

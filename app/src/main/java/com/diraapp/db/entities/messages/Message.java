@@ -9,6 +9,7 @@ import androidx.room.TypeConverters;
 import com.diraapp.db.converters.AttachmentConverter;
 import com.diraapp.db.converters.CustomClientDataConverter;
 import com.diraapp.db.converters.MessageReadingConverter;
+import com.diraapp.db.converters.MessageReplyConverter;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
 import com.diraapp.utils.CacheUtils;
@@ -19,7 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 @Entity
-@TypeConverters({AttachmentConverter.class, CustomClientDataConverter.class, MessageReadingConverter.class})
+@TypeConverters({AttachmentConverter.class, CustomClientDataConverter.class,
+        MessageReadingConverter.class, MessageReplyConverter.class})
 public class Message {
 
     @PrimaryKey
@@ -32,6 +34,9 @@ public class Message {
     private long time;
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private CustomClientData customClientData = null;
+
+    @ColumnInfo(defaultValue = "null")
+    private MessageReply messageReply;
 
     @ColumnInfo(defaultValue = "true")
     private boolean isRead = true;
@@ -165,5 +170,13 @@ public class Message {
 
     public void setRead(boolean read) {
         isRead = read;
+    }
+
+    public MessageReply getMessageReply() {
+        return messageReply;
+    }
+
+    public void setMessageReply(MessageReply messageReply) {
+        this.messageReply = messageReply;
     }
 }
