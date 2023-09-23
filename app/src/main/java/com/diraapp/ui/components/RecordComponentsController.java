@@ -28,6 +28,7 @@ import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.media.SoundRecorder;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.Logger;
 import com.otaliastudios.cameraview.CameraListener;
 import com.otaliastudios.cameraview.CameraOptions;
 import com.otaliastudios.cameraview.CameraView;
@@ -76,7 +77,8 @@ public class RecordComponentsController {
         camera.addCameraListener(new CameraListener() {
             @Override
             public void onVideoTaken(VideoResult result) {
-                System.out.println("Bubble captured");
+                Logger.logDebug(this.getClass().getSimpleName(),
+                        "Bubble captured");
                 if (recordListener != null) {
                     recordListener.onMediaMessageRecorded(result.getFile().getPath(), AttachmentType.BUBBLE);
                     camera.close();
@@ -192,7 +194,8 @@ public class RecordComponentsController {
             @Override
             public void onCameraOpened(@NonNull CameraOptions options) {
                 super.onCameraOpened(options);
-                System.out.println("Taking snapshot...");
+                Logger.logDebug(this.getClass().getSimpleName(),
+                        "Taking captured video...");
                 camera.takeVideoSnapshot(new File(directory, "bubbleMessage.mp4"));
                 camera.removeCameraListener(this);
             }

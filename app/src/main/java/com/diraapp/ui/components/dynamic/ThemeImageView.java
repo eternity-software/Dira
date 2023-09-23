@@ -45,7 +45,6 @@ public class ThemeImageView extends androidx.appcompat.widget.AppCompatImageView
             }
 
             try {
-                System.out.println("Getting background tint " + backgroundTint + " " + color);
                 getBackground().setColorFilter(Theme.getColor(backgroundTint), PorterDuff.Mode.SRC_ATOP);
             } catch (NoSuchValueException e) {
 

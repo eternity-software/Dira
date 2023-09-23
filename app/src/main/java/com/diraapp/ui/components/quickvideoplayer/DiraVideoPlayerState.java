@@ -1,6 +1,6 @@
 package com.diraapp.ui.components.quickvideoplayer;
 
-public enum QuickVideoPlayerState {
+public enum DiraVideoPlayerState {
 
     PLAYING,
 
@@ -10,5 +10,6 @@ public enum QuickVideoPlayerState {
 
     READY,
 
-    IDLE
+    IDLE,
+    RESET
 }

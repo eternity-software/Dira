@@ -14,7 +14,7 @@ import com.diraapp.R;
 import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.MultiAttachmentMessageView;
-import com.diraapp.ui.components.quickvideoplayer.QuickVideoPlayer;
+import com.diraapp.ui.components.quickvideoplayer.DiraVideoPlayer;
 import com.felipecsl.asymmetricgridview.library.widget.AsymmetricGridView;
 import com.masoudss.lib.WaveformSeekBar;
 
@@ -29,7 +29,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     TextView dateText;
     ImageView profilePicture;
     ImageView imageView;
-    QuickVideoPlayer videoPlayer;
+    DiraVideoPlayer videoPlayer;
     CardView pictureContainer;
     LinearLayout messageContainer;
     CardView imageContainer;
@@ -52,7 +52,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     WaveformSeekBar waveformSeekBar;
     LinearLayout voiceLayout;
     ImageView playButton;
-    QuickVideoPlayer bubblePlayer;
+    DiraVideoPlayer bubblePlayer;
     CardView bubbleContainer;
 
     LinearLayout messageBackground;

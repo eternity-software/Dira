@@ -28,6 +28,7 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
 import com.diraapp.userstatus.UserStatus;
 import com.diraapp.utils.EncryptionUtil;
+import com.diraapp.utils.Logger;
 
 import org.json.JSONObject;
 
@@ -195,19 +196,19 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             try {
                 MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
 
-                Message newestLoaded =  messageList.get(0);
+                Message newestLoaded = messageList.get(0);
 
                 List<Message> newMessages = messageDao.getNewerMessages(roomSecret,
                         newestLoaded.getTime());
 
-                if (newMessages.size() == 0)  {
-                    System.out.println("No newer messages were loaded!");
+                if (newMessages.size() == 0) {
+
                     isNewestMessagesLoaded = true;
                     return;
                 }
-                System.out.println("Newer messages loaded!");
 
-                for (Message m: newMessages) {
+
+                for (Message m : newMessages) {
                     messageList.add(0, m);
                 }
                 view.notifyMessagesChanged(0, newMessages.size(), newMessages.size());
@@ -312,14 +313,17 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     @Override
     public void uploadAttachmentAndSendMessage(AttachmentType attachmentType, String fileUri, String messageText) {
         view.runBackground(() -> {
-            System.out.println("uploading...");
+            Logger.logDebug(this.getClass().getSimpleName(),
+                    "Uploading started.. ");
 
             if (FileClassifier.isVideoFile(fileUri) && (attachmentType == AttachmentType.VIDEO
                     || attachmentType == AttachmentType.BUBBLE)) {
                 List<Uri> urisToCompress = new ArrayList<>();
                 urisToCompress.add(Uri.fromFile(new File(fileUri)));
-                System.out.println("compression started");
+                Logger.logDebug(this.getClass().getSimpleName(),
+                        "Compression started.. ");
 
+                int bitrate = 2;
 
                 Double videoHeight = null;
                 Double videoWidth = null;
@@ -327,14 +331,15 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 VideoQuality videoQuality = VideoQuality.VERY_LOW;
 
                 if (attachmentType == AttachmentType.BUBBLE) {
-                   videoHeight = 512D;
-                   videoWidth =  512D;
+                    videoHeight = 340D;
+                    videoWidth = 340D;
+                    bitrate = 1;
                 }
 
                 view.compressVideo(urisToCompress, fileUri, videoQuality,
                         videoHeight, videoWidth,
                         new RoomActivityPresenter.RoomAttachmentCallback(null, messageText, attachmentType),
-                        room.getServerAddress(), room.getEncryptionKey());
+                        room.getServerAddress(), room.getEncryptionKey(), bitrate);
 
             } else {
                 view.uploadFile(fileUri,
@@ -355,6 +360,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         private int height;
         private int width;
         private String fileUri;
+
+        private long fileSize;
 
         public RoomAttachmentCallback(String fileUri, String messageText, AttachmentType attachmentType) {
             this.fileUri = fileUri;
@@ -381,18 +388,19 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
         public RoomAttachmentCallback setFileUri(String fileUri) {
             this.fileUri = fileUri;
+            fileSize = new File(fileUri).length();
             return this;
         }
 
         @Override
         public void onFailure(@NonNull Call call, @NonNull IOException e) {
             e.printStackTrace();
-            System.out.println(":(");
         }
 
         @Override
         public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-            System.out.println("uploading");
+            Logger.logDebug(this.getClass().getSimpleName(),
+                    "Uploading started.. ");
 
             try {
                 String fileTempName = new JSONObject(response.body().string()).getString("message");
@@ -403,9 +411,13 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
                 attachment.setFileCreatedTime(System.currentTimeMillis());
                 attachment.setFileName("attachment");
-                System.out.println("uploaded url " + fileTempName);
+                Logger.logDebug(this.getClass().getSimpleName(),
+                        "Uploaded! Url " + fileTempName);
                 attachment.setFileUrl(fileTempName);
                 attachment.setSize(new File(fileUri).length());
+
+                if(attachment.getSize() == 0) attachment.setSize(fileSize);
+
 
                 if (attachment.getAttachmentType() == AttachmentType.VIDEO ||
                         attachment.getAttachmentType() == AttachmentType.IMAGE) {

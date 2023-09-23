@@ -42,6 +42,7 @@ import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.EncryptionUtil;
+import com.diraapp.utils.Logger;
 import com.google.gson.Gson;
 
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
@@ -132,7 +133,10 @@ public class UpdateProcessor {
     }
 
     public String getFileServer(String address) {
-        System.out.println("Getting file server  for " + address);
+        Logger.logDebug(this.getClass().getSimpleName(),
+                "Getting file server  for " + address);
+
+
         return fileServers.get(address);
     }
 
@@ -163,7 +167,9 @@ public class UpdateProcessor {
 
             if (update.getUpdateType() == UpdateType.SERVER_SYNC) {
                 ServerSyncUpdate serverSyncUpdate = (ServerSyncUpdate) update;
-                System.out.println("New file server " + serverSyncUpdate.getFileServerUrl() + " for " + address);
+                Logger.logDebug(this.getClass().getSimpleName(),
+                        "New file server " + serverSyncUpdate.getFileServerUrl() + " for " + address);
+
                 fileServers.put(address, serverSyncUpdate.getFileServerUrl());
                 timeServerStartups.put(address, serverSyncUpdate.getTimeServerStart());
             } else if (update.getUpdateType() == UpdateType.NEW_ROOM_UPDATE) {
@@ -214,14 +220,11 @@ public class UpdateProcessor {
             } else if (update.getUpdateType() == UpdateType.RENEWING_CONFIRMED) {
                 roomUpdatesProcessor.updateRoom(update);
                 diraKeyProtocol.onKeyConfirmed((RenewingConfirmUpdate) update);
-                System.out.println("Dhinit update - " + message);
             } else if (update.getUpdateType() == UpdateType.RENEWING_CANCEL) {
                 roomUpdatesProcessor.updateRoom(update);
                 diraKeyProtocol.onKeyCancel((RenewingCancelUpdate) update);
-                System.out.println("Cancel update - " + message);
             } else if (update.getUpdateType() == UpdateType.KEY_RECEIVED_UPDATE) {
                 diraKeyProtocol.onIntermediateKey((KeyReceivedUpdate) update);
-                System.out.println("KeyReceived update - " + message);
                 // roomUpdatesProcessor.updateRoom(update, true);
             } else if (update.getUpdateType() == UpdateType.PING_UPDATE) {
                 PingUpdate pingUpdate = (PingUpdate) update;
@@ -277,7 +280,8 @@ public class UpdateProcessor {
             if (socketClient != null) {
                 Gson gson = new Gson();
                 String sent = gson.toJson(request);
-                System.out.println(sent);
+                Logger.logDebug(this.getClass().getSimpleName(),
+                        address + " <-- " + sent);
                 socketClient.send(sent);
                 if (callback != null) {
                     long finalLastRequestId = lastRequestId;
@@ -386,7 +390,7 @@ public class UpdateProcessor {
 
         HashMap<String, GetUpdatesRequest> requestHashMap = createGetUpdatesRequests(rooms);
 
-        for (String serverAddress: requestHashMap.keySet()) {
+        for (String serverAddress : requestHashMap.keySet()) {
             try {
                 UpdateProcessor.getInstance().sendRequest(requestHashMap.get(serverAddress),
                         new UpdateListener() {
@@ -419,7 +423,7 @@ public class UpdateProcessor {
     public HashMap<String, GetUpdatesRequest> createGetUpdatesRequests(List<Room> rooms) {
         HashMap<String, GetUpdatesRequest> requestHashMap = new HashMap<>();
 
-        for (Room room: rooms) {
+        for (Room room : rooms) {
             GetUpdatesRequest request = requestHashMap.get(room.getServerAddress());
 
             if (request == null) {

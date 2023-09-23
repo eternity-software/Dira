@@ -1,6 +1,5 @@
 package com.diraapp.api.requests;
 
-import com.diraapp.api.updates.RoomUpdate;
 import com.diraapp.api.views.RoomInfo;
 
 import java.util.ArrayList;

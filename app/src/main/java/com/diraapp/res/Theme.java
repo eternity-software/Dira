@@ -16,6 +16,7 @@ import com.diraapp.exceptions.NoSuchValueException;
 import com.diraapp.res.lang.StringsRepository;
 import com.diraapp.ui.appearance.ColorThemeType;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,8 +29,8 @@ import java.util.List;
 public class Theme {
 
     private final static String DARK_THEME = "APP_THEME_NIGHT";
-    private static StringsRepository stringsRepository = new StringsRepository();
     private static final List<ThemeChangeHandler> themeChangeHandlers = new ArrayList<>();
+    private static StringsRepository stringsRepository = new StringsRepository();
 
     public static List<ThemeChangeHandler> getThemeChangeHandlers() {
         return themeChangeHandlers;
@@ -78,7 +79,8 @@ public class Theme {
             try {
                 return Color.parseColor(colorHex);
             } catch (Exception e) {
-                System.out.println("Unknown color: " + colorHex);
+                Logger.logDebug("Theme",
+                        "Color " + colorHex + " is unknown");
                 e.printStackTrace();
                 return Color.RED;
             }

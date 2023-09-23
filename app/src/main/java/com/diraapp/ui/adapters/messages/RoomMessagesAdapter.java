@@ -41,6 +41,8 @@ import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientDat
 import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
+import com.diraapp.device.PerformanceClass;
+import com.diraapp.device.PerformanceTester;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.res.Theme;
@@ -56,12 +58,13 @@ import com.diraapp.ui.adapters.messagetooltipread.UserReadMessage;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.MessageAttachmentToLargeView;
 import com.diraapp.ui.components.MultiAttachmentMessageView;
-import com.diraapp.ui.components.quickvideoplayer.QuickVideoPlayer;
 import com.diraapp.ui.components.RoomMessageCustomClientDataView;
 import com.diraapp.ui.components.RoomMessageVideoPlayer;
 import com.diraapp.ui.components.VoiceMessageView;
-import com.diraapp.ui.components.quickvideoplayer.QuickVideoPlayerState;
+import com.diraapp.ui.components.quickvideoplayer.DiraVideoPlayer;
+import com.diraapp.ui.components.quickvideoplayer.DiraVideoPlayerState;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.Logger;
 import com.diraapp.utils.Numbers;
 import com.diraapp.utils.StringFormatter;
 import com.diraapp.utils.TimeConverter;
@@ -118,7 +121,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private Room room;
     private List<Message> messages = new ArrayList<>();
     private HashMap<String, Member> members = new HashMap<>();
-    private Amplituda amplituda;
+    private final Amplituda amplituda;
 
 
     public RoomMessagesAdapter(DiraActivity context,
@@ -187,7 +190,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onViewRecycled(@NonNull ViewHolder holder) {
         super.onViewRecycled(holder);
-        QuickVideoPlayer player = null;
+        DiraVideoPlayer player = null;
         if (holder.videoPlayer != null) player = holder.videoPlayer;
         if (holder.bubblePlayer != null) player = holder.bubblePlayer;
 
@@ -199,7 +202,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
-        QuickVideoPlayer player = null;
+        DiraVideoPlayer player = null;
         if (holder.videoPlayer != null) player = holder.videoPlayer;
         if (holder.bubblePlayer != null) player = holder.bubblePlayer;
 
@@ -212,14 +215,17 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
         super.onViewAttachedToWindow(holder);
 
-        QuickVideoPlayer player = null;
+        DiraVideoPlayer player = null;
         if (holder.videoPlayer != null) player = holder.videoPlayer;
         if (holder.bubblePlayer != null) player = holder.bubblePlayer;
 
+
+
         if (player != null) {
-            if (player.getState() == QuickVideoPlayerState.PAUSED) {
+            if (player.getState() == DiraVideoPlayerState.PAUSED) {
                 player.play();
             }
+
         }
     }
 
@@ -360,18 +366,19 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         } else if (attachment.getAttachmentType() == AttachmentType.VIDEO || attachment.getAttachmentType() == AttachmentType.BUBBLE) {
 
 
-            QuickVideoPlayer videoPlayer = holder.videoPlayer;
+            DiraVideoPlayer videoPlayer = holder.videoPlayer;
 
 
             if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
                 videoPlayer = holder.bubblePlayer;
-
+                videoPlayer.attachDebugIndicator(holder.bubbleViewContainer);
             } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
                 holder.imageView.setVisibility(View.VISIBLE);
 
 
+                videoPlayer.attachDebugIndicator(holder.viewsContainer);
                 videoPlayer.setVisibility(View.VISIBLE);
-                QuickVideoPlayer finalVideoPlayer = videoPlayer;
+                DiraVideoPlayer finalVideoPlayer = videoPlayer;
                 holder.imageView.post(new Runnable() {
                     @Override
                     public void run() {
@@ -389,17 +396,28 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 });
 
             }
+            DiraVideoPlayer finalVideoPlayer = videoPlayer;
+
             videoPlayer.attachRecyclerView(recyclerView);
             videoPlayer.attachDiraActivity(context);
 
+            videoPlayer.addSelfDestroyListener(diraVideoPlayerState -> {
+                if(diraVideoPlayerState == DiraVideoPlayerState.READY) {
+                    finalVideoPlayer.play(file.getPath());
+                    return true;
+                }
+                return false;
+            });
+
+
             try {
-                videoPlayer.play(file.getPath());
+
 
                 holder.loading.setVisibility(View.GONE);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            QuickVideoPlayer finalVideoPlayer = videoPlayer;
+
             videoPlayer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -425,7 +443,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                 @Override
                                 public void onPrepared(MediaPlayer mp) {
                                     diraMediaPlayer.start();
-
+                                    holder.timeText.setText(AppStorage.getStringSize(attachment.getSize()));
                                     finalVideoPlayer.setProgress(0);
                                     finalVideoPlayer.setSpeed(1f);
                                     diraMediaPlayer.setOnPreparedListener(null);
@@ -439,11 +457,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 }
             });
 
-         //   videoPlayer.play(file.getPath());
+            //   videoPlayer.play(file.getPath());
 
         } else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
             holder.loading.setVisibility(View.GONE);
-
 
 
             context.runBackground(() -> {
@@ -457,13 +474,12 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                             context.runOnUiThread(() -> {
                                 try {
                                     holder.waveformSeekBar.setSampleFrom(array);
+                                } catch (Exception ignored) {
                                 }
-                                catch (Exception ignored)
-                                {}
                             });
                         }, exception -> {
                             if (exception instanceof AmplitudaIOException) {
-                                System.out.println("IO Exception!");
+
                             }
                         });
             });
@@ -774,7 +790,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                     @Override
                     public void onAttachmentDownloadFailed(Attachment attachment) {
                         if (attachment.getFileUrl().equals(message.getAttachments().get(0).getFileUrl())) {
-                            System.out.println("failed");
+                            Logger.logDebug(this.getClass().getSimpleName(),
+                                    "Attachment failed to download! Url:" + attachment.getFileUrl());
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -1144,7 +1161,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         default void onLastLoadedScrolled(Message message, int index) {
         }
 
-        ;
     }
 
 }

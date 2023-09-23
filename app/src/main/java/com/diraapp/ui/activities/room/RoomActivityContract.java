@@ -52,7 +52,8 @@ public interface RoomActivityContract {
                            Double videoWidth,
                            RoomActivityPresenter.RoomAttachmentCallback callback,
                            String serverAddress,
-                           String encryptionKey);
+                           String encryptionKey,
+                           int bitrate);
 
         DiraRoomDatabase getRoomDatabase();
 

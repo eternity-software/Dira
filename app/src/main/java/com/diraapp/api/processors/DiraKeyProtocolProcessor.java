@@ -15,6 +15,7 @@ import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.Logger;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class DiraKeyProtocolProcessor {
 
             roomMembers.put(dhInitUpdate.getRoomSecret(), dhInfo);
 
-            System.out.println("dh init");
+            Logger.logDebug(this.getClass().getSimpleName(), "DhInit ready");
 
             checkIfHasNewMember(dhInfo.getMemberList(), room.getSecretName());
 
@@ -71,8 +72,7 @@ public class DiraKeyProtocolProcessor {
 
             if (dhInfo != null) {
                 DhKey dhKey = keyReceivedUpdate.getDhKey();
-
-                System.out.println("key received n=" + dhKey.getN());
+                Logger.logDebug(this.getClass().getSimpleName(), "Received N=" + dhKey.getN());
                 BigInteger G = new BigInteger(dhKey.getG());
                 BigInteger P = new BigInteger(dhInfo.getP());
                 BigInteger clientSecret = new BigInteger(room.getClientSecret());
@@ -84,7 +84,8 @@ public class DiraKeyProtocolProcessor {
                     SubmitKeyRequest submitKeyRequest = new SubmitKeyRequest(room.getSecretName(), baseMember);
                     try {
                         UpdateProcessor.getInstance().sendRequest(submitKeyRequest, room.getServerAddress());
-                        System.out.println("Ready " + dhKey.getG());
+
+                        Logger.logDebug(this.getClass().getSimpleName(), "Key ready G=" + dhKey.getG());
                     } catch (UnablePerformRequestException e) {
 
                     }
@@ -97,7 +98,7 @@ public class DiraKeyProtocolProcessor {
                 dhKey.setN(dhKey.getN() + 1);
                 dhKey.setRecipientMemberId(getNextToId(dhInfo.getMemberList(), dhKey.getRecipientMemberId()).getId());
                 sendToNextUser(dhKey, room.getSecretName(), room.getServerAddress());
-                System.out.println("sent to next n=" + dhKey.getN());
+                Logger.logDebug(this.getClass().getSimpleName(), "Key sent to N=" + dhKey.getN());
             }
 
         }
@@ -132,7 +133,7 @@ public class DiraKeyProtocolProcessor {
     }
 
     public void sendToNextUser(DhKey dhKey, String roomSecret, String serverAddress) {
-        System.out.println("sent to " + dhKey.getRecipientMemberId());
+        Logger.logDebug(this.getClass().getSimpleName(), "Key sent to id=" + dhKey.getRecipientMemberId());
         SendIntermediateKey sendIntermediateKey = new SendIntermediateKey(dhKey, roomSecret);
         try {
             UpdateProcessor.getInstance().sendRequest(sendIntermediateKey, serverAddress);
@@ -147,14 +148,15 @@ public class DiraKeyProtocolProcessor {
         List<Member> realMembers = memberDao.getMembersByRoomSecret(roomSecret);
         HashSet<String> realMembersIds = new HashSet<>(size);
 
-        for (Member member: realMembers) {
+        for (Member member : realMembers) {
             realMembersIds.add(member.getId());
         }
         realMembersIds.add(cacheUtils.getString(CacheUtils.ID));
 
         ArrayList<Member> newMembers = new ArrayList<>(size);
         for (BaseMember baseMember : baseMembers) {
-            System.out.println(baseMember.getNickname() + " " + baseMember.getId());
+            Logger.logDebug(this.getClass().getSimpleName(), "Member (" + baseMember.getNickname() + " " + baseMember.getId());
+
 
             if (!realMembersIds.contains(baseMember.getId())) {
                 newMembers.add(new Member(baseMember.getId(), baseMember.getNickname(),
@@ -163,7 +165,7 @@ public class DiraKeyProtocolProcessor {
         }
 
         if (newMembers.size() != 0) {
-            for (Member newMember: newMembers) {
+            for (Member newMember : newMembers) {
                 memberDao.insertAll(newMember);
             }
         }

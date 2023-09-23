@@ -59,7 +59,7 @@ public class UserStatusHandler implements UpdateListener {
 
             int stop = 3;
             int a = 0;
-            for (UserStatus status: userStatusHashMap.values()) {
+            for (UserStatus status : userStatusHashMap.values()) {
                 if (status.getUserStatus().ordinal() == maxIndex) {
                     list.add(status);
                     a++;
@@ -98,7 +98,6 @@ public class UserStatusHandler implements UpdateListener {
     private void initUserStatusThread() {
         statusThread = new Thread(() -> {
             ArrayList<UserStatus> listToDelete = new ArrayList<>();
-            System.out.println("User status thread started");
             long minTime = -1;
             while (true) {
                 ArrayList<UserStatus> userUserStatusList = new ArrayList<>(userUserStatuses);

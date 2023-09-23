@@ -104,7 +104,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     public void onBindViewHolder(ViewHolder holder, int position) {
         FilePreview picturesView = holder.fileParingImageView;
         picturesView.setFileInfo(mediaElements.get(position));
-        System.out.println(mediaElements.get(position).getMimeType());
 
         try {
 

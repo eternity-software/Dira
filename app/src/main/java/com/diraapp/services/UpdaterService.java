@@ -1,18 +1,21 @@
 package com.diraapp.services;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.IBinder;
 
-import com.diraapp.DiraApplication;
 import com.diraapp.api.processors.UpdateProcessor;
 
 public class UpdaterService extends Service {
 
 
-    private static final int DEFAULT_RESTART_DELAY_SEC = 10;
+    private static final int DEFAULT_RESTART_DELAY_SEC = 100000;
 
     public static Runnable runnable = null;
     public static UpdateProcessor updateProcessor;
@@ -33,24 +36,6 @@ public class UpdaterService extends Service {
                 updateProcessor.reconnectSockets();
 
 
-                // Delay for receiving updates and sleep for battery economy
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (DiraApplication.isBackgrounded()) {
-                            try {
-                                Thread.sleep(3000);
-                                updateProcessor.disconnectSockets();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    }
-                });
-                thread.start();
-
-
                 handler.postDelayed(runnable, DEFAULT_RESTART_DELAY_SEC * 1000);
             }
         };
@@ -59,8 +44,34 @@ public class UpdaterService extends Service {
         updateProcessor.reconnectSockets();
 
         handler.postDelayed(runnable, 15000);
+
+        BroadcastReceiver br = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (isOnline(context)) {
+                    updateProcessor.reconnectSockets();
+                }
+
+            }
+        };
+
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver((BroadcastReceiver) br, intentFilter);
     }
 
+    private boolean isOnline(Context context) {
+        try {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getActiveNetworkInfo();
+            //should check null because in airplane mode it will be null
+            return (netInfo != null && netInfo.isConnected());
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     @Override
     public void onDestroy() {
@@ -70,22 +81,6 @@ public class UpdaterService extends Service {
         runnable = new Runnable() {
             public void run() {
                 updateProcessor.reconnectSockets();
-                // Delay for receiving updates and sleep for battery economy
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (DiraApplication.isBackgrounded()) {
-                            try {
-                                Thread.sleep(3000);
-                                updateProcessor.disconnectSockets();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    }
-                });
-                thread.start();
 
                 handler.postDelayed(runnable, DEFAULT_RESTART_DELAY_SEC * 1000);
             }

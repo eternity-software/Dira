@@ -2,6 +2,7 @@ package com.diraapp.api;
 
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.SocketListener;
+import com.diraapp.utils.Logger;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -32,7 +33,7 @@ public class SocketClient extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        System.out.println("new connection opened");
+        Logger.logDebug(this.getClass().getSimpleName(), "Opened new socket");
         if (socketListener != null) {
             socketListener.onSocketOpened();
         }
@@ -41,6 +42,8 @@ public class SocketClient extends WebSocketClient {
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
+        Logger.logDebug(this.getClass().getSimpleName(),
+                "Socket closed: " + reason + "(" + code + ", by remote " + remote + ")");
         System.out.println("closed with exit code " + code + " additional info: " + reason);
         if (socketListener != null) {
             socketListener.onSocketClosed();
@@ -49,7 +52,8 @@ public class SocketClient extends WebSocketClient {
 
     @Override
     public void onMessage(String message) {
-        System.out.println(address + " In ->> " + message);
+
+        Logger.logDebug(this.getClass().getSimpleName(), address + " -> " + message);
         try {
             UpdateProcessor.getInstance().notifyMessage(message, address);
         } catch (Exception e) {
@@ -59,12 +63,13 @@ public class SocketClient extends WebSocketClient {
 
     @Override
     public void onMessage(ByteBuffer message) {
-        System.out.println("received ByteBuffer");
+        Logger.logDebug(this.getClass().getSimpleName(), "Received ByteBuffer");
+
     }
 
     @Override
     public void onError(Exception ex) {
-        System.err.println("an error occurred:" + ex);
+        ex.printStackTrace();
     }
 
 }

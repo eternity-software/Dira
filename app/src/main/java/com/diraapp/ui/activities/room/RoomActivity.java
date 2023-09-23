@@ -58,6 +58,7 @@ import com.diraapp.userstatus.UserStatus;
 import com.diraapp.userstatus.UserStatusHandler;
 import com.diraapp.userstatus.UserStatusListener;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.Logger;
 import com.diraapp.utils.SliderActivity;
 
 import java.io.File;
@@ -83,6 +84,18 @@ public class RoomActivity extends DiraActivity
     private RoomActivityContract.Presenter presenter;
 
     private int lastVisiblePosition = 0;
+    private final MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
+        @Override
+        public void onItemClick(int pos, final View view) {
+            ImageSendActivity.open(RoomActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(), "",
+                    (FilePreview) view, ImageSendActivity.IMAGE_PURPOSE_MESSAGE);
+        }
+
+        @Override
+        public void onLastItemLoaded(int pos, View view) {
+
+        }
+    };
 
     public static void putRoomExtrasInIntent(Intent intent, String roomSecret, String roomName) {
         intent.putExtra(RoomSelectorActivity.PENDING_ROOM_SECRET, roomSecret);
@@ -196,8 +209,6 @@ public class RoomActivity extends DiraActivity
 
     }
 
-
-
     private void setBackground() {
         ImageView backgroundView = findViewById(R.id.room_background);
         CacheUtils cacheUtils = getCacheUtils();
@@ -218,7 +229,6 @@ public class RoomActivity extends DiraActivity
         backgroundView.setImageDrawable(getDrawable(drawableResourceId));
 
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -287,7 +297,6 @@ public class RoomActivity extends DiraActivity
         UpdateProcessor.getInstance().removeProcessorListener(this);
         UserStatusHandler.getInstance().removeListener(this);
     }
-
 
     @Override
     public void onSocketsCountChange(float percentOpened) {
@@ -553,8 +562,10 @@ public class RoomActivity extends DiraActivity
         runOnUiThread(() -> {
             roomMessagesAdapter.notifyItemRangeRemoved(start, count);
         });
-        System.out.println("Deleted items from start - " + start + " to " + (count - 1) +
-                " size is " + roomMessagesAdapter.getItemCount());
+        Logger.logDebug(this.getClass().getSimpleName(),
+                "Deleted items from start - " + start + " to " + (count - 1) +
+                        " size is " + roomMessagesAdapter.getItemCount());
+
     }
 
     @Override
@@ -587,9 +598,10 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void compressVideo(List<Uri> urisToCompress, String fileUri, VideoQuality videoQuality, Double videoHeight,
-                              Double videoWidth, RoomActivityPresenter.RoomAttachmentCallback callback, String serverAddress, String encryptionKey) {
+                              Double videoWidth, RoomActivityPresenter.RoomAttachmentCallback callback, String serverAddress, String encryptionKey, int
+                              bitrate) {
         VideoCompressor.start(getApplicationContext(), urisToCompress,
-                false,
+                true,
                 null,
                 new AppSpecificStorageConfiguration(
                         new File(fileUri).getName() + "temp_compressed", null), // => required name
@@ -621,17 +633,20 @@ public class RoomActivity extends DiraActivity
 
                     @Override
                     public void onFailure(int i, @NonNull String s) {
-                        System.out.println("compression fail " + s);
+                        Logger.logDebug(this.getClass().getSimpleName(),
+                                "Compression fail: " + s);
                     }
 
                     @Override
                     public void onProgress(int i, float v) {
-                        System.out.println("compression progress " + i + "  " + v);
+                        Logger.logDebug(this.getClass().getSimpleName(),
+                                "Compression progress: " + i + " " + v);
                     }
 
                     @Override
                     public void onCancelled(int i) {
-                        System.out.println("compression canceled");
+                        Logger.logDebug(this.getClass().getSimpleName(),
+                                "Compression cancelled: " + i);
                     }
                 });
     }
@@ -645,18 +660,5 @@ public class RoomActivity extends DiraActivity
     public DiraMessageDatabase getMessagesDatabase() {
         return DiraMessageDatabase.getDatabase(getApplicationContext());
     }
-
-    private MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
-        @Override
-        public void onItemClick(int pos, final View view) {
-            ImageSendActivity.open(RoomActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(), "",
-                    (FilePreview) view, ImageSendActivity.IMAGE_PURPOSE_MESSAGE);
-        }
-
-        @Override
-        public void onLastItemLoaded(int pos, View view) {
-
-        }
-    };
 
 }

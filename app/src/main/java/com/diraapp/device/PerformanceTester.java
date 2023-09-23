@@ -25,7 +25,7 @@ public class PerformanceTester {
             2067361998, // MSM8917
             -1853602818 // SDM439
     };
-    private static PerformanceClass measuredClass;
+    public static PerformanceClass measuredClass;
 
     public static PerformanceClass measureDevicePerformanceClass(Context context) {
         if (measuredClass != null) return measuredClass;

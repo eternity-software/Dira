@@ -35,7 +35,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
     /**
      * This will not work properly with FragmentManager
-     *
+     * <p>
      * Must be initialized onAttach as context
      */
     private MediaGridItemListener onItemClickListener;
@@ -98,8 +98,6 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     @Override
     public void onActivityCreated(Bundle arg0) {
         super.onActivityCreated(arg0);
-
-
 
 
     }
