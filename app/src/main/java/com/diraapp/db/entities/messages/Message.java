@@ -35,6 +35,9 @@ public class Message {
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private CustomClientData customClientData = null;
 
+    @Ignore
+    private String repliedMessageId;
+
     @ColumnInfo(defaultValue = "null")
     private MessageReply messageReply;
 
@@ -170,6 +173,14 @@ public class Message {
 
     public void setRead(boolean read) {
         isRead = read;
+    }
+
+    public String getRepliedMessageId() {
+        return repliedMessageId;
+    }
+
+    public void setRepliedMessageId(String repliedMessageId) {
+        this.repliedMessageId = repliedMessageId;
     }
 
     public MessageReply getMessageReply() {
