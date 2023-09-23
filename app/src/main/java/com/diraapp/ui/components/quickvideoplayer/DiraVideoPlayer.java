@@ -145,7 +145,6 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     }
 
-
     public void play(String source) {
         if (source == null) return;
         playingNow = source;
@@ -278,11 +277,13 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
     private void setSurface(@NonNull Surface surface) {
 
         try {
-            mediaPlayer.setSurface(surface);
             this.surface = surface;
-
-
-
+            if(mediaPlayer == null)
+            {
+                setupMediaPlayer();
+                return;
+            }
+            mediaPlayer.setSurface(surface);
             notifyStateChanged(DiraVideoPlayerState.READY);
 
 
