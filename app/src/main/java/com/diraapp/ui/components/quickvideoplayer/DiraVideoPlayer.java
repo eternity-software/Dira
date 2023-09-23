@@ -154,8 +154,8 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
         Runnable play = () -> {
             try {
-                if (!source.equals(playingNow)) return;
 
+                if (!source.equals(playingNow)) return;
 
                 mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
