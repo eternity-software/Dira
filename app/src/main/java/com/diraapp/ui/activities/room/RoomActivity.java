@@ -73,9 +73,9 @@ import okhttp3.Callback;
 public class RoomActivity extends DiraActivity
         implements RoomActivityContract.View, ProcessorListener, UserStatusListener, RecordComponentsController.RecordListener {
 
-    public static final int doNotNeedToScroll = -1;
+    private static final int DO_NOT_NEED_TO_SCROLL = -1;
 
-    public static final int isRoomOpen = -1;
+    private static final int IS_ROOM_OPENING = -1;
     private String roomSecret;
     private RoomMessagesAdapter roomMessagesAdapter;
     private FilePickerBottomSheet filePickerBottomSheet;
@@ -533,16 +533,30 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
+    public void notifyOnRoomOpenMessagesLoaded(int scrollPosition) {
+        if (scrollPosition == 0) {
+            notifyMessagesChanged(IS_ROOM_OPENING, 0, DO_NOT_NEED_TO_SCROLL);
+            return;
+        }
+        notifyMessagesChanged(IS_ROOM_OPENING, 0, scrollPosition);
+    }
+
+    @Override
+    public void notifyMessageChangedWithoutScroll(int start, int last) {
+        notifyMessagesChanged(start, last, DO_NOT_NEED_TO_SCROLL);
+    }
+
+    @Override
     public void notifyMessagesChanged(int start, int last, int scrollPosition) {
         runOnUiThread(() -> {
-            if (start == isRoomOpen) {
+            if (start == IS_ROOM_OPENING) {
                 roomMessagesAdapter.notifyDataSetChanged();
             } else {
                 roomMessagesAdapter.notifyItemRangeInserted(start, last);
             }
 
-            if (scrollPosition != doNotNeedToScroll) {
-                if (start == isRoomOpen) {
+            if (scrollPosition != DO_NOT_NEED_TO_SCROLL) {
+                if (start == IS_ROOM_OPENING) {
                     ((LinearLayoutManager) binding.recyclerView.getLayoutManager())
                             .scrollToPositionWithOffset(scrollPosition, 20);
                     return;

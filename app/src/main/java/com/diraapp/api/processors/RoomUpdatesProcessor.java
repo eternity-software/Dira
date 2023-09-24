@@ -22,14 +22,12 @@ import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
-import com.diraapp.db.entities.messages.MessageReply;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 
 public class RoomUpdatesProcessor {
     private final RoomDao roomDao;
@@ -129,9 +127,9 @@ public class RoomUpdatesProcessor {
                         getMessageById(newMessage.getRepliedMessageId());
 
                 if (repliedMessage != null) {
-                    MessageReply messageReply = new MessageReply(repliedMessage.getId());
-                    messageReply.setRepliedMessage(repliedMessage);
-                    newMessage.setMessageReply(messageReply);
+                    newMessage.setRepliedMessage(repliedMessage);
+                } else {
+                    newMessage.setRepliedMessage(null);
                 }
             }
         }

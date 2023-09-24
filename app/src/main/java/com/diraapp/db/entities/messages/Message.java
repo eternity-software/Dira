@@ -9,7 +9,6 @@ import androidx.room.TypeConverters;
 import com.diraapp.db.converters.AttachmentConverter;
 import com.diraapp.db.converters.CustomClientDataConverter;
 import com.diraapp.db.converters.MessageReadingConverter;
-import com.diraapp.db.converters.MessageReplyConverter;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
 import com.diraapp.utils.CacheUtils;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 
 @Entity
 @TypeConverters({AttachmentConverter.class, CustomClientDataConverter.class,
-        MessageReadingConverter.class, MessageReplyConverter.class})
+        MessageReadingConverter.class})
 public class Message {
 
     @PrimaryKey
@@ -34,12 +33,11 @@ public class Message {
     private long time;
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private CustomClientData customClientData = null;
-
-    @Ignore
+    @ColumnInfo(defaultValue = "null")
     private String repliedMessageId;
 
-    @ColumnInfo(defaultValue = "null")
-    private MessageReply messageReply;
+    @Ignore
+    private Message repliedMessage;
 
     @ColumnInfo(defaultValue = "true")
     private boolean isRead = true;
@@ -183,11 +181,11 @@ public class Message {
         this.repliedMessageId = repliedMessageId;
     }
 
-    public MessageReply getMessageReply() {
-        return messageReply;
+    public Message getRepliedMessage() {
+        return repliedMessage;
     }
 
-    public void setMessageReply(MessageReply messageReply) {
-        this.messageReply = messageReply;
+    public void setRepliedMessage(Message repliedMessage) {
+        this.repliedMessage = repliedMessage;
     }
 }

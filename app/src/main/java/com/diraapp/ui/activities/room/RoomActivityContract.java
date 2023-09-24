@@ -29,6 +29,10 @@ public interface RoomActivityContract {
 
         void notifyMessagesChanged(int start, int last, int scrollPosition);
 
+        void notifyMessageChangedWithoutScroll(int start, int last);
+
+        void notifyOnRoomOpenMessagesLoaded(int scrollPosition);
+
         void notifyAdapterItemChanged(int index);
 
         void notifyAdapterItemsDeleted(int start, int last);

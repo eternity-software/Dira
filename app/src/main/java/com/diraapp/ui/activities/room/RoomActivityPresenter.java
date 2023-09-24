@@ -168,10 +168,11 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
                 List<Message> oldMessages = messageDao.getBeforeMessagesInRoom(roomSecret, message.getTime());
                 if (oldMessages.size() == 0) return;
+                loadReplies(oldMessages, messageDao);
                 int notifyingIndex = messageList.size() - 1;
                 messageList.addAll(oldMessages);
-                view.notifyMessagesChanged(index + 1, index + oldMessages.size(),
-                        RoomActivity.doNotNeedToScroll);
+                view.notifyMessageChangedWithoutScroll(
+                        index + 1, index + oldMessages.size());
 
                 view.notifyAdapterItemChanged(notifyingIndex);
 
@@ -207,6 +208,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     return;
                 }
 
+                loadReplies(newMessages, messageDao);
 
                 for (Message m : newMessages) {
                     messageList.add(0, m);
@@ -248,7 +250,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         view.runBackground(() -> {
             MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
 
-            int scrollTo = RoomActivity.doNotNeedToScroll;
+            int scrollTo = 0;
 
             int size = room.getUnreadMessagesIds().size();
             if (size == 0) {
@@ -271,11 +273,24 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 }
             }
 
+            loadReplies(messageList, messageDao);
+
             initMembers();
             view.setMessages(messageList);
-            view.notifyMessagesChanged(RoomActivity.isRoomOpen, 0, scrollTo);
+            view.notifyOnRoomOpenMessagesLoaded(scrollTo);
         });
 
+    }
+
+    private void loadReplies(List<Message> messages, MessageDao messageDao) {
+        for (Message message: messages) {
+            if (message.getRepliedMessageId() == null) continue;
+
+            Message repliedMessage = messageDao.getMessageById(
+                    message.getRepliedMessageId());
+
+            if (repliedMessage != null) message.setRepliedMessage(repliedMessage);
+        }
     }
 
     public boolean sendTextMessage(String text) {
