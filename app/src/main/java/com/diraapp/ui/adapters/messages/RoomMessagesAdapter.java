@@ -41,8 +41,6 @@ import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientDat
 import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
-import com.diraapp.device.PerformanceClass;
-import com.diraapp.device.PerformanceTester;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.res.Theme;
@@ -61,8 +59,8 @@ import com.diraapp.ui.components.MultiAttachmentMessageView;
 import com.diraapp.ui.components.RoomMessageCustomClientDataView;
 import com.diraapp.ui.components.RoomMessageVideoPlayer;
 import com.diraapp.ui.components.VoiceMessageView;
-import com.diraapp.ui.components.quickvideoplayer.DiraVideoPlayer;
-import com.diraapp.ui.components.quickvideoplayer.DiraVideoPlayerState;
+import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
+import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayerState;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.Numbers;
@@ -401,13 +399,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             videoPlayer.attachRecyclerView(recyclerView);
             videoPlayer.attachDiraActivity(context);
 
-            videoPlayer.addSelfDestroyListener(diraVideoPlayerState -> {
-                if(diraVideoPlayerState == DiraVideoPlayerState.READY) {
-                    finalVideoPlayer.play(file.getPath());
-                    return true;
-                }
-                return false;
-            });
+            finalVideoPlayer.play(file.getPath());
 
 
             try {

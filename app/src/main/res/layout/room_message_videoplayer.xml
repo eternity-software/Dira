@@ -19,7 +19,7 @@
         android:elevation="0dp"
         android:adjustViewBounds="true" />
 
-    <com.diraapp.ui.components.quickvideoplayer.DiraVideoPlayer
+    <com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer
         android:visibility="gone"
         android:id="@+id/video_player"
         android:layout_width="wrap_content"

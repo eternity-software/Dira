@@ -1,4 +1,4 @@
-package com.diraapp.ui.components.quickvideoplayer;
+package com.diraapp.ui.components.diravideoplayer;
 
 public enum DiraVideoPlayerState {
 
