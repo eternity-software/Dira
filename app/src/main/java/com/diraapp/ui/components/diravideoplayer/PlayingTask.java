@@ -1,5 +1,8 @@
 package com.diraapp.ui.components.diravideoplayer;
 
+/**
+ * An object that handles data about playing media file
+ */
 public class PlayingTask {
     private String sourcePath;
 
