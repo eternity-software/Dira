@@ -315,7 +315,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
     }
 
     /**
-     * Releases player and recreates player instance
+     * Ask player to release and recreates MediaPlayer instance
      */
     public void reset() {
         if (mediaPlayer == null) return;
@@ -330,6 +330,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
                 if(Objects.equals(localPlayingNow, currentPlayingTask)) {
                     mediaPlayer = null;
+                    surface = null;
                     if(!mediaPlayerToDestroy.isReleased())
                     {
                         mediaPlayerToDestroy.reset();
@@ -338,6 +339,8 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
                     currentPlayingTask = null;
                     notifyStateChanged(DiraVideoPlayerState.RESET);
+
+                    // Auto-recreation after each reset
                     setupMediaPlayer(true);
                 }
 
@@ -374,6 +377,9 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
         try {
             Surface surface = new Surface(surfaceTexture);
             setSurface(surface);
+
+            // In some cases in recycler view Surface appears after READY state.
+            // Investigation need
             play(currentPlayingTask);
         } catch (Exception e) {
             e.printStackTrace();
@@ -397,6 +403,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
             mediaPlayer.setSurface(surface);
             notifyStateChanged(DiraVideoPlayerState.READY);
             mediaPlayer.start();
+
 
 
 
