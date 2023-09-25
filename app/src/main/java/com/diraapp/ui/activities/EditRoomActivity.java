@@ -82,7 +82,7 @@ public class EditRoomActivity extends DiraActivity implements ServerSelectorBott
             public void onClick(View v) {
                 EditText roomName = findViewById(R.id.room_name);
                 RoomUpdateRequest request = new RoomUpdateRequest(AppStorage.getBase64FromBitmap(roomPicture),
-                        roomName.getText().toString(), roomSecret);
+                        roomName.getText().toString(), roomSecret, room.getUpdateExpireSec());
 
                 try {
                     UpdateProcessor.getInstance().sendRequest(request, room.getServerAddress());

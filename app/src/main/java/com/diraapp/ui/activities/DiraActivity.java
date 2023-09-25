@@ -85,19 +85,19 @@ public class DiraActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        for (DiraActivityListener listener : activityListenerList) listener.onPause();
+        for (DiraActivityListener listener : new ArrayList<>(activityListenerList)) listener.onPause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        for (DiraActivityListener listener : activityListenerList) listener.onDestroy();
+        for (DiraActivityListener listener : new ArrayList<>(activityListenerList)) listener.onDestroy();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        for (DiraActivityListener listener : activityListenerList) listener.onResume();
+        for (DiraActivityListener listener : new ArrayList<>(activityListenerList)) listener.onResume();
     }
 
     public void addListener(DiraActivityListener diraActivityListener) {

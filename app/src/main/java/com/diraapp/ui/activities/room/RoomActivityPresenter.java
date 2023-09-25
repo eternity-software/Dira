@@ -313,7 +313,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 message.setText(EncryptionUtil.encrypt(text, room.getEncryptionKey()));
             }
 
-            SendMessageRequest sendMessageRequest = new SendMessageRequest(message);
+            SendMessageRequest sendMessageRequest = new SendMessageRequest(message, room.getUpdateExpireSec());
             try {
                 UpdateProcessor.getInstance().sendRequest(sendMessageRequest, room.getServerAddress());
             } catch (UnablePerformRequestException e) {
@@ -452,7 +452,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
                 message.getAttachments().add(attachment);
 
-                SendMessageRequest sendMessageRequest = new SendMessageRequest(message);
+                SendMessageRequest sendMessageRequest = new SendMessageRequest(message, room.getUpdateExpireSec());
 
                 UpdateProcessor.getInstance().sendRequest(sendMessageRequest, room.getServerAddress());
 

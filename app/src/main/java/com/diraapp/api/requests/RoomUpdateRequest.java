@@ -5,12 +5,22 @@ public class RoomUpdateRequest extends Request {
     private String base64Picture;
     private String name;
     private String roomSecret;
+    private int updateExpireSec;
 
-    public RoomUpdateRequest(String base64Picture, String name, String roomSecret) {
+    public RoomUpdateRequest(String base64Picture, String name, String roomSecret, int updateExpireSec) {
         super(0, RequestType.UPDATE_ROOM);
         this.base64Picture = base64Picture;
         this.name = name;
         this.roomSecret = roomSecret;
+        this.updateExpireSec = updateExpireSec;
+    }
+
+    public int getUpdateExpireSec() {
+        return updateExpireSec;
+    }
+
+    public void setUpdateExpireSec(int updateExpireSec) {
+        this.updateExpireSec = updateExpireSec;
     }
 
     public String getBase64Picture() {
