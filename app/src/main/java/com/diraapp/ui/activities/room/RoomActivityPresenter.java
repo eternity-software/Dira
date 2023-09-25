@@ -383,7 +383,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             view.setReplyMessage(null);
         }
 
-        SendMessageRequest sendMessageRequest = new SendMessageRequest(message);
+        SendMessageRequest sendMessageRequest = new SendMessageRequest(message, room.getUpdateExpireSec());
 
         UpdateProcessor.getInstance().sendRequest(sendMessageRequest, room.getServerAddress());
 

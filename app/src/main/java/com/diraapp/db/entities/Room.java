@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.api.updates.Update;
 import com.diraapp.db.converters.UnreadIdsConverter;
 import com.diraapp.db.entities.messages.Message;
 
@@ -37,6 +38,9 @@ public class Room {
     private long timeServerStartup;
     @ColumnInfo(defaultValue = "0")
     private long timeEncryptionKeyUpdated;
+
+    @ColumnInfo(defaultValue = ("" + Update.DEFAULT_UPDATE_EXPIRE_SEC))
+    private int updateExpireSec;
     @ColumnInfo(defaultValue = "")
     private String encryptionKey;
     @ColumnInfo(defaultValue = "0")
@@ -62,6 +66,14 @@ public class Room {
             return;
         }
         this.unreadMessagesIds = unreadMessagesIds;
+    }
+
+    public int getUpdateExpireSec() {
+        return updateExpireSec;
+    }
+
+    public void setUpdateExpireSec(int updateExpireSec) {
+        this.updateExpireSec = updateExpireSec;
     }
 
     public String getClientSecret() {

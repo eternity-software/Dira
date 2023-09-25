@@ -2,11 +2,13 @@ package com.diraapp.api.updates;
 
 public class Update {
 
+    public static final int DEFAULT_UPDATE_EXPIRE_SEC = 8 * 60 * 60;
+
     private final long updateCreatedTime;
     private final UpdateType updateType;
     private long originRequestId = -1;
     private long updateId = 0;
-    private long updateExpireSec = 8 * 60 * 60;
+    private long updateExpireSec = DEFAULT_UPDATE_EXPIRE_SEC;
     private String roomSecret;
 
     public Update(long updateId, UpdateType updateType) {
