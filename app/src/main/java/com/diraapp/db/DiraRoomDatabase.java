@@ -39,7 +39,7 @@ public abstract class DiraRoomDatabase extends RoomDatabase {
 
     public static DiraRoomDatabase getDatabase(Context applicationContext) {
         return androidx.room.Room.databaseBuilder(applicationContext,
-                DiraRoomDatabase.class, DB_NAME).build();
+                DiraRoomDatabase.class, DB_NAME).enableMultiInstanceInvalidation().build();
     }
 
     public abstract RoomDao getRoomDao();

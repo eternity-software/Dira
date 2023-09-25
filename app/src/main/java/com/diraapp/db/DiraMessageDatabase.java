@@ -45,7 +45,7 @@ public abstract class DiraMessageDatabase extends RoomDatabase {
 
     public static DiraMessageDatabase getDatabase(Context applicationContext) {
         return androidx.room.Room.databaseBuilder(applicationContext,
-                DiraMessageDatabase.class, DB_NAME).build();
+                DiraMessageDatabase.class, DB_NAME).enableMultiInstanceInvalidation().build();
     }
 
     public abstract MessageDao getMessageDao();

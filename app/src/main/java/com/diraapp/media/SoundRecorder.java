@@ -61,11 +61,19 @@ public class SoundRecorder {
     }
 
     public void stop() {
-        if (mediaRecorder != null) {
-            mediaRecorder.stop();
-            mediaRecorder.release();
-            mediaRecorder = null;
+        try
+        {
+            if (mediaRecorder != null) {
+                mediaRecorder.stop();
+                mediaRecorder.release();
+                mediaRecorder = null;
+            }
         }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     public boolean isRunning() {
