@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -35,6 +36,7 @@ import com.diraapp.api.views.UserStatusType;
 import com.diraapp.databinding.ActivityRoomBinding;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
+import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
@@ -43,6 +45,7 @@ import com.diraapp.notifications.Notifier;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
+import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.images.FilesUploader;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.ImageSendActivity;
@@ -53,6 +56,7 @@ import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.adapters.messages.MessageSwiper;
 import com.diraapp.ui.adapters.messages.RoomMessagesAdapter;
 import com.diraapp.ui.appearance.BackgroundType;
+import com.diraapp.ui.appearance.ColorTheme;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.FilePreview;
 import com.diraapp.ui.components.RecordComponentsController;
@@ -62,6 +66,7 @@ import com.diraapp.userstatus.UserStatusListener;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.SliderActivity;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -213,6 +218,13 @@ public class RoomActivity extends DiraActivity
 
 
         UserStatusHandler.getInstance().addListener(this);
+
+        binding.replyClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setReplyMessage(null);
+            }
+        });
 
     }
 
@@ -471,12 +483,83 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void setReplyMessage(Message message) {
-        if (message == null) {
-            // TODO
-            return;
-        }
+        runOnUiThread(() -> {
+            if (message == null) {
+                presenter.setReplyingMessage(null);
+                binding.replyLayout.setVisibility(View.GONE);
+                return;
+            }
 
-        // TODO
+            String text = "";
+            Attachment attachment = null;
+            boolean showImage = false;
+            int size = message.getAttachments().size();
+            if (size > 0) {
+                attachment = message.getAttachments().get(0);
+            }
+
+            if (attachment != null) {
+                binding.replyText.setTextColor(Theme.getColor(this, R.color.self_reply_color));
+                if (size > 1) {
+                    text = getResources().getString(R.string.message_type_attachments);
+                } else if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
+                    text = getResources().getString(R.string.message_type_bubble);
+                } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
+                    text = getResources().getString(R.string.message_type_video);
+                } else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
+                    text = getResources().getString(R.string.message_type_voice);
+                } else if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
+                    text = message.getText();
+                    if (text == null | "".equals(text)) {
+                        text = getResources().getString(R.string.message_type_image);
+                    } else {
+                        binding.replyText.setTextColor(Theme.getColor
+                                (this, R.color.self_message_color));
+                    }
+
+                    File file = AttachmentsStorage.getFileFromAttachment(attachment,
+                            this, roomSecret);
+
+                    if (file != null) {
+                        Picasso.get().load(file).into(binding.replyImage);
+                        binding.replyImageCard.setVisibility(View.VISIBLE);
+                    }
+                    showImage = true;
+                }
+            } else {
+                text = message.getText();
+                if (text == null) text = "";
+            }
+
+            if (!showImage) {
+                binding.replyImageCard.setVisibility(View.GONE);
+            }
+
+            HashMap<String, Member> members = ((RoomMessagesAdapter) binding.recyclerView.getAdapter())
+                    .getMembers();
+
+            String author = "";
+            boolean isUnknown = true;
+            if (message.getAuthorId().equals(getCacheUtils().getString(CacheUtils.ID))) {
+                author = getString(R.string.you);
+                isUnknown = false;
+            } else if (members != null) {
+                Member member = members.get(message.getAuthorId());
+                if (member != null) {
+                    author = member.getNickname();
+                    isUnknown = false;
+                }
+            }
+
+            if (isUnknown) {
+                author = getString(R.string.unknown);
+            }
+
+            binding.replyAuthorName.setText(author);
+            binding.replyText.setText(text);
+
+            binding.replyLayout.setVisibility(View.VISIBLE);
+        });
     }
 
     @Override

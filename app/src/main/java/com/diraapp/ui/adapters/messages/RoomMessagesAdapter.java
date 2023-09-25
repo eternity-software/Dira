@@ -648,6 +648,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             }
         }
 
+        fillMessageReply(message.getRepliedMessage(), holder);
+
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -1145,6 +1147,80 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 
         return holder;
+    }
+
+    private void fillMessageReply(Message message, ViewHolder viewHolder) {
+        if (message == null) {
+            viewHolder.replyContainer.setVisibility(View.GONE);
+            return;
+        }
+
+        String text = "";
+        Attachment attachment = null;
+        boolean showImage = false;
+        int size = message.getAttachments().size();
+        if (size > 0) {
+            attachment = message.getAttachments().get(0);
+        }
+
+        if (attachment != null) {
+            viewHolder.replyText.setTextColor(Theme.getColor(context, R.color.self_reply_color));
+            if (size > 1) {
+                text = context.getResources().getString(R.string.message_type_attachments);
+            } else if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
+                text = context.getResources().getString(R.string.message_type_bubble);
+            } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
+                text = context.getResources().getString(R.string.message_type_video);
+            } else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
+                text = context.getResources().getString(R.string.message_type_voice);
+            } else if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
+                text = message.getText();
+                if (text == null | "".equals(text)) {
+                    text = context.getResources().getString(R.string.message_type_image);
+                } else {
+                    viewHolder.replyText.setTextColor(Theme.getColor
+                            (context, R.color.self_message_color));
+                }
+
+                File file = AttachmentsStorage.getFileFromAttachment(attachment,
+                        context, room.getSecretName());
+
+                if (file != null) {
+                    Picasso.get().load(file).into(viewHolder.replyImage);
+                    viewHolder.replyImageCard.setVisibility(View.VISIBLE);
+                }
+                showImage = true;
+            }
+        } else {
+            text = message.getText();
+            if (text == null) text = "";
+        }
+
+        if (!showImage) {
+            viewHolder.replyImageCard.setVisibility(View.GONE);
+        }
+
+        String author = "";
+        boolean isUnknown = true;
+        if (message.getAuthorId().equals(selfId)) {
+            author = context.getString(R.string.you);
+            isUnknown = false;
+        } else if (members != null) {
+            Member member = members.get(message.getAuthorId());
+            if (member != null) {
+                author = member.getNickname();
+                isUnknown = false;
+            }
+        }
+
+        if (isUnknown) {
+            author = context.getString(R.string.unknown);
+        }
+
+        viewHolder.replyAuthor.setText(author);
+        viewHolder.replyText.setText(text);
+
+        viewHolder.replyContainer.setVisibility(View.VISIBLE);
     }
 
     public interface MessageAdapterListener {

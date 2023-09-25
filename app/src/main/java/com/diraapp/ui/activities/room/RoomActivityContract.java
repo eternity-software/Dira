@@ -97,6 +97,8 @@ public interface RoomActivityContract {
         void uploadAttachmentAndSendMessage(AttachmentType attachmentType, String fileUri, String messageText);
 
         void sendMessage(Message message) throws UnablePerformRequestException;
+
+        void setReplyingMessage(Message message);
     }
 
 }

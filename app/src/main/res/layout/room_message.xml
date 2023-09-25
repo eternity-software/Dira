@@ -91,6 +91,81 @@
                     app:themeBackgroundColor="message_background">
 
                     <LinearLayout
+                        android:layout_marginTop="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/message_reply_container"
+                        android:visibility="gone">
+
+                        <com.diraapp.ui.components.dynamic.ThemeImageView
+                            android:layout_width="4dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginVertical="4dp"
+                            android:layout_marginStart="8dp"
+                            app:themeBackgroundTint="message_reply_color"
+                            android:background="@drawable/gray_rounded"/>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            app:cardElevation="0dp"
+                            app:cardBackgroundColor="@android:color/transparent"
+                            android:layout_weight="0"
+                            android:layout_marginStart="8dp"
+                            app:cardCornerRadius="16dp"
+                            android:layout_gravity="center_vertical"
+                            android:id="@+id/message_reply_image_card">
+
+                            <ImageView
+                                android:id="@+id/message_reply_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"/>
+
+                        </androidx.cardview.widget.CardView>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:orientation="vertical"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_weight="1">
+
+                            <com.diraapp.ui.components.dynamic.DynamicTextView
+                                android:id="@+id/message_reply_author_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:fontFamily="@font/montserratbold"
+                                android:maxLines="1"
+
+                                app:themeColor="message_reply_color"
+                                android:text="Author"
+                                android:textColor="@color/white"
+                                android:textSize="12sp"
+                                android:transitionName="name"/>
+
+                            <com.diraapp.ui.components.dynamic.DynamicTextView
+                                android:id="@+id/message_reply_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:fontFamily="@font/montserratsemibold"
+                                android:maxLines="1"
+
+                                app:themeColor="message_reply_color"
+                                android:text="Message text"
+                                android:textColor="@color/white"
+                                android:textSize="12sp"
+                                android:transitionName="name"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:id="@+id/loading_attachment_layout"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
@@ -117,7 +192,10 @@
                         android:id="@+id/message_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         android:autoLink="all"
                         android:fontFamily="@font/montserratsemibold"
 
@@ -129,7 +207,6 @@
                         android:textSize="15sp"
 
                         android:visibility="visible"
-
 
                         app:themeColor="message_color"
                         app:themeColorLink="message_color_link" />

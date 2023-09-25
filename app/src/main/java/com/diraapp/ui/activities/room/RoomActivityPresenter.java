@@ -380,13 +380,18 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     public void sendMessage(Message message) throws UnablePerformRequestException {
         if (replyingMessage != null) {
             message.setRepliedMessageId(replyingMessage.getId());
-            replyingMessage = null;
+            view.setReplyMessage(null);
         }
 
         SendMessageRequest sendMessageRequest = new SendMessageRequest(message);
 
         UpdateProcessor.getInstance().sendRequest(sendMessageRequest, room.getServerAddress());
 
+    }
+
+    @Override
+    public void setReplyingMessage(Message message) {
+        replyingMessage = message;
     }
 
 

@@ -198,13 +198,14 @@
         app:layout_constraintEnd_toEndOf="@+id/record_ripple"
         app:layout_constraintTop_toTopOf="@+id/record_ripple"
         app:tint="@color/dark" />
+
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/message_input"
         android:clipToPadding="false"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:elevation="1dp"
 
         android:paddingHorizontal="8dp"
@@ -213,65 +214,153 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <EditText
-            android:id="@+id/message_text_input"
+        <LinearLayout
+            android:id="@+id/reply_layout"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginHorizontal="12dp"
-            android:layout_weight="1"
-            android:background="@color/gray"
-            android:fontFamily="@font/montserratsemibold"
-            android:hint="@string/type_message_hint"
-            android:maxHeight="100dp"
-            android:maxLength="600"
-            android:paddingVertical="12dp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/light_gray"
-            android:textSize="16sp" />
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/attach_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="6dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0"
-            android:background="@drawable/light_round"
-            android:padding="12dp"
-            android:src="@drawable/ic_attach"
-            app:tint="@color/light_gray" />
+            <com.diraapp.ui.components.dynamic.ThemeImageView
+                android:layout_width="4dp"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="8dp"
+                android:layout_marginStart="4dp"
+                app:themeBackgroundTint="self_reply_color"
+                android:background="@drawable/gray_rounded"/>
 
-        <com.diraapp.ui.components.dynamic.ThemeImageView
-            android:id="@+id/send_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0"
-            android:background="@drawable/accent_rounded"
-            android:padding="8dp"
+            <androidx.cardview.widget.CardView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@android:color/transparent"
+                android:layout_weight="0"
+                app:cardCornerRadius="16dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:id="@+id/reply_image_card"
+                android:visibility="visible">
 
-            app:themeBackgroundTint="accent_button_background"
-            app:themeImageColor="accent_button_color"
+                <ImageView
+                    android:id="@+id/reply_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
 
-            android:src="@drawable/ic_send"
-            app:tint="@color/dark" />
+            </androidx.cardview.widget.CardView>
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="4dp"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <com.diraapp.ui.components.dynamic.DynamicTextView
+                    android:id="@+id/reply_author_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="@font/montserratbold"
+                    android:maxLines="1"
+                    
+                    app:themeColor="self_reply_color"
+                    android:text="Author"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:transitionName="name"/>
+
+                <com.diraapp.ui.components.dynamic.DynamicTextView
+                    android:id="@+id/reply_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="@font/montserratsemibold"
+                    android:maxLines="1"
+
+                    app:themeColor="self_message_color"
+                    android:text="Message text"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:transitionName="name"/>
+
+            </LinearLayout>
+
+            <com.diraapp.ui.components.dynamic.ThemeImageView
+                app:themeImageColor="light_gray"
+                android:layout_width="40dp"
+                android:paddingHorizontal="8dp"
+                android:layout_gravity="center_vertical"
+                android:layout_height="40dp"
+                android:id="@+id/reply_close"
+                android:src="@drawable/ic_close"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/message_text_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="12dp"
+                android:layout_weight="1"
+                android:background="@color/gray"
+                android:fontFamily="@font/montserratsemibold"
+                android:hint="@string/type_message_hint"
+                android:maxHeight="100dp"
+                android:maxLength="600"
+                android:paddingVertical="12dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/light_gray"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/attach_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="6dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0"
+                android:background="@drawable/light_round"
+                android:padding="12dp"
+                android:src="@drawable/ic_attach"
+                app:tint="@color/light_gray" />
+
+            <com.diraapp.ui.components.dynamic.ThemeImageView
+                android:id="@+id/send_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0"
+                android:background="@drawable/accent_rounded"
+                android:padding="8dp"
+
+                app:themeBackgroundTint="accent_button_background"
+                app:themeImageColor="accent_button_color"
+
+                android:src="@drawable/ic_send"
+                app:tint="@color/dark" />
+
+            <ImageView
+                android:id="@+id/status_light"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:elevation="20dp"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="-10dp"
+                android:layout_marginBottom="4dp"
+                android:src="@drawable/circle"
+                android:visibility="gone" />
+
+        </LinearLayout>
 
 
 
-
-
-
-        <ImageView
-            android:id="@+id/status_light"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:elevation="20dp"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="-10dp"
-            android:layout_marginBottom="4dp"
-            android:src="@drawable/circle"
-            android:visibility="gone" />
     </LinearLayout>
 
 
