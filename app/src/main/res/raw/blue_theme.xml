@@ -42,10 +42,12 @@
     <color name="self_message_color">#FFFFFF</color>
     <color name="self_message_background">#388BD7</color>
     <color name="self_message_color_link">#313131</color>
+    <color name="self_reply_color">#108F80</color>
 
     <color name="message_background">#424242</color>
     <color name="message_color">@color/white</color>
     <color name="message_color_link">#388BD7</color>
+    <color name="message_reply_color">#108F80</color>
 
     <color name="author_color">@color/white</color>
     <color name="subtitle_color">@color/medium_light_light_gray</color>

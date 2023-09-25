@@ -11,6 +11,7 @@ import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.userstatus.UserStatus;
 import com.diraapp.utils.CacheUtils;
 
@@ -70,6 +71,8 @@ public interface RoomActivityContract {
         void runBackground(Runnable runnable);
 
         void runOnUiThread(Runnable runnable);
+
+        void setReplyMessage(Message message);
     }
 
     interface Presenter {
@@ -92,6 +95,8 @@ public interface RoomActivityContract {
         boolean sendTextMessage(String text);
 
         void uploadAttachmentAndSendMessage(AttachmentType attachmentType, String fileUri, String messageText);
+
+        void sendMessage(Message message) throws UnablePerformRequestException;
     }
 
 }

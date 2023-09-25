@@ -26,6 +26,7 @@ import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
+import com.diraapp.ui.adapters.messages.MessageSwiper;
 import com.diraapp.userstatus.UserStatus;
 import com.diraapp.utils.EncryptionUtil;
 import com.diraapp.utils.Logger;
@@ -43,8 +44,8 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class RoomActivityPresenter implements RoomActivityContract.Presenter, UpdateListener {
-
+public class RoomActivityPresenter implements RoomActivityContract.Presenter, UpdateListener,
+        MessageSwiper.MessageSwipingListener {
 
     private static final int MAX_ADAPTER_MESSAGES_COUNT = 200;
     private final String roomSecret;
@@ -55,6 +56,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     private UserStatus currentUserStatus;
     private Room room;
     private boolean isNewestMessagesLoaded = false;
+
+    private Message replyingMessage = null;
 
     public RoomActivityPresenter(String roomSecret, String selfId) {
         this.roomSecret = roomSecret;
@@ -313,10 +316,9 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 message.setText(EncryptionUtil.encrypt(text, room.getEncryptionKey()));
             }
 
-            SendMessageRequest sendMessageRequest = new SendMessageRequest(message);
             try {
-                UpdateProcessor.getInstance().sendRequest(sendMessageRequest, room.getServerAddress());
-            } catch (UnablePerformRequestException e) {
+                sendMessage(message);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return true;
@@ -366,6 +368,27 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         });
 
     }
+
+
+    public void onMessageSwiped(int position) {
+        replyingMessage = messageList.get(position);
+
+        view.setReplyMessage(replyingMessage);
+    }
+
+    @Override
+    public void sendMessage(Message message) throws UnablePerformRequestException {
+        if (replyingMessage != null) {
+            message.setRepliedMessageId(replyingMessage.getId());
+            replyingMessage = null;
+        }
+
+        SendMessageRequest sendMessageRequest = new SendMessageRequest(message);
+
+        UpdateProcessor.getInstance().sendRequest(sendMessageRequest, room.getServerAddress());
+
+    }
+
 
     public class RoomAttachmentCallback implements Callback {
 
@@ -452,9 +475,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
                 message.getAttachments().add(attachment);
 
-                SendMessageRequest sendMessageRequest = new SendMessageRequest(message);
-
-                UpdateProcessor.getInstance().sendRequest(sendMessageRequest, room.getServerAddress());
+                sendMessage(message);
 
             } catch (Exception e) {
                 e.printStackTrace();

@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.widget.ImageViewCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
@@ -49,6 +50,7 @@ import com.diraapp.ui.activities.RoomInfoActivity;
 import com.diraapp.ui.activities.RoomSelectorActivity;
 import com.diraapp.ui.activities.resizer.FluidContentResizer;
 import com.diraapp.ui.adapters.MediaGridItemListener;
+import com.diraapp.ui.adapters.messages.MessageSwiper;
 import com.diraapp.ui.adapters.messages.RoomMessagesAdapter;
 import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
@@ -120,6 +122,11 @@ public class RoomActivity extends DiraActivity
         binding.recyclerView.setItemViewCacheSize(50);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setNestedScrollingEnabled(false);
+
+        MessageSwiper messageSwiper = new  MessageSwiper(binding.recyclerView);
+        messageSwiper.addListener((MessageSwiper.MessageSwipingListener) presenter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(messageSwiper);
+        itemTouchHelper.attachToRecyclerView(binding.recyclerView);
 
 //        binding.recyclerView.getRecycledViewPool().setMaxRecycledViews(1, 4);
 //        binding.recyclerView.getRecycledViewPool().setMaxRecycledViews(21, 4);
@@ -460,6 +467,16 @@ public class RoomActivity extends DiraActivity
             } catch (Exception ignored) {
             }
         });
+    }
+
+    @Override
+    public void setReplyMessage(Message message) {
+        if (message == null) {
+            // TODO
+            return;
+        }
+
+        // TODO
     }
 
     @Override
