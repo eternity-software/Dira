@@ -1,6 +1,8 @@
 package com.diraapp.ui.activities.room;
 
 import android.Manifest;
+import android.animation.ValueAnimator;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,6 +14,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -66,6 +70,7 @@ import com.diraapp.userstatus.UserStatusHandler;
 import com.diraapp.userstatus.UserStatusListener;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
+import com.diraapp.utils.Numbers;
 import com.diraapp.utils.SliderActivity;
 import com.squareup.picasso.Picasso;
 
@@ -223,7 +228,23 @@ public class RoomActivity extends DiraActivity
         binding.replyClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setReplyMessage(null);
+                int finalHeight = Numbers.dpToPx(48, RoomActivity.this);
+                ValueAnimator animator = ValueAnimator.ofInt(finalHeight, 0);
+                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
+                        int value = (int) valueAnimator.getAnimatedValue();
+                        ViewGroup.LayoutParams params = binding.replyLayout.getLayoutParams();
+                        params.height = value;
+                        binding.replyLayout.setLayoutParams(params);
+                        if (value == 0) {
+                            setReplyMessage(null);
+                        }
+                    }
+                });
+
+                animator.setDuration(250);
+                animator.start();
             }
         });
 
@@ -560,6 +581,19 @@ public class RoomActivity extends DiraActivity
             binding.replyText.setText(text);
 
             binding.replyLayout.setVisibility(View.VISIBLE);
+            ValueAnimator animator = ValueAnimator.ofInt(0, Numbers.dpToPx(48, this));
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
+                    int value = (int) valueAnimator.getAnimatedValue();
+                    ViewGroup.LayoutParams params = binding.replyLayout.getLayoutParams();
+                    params.height = value;
+                    binding.replyLayout.setLayoutParams(params);
+                }
+            });
+
+            animator.setDuration(250);
+            animator.start();
         });
     }
 

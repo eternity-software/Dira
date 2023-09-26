@@ -306,6 +306,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             }
 
             messageList = messages;
+            loadReplies(messages, messageDao);
             view.setMessages(messageList);
             view.notifyOnRoomOpenMessagesLoaded(scrollTo);
             isNewestMessagesLoaded = messages.get(0).getId().equals(room.getLastMessageId());
@@ -315,7 +316,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     private void loadReplies(List<Message> messages, MessageDao messageDao) {
         HashMap<String, Message> messageHashMap = new HashMap<>(messages.size());
 
-        for (Message m: messages) {
+        for (Message m: messageList) {
             messageHashMap.put(m.getId(), m);
         }
 
