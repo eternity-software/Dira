@@ -336,7 +336,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     }
 
     public boolean sendTextMessage(String text) {
-
         while (text.contains("   ")) {
             text = text.replace("   ", " ");
         }
@@ -368,6 +367,12 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     @Override
     public void uploadAttachmentAndSendMessage(AttachmentType attachmentType, String fileUri, String messageText) {
+        String replyId;
+        if (replyingMessage != null) replyId = replyingMessage.getId();
+        else {
+            replyId = null;
+        }
+        view.setReplyMessage(null);
         view.runBackground(() -> {
             Logger.logDebug(this.getClass().getSimpleName(),
                     "Uploading started.. ");
@@ -392,14 +397,17 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     bitrate = 1;
                 }
 
+
                 view.compressVideo(urisToCompress, fileUri, videoQuality,
                         videoHeight, videoWidth,
-                        new RoomActivityPresenter.RoomAttachmentCallback(null, messageText, attachmentType),
+                        new RoomActivityPresenter.RoomAttachmentCallback(null, messageText,
+                                attachmentType, replyId),
                         room.getServerAddress(), room.getEncryptionKey(), bitrate);
 
             } else {
                 view.uploadFile(fileUri,
-                        new RoomAttachmentCallback(fileUri, messageText, attachmentType),
+                        new RoomAttachmentCallback(fileUri, messageText, attachmentType,
+                                replyId),
                         false,
                         room.getServerAddress(),
                         room.getEncryptionKey());
@@ -419,7 +427,9 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     @Override
     public void sendMessage(Message message) throws UnablePerformRequestException {
         if (replyingMessage != null) {
-            message.setRepliedMessageId(replyingMessage.getId());
+            if (message.getRepliedMessageId() == null) {
+                message.setRepliedMessageId(replyingMessage.getId());
+            }
             view.setReplyMessage(null);
         }
 
@@ -467,10 +477,13 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
         private long fileSize;
 
-        public RoomAttachmentCallback(String fileUri, String messageText, AttachmentType attachmentType) {
+        private String messageReplyId;
+
+        public RoomAttachmentCallback(String fileUri, String messageText, AttachmentType attachmentType, String messageReplyId) {
             this.fileUri = fileUri;
             this.messageText = messageText;
             this.attachmentType = attachmentType;
+            this.messageReplyId = messageReplyId;
         }
 
         public AttachmentType getAttachmentType() {
@@ -530,6 +543,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 }
 
                 Message message = Message.generateMessage(view.getCacheUtils(), roomSecret);
+                message.setRepliedMessageId(messageReplyId);
 
                 message.setLastTimeEncryptionKeyUpdated(room.getTimeEncryptionKeyUpdated());
 

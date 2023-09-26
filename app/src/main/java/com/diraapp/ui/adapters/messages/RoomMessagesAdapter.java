@@ -55,6 +55,7 @@ import com.diraapp.ui.adapters.messagetooltipread.MessageTooltipAdapter;
 import com.diraapp.ui.adapters.messagetooltipread.UserReadMessage;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.MessageAttachmentToLargeView;
+import com.diraapp.ui.components.MessageReplyComponent;
 import com.diraapp.ui.components.MultiAttachmentMessageView;
 import com.diraapp.ui.components.RoomMessageCustomClientDataView;
 import com.diraapp.ui.components.RoomMessageVideoPlayer;
@@ -664,7 +665,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             }
         }
 
-        fillMessageReply(message.getRepliedMessage(), holder);
+        fillMessageReply(message.getRepliedMessage(), holder, isSelfMessage);
 
     }
 
@@ -1132,14 +1133,18 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         View view = null;
 
         boolean bubbleAdded = false;
+        MessageReplyComponent replyComponent;
 
         if (viewType == VIEW_TYPE_ROOM_MESSAGE_BUBBLE) {
+            replyComponent = new MessageReplyComponent(context,
+                    VIEW_TYPE_ROOM_MESSAGE_BUBBLE, isSelfMessage);
+            holder.bubbleViewContainer.addView(replyComponent);
+
             CardView bubble = new BubbleMessageView(context);
             holder.bubbleViewContainer.addView(bubble);
 
             holder.messageContainer.setVisibility(View.GONE);
             holder.viewsContainer.setVisibility(View.GONE);
-            holder.updateViews();
 
             bubbleAdded = true;
         } else if (viewType == VIEW_TYPE_ROOM_MESSAGE_VOICE) {
@@ -1154,18 +1159,23 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             view = MultiAttachmentMessageView.createNewMultiAttachmentView(context);
         }
 
+        if (!bubbleAdded) {
+            replyComponent = new MessageReplyComponent(context,
+                    viewType, isSelfMessage);
+            holder.viewsContainer.addView(replyComponent);
+        }
+
         if (!bubbleAdded & view != null) {
             holder.messageContainer.setVisibility(View.VISIBLE);
             holder.viewsContainer.addView(view);
-            holder.updateViews();
-
         }
 
+        holder.updateViews();
 
         return holder;
     }
 
-    private void fillMessageReply(Message message, ViewHolder viewHolder) {
+    private void fillMessageReply(Message message, ViewHolder viewHolder, boolean isSelfMessage) {
         if (message == null) {
             viewHolder.replyContainer.setVisibility(View.GONE);
             return;
@@ -1179,8 +1189,15 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             attachment = message.getAttachments().get(0);
         }
 
+        int textColorId = 0;
+        if (isSelfMessage) textColorId = R.color.self_message_color;
+        else textColorId = R.color.message_color;
+
         if (attachment != null) {
-            viewHolder.replyText.setTextColor(Theme.getColor(context, R.color.self_reply_color));
+            int statusTextColor = 0;
+            if (isSelfMessage) statusTextColor = R.color.self_reply_color;
+            else statusTextColor = R.color.message_reply_color;
+            viewHolder.replyText.setTextColor(Theme.getColor(context, statusTextColor));
             if (size > 1) {
                 text = context.getResources().getString(R.string.message_type_attachments);
             } else if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
@@ -1195,7 +1212,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                     text = context.getResources().getString(R.string.message_type_image);
                 } else {
                     viewHolder.replyText.setTextColor(Theme.getColor
-                            (context, R.color.self_message_color));
+                            (context, textColorId));
                 }
 
                 File file = AttachmentsStorage.getFileFromAttachment(attachment,
@@ -1211,7 +1228,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             text = message.getText();
             if (text == null) text = "";
             viewHolder.replyText.setTextColor(Theme.getColor
-                    (context, R.color.self_message_color));
+                    (context, textColorId));
         }
 
         if (!showImage) {

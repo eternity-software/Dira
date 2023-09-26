@@ -14,7 +14,7 @@ import com.diraapp.utils.Numbers;
 public class ViewSwiper {
 
 
-    public static final int DEFAULT_DEATH_ZONE_DP = 20;
+    public static final int DEFAULT_DEATH_ZONE_DP = 40;
     public static final float SWIPE_TRIGGER_PERCENT = 0.1f;
 
     private RecyclerView view;

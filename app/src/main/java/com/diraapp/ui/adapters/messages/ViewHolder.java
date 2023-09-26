@@ -75,10 +75,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     DynamicTextView replyAuthor;
 
-
-
-
-
     public ViewHolder(@NonNull View itemView) {
         super(itemView);
 
@@ -111,13 +107,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         messageBackground = itemView.findViewById(R.id.message_background);
         viewsContainer = itemView.findViewById(R.id.views_container);
         bubbleViewContainer = itemView.findViewById(R.id.bubble_view_container);
-
-        // message reply
-        replyImage = itemView.findViewById(R.id.message_reply_image);
-        replyImageCard = itemView.findViewById(R.id.message_reply_image_card);
-        replyContainer = itemView.findViewById(R.id.message_reply_container);
-        replyText = itemView.findViewById(R.id.message_reply_text);
-        replyAuthor = itemView.findViewById(R.id.message_reply_author_name);
     }
 
     public void updateViews() {
@@ -144,5 +133,12 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
         multiAttachmentsView = itemView.findViewById(MultiAttachmentMessageView.
                 MULTI_ATTACHMENT_MESSAGE_VIEW_ID);
+
+        // message reply
+        replyImage = itemView.findViewById(R.id.message_reply_image);
+        replyImageCard = itemView.findViewById(R.id.message_reply_image_card);
+        replyContainer = itemView.findViewById(R.id.message_reply_container);
+        replyText = itemView.findViewById(R.id.message_reply_text);
+        replyAuthor = itemView.findViewById(R.id.message_reply_author_name);
     }
 }

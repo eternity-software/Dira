@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/message_reply_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:visibility="gone">
+
+    <com.diraapp.ui.components.dynamic.ThemeImageView
+        android:id="@+id/message_reply_line"
+        app:themeBackgroundTint="message_reply_color"
+        android:layout_width="4dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/gray_rounded"
+        android:paddingTop="4dp" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/message_reply_image_card"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        android:layout_weight="0">
+
+        <ImageView
+            android:id="@+id/message_reply_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <com.diraapp.ui.components.dynamic.DynamicTextView
+            android:id="@+id/message_reply_author_name"
+            app:themeColor="message_reply_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="@font/montserratbold"
+
+            android:maxLines="1"
+            android:text="Author"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:transitionName="name" />
+
+        <com.diraapp.ui.components.dynamic.DynamicTextView
+            android:id="@+id/message_reply_text"
+            app:themeColor="message_reply_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="@font/montserratsemibold"
+
+            android:maxLines="1"
+            android:text="Message text"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:transitionName="name" />
+
+    </LinearLayout>
+
+</LinearLayout>
