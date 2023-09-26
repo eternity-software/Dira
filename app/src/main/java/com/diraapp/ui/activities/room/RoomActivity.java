@@ -53,6 +53,7 @@ import com.diraapp.ui.activities.RoomInfoActivity;
 import com.diraapp.ui.activities.RoomSelectorActivity;
 import com.diraapp.ui.activities.resizer.FluidContentResizer;
 import com.diraapp.ui.adapters.MediaGridItemListener;
+import com.diraapp.ui.adapters.messages.MessageReplyClickedListener;
 import com.diraapp.ui.adapters.messages.MessageSwiper;
 import com.diraapp.ui.adapters.messages.RoomMessagesAdapter;
 import com.diraapp.ui.appearance.BackgroundType;
@@ -563,6 +564,11 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
+    public void smoothScrollTo(int position) {
+        binding.recyclerView.smoothScrollToPosition(position);
+    }
+
+    @Override
     public void onMediaMessageRecorded(String path, AttachmentType attachmentType) {
         presenter.uploadAttachmentAndSendMessage(attachmentType, path, "");
     }
@@ -599,6 +605,7 @@ public class RoomActivity extends DiraActivity
             });
 
             binding.recyclerView.setAdapter(roomMessagesAdapter);
+            roomMessagesAdapter.setReplyClickedListener((MessageReplyClickedListener) presenter);
 
             presenter.loadMessages();
         });

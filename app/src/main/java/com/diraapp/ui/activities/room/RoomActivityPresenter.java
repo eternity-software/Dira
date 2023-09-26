@@ -26,7 +26,9 @@ import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
+import com.diraapp.ui.adapters.messages.MessageReplyClickedListener;
 import com.diraapp.ui.adapters.messages.MessageSwiper;
+import com.diraapp.ui.adapters.messages.RoomMessagesAdapter;
 import com.diraapp.userstatus.UserStatus;
 import com.diraapp.utils.EncryptionUtil;
 import com.diraapp.utils.Logger;
@@ -45,7 +47,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class RoomActivityPresenter implements RoomActivityContract.Presenter, UpdateListener,
-        MessageSwiper.MessageSwipingListener {
+        MessageSwiper.MessageSwipingListener, MessageReplyClickedListener {
 
     private static final int MAX_ADAPTER_MESSAGES_COUNT = 200;
     private final String roomSecret;
@@ -171,9 +173,9 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
                 List<Message> oldMessages = messageDao.getBeforeMessagesInRoom(roomSecret, message.getTime());
                 if (oldMessages.size() == 0) return;
-                loadReplies(oldMessages, messageDao);
                 int notifyingIndex = messageList.size() - 1;
                 messageList.addAll(oldMessages);
+                loadReplies(oldMessages, messageDao);
                 view.notifyMessageChangedWithoutScroll(
                         index + 1, index + oldMessages.size());
 
@@ -211,11 +213,10 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     return;
                 }
 
-                loadReplies(newMessages, messageDao);
-
                 for (Message m : newMessages) {
                     messageList.add(0, m);
                 }
+                loadReplies(newMessages, messageDao);
                 view.notifyMessagesChanged(0, newMessages.size(), newMessages.size());
 
                 if (messageList.size() > MAX_ADAPTER_MESSAGES_COUNT) {
@@ -285,12 +286,49 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     }
 
+    @Override
+    public void loadMessagesNearByTime(long time) {
+        view.runBackground(() -> {
+            MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
+            List<Message> olderMessages = messageDao.getBeforePartOnRoomLoading(roomSecret, time);
+            List<Message> messages = messageDao.getNewerPartOnRoomLoading(roomSecret, time);
+
+            Collections.reverse(messages);
+            messages.addAll(olderMessages);
+
+            int scrollTo = 0;
+            for (int i = 0; i < messages.size(); i++) {
+                Message m = messages.get(i);
+                if (m.getTime() == time) {
+                    scrollTo = i;
+                    break;
+                }
+            }
+
+            messageList = messages;
+            view.setMessages(messageList);
+            view.notifyOnRoomOpenMessagesLoaded(scrollTo);
+            isNewestMessagesLoaded = messages.get(0).getId().equals(room.getLastMessageId());
+        });
+    }
+
     private void loadReplies(List<Message> messages, MessageDao messageDao) {
+        HashMap<String, Message> messageHashMap = new HashMap<>(messages.size());
+
+        for (Message m: messages) {
+            messageHashMap.put(m.getId(), m);
+        }
+
         for (Message message: messages) {
             if (message.getRepliedMessageId() == null) continue;
+            Message repliedMessage;
 
-            Message repliedMessage = messageDao.getMessageById(
-                    message.getRepliedMessageId());
+            repliedMessage = messageHashMap.get(message.getRepliedMessageId());
+
+            if (repliedMessage == null) {
+                repliedMessage = messageDao.getMessageById(
+                        message.getRepliedMessageId());
+            }
 
             if (repliedMessage != null) message.setRepliedMessage(repliedMessage);
         }
@@ -392,6 +430,27 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     @Override
     public void setReplyingMessage(Message message) {
         replyingMessage = message;
+    }
+
+    @Override
+    public void onClicked(Message message) {
+        if (message == null) return;
+        int messageIndex = -1;
+
+        for (int i = 0; i < messageList.size(); i++) {
+            Message m = messageList.get(i);
+            if (m.getId().equals(message.getId())) {
+                messageIndex = i;
+                break;
+            }
+        }
+
+        if (messageIndex != -1) {
+            view.smoothScrollTo(messageIndex);
+            return;
+        }
+
+        loadMessagesNearByTime(message.getTime());
     }
 
 

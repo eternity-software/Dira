@@ -73,6 +73,8 @@ public interface RoomActivityContract {
         void runOnUiThread(Runnable runnable);
 
         void setReplyMessage(Message message);
+
+        void smoothScrollTo(int index);
     }
 
     interface Presenter {
@@ -91,6 +93,8 @@ public interface RoomActivityContract {
         void sendStatus(UserStatusType userStatusType);
 
         void loadMessages();
+
+        void loadMessagesNearByTime(long time);
 
         boolean sendTextMessage(String text);
 

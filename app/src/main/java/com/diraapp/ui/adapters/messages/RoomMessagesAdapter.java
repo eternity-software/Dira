@@ -121,6 +121,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private HashMap<String, Member> members = new HashMap<>();
     private final Amplituda amplituda;
 
+    private MessageReplyClickedListener replyClickedListener;
+
 
     public RoomMessagesAdapter(DiraActivity context,
                                RecyclerView recyclerView,
@@ -139,6 +141,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         selfId = cacheUtils.getString(CacheUtils.ID);
         maxAutoLoadSize = cacheUtils.getLong(CacheUtils.AUTO_LOAD_SIZE);
+    }
+
+    public void setReplyClickedListener(MessageReplyClickedListener replyClickedListener) {
+        this.replyClickedListener = replyClickedListener;
     }
 
     public Room getRoom() {
@@ -1194,6 +1200,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         } else {
             text = message.getText();
             if (text == null) text = "";
+            viewHolder.replyText.setTextColor(Theme.getColor
+                    (context, R.color.self_message_color));
         }
 
         if (!showImage) {
@@ -1221,6 +1229,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         viewHolder.replyText.setText(text);
 
         viewHolder.replyContainer.setVisibility(View.VISIBLE);
+
+        viewHolder.replyContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (replyClickedListener != null) replyClickedListener.onClicked(message);
+            }
+        });
     }
 
     public interface MessageAdapterListener {

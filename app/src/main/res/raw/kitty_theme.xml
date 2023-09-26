@@ -42,12 +42,12 @@
     <color name="self_message_color">@color/white</color>
     <color name="self_message_background">@color/accent</color>
     <color name="self_message_color_link">@color/accent_dark</color>
-    <color name="self_reply_color">#108F80</color>
+    <color name="self_reply_color">@color/white</color>
 
     <color name="message_background">@color/accent_medium</color>
     <color name="message_color">@color/white</color>
     <color name="message_color_link">@color/accent</color>
-    <color name="message_reply_color">#108F80</color>
+    <color name="message_reply_color">#8978FA</color>
 
     <color name="author_color">@color/white</color>
     <color name="subtitle_color">@color/medium_light_light_gray</color>
