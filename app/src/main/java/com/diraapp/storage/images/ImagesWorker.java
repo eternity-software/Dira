@@ -17,7 +17,7 @@ import java.io.ByteArrayOutputStream;
 
 
 public class ImagesWorker {
-
+    private static final long MAX_SIZE_BYTES = 800000;
 
     public static void saveBitmapToGallery(Bitmap finalBitmap, Activity activity) {
         String fname = "DiraSaved-" + System.currentTimeMillis() + ".jpg";
@@ -84,9 +84,42 @@ public class ImagesWorker {
         return output;
     }
 
-    public static Bitmap compressBitmap(Bitmap bitmap) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-        return BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
+ 
+
+    public static Bitmap resizeBitmap(Bitmap bitmap, int maxFrameSize)
+    {
+
+        int height = bitmap.getHeight();
+        int width = bitmap.getWidth();
+        if (bitmap.getHeight() * bitmap.getWidth() > maxFrameSize * maxFrameSize) {
+
+            float scaleFactor = (bitmap.getHeight() * bitmap.getWidth()) / (float) (maxFrameSize * maxFrameSize);
+
+            bitmap = Bitmap.createScaledBitmap(bitmap, (int) (width / scaleFactor),
+                    (int) (height / scaleFactor), true);
+        }
+
+        return bitmap;
     }
+
+    public static Bitmap compressBitmap(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        int currSize;
+        int currQuality = 50;
+
+        bitmap.compress(Bitmap.CompressFormat.JPEG, currQuality, stream);
+        currSize = stream.toByteArray().length;
+
+        while (currSize > MAX_SIZE_BYTES && currQuality > 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                bitmap.compress(Bitmap.CompressFormat.PNG, currQuality, stream);
+            }
+            currSize = stream.toByteArray().length;
+            currQuality -= 5;
+        }
+
+        return BitmapFactory.decodeByteArray(stream.toByteArray(), 0, currSize);
+    }
+
+
 }

@@ -1,9 +1,14 @@
 package com.diraapp.db.entities;
 
+import android.graphics.Bitmap;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import com.diraapp.storage.AppStorage;
+import com.diraapp.storage.images.ImagesWorker;
 
 @Entity
 public class Attachment {
@@ -23,8 +28,32 @@ public class Attachment {
     @ColumnInfo(defaultValue = "-1")
     private int width;
 
+    @ColumnInfo(defaultValue = "")
+    private String imagePreview;
+
     @Ignore
     private float voiceMessageStopPoint = 0;
+
+    public String getImagePreview() {
+        return imagePreview;
+    }
+
+    public Bitmap getBitmapPreview()
+    {
+        try {
+            return Bitmap.createScaledBitmap(AppStorage.getBitmapFromBase64(imagePreview), width, height, true);
+        }
+        catch (Exception e)
+        {
+            System.out.println(imagePreview);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void setImagePreview(String imagePreview) {
+        this.imagePreview = imagePreview;
+    }
 
     public long getId() {
         return id;

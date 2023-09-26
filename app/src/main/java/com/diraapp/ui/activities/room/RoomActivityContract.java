@@ -75,6 +75,8 @@ public interface RoomActivityContract {
         void setReplyMessage(Message message);
 
         void smoothScrollTo(int index);
+
+        Bitmap getBitmap(String path);
     }
 
     interface Presenter {

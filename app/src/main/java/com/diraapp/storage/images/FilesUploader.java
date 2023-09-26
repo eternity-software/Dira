@@ -30,7 +30,7 @@ import okhttp3.Response;
 
 public class FilesUploader {
 
-    private static final long MAX_SIZE_BYTES = 800000;
+
 
     public static boolean uploadFile(String sourceFileUri,
                                      Callback callback,
@@ -50,18 +50,8 @@ public class FilesUploader {
                     bitmap = AppStorage.getBitmapFromPath(sourceFileUri);
                 }
 
-                int maxFrameSize = 2000;
-                int height = bitmap.getHeight();
-                int width = bitmap.getWidth();
-                if (bitmap.getHeight() * bitmap.getWidth() > maxFrameSize * maxFrameSize) {
-
-                    float scaleFactor = (bitmap.getHeight() * bitmap.getWidth()) / (float) (maxFrameSize * maxFrameSize);
-
-                    bitmap = Bitmap.createScaledBitmap(bitmap, (int) (width / scaleFactor),
-                            (int) (height / scaleFactor), true);
-                }
-
-                bitmap = compressBitmap(bitmap);
+                bitmap = ImagesWorker.compressBitmap(bitmap);
+                bitmap = ImagesWorker.resizeBitmap(bitmap, 2000);
 
                 if (callback instanceof RoomActivityPresenter.RoomAttachmentCallback) {
                     ((RoomActivityPresenter.RoomAttachmentCallback) callback).
@@ -134,23 +124,5 @@ public class FilesUploader {
         return false;
     }
 
-    private static Bitmap compressBitmap(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        int currSize;
-        int currQuality = 25;
-
-        bitmap.compress(Bitmap.CompressFormat.JPEG, currQuality, stream);
-        currSize = stream.toByteArray().length;
-
-        while (currSize > MAX_SIZE_BYTES && currQuality > 0) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                bitmap.compress(Bitmap.CompressFormat.PNG, currQuality, stream);
-            }
-            currSize = stream.toByteArray().length;
-            currQuality -= 5;
-        }
-
-        return BitmapFactory.decodeByteArray(stream.toByteArray(), 0, currSize);
-    }
 
 }

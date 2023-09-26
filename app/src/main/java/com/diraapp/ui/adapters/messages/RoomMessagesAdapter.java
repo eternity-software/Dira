@@ -359,17 +359,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         } else if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
             holder.imageView.setVisibility(View.VISIBLE);
 
-
             holder.imageView.setImageBitmap(AppStorage.getBitmapFromPath(file.getPath()));
-
 
             // Causing "blink"
             // Picasso.get().load(Uri.fromFile(file)).into(holder.imageView);
             holder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
                     PreviewActivity.open(context, file.getPath(),
                             attachment.getAttachmentType() == AttachmentType.VIDEO, holder.imageContainer);
                 }
@@ -380,12 +376,12 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
             DiraVideoPlayer videoPlayer = holder.videoPlayer;
 
-
             if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
                 videoPlayer = holder.bubblePlayer;
                 videoPlayer.attachDebugIndicator(holder.bubbleViewContainer);
             } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
                 holder.imageView.setVisibility(View.VISIBLE);
+
 
 
                 videoPlayer.attachDebugIndicator(holder.viewsContainer);
@@ -608,9 +604,18 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 Attachment attachment = message.getAttachments().get(0);
 
                 if (attachment.getWidth() > 0 & attachment.getHeight() > 0) {
-                    Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
-                    Bitmap bmp = Bitmap.createBitmap(attachment.getWidth(), attachment.getHeight(), conf);
-                    holder.imageView.setImageBitmap(bmp);
+                    Bitmap previewBitmap = attachment.getBitmapPreview();
+                    if(previewBitmap == null)
+                    {
+                        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+                        Bitmap bmp = Bitmap.createBitmap(attachment.getWidth(), attachment.getHeight(), conf);
+                        holder.imageView.setImageBitmap(bmp);
+                    }
+                    else
+                    {
+                        holder.imageView.setImageBitmap(previewBitmap);
+                    }
+
 
 
                 }
@@ -828,11 +833,21 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                     Attachment attachment = message.getAttachments().get(i);
 
                     if (holder.imageView != null) {
-                        holder.loading.setVisibility(View.GONE);
+                        Bitmap previewBitmap = attachment.getBitmapPreview();
                         holder.imageView.setVisibility(View.VISIBLE);
-                        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-                        Bitmap bmp = Bitmap.createBitmap(attachment.getWidth(), attachment.getHeight(), conf);
-                        holder.imageView.setImageBitmap(bmp);
+                        if(previewBitmap == null)
+                        {
+
+                            Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+                            Bitmap bmp = Bitmap.createBitmap(attachment.getWidth(), attachment.getHeight(), conf);
+                            holder.imageView.setImageBitmap(bmp);
+                        }
+                        else
+                        {
+                            holder.imageView.setImageBitmap(previewBitmap);
+                        }
+
+
                     } else if (i == 0 & attachmentCount > 1) {
                         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
 

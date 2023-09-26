@@ -598,6 +598,11 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
+    public Bitmap getBitmap(String path) {
+        return AppStorage.getBitmapFromPath(path, this);
+    }
+
+    @Override
     public void onMediaMessageRecorded(String path, AttachmentType attachmentType) {
         presenter.uploadAttachmentAndSendMessage(attachmentType, path, "");
     }

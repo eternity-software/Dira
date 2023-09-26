@@ -1,6 +1,7 @@
 package com.diraapp.ui.activities.createroom;
 
 import android.content.ClipboardManager;
+import android.graphics.Bitmap;
 
 public interface CreateRoomContract {
 
