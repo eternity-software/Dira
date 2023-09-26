@@ -2,7 +2,9 @@ package com.diraapp.ui.activities.room;
 
 
 import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 
@@ -26,6 +28,7 @@ import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
+import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.ui.adapters.messages.MessageReplyClickedListener;
 import com.diraapp.ui.components.viewswiper.ViewSwiperListener;
 import com.diraapp.userstatus.UserStatus;
@@ -518,9 +521,43 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 Logger.logDebug(this.getClass().getSimpleName(),
                         "Uploaded! Url " + fileTempName);
                 attachment.setFileUrl(fileTempName);
+
+
+
+
                 attachment.setSize(new File(fileUri).length());
 
+
                 if(attachment.getSize() == 0) attachment.setSize(fileSize);
+
+                if(attachment.getAttachmentType() == AttachmentType.IMAGE ||
+                        attachment.getAttachmentType() == AttachmentType.BUBBLE ||
+                        attachment.getAttachmentType() == AttachmentType.VIDEO
+                )
+                {
+
+                    String previewUri = fileUri;
+                    Bitmap bitmap = null;
+
+                    if( attachment.getAttachmentType() == AttachmentType.VIDEO ||
+                            attachment.getAttachmentType() == AttachmentType.BUBBLE)
+                    {
+                        bitmap = ThumbnailUtils.createVideoThumbnail(previewUri, MediaStore.Video.Thumbnails.MINI_KIND);
+                    }
+                    else if( attachment.getAttachmentType() == AttachmentType.IMAGE )
+                    {
+                        bitmap = view.getBitmap(previewUri);
+                    }
+
+
+                    float scaleFactor = bitmap.getHeight() / (float) getWidth();
+
+                    if(scaleFactor < 0.3) scaleFactor = 0.3f;
+                    if(scaleFactor > 4) scaleFactor = 4f;
+                    Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, (int) (10 * scaleFactor), 10, true);
+
+                    attachment.setImagePreview(AppStorage.getBase64FromBitmap(previewBitmap));
+                }
 
 
                 if (attachment.getAttachmentType() == AttachmentType.VIDEO ||

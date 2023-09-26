@@ -280,6 +280,7 @@ public class RoomSelectorActivity extends AppCompatActivity
                         }
                     });
                 } catch (Exception ignored) {
+                    ignored.printStackTrace();
                 }
             }
         });

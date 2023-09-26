@@ -123,11 +123,6 @@ public class ViewSwiper {
                     notifyScrollStateChanged(true);
 
                 }
-
-
-
-
-
         }
 
         return isIntercept;

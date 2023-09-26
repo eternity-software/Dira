@@ -255,12 +255,19 @@ public class AppStorage {
     }
 
     public static Bitmap getBitmapFromBase64(String base64Str) throws IllegalArgumentException {
-        byte[] decodedBytes = Base64.decode(
-                base64Str.substring(base64Str.indexOf(",") + 1),
-                Base64.DEFAULT
-        );
+        try {
+            byte[] decodedBytes = Base64.decode(
+                    base64Str.substring(base64Str.indexOf(",") + 1),
+                    Base64.DEFAULT
+            );
 
-        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+            return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static String getBase64FromBitmap(Bitmap bitmap) {

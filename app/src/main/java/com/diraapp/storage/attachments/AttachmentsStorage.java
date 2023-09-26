@@ -1,6 +1,7 @@
 package com.diraapp.storage.attachments;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.db.entities.Attachment;
@@ -136,6 +137,7 @@ public class AttachmentsStorage {
         }
         return null;
     }
+
 
     public static File getFileFromAttachment(Attachment attachment, Context context, String roomSecret) {
         File localFile = new File(context.getExternalCacheDir(), roomSecret + "_" + attachment.getFileUrl());
