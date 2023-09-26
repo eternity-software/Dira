@@ -189,12 +189,14 @@
                 android:autoLink="all"
 
                 android:fontFamily="@font/montserratsemibold"
-                android:text="самсой"
+                android:text="Самсой"
                 android:textColor="@color/self_message_color"
                 android:textColorLink="@color/self_message_color_link"
 
                 android:textIsSelectable="true"
                 android:textSize="15sp"
+
+
 
                 app:themeColor="self_message_color"
                 app:themeColorLink="self_message_color_link" />

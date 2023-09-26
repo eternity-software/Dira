@@ -77,12 +77,18 @@ public class EditRoomActivity extends DiraActivity implements ServerSelectorBott
             }
         });
 
+        EditText updatesLifetimeInput = findViewById(R.id.room_updates_lifetime);
+
         findViewById(R.id.button_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EditText roomName = findViewById(R.id.room_name);
+
+
+                int sec = Integer.parseInt(updatesLifetimeInput.getText().toString()) * 60 * 60;
+                room.setUpdateExpireSec(sec);
                 RoomUpdateRequest request = new RoomUpdateRequest(AppStorage.getBase64FromBitmap(roomPicture),
-                        roomName.getText().toString(), roomSecret, room.getUpdateExpireSec());
+                        roomName.getText().toString(), roomSecret, sec);
 
                 try {
                     UpdateProcessor.getInstance().sendRequest(request, room.getServerAddress());
@@ -183,6 +189,7 @@ public class EditRoomActivity extends DiraActivity implements ServerSelectorBott
             public void run() {
                 EditRoomActivity.this.room = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getRoomBySecretName(roomSecret);
 
+                int hours = room.getUpdateExpireSec() / 60 / 60;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -192,6 +199,11 @@ public class EditRoomActivity extends DiraActivity implements ServerSelectorBott
                         }
                         TextView textView = findViewById(R.id.room_server);
                         textView.setText(room.getServerAddress());
+
+                        if(hours != 0) {
+                            TextView updatesLifetimeInput = findViewById(R.id.room_updates_lifetime);
+                            updatesLifetimeInput.setText(String.valueOf(hours));
+                        }
 
                         EditText roomName = findViewById(R.id.room_name);
                         roomName.setText(room.getName());

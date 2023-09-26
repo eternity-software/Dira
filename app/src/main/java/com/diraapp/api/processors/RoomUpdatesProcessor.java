@@ -147,6 +147,11 @@ public class RoomUpdatesProcessor {
 
                     String path = null;
 
+                    if(((RoomUpdate) update).getRoomUpdateExpireSec() != 0)
+                    {
+                        room.setUpdateExpireSec((int) ((RoomUpdate) update).getRoomUpdateExpireSec());
+                    }
+
                     if (!oldName.equals(newName)) {
                         room.setName(newName);
                     }

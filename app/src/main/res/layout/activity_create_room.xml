@@ -115,7 +115,8 @@
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
-            <TextView
+            <EditText
+                android:id="@+id/updates_expire_hours"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="18dp"
@@ -125,7 +126,7 @@
                 android:inputType="text"
                 android:maxLines="1"
                 android:paddingHorizontal="8dp"
-                android:text="6h"
+                android:text="8"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 

@@ -36,11 +36,13 @@ import com.diraapp.db.migrations.RoomMigrationFrom17To18;
 @TypeConverters({UnreadIdsConverter.class})
 public abstract class DiraRoomDatabase extends RoomDatabase {
 
+    public static DiraRoomDatabase db;
     public static final String DB_NAME = "rooms_db";
 
     public static DiraRoomDatabase getDatabase(Context applicationContext) {
-        return androidx.room.Room.databaseBuilder(applicationContext,
+        if(db == null) db = androidx.room.Room.databaseBuilder(applicationContext,
                 DiraRoomDatabase.class, DB_NAME).enableMultiInstanceInvalidation().build();
+        return db;
     }
 
     public abstract RoomDao getRoomDao();

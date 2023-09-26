@@ -1,6 +1,7 @@
 package com.diraapp.ui.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,18 +32,22 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentsStorage;
+import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.ui.adapters.MediaGridAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.bottomsheet.InvitationCodeBottomSheet;
 import com.diraapp.ui.bottomsheet.RoomEncryptionBottomSheet;
 import com.diraapp.ui.bottomsheet.filepicker.FileInfo;
 import com.diraapp.ui.components.DiraPopup;
+import com.diraapp.ui.components.FadingImageView;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.SliderActivity;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import jp.wasabeef.blurry.Blurry;
 
 public class RoomInfoActivity extends DiraActivity implements UpdateListener, InvitationCodeBottomSheet.BottomSheetListener {
 
@@ -288,7 +294,28 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
 
                         if (room.getImagePath() != null) {
                             ImageView roomPicture = findViewById(R.id.room_picture);
-                            roomPicture.setImageBitmap(AppStorage.getBitmapFromPath(room.getImagePath()));
+                            Bitmap bitmap = AppStorage.getBitmapFromPath(room.getImagePath(), getApplicationContext());
+                            roomPicture.setImageBitmap(bitmap);
+
+                            FadingImageView blurryBackground = findViewById(R.id.blurred_picture);
+                            blurryBackground.setEdgeLength(200);
+                            blurryBackground.setFadeTop(true);
+                            blurryBackground.setFadeBottom(true);
+                            blurryBackground.setFadeLeft(true);
+                            blurryBackground.setFadeRight(true);
+
+                            Bitmap bitmap1 = bitmap.copy(Bitmap.Config.ARGB_8888, false);
+
+                            blurryBackground.setImageBitmap(bitmap1);
+
+
+                            Blurry.with(getApplicationContext()).radius(8)
+                                    .sampling(8).from(ImagesWorker.getRoundedCroppedBitmap(bitmap1))
+
+                                    .into(blurryBackground);
+
+
+
                         }
 
                         TextView roomName = findViewById(R.id.room_name);

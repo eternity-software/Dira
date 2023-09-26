@@ -1,6 +1,7 @@
 package com.diraapp.media;
 
 import android.media.MediaPlayer;
+import android.os.Build;
 
 import com.diraapp.exceptions.ResetRequiredException;
 
@@ -62,7 +63,23 @@ public class DiraMediaPlayer extends MediaPlayer {
     }
 
     public void setProgress(float progress) {
-        seekTo((int) (getDuration() * progress));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if(progress == 0)
+            {
+                seekTo((int) 1,MediaPlayer.SEEK_CLOSEST);
+                return;
+            }
+            seekTo((int) (getDuration() * progress),MediaPlayer.SEEK_CLOSEST);
+        }
+        else
+        {
+            if(progress == 0)
+            {
+                seekTo((int) 1);
+                return;
+            }
+            seekTo((int) (getDuration() * progress));
+        }
     }
 
     @Override

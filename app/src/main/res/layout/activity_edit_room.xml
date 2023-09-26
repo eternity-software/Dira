@@ -150,6 +150,43 @@
                 android:text="@string/room_servers_official"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginTop="18dp"
+                android:orientation="vertical">
+                <TextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="12dp"
+
+                    android:layout_weight="1"
+                    android:fontFamily="@font/montserratsemibold"
+                    android:text="@string/edit_room_update_expire"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/room_updates_lifetime"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:layout_marginTop="18dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/dark_rect"
+                    android:fontFamily="@font/montserratsemibold"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:maxLength="1"
+                    android:paddingHorizontal="8dp"
+                    android:text="6"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

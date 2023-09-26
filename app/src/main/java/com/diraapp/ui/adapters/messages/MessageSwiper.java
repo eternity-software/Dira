@@ -37,11 +37,11 @@ public class MessageSwiper extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        int position = viewHolder.getAbsoluteAdapterPosition();
+        int position = viewHolder.getAdapterPosition();
 
         if (((ViewHolder) viewHolder).roomUpdatesLayout != null) return;
 
-        recyclerView.getAdapter().notifyItemChanged(position);
+        //recyclerView.getAdapter().notifyItemChanged(position);
 
         MessageSwiper.this.notifyListeners(position);
 

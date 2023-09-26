@@ -20,10 +20,11 @@ public class CreateRoomModel implements CreateRoomContract.Model {
 
     @Override
     public void createRoom(String roomName, String roomSecret, String welcomeMessage,
-                           String authorId, String authorName, String serverAddress) {
+                           String authorId, String authorName, String serverAddress, int updateExpireSec) {
 
         Room room = new Room(roomName, System.currentTimeMillis(), roomSecret, serverAddress, true, new ArrayList<>());
 
+        room.setUpdateExpireSec(updateExpireSec);
         roomDao.insertAll(room);
 
         Message message = new Message();
@@ -33,7 +34,7 @@ public class CreateRoomModel implements CreateRoomContract.Model {
         message.setId(KeyGenerator.generateId());
         message.setRoomSecret(roomSecret);
 
-        SendMessageRequest sendMessageRequest = new SendMessageRequest(message, Update.DEFAULT_UPDATE_EXPIRE_SEC);
+        SendMessageRequest sendMessageRequest = new SendMessageRequest(message, updateExpireSec);
 
         UpdateProcessor.getInstance().sendSubscribeRequest();
         try {

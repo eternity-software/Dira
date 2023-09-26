@@ -19,6 +19,7 @@ public class CreateRoomPresenter implements CreateRoomContract.Presenter {
     private final CreateRoomContract.Model model;
 
     private final String roomSecret;
+    private int updateExpireSec = Update.DEFAULT_UPDATE_EXPIRE_SEC;
     private String serverAddress = UpdateProcessor.OFFICIAL_ADDRESS;
 
     public CreateRoomPresenter(CreateRoomContract.View view, CreateRoomContract.Model model) {
@@ -46,7 +47,7 @@ public class CreateRoomPresenter implements CreateRoomContract.Presenter {
 
                         if (acceptedStatusAnswer.isAccepted()) {
                             model.createRoom(roomName, roomSecret, welcomeMessage,
-                                    view.getAuthorId(), view.getAuthorName(), serverAddress);
+                                    view.getAuthorId(), view.getAuthorName(), serverAddress, updateExpireSec);
                             view.finish();
                         }
                     }, serverAddress);
@@ -67,6 +68,11 @@ public class CreateRoomPresenter implements CreateRoomContract.Presenter {
     @Override
     public void setServer(String serverAddress) {
         this.serverAddress = serverAddress;
+    }
+
+    @Override
+    public void setUpdateExpireSec(int seconds) {
+        updateExpireSec = seconds;
     }
 
 

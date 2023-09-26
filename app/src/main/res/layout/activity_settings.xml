@@ -136,22 +136,21 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/gray_rounded"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="16dp">
 
                 <com.diraapp.ui.components.dynamic.ThemeImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
-                    app:themeImageColor="accent_image_button_color"
-                    android:src="@drawable/ic_chats" />
+                    android:src="@drawable/ic_star"
+                    app:themeImageColor="accent_image_button_color" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:fontFamily="@font/montserratsemibold"
-                    android:text="@string/settings_chats"
+                    android:text="@string/settings_appearance"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 

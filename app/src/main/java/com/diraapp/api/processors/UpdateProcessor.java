@@ -63,7 +63,7 @@ import java.util.List;
 public class UpdateProcessor {
 
     public static final String OFFICIAL_ADDRESS = "ws://diraapp.com:8888";
-    public static final String API_VERSION = "0.0.3";
+    public static final String API_VERSION = "0.0.4";
 
     private static UpdateProcessor instance;
     private final HashMap<String, SocketClient> socketClients = new HashMap<>();
@@ -83,10 +83,9 @@ public class UpdateProcessor {
     private final RoomDao roomDao;
     private final MemberDao memberDao;
     private final RoomUpdatesProcessor roomUpdatesProcessor;
-    private final DiraKeyProtocolProcessor diraKeyProtocol;
+    private final DiraKeyProtocolProcessor keyProtocolProcessor;
 
     private final ClientMessageProcessor clientMessageProcessor;
-    int updatedRoomsCount = 0;
     private SocketClient socketClient;
 
     public UpdateProcessor(Context context) throws SingletonException {
@@ -106,7 +105,7 @@ public class UpdateProcessor {
         roomDao = DiraRoomDatabase.getDatabase(context).getRoomDao();
         memberDao = DiraRoomDatabase.getDatabase(context).getMemberDao();
 
-        diraKeyProtocol = new DiraKeyProtocolProcessor(roomDao, memberDao, new CacheUtils(context));
+        keyProtocolProcessor = new DiraKeyProtocolProcessor(roomDao, memberDao, new CacheUtils(context));
         MessageDao messageDao = DiraMessageDatabase.getDatabase(context).getMessageDao();
         roomUpdatesProcessor = new RoomUpdatesProcessor(roomDao, memberDao, messageDao, context);
         clientMessageProcessor = new ClientMessageProcessor(context);
@@ -216,15 +215,15 @@ public class UpdateProcessor {
                 roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.DIFFIE_HELLMAN_INIT_UPDATE) {
                 roomUpdatesProcessor.updateRoom(update);
-                diraKeyProtocol.onDiffieHellmanInit((DhInitUpdate) update);
+                keyProtocolProcessor.onDiffieHellmanInit((DhInitUpdate) update);
             } else if (update.getUpdateType() == UpdateType.RENEWING_CONFIRMED) {
                 roomUpdatesProcessor.updateRoom(update);
-                diraKeyProtocol.onKeyConfirmed((RenewingConfirmUpdate) update);
+                keyProtocolProcessor.onKeyConfirmed((RenewingConfirmUpdate) update);
             } else if (update.getUpdateType() == UpdateType.RENEWING_CANCEL) {
                 roomUpdatesProcessor.updateRoom(update);
-                diraKeyProtocol.onKeyCancel((RenewingCancelUpdate) update);
+                keyProtocolProcessor.onKeyCancel((RenewingCancelUpdate) update);
             } else if (update.getUpdateType() == UpdateType.KEY_RECEIVED_UPDATE) {
-                diraKeyProtocol.onIntermediateKey((KeyReceivedUpdate) update);
+                keyProtocolProcessor.onIntermediateKey((KeyReceivedUpdate) update);
                 // roomUpdatesProcessor.updateRoom(update, true);
             } else if (update.getUpdateType() == UpdateType.PING_UPDATE) {
                 PingUpdate pingUpdate = (PingUpdate) update;

@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -132,6 +133,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         this.messageAdapterListener = messageAdapterListener;
         this.room = room;
         this.recyclerView = recyclerView;
+
         layoutInflater = LayoutInflater.from(context);
         cacheUtils = new CacheUtils(context);
         amplituda = new Amplituda(context);
@@ -399,7 +401,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             videoPlayer.attachRecyclerView(recyclerView);
             videoPlayer.attachDiraActivity(context);
 
-            finalVideoPlayer.play(file.getPath());
+            videoPlayer.play(file.getPath());
 
 
             try {
@@ -428,20 +430,23 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                             diraMediaPlayer.setDataSource(file.getPath());
 
 
-                            diraMediaPlayer.prepareAsync();
 
 
                             diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                                 @Override
                                 public void onPrepared(MediaPlayer mp) {
-                                    diraMediaPlayer.start();
-                                    holder.timeText.setText(AppStorage.getStringSize(attachment.getSize()));
-                                    finalVideoPlayer.setProgress(0);
-                                    finalVideoPlayer.setSpeed(1f);
-                                    diraMediaPlayer.setOnPreparedListener(null);
+
+                                        diraMediaPlayer.start();
+                                        holder.timeText.setText(AppStorage.getStringSize(attachment.getSize()));
+                                        ((DiraVideoPlayer) v).setSpeed(1f);
+                                        ((DiraVideoPlayer) v).setProgress(0);
+                                        diraMediaPlayer.setOnPreparedListener(null);
+
+
 
                                 }
                             });
+                            diraMediaPlayer.prepareAsync();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
