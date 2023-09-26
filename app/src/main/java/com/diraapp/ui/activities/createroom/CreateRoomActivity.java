@@ -46,9 +46,13 @@ public class CreateRoomActivity extends DiraActivity implements CreateRoomContra
             }
         });
 
+
+
         binding.buttonCreateNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                presenter.setUpdateExpireSec(Integer.parseInt(binding.updatesExpireHours
+                        .getText().toString()) * 60 * 60);
                 presenter.onCreateButtonClick();
             }
         });

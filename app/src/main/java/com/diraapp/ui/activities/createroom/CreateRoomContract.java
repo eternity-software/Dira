@@ -12,6 +12,7 @@ public interface CreateRoomContract {
         void onCopyButtonClick(ClipboardManager clipboardManager);
 
         void setServer(String serverAddress);
+        void setUpdateExpireSec(int seconds);
     }
 
     interface View {
@@ -36,7 +37,8 @@ public interface CreateRoomContract {
 
     interface Model {
         void createRoom(String roomName, String secretName, String welcomeMessage,
-                        String authorId, String authorName, String serverAddress);
+                        String authorId, String authorName, String serverAddress,
+                        int updateExpireSec);
     }
 
 }

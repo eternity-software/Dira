@@ -67,7 +67,7 @@
                 android:background="@drawable/dark_rect"
                 android:fontFamily="@font/montserratsemibold"
                 android:gravity="center"
-                android:hint="p312AFds4lKj#"
+                android:hint="p312AFds4lKj#_112234322"
                 android:inputType="text"
                 android:maxLines="1"
                 android:paddingHorizontal="8dp"

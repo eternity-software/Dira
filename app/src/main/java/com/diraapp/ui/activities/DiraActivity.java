@@ -1,5 +1,9 @@
 package com.diraapp.ui.activities;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -60,6 +64,15 @@ public class DiraActivity extends AppCompatActivity {
     public CacheUtils getCacheUtils() {
         if (cacheUtils == null) cacheUtils = new CacheUtils(getApplicationContext());
         return cacheUtils;
+    }
+
+    public static Bitmap captureView(View view) {
+        Bitmap tBitmap = Bitmap.createBitmap(
+                view.getWidth(), view.getHeight(), Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(tBitmap);
+        view.draw(canvas);
+        canvas.setBitmap(null);
+        return tBitmap;
     }
 
     public ScaleAnimation preformScaleAnimation(float fromScale, float toScale, View view) {
