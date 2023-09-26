@@ -16,7 +16,7 @@ import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.MultiAttachmentMessageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.dynamic.DynamicTextView;
-import com.diraapp.ui.components.dynamic.ThemeImageView;
+import com.diraapp.ui.components.viewswiper.ViewSwiper;
 import com.felipecsl.asymmetricgridview.library.widget.AsymmetricGridView;
 import com.masoudss.lib.WaveformSeekBar;
 
@@ -78,8 +78,10 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
 
 
+
     public ViewHolder(@NonNull View itemView) {
         super(itemView);
+
         messageText = itemView.findViewById(R.id.message_text);
         nicknameText = itemView.findViewById(R.id.nickname_text);
         timeText = itemView.findViewById(R.id.time_view);

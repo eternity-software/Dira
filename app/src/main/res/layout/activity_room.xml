@@ -30,8 +30,6 @@
         android:nestedScrollingEnabled="false"
 
 
-        android:clipToPadding="true"
-
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
@@ -204,7 +202,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/message_input"
-        android:clipToPadding="false"
         android:orientation="vertical"
         android:elevation="1dp"
 
@@ -384,6 +381,7 @@
             app:cardCornerRadius="300dp"
             app:cardElevation="0dp"
             app:cardBackgroundColor="@android:color/transparent"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

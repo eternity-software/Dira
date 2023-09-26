@@ -1,15 +1,16 @@
 package com.diraapp.ui.activities;
 
+import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -87,6 +88,23 @@ public class DiraActivity extends AppCompatActivity {
 
         view.startAnimation(scaleOut);
         return scaleOut;
+    }
+
+    public ValueAnimator performHeightAnimation(int fromHeight, int toHeight, View view) {
+        ValueAnimator animator = ValueAnimator.ofInt(fromHeight, toHeight);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
+                int value = (int) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams params = view.getLayoutParams();
+                params.height = value;
+                view.setLayoutParams(params);
+            }
+        });
+        animator.setInterpolator(new DecelerateInterpolator(2f));
+        animator.setDuration(150);
+        animator.start();
+        return animator;
     }
 
     @Override

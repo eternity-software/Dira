@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,6 +61,7 @@ import com.diraapp.ui.components.RoomMessageVideoPlayer;
 import com.diraapp.ui.components.VoiceMessageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayerState;
+import com.diraapp.ui.components.viewswiper.ViewSwiper;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.Numbers;
@@ -170,11 +170,14 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Timer timer = new Timer("OnCreateViewHolder");
         ViewHolder holder;
+        View view;
         if (viewType >= VIEW_TYPE_ROOM_MESSAGE) {
-            holder = new ViewHolder(layoutInflater.inflate(R.layout.room_message, parent, false));
+            view = layoutInflater.inflate(R.layout.room_message, parent, false);
         } else {
-            holder = new ViewHolder(layoutInflater.inflate(R.layout.self_message, parent, false));
+            view = layoutInflater.inflate(R.layout.self_message, parent, false);
         }
+
+        holder = new ViewHolder(view);
 
         ViewHolder viewHolder = displayMessageView(holder, viewType);
         timer.reportTime();
@@ -245,6 +248,8 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             AttachmentsStorage.removeAttachmentsStorageListener(holder.attachmentsStorageListener);
             listeners.remove(holder.attachmentsStorageListener);
         }
+
+
 
         holder.loading.setVisibility(View.GONE);
 

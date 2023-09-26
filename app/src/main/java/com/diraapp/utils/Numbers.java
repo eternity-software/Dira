@@ -19,6 +19,16 @@ public class Numbers {
         return (int) px;
     }
 
+    public static int pxToDp(float toDP, Context context){
+        if (toDP == 0){
+            return 0;
+        } else{
+            float density = context.getResources().getDisplayMetrics().density;
+            return (int) Math.ceil((density * toDP));
+        }
+    }
+
+
     public static int spToPx(float sp, Context context) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
     }

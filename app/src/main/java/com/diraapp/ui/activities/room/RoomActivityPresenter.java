@@ -27,8 +27,7 @@ import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
 import com.diraapp.ui.adapters.messages.MessageReplyClickedListener;
-import com.diraapp.ui.adapters.messages.MessageSwiper;
-import com.diraapp.ui.adapters.messages.RoomMessagesAdapter;
+import com.diraapp.ui.components.viewswiper.ViewSwiperListener;
 import com.diraapp.userstatus.UserStatus;
 import com.diraapp.utils.EncryptionUtil;
 import com.diraapp.utils.Logger;
@@ -47,7 +46,8 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class RoomActivityPresenter implements RoomActivityContract.Presenter, UpdateListener,
-        MessageSwiper.MessageSwipingListener, MessageReplyClickedListener {
+        ViewSwiperListener, MessageReplyClickedListener {
+
 
     private static final int MAX_ADAPTER_MESSAGES_COUNT = 200;
     private final String roomSecret;
@@ -409,7 +409,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     }
 
 
-    public void onMessageSwiped(int position) {
+    @Override
+    public void onSwiped(int position) {
         replyingMessage = messageList.get(position);
 
         view.setReplyMessage(replyingMessage);

@@ -1,21 +1,18 @@
 package com.diraapp.ui.activities.room;
 
 import android.Manifest;
-import android.animation.ValueAnimator;
-import android.app.ActionBar;
+import android.animation.Animator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,7 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.widget.ImageViewCompat;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
@@ -58,13 +54,13 @@ import com.diraapp.ui.activities.RoomSelectorActivity;
 import com.diraapp.ui.activities.resizer.FluidContentResizer;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.adapters.messages.MessageReplyClickedListener;
-import com.diraapp.ui.adapters.messages.MessageSwiper;
 import com.diraapp.ui.adapters.messages.RoomMessagesAdapter;
 import com.diraapp.ui.appearance.BackgroundType;
-import com.diraapp.ui.appearance.ColorTheme;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.FilePreview;
 import com.diraapp.ui.components.RecordComponentsController;
+import com.diraapp.ui.components.viewswiper.ViewSwiper;
+import com.diraapp.ui.components.viewswiper.ViewSwiperListener;
 import com.diraapp.userstatus.UserStatus;
 import com.diraapp.userstatus.UserStatusHandler;
 import com.diraapp.userstatus.UserStatusListener;
@@ -134,10 +130,8 @@ public class RoomActivity extends DiraActivity
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setNestedScrollingEnabled(false);
 
-        MessageSwiper messageSwiper = new  MessageSwiper(binding.recyclerView);
-        messageSwiper.addListener((MessageSwiper.MessageSwipingListener) presenter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(messageSwiper);
-        itemTouchHelper.attachToRecyclerView(binding.recyclerView);
+        ViewSwiper viewSwiper = new ViewSwiper(binding.recyclerView);
+        viewSwiper.setViewSwiperListener((ViewSwiperListener) presenter);
 
 //        binding.recyclerView.getRecycledViewPool().setMaxRecycledViews(1, 4);
 //        binding.recyclerView.getRecycledViewPool().setMaxRecycledViews(21, 4);
@@ -228,23 +222,30 @@ public class RoomActivity extends DiraActivity
         binding.replyClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int finalHeight = Numbers.dpToPx(48, RoomActivity.this);
-                ValueAnimator animator = ValueAnimator.ofInt(finalHeight, 0);
-                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
-                        int value = (int) valueAnimator.getAnimatedValue();
-                        ViewGroup.LayoutParams params = binding.replyLayout.getLayoutParams();
-                        params.height = value;
-                        binding.replyLayout.setLayoutParams(params);
-                        if (value == 0) {
-                            setReplyMessage(null);
-                        }
-                    }
-                });
 
-                animator.setDuration(250);
-                animator.start();
+                performHeightAnimation( Numbers.dpToPx(48, RoomActivity.this), 0, binding.replyLayout)
+                        .addListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(@NonNull Animator animator) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(@NonNull Animator animator) {
+                                setReplyMessage(null);
+                            }
+
+                            @Override
+                            public void onAnimationCancel(@NonNull Animator animator) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(@NonNull Animator animator) {
+
+                            }
+                        });
+
             }
         });
 
@@ -580,20 +581,14 @@ public class RoomActivity extends DiraActivity
             binding.replyAuthorName.setText(author);
             binding.replyText.setText(text);
 
-            binding.replyLayout.setVisibility(View.VISIBLE);
-            ValueAnimator animator = ValueAnimator.ofInt(0, Numbers.dpToPx(48, this));
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
-                    int value = (int) valueAnimator.getAnimatedValue();
-                    ViewGroup.LayoutParams params = binding.replyLayout.getLayoutParams();
-                    params.height = value;
-                    binding.replyLayout.setLayoutParams(params);
-                }
-            });
 
-            animator.setDuration(250);
-            animator.start();
+
+            if(binding.replyLayout.getVisibility() != View.VISIBLE)
+            {
+                binding.replyLayout.setVisibility(View.VISIBLE);
+                performHeightAnimation(0, Numbers.dpToPx(48, this), binding.replyLayout);
+            }
+
         });
     }
 
