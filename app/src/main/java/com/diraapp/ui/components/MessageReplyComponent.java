@@ -44,8 +44,8 @@ public class MessageReplyComponent extends FrameLayout {
         LinearLayout layout = this.findViewById(R.id.message_reply_container);
         if (messageType == RoomMessagesAdapter.VIEW_TYPE_ROOM_MESSAGE_ATTACHMENTS |
                 messageType == RoomMessagesAdapter.VIEW_TYPE_ROOM_MESSAGE_MULTI_ATTACHMENTS) {
-            int margin = Numbers.dpToPx(4, this.getContext());
-            params.setMargins(0, margin, 0, margin);
+            int margin = Numbers.dpToPx(8, this.getContext());
+            params.setMargins(margin / 2, (int) (1.5 * margin), 0, margin);
             layout.setLayoutParams(params);
         } else if (messageType == RoomMessagesAdapter.VIEW_TYPE_ROOM_MESSAGE_BUBBLE) {
             int padding = Numbers.dpToPx(6,this.getContext());
@@ -54,11 +54,12 @@ public class MessageReplyComponent extends FrameLayout {
 
             int margin = Numbers.dpToPx(4, this.getContext());
             params.setMargins(margin, margin, margin, margin);
-            params.gravity = Gravity.RIGHT;
+
+            if (isSelfMessage) params.gravity = Gravity.RIGHT;
             layout.setLayoutParams(params);
 
             layout.setBackground(this.getContext().getResources().
-                    getDrawable(R.drawable.medium_round_square));
+                    getDrawable(R.drawable.rounded_accent_rectangle));
             layout.getBackground().setColorFilter(Theme.getColor(
                     this.getContext(), R.color.gray_trans), PorterDuff.Mode.SRC_ATOP);
         }
