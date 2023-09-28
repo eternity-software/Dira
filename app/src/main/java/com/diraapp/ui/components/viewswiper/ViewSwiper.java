@@ -67,12 +67,13 @@ public class ViewSwiper {
 
         float k = 2.0f;
 
-        float deltaY = (downY - event.getY());
+        float deltaY = (downY - event.getRawY());
         float deltaX = (downX - event.getRawX()) - Numbers.dpToPx(DEFAULT_DEATH_ZONE_DP, rv.getContext());
 
         if (deltaX < 0) deltaX = 0;
 
-
+        if(deltaX * 3 < deltaY && event.getAction() == MotionEvent.ACTION_MOVE && !isSwiped)
+            return false;
 
         boolean isIntercept = false;
 
@@ -80,7 +81,7 @@ public class ViewSwiper {
             case MotionEvent.ACTION_DOWN:
                 downView = child;
                 isDown = true;
-                downY = event.getY();
+                downY = event.getRawY();
                 downX = event.getRawX();
                 isSwiped = false;
 
@@ -98,8 +99,9 @@ public class ViewSwiper {
                         if(deltaX > rv.getWidth() * SWIPE_TRIGGER_PERCENT && !isSwiped)
                         {
                             isSwiped = true;
+
                             DiraVibrator.vibrateOneTime(rv.getContext());
-                            notifyViewSwiped(position);
+
                         }
 
                         if(deltaX < rv.getWidth() * SWIPE_TRIGGER_PERCENT * 0.8 && isSwiped)
@@ -117,6 +119,12 @@ public class ViewSwiper {
                 if(isDown)
                 {
                     isDown = false;
+                    downX = 0;
+                    downY = 0;
+                    if(isSwiped)
+                    {
+                        notifyViewSwiped(position);
+                    }
                     downView.animate().x(0).setInterpolator(new DecelerateInterpolator(2f))
                             .setDuration(200);
                     notifyScrollStateChanged(true);
@@ -126,6 +134,7 @@ public class ViewSwiper {
 
         return isIntercept;
     }
+
 
     
     private void notifyViewSwiped(int position)

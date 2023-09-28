@@ -258,7 +258,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 
 
-       // holder.loading.setVisibility(View.GONE);
+        // holder.loading.setVisibility(View.GONE);
 
         if (holder.imageContainer != null) {
             holder.videoPlayer.reset();
@@ -365,10 +365,10 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         } else if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
             holder.imageView.setVisibility(View.VISIBLE);
             DiraActivity.runGlobalBackground(() -> {
-                    Bitmap bitmap = AppStorage.getBitmapFromPath(file.getPath(), context);
-                    context.runOnUiThread(() -> {
-                        holder.imageView.setImageBitmap(bitmap);
-                    });
+                Bitmap bitmap = AppStorage.getBitmapFromPath(file.getPath(), context);
+                context.runOnUiThread(() -> {
+                    holder.imageView.setImageBitmap(bitmap);
+                });
             });
 
             // Causing "blink"
@@ -380,7 +380,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                             attachment.getAttachmentType() == AttachmentType.VIDEO, holder.imageContainer);
                 }
             });
-           // holder.loading.setVisibility(View.GONE);
+            // holder.loading.setVisibility(View.GONE);
         } else if (attachment.getAttachmentType() == AttachmentType.VIDEO || attachment.getAttachmentType() == AttachmentType.BUBBLE) {
 
 
@@ -389,7 +389,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
             if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
                 videoPlayer = holder.bubblePlayer;
-                videoPlayer.attachDebugIndicator(holder.bubbleContainer);
+                videoPlayer.attachDebugIndicator(holder.imageView);
             } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
                 holder.imageView.setVisibility(View.VISIBLE);
 
@@ -473,7 +473,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 }
             });
         } else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
-           // holder.loading.setVisibility(View.GONE);
+            // holder.loading.setVisibility(View.GONE);
 
 
 
@@ -673,18 +673,18 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             if (members.containsKey(message.getAuthorId())) {
 
                 Member member = members.get(message.getAuthorId());
-                holder.nicknameText.setText(member.getNickname());
-
-
-                if (showProfilePicture) {
-                    if (member.getImagePath() != null) {
-                        Picasso.get().load(new File(member.getImagePath())).into(holder.profilePicture);
-                    } else {
-                        holder.profilePicture.setImageResource(R.drawable.placeholder);
+                if(holder.nicknameText != null) {
+                    holder.nicknameText.setText(member.getNickname());
+                    if (showProfilePicture) {
+                        if (member.getImagePath() != null) {
+                            Picasso.get().load(new File(member.getImagePath())).into(holder.profilePicture);
+                        } else {
+                            holder.profilePicture.setImageResource(R.drawable.placeholder);
+                        }
+                        holder.pictureContainer.setVisibility(View.VISIBLE);
+                        holder.nicknameText.setText(message.getAuthorNickname());
+                        holder.nicknameText.setVisibility(View.VISIBLE);
                     }
-                    holder.pictureContainer.setVisibility(View.VISIBLE);
-                    holder.nicknameText.setText(message.getAuthorNickname());
-                    holder.nicknameText.setVisibility(View.VISIBLE);
                 }
 
             } else {
@@ -827,7 +827,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                     if (file != null) {
                                         updateAttachment(holder, attachment, file, message);
                                     } else {
-                                       // holder.loading.setVisibility(View.VISIBLE);
+                                        // holder.loading.setVisibility(View.VISIBLE);
 
                                         SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment, message.getRoomSecret());
                                         AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, serverAddress);
@@ -847,7 +847,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                   // holder.loading.setVisibility(View.GONE);
+                                    // holder.loading.setVisibility(View.GONE);
                                     holder.imageView.setImageResource(R.drawable.ic_trash);
                                     holder.imageView.setVisibility(View.VISIBLE);
                                 }
@@ -871,16 +871,17 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                     if (holder.imageView != null) {
 
                         holder.imageView.setVisibility(View.VISIBLE);
+                        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+                        Bitmap bmp = Bitmap.createBitmap(attachment.getWidth(), attachment.getHeight(), conf);
+
+                        holder.imageView.setImageBitmap(bmp);
+
                         DiraActivity.runGlobalBackground(() -> {
 
                             Bitmap previewBitmap = attachment.getBitmapPreview();
                             if (previewBitmap == null) {
 
-                                Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-                                Bitmap bmp = Bitmap.createBitmap(attachment.getWidth(), attachment.getHeight(), conf);
-                                context.runOnUiThread(() -> {
-                                    holder.imageView.setImageBitmap(bmp);
-                                });
+
 
                             } else {
                                 context.runOnUiThread(() -> {
@@ -906,7 +907,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                         // there need to setup adapter
                         //ListAdapter adapter = new ListAdapter() {}
                     } else {
-                       // holder.loading.setVisibility(View.VISIBLE);
+                        // holder.loading.setVisibility(View.VISIBLE);
                     }
 
 
@@ -918,7 +919,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                     } else {
                         if (attachmentSize > maxAutoLoadSize) {
                             if (i == 0) {
-                               // holder.loading.setVisibility(View.GONE);
+                                // holder.loading.setVisibility(View.GONE);
                                 holder.sizeText.setText(AppStorage.getStringSize(attachmentSize));
                                 String finalEncryptionKey = encryptionKey;
                                 long finalAttachmentSize = attachmentSize;
