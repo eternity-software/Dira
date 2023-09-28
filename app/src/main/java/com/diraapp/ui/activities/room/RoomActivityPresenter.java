@@ -563,13 +563,14 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     }
 
 
-                    float scaleFactor = bitmap.getHeight() / (float) getWidth();
+                    if(bitmap != null) {
+                        float scaleFactor = bitmap.getHeight() / (float) getWidth();
 
-                    if(scaleFactor < 0.3) scaleFactor = 0.3f;
-                    if(scaleFactor > 4) scaleFactor = 4f;
-                    Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, (int) (10 * scaleFactor), 10, true);
-
-                    attachment.setImagePreview(AppStorage.getBase64FromBitmap(previewBitmap));
+                        if (scaleFactor < 0.3) scaleFactor = 0.3f;
+                        if (scaleFactor > 4) scaleFactor = 4f;
+                       bitmap = Bitmap.createScaledBitmap(bitmap, (int) (10 * scaleFactor), 10, true);
+                    }
+                    attachment.setImagePreview(AppStorage.getBase64FromBitmap(bitmap));
                 }
 
 

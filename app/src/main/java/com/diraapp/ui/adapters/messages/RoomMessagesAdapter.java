@@ -8,7 +8,9 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -62,7 +64,6 @@ import com.diraapp.ui.components.RoomMessageVideoPlayer;
 import com.diraapp.ui.components.VoiceMessageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayerState;
-import com.diraapp.ui.components.viewswiper.ViewSwiper;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.Numbers;
@@ -86,8 +87,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import linc.com.amplituda.Amplituda;
+
 import linc.com.amplituda.exceptions.io.AmplitudaIOException;
 
 public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
@@ -121,10 +126,11 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     private Room room;
     private List<Message> messages = new ArrayList<>();
     private HashMap<String, Member> members = new HashMap<>();
-    private final Amplituda amplituda;
+    private Amplituda amplituda;
 
     private MessageReplyClickedListener replyClickedListener;
 
+    private Executor voiceWaveformsThread = Executors.newSingleThreadExecutor();
 
     public RoomMessagesAdapter(DiraActivity context,
                                RecyclerView recyclerView,
@@ -252,7 +258,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 
 
-        holder.loading.setVisibility(View.GONE);
+       // holder.loading.setVisibility(View.GONE);
 
         if (holder.imageContainer != null) {
             holder.videoPlayer.reset();
@@ -358,8 +364,12 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         } else if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
             holder.imageView.setVisibility(View.VISIBLE);
-
-            holder.imageView.setImageBitmap(AppStorage.getBitmapFromPath(file.getPath()));
+            DiraActivity.runGlobalBackground(() -> {
+                    Bitmap bitmap = AppStorage.getBitmapFromPath(file.getPath(), context);
+                    context.runOnUiThread(() -> {
+                        holder.imageView.setImageBitmap(bitmap);
+                    });
+            });
 
             // Causing "blink"
             // Picasso.get().load(Uri.fromFile(file)).into(holder.imageView);
@@ -370,7 +380,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                             attachment.getAttachmentType() == AttachmentType.VIDEO, holder.imageContainer);
                 }
             });
-            holder.loading.setVisibility(View.GONE);
+           // holder.loading.setVisibility(View.GONE);
         } else if (attachment.getAttachmentType() == AttachmentType.VIDEO || attachment.getAttachmentType() == AttachmentType.BUBBLE) {
 
 
@@ -415,7 +425,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             try {
 
 
-                holder.loading.setVisibility(View.GONE);
+              //  holder.loading.setVisibility(View.GONE);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -465,29 +475,52 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             //   videoPlayer.play(file.getPath());
 
         } else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
-            holder.loading.setVisibility(View.GONE);
+           // holder.loading.setVisibility(View.GONE);
 
 
-            context.runBackground(() -> {
 
-                amplituda.processAudio(file)
-                        .get(result -> {
-                            List<Integer> amplitudesData = result.amplitudesAsList();
-                            int[] array = new int[amplitudesData.size()];
-                            for (int i = 0; i < amplitudesData.size(); i++)
-                                array[i] = amplitudesData.get(i);
-                            context.runOnUiThread(() -> {
+
+            voiceWaveformsThread.execute(() -> {
+
+
+                try {
+
+
+                    // Check if media file is not corrupted
+                    MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+                    mmr.setDataSource(context, Uri.fromFile(file));
+                    String dur = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
+                    if(dur.equals("0")) return;
+
+                    amplituda.processAudio(file)
+                            .get(result -> {
                                 try {
-                                    holder.waveformSeekBar.setSampleFrom(array);
-                                } catch (Exception ignored) {
-                                }
-                            });
-                        }, exception -> {
-                            if (exception instanceof AmplitudaIOException) {
+                                    List<Integer> amplitudesData = result.amplitudesAsList();
+                                    int[] array = new int[amplitudesData.size()];
+                                    for (int i = 0; i < amplitudesData.size(); i++)
+                                        array[i] = amplitudesData.get(i);
 
-                            }
-                        });
+
+                                    context.runOnUiThread(() -> {
+                                        try {
+                                            holder.waveformSeekBar.setSampleFrom(array);
+                                        } catch (Exception ignored) {
+                                        }
+                                    });
+                                } catch (Exception e) {
+
+                                }
+                            }, exception -> {
+
+                            });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
             });
+
 
 
             holder.waveformSeekBar.setProgress(attachment.getVoiceMessageStopProgress());
@@ -785,13 +818,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                             public void run() {
                                 if (attachment.getFileUrl().equals(message.getAttachments().get(0).getFileUrl())) {
 
-                                    holder.loading.setVisibility(View.GONE);
+                                    //holder.loading.setVisibility(View.GONE);
                                     File file = AttachmentsStorage.getFileFromAttachment(attachment, context, message.getRoomSecret());
 
                                     if (file != null) {
                                         updateAttachment(holder, attachment, file, message);
                                     } else {
-                                        holder.loading.setVisibility(View.VISIBLE);
+                                       // holder.loading.setVisibility(View.VISIBLE);
 
                                         SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment, message.getRoomSecret());
                                         AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, serverAddress);
@@ -811,7 +844,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                             context.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    holder.loading.setVisibility(View.GONE);
+                                   // holder.loading.setVisibility(View.GONE);
                                     holder.imageView.setImageResource(R.drawable.ic_trash);
                                     holder.imageView.setVisibility(View.VISIBLE);
                                 }
@@ -835,18 +868,23 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                     if (holder.imageView != null) {
                         Bitmap previewBitmap = attachment.getBitmapPreview();
                         holder.imageView.setVisibility(View.VISIBLE);
-                        if(previewBitmap == null)
-                        {
+                        DiraActivity.runGlobalBackground(() -> {
 
-                            Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-                            Bitmap bmp = Bitmap.createBitmap(attachment.getWidth(), attachment.getHeight(), conf);
-                            holder.imageView.setImageBitmap(bmp);
-                        }
-                        else
-                        {
-                            holder.imageView.setImageBitmap(previewBitmap);
-                        }
 
+                            if (previewBitmap == null) {
+
+                                Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+                                Bitmap bmp = Bitmap.createBitmap(attachment.getWidth(), attachment.getHeight(), conf);
+                                context.runOnUiThread(() -> {
+                                    holder.imageView.setImageBitmap(bmp);
+                                });
+
+                            } else {
+                                context.runOnUiThread(() -> {
+                                    holder.imageView.setImageBitmap(previewBitmap);
+                                });
+                            }
+                        });
 
                     } else if (i == 0 & attachmentCount > 1) {
                         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
@@ -865,7 +903,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                         // there need to setup adapter
                         //ListAdapter adapter = new ListAdapter() {}
                     } else {
-                        holder.loading.setVisibility(View.VISIBLE);
+                       // holder.loading.setVisibility(View.VISIBLE);
                     }
 
 
@@ -877,7 +915,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                     } else {
                         if (attachmentSize > maxAutoLoadSize) {
                             if (i == 0) {
-                                holder.loading.setVisibility(View.GONE);
+                               // holder.loading.setVisibility(View.GONE);
                                 holder.sizeText.setText(AppStorage.getStringSize(attachmentSize));
                                 String finalEncryptionKey = encryptionKey;
                                 long finalAttachmentSize = attachmentSize;
@@ -886,7 +924,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                     public void onClick(View v) {
 
                                         holder.buttonDownload.setVisibility(View.GONE);
-                                        holder.loading.setVisibility(View.VISIBLE);
+                                        //holder.loading.setVisibility(View.VISIBLE);
 
                                         thread = new Thread(new Runnable() {
                                             @Override
@@ -1164,6 +1202,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             bubbleAdded = true;
         } else if (viewType == VIEW_TYPE_ROOM_MESSAGE_VOICE) {
             view = new VoiceMessageView(context, isSelfMessage);
+            holder.voiceLayout = (LinearLayout) view;
         } else if (viewType == VIEW_TYPE_ROOM_MESSAGE_ATTACHMENTS_TOO_LARGE) {
             view = new MessageAttachmentToLargeView(context, isSelfMessage);
         } else if (viewType == VIEW_TYPE_ROOM_MESSAGE_ATTACHMENTS) {

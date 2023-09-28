@@ -84,7 +84,7 @@ public class ImagesWorker {
         return output;
     }
 
- 
+
 
     public static Bitmap resizeBitmap(Bitmap bitmap, int maxFrameSize)
     {

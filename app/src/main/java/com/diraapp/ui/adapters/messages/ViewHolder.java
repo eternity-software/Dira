@@ -14,6 +14,7 @@ import com.diraapp.R;
 import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.MultiAttachmentMessageView;
+import com.diraapp.ui.components.VoiceMessageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.dynamic.DynamicTextView;
 import com.diraapp.ui.components.viewswiper.ViewSwiper;
@@ -117,7 +118,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         roomUpdatesText = itemView.findViewById(R.id.room_updates_text);
         waveformSeekBar = itemView.findViewById(R.id.waveform_seek_bar);
         playButton = itemView.findViewById(R.id.play_button);
-        voiceLayout = itemView.findViewById(R.id.voice_layout);
+        voiceLayout = itemView.findViewById(VoiceMessageView.VOICE_CONTAINER_ID);
         bubbleContainer = itemView.findViewById(BubbleMessageView.BUBBLE_CONTAINER_ID);
         bubblePlayer = itemView.findViewById(R.id.bubble_player);
 

@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/voice_layout"
+
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginHorizontal="8dp"
-    android:paddingTop="2dp"
-    android:paddingBottom="4dp"
-    android:visibility="visible">
+    android:layout_height="wrap_content">
 
 
     <ImageView
@@ -46,4 +42,4 @@
 
 
         android:layout_height="50dp" />
-</LinearLayout>
+</merge>
