@@ -46,7 +46,6 @@ public class ViewSwiper {
 
     public boolean onMotionEvent( RecyclerView rv, MotionEvent event)
     {
-        Logger.logDebug(getClass().getSimpleName(), "event " + event.getAction());
         View child = rv.findChildViewUnder(event.getX(), event.getY());
         if (child == null && downView == null) return false;
 
@@ -73,7 +72,7 @@ public class ViewSwiper {
 
         if (deltaX < 0) deltaX = 0;
 
-        Logger.logDebug(getClass().getSimpleName(), "deltaX=" + deltaX);
+
 
         boolean isIntercept = false;
 

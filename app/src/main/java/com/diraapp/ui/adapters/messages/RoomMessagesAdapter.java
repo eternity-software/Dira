@@ -384,11 +384,12 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         } else if (attachment.getAttachmentType() == AttachmentType.VIDEO || attachment.getAttachmentType() == AttachmentType.BUBBLE) {
 
 
+
             DiraVideoPlayer videoPlayer = holder.videoPlayer;
 
             if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
                 videoPlayer = holder.bubblePlayer;
-                videoPlayer.attachDebugIndicator(holder.bubbleViewContainer);
+                videoPlayer.attachDebugIndicator(holder.bubbleContainer);
             } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
                 holder.imageView.setVisibility(View.VISIBLE);
 
@@ -425,7 +426,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             try {
 
 
-              //  holder.loading.setVisibility(View.GONE);
+                holder.loading.setVisibility(View.GONE);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -454,11 +455,11 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                                 @Override
                                 public void onPrepared(MediaPlayer mp) {
 
-                                        diraMediaPlayer.start();
-                                        holder.timeText.setText(AppStorage.getStringSize(attachment.getSize()));
-                                        ((DiraVideoPlayer) v).setSpeed(1f);
-                                        ((DiraVideoPlayer) v).setProgress(0);
-                                        diraMediaPlayer.setOnPreparedListener(null);
+                                    diraMediaPlayer.start();
+                                    holder.timeText.setText(AppStorage.getStringSize(attachment.getSize()));
+                                    ((DiraVideoPlayer) v).setSpeed(1f);
+                                    ((DiraVideoPlayer) v).setProgress(0);
+                                    diraMediaPlayer.setOnPreparedListener(null);
 
 
 
@@ -471,9 +472,6 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                     }
                 }
             });
-
-            //   videoPlayer.play(file.getPath());
-
         } else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
            // holder.loading.setVisibility(View.GONE);
 
@@ -637,17 +635,22 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 Attachment attachment = message.getAttachments().get(0);
 
                 if (attachment.getWidth() > 0 & attachment.getHeight() > 0) {
-                    Bitmap previewBitmap = attachment.getBitmapPreview();
-                    if(previewBitmap == null)
-                    {
-                        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-                        Bitmap bmp = Bitmap.createBitmap(attachment.getWidth(), attachment.getHeight(), conf);
-                        holder.imageView.setImageBitmap(bmp);
-                    }
-                    else
-                    {
-                        holder.imageView.setImageBitmap(previewBitmap);
-                    }
+
+                    DiraActivity.runGlobalBackground(() -> {
+                        Bitmap previewBitmap = attachment.getBitmapPreview();
+                        if (previewBitmap == null) {
+                            Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+                            Bitmap bmp = Bitmap.createBitmap(attachment.getWidth(), attachment.getHeight(), conf);
+                            context.runOnUiThread(() -> {
+                                holder.imageView.setImageBitmap(bmp);
+                            });
+                        } else {
+                            context.runOnUiThread(() -> {
+                                holder.imageView.setImageBitmap(previewBitmap);
+                            });
+
+                        }
+                    });
 
 
 
@@ -866,11 +869,11 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                     Attachment attachment = message.getAttachments().get(i);
 
                     if (holder.imageView != null) {
-                        Bitmap previewBitmap = attachment.getBitmapPreview();
+
                         holder.imageView.setVisibility(View.VISIBLE);
                         DiraActivity.runGlobalBackground(() -> {
 
-
+                            Bitmap previewBitmap = attachment.getBitmapPreview();
                             if (previewBitmap == null) {
 
                                 Bitmap.Config conf = Bitmap.Config.ARGB_8888;

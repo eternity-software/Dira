@@ -56,7 +56,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     LinearLayout voiceLayout;
     ImageView playButton;
     DiraVideoPlayer bubblePlayer;
-    CardView bubbleContainer;
+    BubbleMessageView bubbleContainer;
 
     LinearLayout messageBackground;
 
