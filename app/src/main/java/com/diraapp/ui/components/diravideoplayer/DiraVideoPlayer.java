@@ -215,7 +215,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
         currentPlayingTask = source;
 
 
-        Logger.logDebug(getClass().getSimpleName(), "Queued " + currentPlayingTask.getSourcePath());
+       // Logger.logDebug(getClass().getSimpleName(), "Queued " + currentPlayingTask.getSourcePath());
         Runnable play = new Runnable() {
             @Override
             public void run() {

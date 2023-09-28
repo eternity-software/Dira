@@ -11,6 +11,7 @@ public class PlayingTask {
     }
 
     public String getSourcePath() {
+        if(sourcePath == null) return "";
         return sourcePath;
     }
 
