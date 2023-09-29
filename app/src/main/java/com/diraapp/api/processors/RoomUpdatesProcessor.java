@@ -275,7 +275,6 @@ public class RoomUpdatesProcessor {
         if (message == null) {
             return;
         }
-        if (message.getMessageReadingList().contains(messageReading)) return;
         if (message.getAuthorId().equals(update.getUserId())) return;
 
         String selfId = new CacheUtils(context).getString(CacheUtils.ID);
@@ -295,6 +294,9 @@ public class RoomUpdatesProcessor {
             }
 
         } else {
+            for (MessageReading mr: message.getMessageReadingList()) {
+                if (mr.getUserId().equals(messageReading.getUserId())) return;
+            }
             message.getMessageReadingList().add(messageReading);
         }
         messageDao.update(message);

@@ -247,7 +247,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+        if (!holder.isInitialised()) return;
 
         Message message = messages.get(position);
 
@@ -256,33 +256,12 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             listeners.remove(holder.attachmentsStorageListener);
         }
 
-
-
-        // holder.loading.setVisibility(View.GONE);
-
+        //
         if (holder.imageContainer != null) {
             holder.videoPlayer.reset();
             holder.imageView.setVisibility(View.GONE);
             holder.videoPlayer.setVisibility(View.GONE);
         }
-
-
-        /*
-        holder.messageText.setVisibility(View.VISIBLE);
-        holder.videoPlayer.release();
-        holder.videoPlayer.setRecyclerView(recyclerView);
-        holder.bubblePlayer.setRecyclerView(recyclerView);
-        holder.bubblePlayer.release();
-        holder.videoPlayer.setDelay(10);
-        holder.bubblePlayer.setDelay(10);
-        holder.voiceLayout.setVisibility(View.GONE);
-        holder.loading.setVisibility(View.GONE);
-        holder.sizeContainer.setVisibility(View.GONE);
-        holder.imageView.setVisibility(View.GONE);
-        holder.videoPlayer.setVisibility(View.GONE);
-        holder.dateText.setVisibility(View.GONE);
-        holder.bubbleContainer.setVisibility(View.GONE); */
-
 
         if (position == messages.size() - 1) {
             messageAdapterListener.onFirstItemScrolled(message, position);
@@ -305,6 +284,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
 
 
+        // delete this
         Message previousMessage = null;
 
         boolean isSameDay = false;
@@ -337,6 +317,9 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         } else {
             holder.dateText.setVisibility(View.GONE);
         }
+        //
+
+        // here call holder.onBind
 
         if (message.getCustomClientData() == null) {
             bindUserMessage(message, previousMessage, isSameDay, isSameYear, holder);
