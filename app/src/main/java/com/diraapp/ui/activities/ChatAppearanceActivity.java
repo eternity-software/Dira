@@ -18,7 +18,7 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.adapters.ChatBackgroundAdapter;
 import com.diraapp.ui.adapters.ColorThemeAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
-import com.diraapp.ui.adapters.messages.RoomMessagesAdapter;
+import com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter;
 import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.appearance.ChatBackground;
@@ -41,7 +41,7 @@ public class ChatAppearanceActivity extends DiraActivity {
 
     private ChatBackgroundAdapter chatBackgroundAdapter;
 
-    private RoomMessagesAdapter roomMessagesAdapter;
+    private LegacyRoomMessagesAdapter legacyRoomMessagesAdapter;
 
     private FilePickerBottomSheet bottomSheet;
 
@@ -141,18 +141,18 @@ public class ChatAppearanceActivity extends DiraActivity {
         messages.add(senderMessage);
 
         RecyclerView recycler = findViewById(R.id.example_messages);
-        roomMessagesAdapter = new RoomMessagesAdapter(this, recycler, null, room, new RoomMessagesAdapter.MessageAdapterListener() {
+        legacyRoomMessagesAdapter = new LegacyRoomMessagesAdapter(this, recycler, null, room, new LegacyRoomMessagesAdapter.MessageAdapterListener() {
             @Override
             public void onFirstItemScrolled(Message message, int index) {
 
             }
         });
-        roomMessagesAdapter.setMessages(messages);
+        legacyRoomMessagesAdapter.setMessages(messages);
 
         ImageView backgroundView = findViewById(R.id.example_background);
         AppTheme.getInstance().getChatBackground().applyBackground(backgroundView);
 
-        recycler.setAdapter(roomMessagesAdapter);
+        recycler.setAdapter(legacyRoomMessagesAdapter);
     }
 
     private void initPickImageButton() {

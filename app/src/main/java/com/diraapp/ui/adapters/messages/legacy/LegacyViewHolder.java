@@ -1,4 +1,4 @@
-package com.diraapp.ui.adapters.messages;
+package com.diraapp.ui.adapters.messages.legacy;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -17,11 +17,10 @@ import com.diraapp.ui.components.MultiAttachmentMessageView;
 import com.diraapp.ui.components.VoiceMessageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.dynamic.DynamicTextView;
-import com.diraapp.ui.components.viewswiper.ViewSwiper;
 import com.felipecsl.asymmetricgridview.library.widget.AsymmetricGridView;
 import com.masoudss.lib.WaveformSeekBar;
 
-public class ViewHolder extends RecyclerView.ViewHolder {
+public class LegacyViewHolder extends RecyclerView.ViewHolder {
 
     TextView messageText;
     TextView emojiText;
@@ -76,7 +75,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     DynamicTextView replyAuthor;
 
-    public ViewHolder(@NonNull View itemView) {
+    public LegacyViewHolder(@NonNull View itemView) {
         super(itemView);
 
         messageText = itemView.findViewById(R.id.message_text);

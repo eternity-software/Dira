@@ -1,4 +1,4 @@
-package com.diraapp.ui.adapters.messages;
+package com.diraapp.ui.adapters.messages.legacy;
 
 import android.annotation.SuppressLint;
 import android.content.ClipData;
@@ -89,13 +89,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import linc.com.amplituda.Amplituda;
 
-import linc.com.amplituda.exceptions.io.AmplitudaIOException;
-
-public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHolder> {
 
 
     public static final int VIEW_TYPE_CLIENT_DATA = 50;
@@ -132,11 +129,11 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private Executor voiceWaveformsThread = Executors.newSingleThreadExecutor();
 
-    public RoomMessagesAdapter(DiraActivity context,
-                               RecyclerView recyclerView,
-                               String serverAddress,
-                               Room room,
-                               MessageAdapterListener messageAdapterListener) {
+    public LegacyRoomMessagesAdapter(DiraActivity context,
+                                     RecyclerView recyclerView,
+                                     String serverAddress,
+                                     Room room,
+                                     MessageAdapterListener messageAdapterListener) {
         this.context = context;
         this.serverAddress = serverAddress;
         this.messageAdapterListener = messageAdapterListener;
@@ -174,9 +171,9 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public LegacyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Timer timer = new Timer("OnCreateViewHolder");
-        ViewHolder holder;
+        LegacyViewHolder holder;
         View view;
         if (viewType >= VIEW_TYPE_ROOM_MESSAGE) {
             view = layoutInflater.inflate(R.layout.room_message, parent, false);
@@ -184,11 +181,11 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             view = layoutInflater.inflate(R.layout.self_message, parent, false);
         }
 
-        holder = new ViewHolder(view);
+        holder = new LegacyViewHolder(view);
 
-        ViewHolder viewHolder = displayMessageView(holder, viewType);
+        LegacyViewHolder legacyViewHolder = displayMessageView(holder, viewType);
         timer.reportTime();
-        return viewHolder;
+        return legacyViewHolder;
     }
 
     @Override
@@ -204,7 +201,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     @Override
-    public void onViewRecycled(@NonNull ViewHolder holder) {
+    public void onViewRecycled(@NonNull LegacyViewHolder holder) {
         super.onViewRecycled(holder);
         DiraVideoPlayer player = null;
         if (holder.videoPlayer != null) player = holder.videoPlayer;
@@ -216,7 +213,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     @Override
-    public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
+    public void onViewDetachedFromWindow(@NonNull LegacyViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
         DiraVideoPlayer player = null;
         if (holder.videoPlayer != null) player = holder.videoPlayer;
@@ -228,7 +225,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     @Override
-    public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
+    public void onViewAttachedToWindow(@NonNull LegacyViewHolder holder) {
         super.onViewAttachedToWindow(holder);
 
         DiraVideoPlayer player = null;
@@ -246,7 +243,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull LegacyViewHolder holder, int position) {
 
 
         Message message = messages.get(position);
@@ -284,11 +281,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.bubbleContainer.setVisibility(View.GONE); */
 
 
-        if (position == messages.size() - 1) {
-            messageAdapterListener.onFirstItemScrolled(message, position);
-        } else if (position == 0) {
-            messageAdapterListener.onLastLoadedScrolled(message, position);
-        }
+
         if (!message.isRead() && message.getCustomClientData() == null) {
             if (message.getAuthorId() == null) return;
             if (!message.getAuthorId().equals(selfId)) {
@@ -347,7 +340,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime(), context));
     }
 
-    public void updateAttachment(ViewHolder holder, Attachment attachment, File file, Message message) {
+    public void updateAttachment(LegacyViewHolder holder, Attachment attachment, File file, Message message) {
 
         int attachmentsCount = message.getAttachments().size();
         if (message.getAttachments().size() > 1) {
@@ -603,7 +596,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     private void bindUserMessage(Message message, Message previousMessage,
-                                 boolean isSameDay, boolean isSameYear, ViewHolder holder) {
+                                 boolean isSameDay, boolean isSameYear, LegacyViewHolder holder) {
         holder.itemView.setClickable(true);
         holder.itemView.setOnClickListener((View v) -> {
             createBalloon(message, holder.itemView);
@@ -711,7 +704,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    private void bindRoomUpdateMessage(Message message, ViewHolder holder) {
+    private void bindRoomUpdateMessage(Message message, LegacyViewHolder holder) {
         holder.itemView.setClickable(false);
 
         holder.nicknameText.setVisibility(View.GONE);
@@ -777,13 +770,13 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-    private void applyDefaultIconOnUpdateMessage(ViewHolder holder) {
+    private void applyDefaultIconOnUpdateMessage(LegacyViewHolder holder) {
         holder.roomUpdatesIcon.setImageTintList(ColorStateList.valueOf(
                 Theme.getColor(context, R.color.client_data_icon_color)));
         holder.roomUpdatesIcon.getBackground().setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
     }
 
-    private void setImageOnRoomUpdateMessage(ViewHolder holder, String path) {
+    private void setImageOnRoomUpdateMessage(LegacyViewHolder holder, String path) {
 
         if (path == null) {
             holder.roomUpdatesIcon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.placeholder));
@@ -797,7 +790,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-    private void loadMessageAttachment(Message message, ViewHolder holder) {
+    private void loadMessageAttachment(Message message, LegacyViewHolder holder) {
         String encryptionKey = "";
         if (room != null) {
             if (message.getLastTimeEncryptionKeyUpdated() == room.getTimeEncryptionKeyUpdated()) {
@@ -1182,7 +1175,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         return type;
     }
 
-    private ViewHolder displayMessageView(ViewHolder holder, int viewType) {
+    private LegacyViewHolder displayMessageView(LegacyViewHolder holder, int viewType) {
         boolean isSelfMessage = viewType < VIEW_TYPE_ROOM_MESSAGE;
 
         if (isSelfMessage) viewType += VIEW_TYPE_ROOM_MESSAGE;
@@ -1233,9 +1226,9 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
         return holder;
     }
 
-    private void fillMessageReply(Message message, ViewHolder viewHolder, boolean isSelfMessage) {
+    private void fillMessageReply(Message message, LegacyViewHolder legacyViewHolder, boolean isSelfMessage) {
         if (message == null) {
-            viewHolder.replyContainer.setVisibility(View.GONE);
+            legacyViewHolder.replyContainer.setVisibility(View.GONE);
             return;
         }
 
@@ -1255,7 +1248,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             int statusTextColor = 0;
             if (isSelfMessage) statusTextColor = R.color.self_reply_color;
             else statusTextColor = R.color.message_reply_color;
-            viewHolder.replyText.setTextColor(Theme.getColor(context, statusTextColor));
+            legacyViewHolder.replyText.setTextColor(Theme.getColor(context, statusTextColor));
             if (size > 1) {
                 text = context.getResources().getString(R.string.message_type_attachments);
             } else if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
@@ -1269,7 +1262,7 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                 if (text == null | "".equals(text)) {
                     text = context.getResources().getString(R.string.message_type_image);
                 } else {
-                    viewHolder.replyText.setTextColor(Theme.getColor
+                    legacyViewHolder.replyText.setTextColor(Theme.getColor
                             (context, textColorId));
                 }
 
@@ -1277,20 +1270,20 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
                         context, room.getSecretName());
 
                 if (file != null) {
-                    Picasso.get().load(file).into(viewHolder.replyImage);
-                    viewHolder.replyImageCard.setVisibility(View.VISIBLE);
+                    Picasso.get().load(file).into(legacyViewHolder.replyImage);
+                    legacyViewHolder.replyImageCard.setVisibility(View.VISIBLE);
                 }
                 showImage = true;
             }
         } else {
             text = message.getText();
             if (text == null) text = "";
-            viewHolder.replyText.setTextColor(Theme.getColor
+            legacyViewHolder.replyText.setTextColor(Theme.getColor
                     (context, textColorId));
         }
 
         if (!showImage) {
-            viewHolder.replyImageCard.setVisibility(View.GONE);
+            legacyViewHolder.replyImageCard.setVisibility(View.GONE);
         }
 
         String author = "";
@@ -1310,12 +1303,12 @@ public class RoomMessagesAdapter extends RecyclerView.Adapter<ViewHolder> {
             author = context.getString(R.string.unknown);
         }
 
-        viewHolder.replyAuthor.setText(author);
-        viewHolder.replyText.setText(text);
+        legacyViewHolder.replyAuthor.setText(author);
+        legacyViewHolder.replyText.setText(text);
 
-        viewHolder.replyContainer.setVisibility(View.VISIBLE);
+        legacyViewHolder.replyContainer.setVisibility(View.VISIBLE);
 
-        viewHolder.replyContainer.setOnClickListener(new View.OnClickListener() {
+        legacyViewHolder.replyContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (replyClickedListener != null) replyClickedListener.onClicked(message);
