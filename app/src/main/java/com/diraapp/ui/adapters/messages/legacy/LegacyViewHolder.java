@@ -108,8 +108,6 @@ public class LegacyViewHolder extends RecyclerView.ViewHolder {
         messageBackground = itemView.findViewById(R.id.message_background);
         viewsContainer = itemView.findViewById(R.id.views_container);
         bubbleViewContainer = itemView.findViewById(R.id.bubble_view_container);
-
-        isSelfMessage = getItemViewType() < RoomMessagesAdapter.VIEW_TYPE_ROOM_MESSAGE;
     }
 
     public boolean isInitialised() {

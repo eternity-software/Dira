@@ -1,4 +1,4 @@
-package com.diraapp.ui.adapters.messages.viewholders;
+package com.diraapp.ui.adapters.messages.views;
 
 import android.view.View;
 import android.widget.TextView;
@@ -7,10 +7,10 @@ import androidx.annotation.NonNull;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.ui.adapters.messages.BaseViewHolder;
+import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.components.MessageReplyComponent;
 
-public class TextMessageViewHolder extends BaseViewHolder {
+public class TextMessageViewHolder extends BaseMessageViewHolder {
 
     TextView messageText;
     TextView emojiText;
@@ -27,19 +27,19 @@ public class TextMessageViewHolder extends BaseViewHolder {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
+    public void onViewInflated(View rootView) {
+        super.onViewInflated(rootView);
         MessageReplyComponent replyComponent = new MessageReplyComponent(itemView.getContext(),
-                getItemViewType(), isSelfMessage());
-        viewsContainer.addView(replyComponent);
+                getItemViewType(), isSelfMessage);
+        postInflatedViewsContainer.addView(replyComponent);
 
-        setInitialised(true);
+        isInitialised = true;
         updateViews();
         updateReplies();
     }
 
     @Override
-    public void onBind(Message message, Message previousMessage) {
-
+    public void bindMessage(Message message, Message previousMessage) {
+        super.bindMessage(message, previousMessage);
     }
 }

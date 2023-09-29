@@ -1,4 +1,4 @@
-package com.diraapp.ui.adapters.messages.viewholders;
+package com.diraapp.ui.adapters.messages.views;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -30,17 +30,19 @@ public class AttachmentViewHolder extends TextMessageViewHolder {
     }
 
     @Override
-    public void onCreate() {
+    public void onViewInflated(View rootView) {
+        super.onViewInflated(rootView);
         View view = new RoomMessageVideoPlayer(itemView.getContext());
         messageContainer.setVisibility(View.VISIBLE);
-        viewsContainer.addView(view);
+        postInflatedViewsContainer.addView(view);
 
-        setInitialised(true);
+        isInitialised = true;
         updateViews();
     }
 
     @Override
-    public void onBind(Message message, Message previousMessage) {
+    public void bindMessage(Message message, Message previousMessage) {
+        super.bindMessage(message, previousMessage);
         videoPlayer.reset();
         imageView.setVisibility(View.GONE);
         videoPlayer.setVisibility(View.GONE);

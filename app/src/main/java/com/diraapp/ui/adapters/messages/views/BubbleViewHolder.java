@@ -1,6 +1,5 @@
-package com.diraapp.ui.adapters.messages.viewholders;
-
-import static com.diraapp.ui.adapters.messages.RoomMessagesAdapter.VIEW_TYPE_ROOM_MESSAGE_BUBBLE;
+package com.diraapp.ui.adapters.messages.views;
+import static com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter.VIEW_TYPE_ROOM_MESSAGE_BUBBLE;
 
 import android.view.View;
 
@@ -9,13 +8,12 @@ import androidx.cardview.widget.CardView;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.ui.adapters.messages.BaseViewHolder;
-import com.diraapp.ui.adapters.messages.ViewHolder;
+import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.MessageReplyComponent;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 
-public class BubbleViewHolder extends BaseViewHolder {
+public class BubbleViewHolder extends BaseMessageViewHolder {
 
     DiraVideoPlayer bubblePlayer;
     BubbleMessageView bubbleContainer;
@@ -31,25 +29,25 @@ public class BubbleViewHolder extends BaseViewHolder {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
+    public void onViewInflated(View rootView) {
+        super.onViewInflated(rootView);
         MessageReplyComponent replyComponent = new MessageReplyComponent(itemView.getContext(),
-                VIEW_TYPE_ROOM_MESSAGE_BUBBLE, isSelfMessage());
-        bubbleViewContainer.addView(replyComponent);
+                VIEW_TYPE_ROOM_MESSAGE_BUBBLE, isSelfMessage);
+        bubbleContainer.addView(replyComponent);
 
         CardView bubble = new BubbleMessageView(itemView.getContext());
-        bubbleViewContainer.addView(bubble);
+        bubbleContainer.addView(bubble);
 
         messageContainer.setVisibility(View.GONE);
-        viewsContainer.setVisibility(View.GONE);
+        postInflatedViewsContainer.setVisibility(View.GONE);
 
-        setInitialised(true);
+        isInitialised = true;
         updateViews();
         updateReplies();
     }
 
     @Override
-    public void onBind(Message message, Message previousMessage) {
-
+    public void bindMessage(Message message, Message previousMessage) {
+        super.bindMessage(message, previousMessage);
     }
 }

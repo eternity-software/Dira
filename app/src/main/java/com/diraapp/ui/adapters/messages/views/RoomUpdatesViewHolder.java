@@ -1,4 +1,4 @@
-package com.diraapp.ui.adapters.messages.viewholders;
+package com.diraapp.ui.adapters.messages.views;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -9,13 +9,10 @@ import androidx.annotation.NonNull;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.ui.adapters.messages.BaseViewHolder;
-import com.diraapp.ui.adapters.messages.ViewHolder;
-import com.diraapp.ui.components.MessageReplyComponent;
+import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.components.RoomMessageCustomClientDataView;
-import com.diraapp.ui.components.VoiceMessageView;
 
-public class RoomUpdatesViewHolder extends BaseViewHolder {
+public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
 
     LinearLayout roomUpdatesLayout;
     ImageView roomUpdatesIcon;
@@ -35,18 +32,18 @@ public class RoomUpdatesViewHolder extends BaseViewHolder {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
+    public void onViewInflated(View rootView) {
+        super.onViewInflated(rootView);
         View view = new RoomMessageCustomClientDataView(itemView.getContext());
         messageContainer.setVisibility(View.VISIBLE);
-        viewsContainer.addView(view);
+        postInflatedViewsContainer.addView(view);
 
-        setInitialised(true);
+        isInitialised = true;
         updateViews();
     }
 
     @Override
-    public void onBind(Message message, Message previousMessage) {
-
+    public void bindMessage(Message message, Message previousMessage) {
+        super.bindMessage(message, previousMessage);
     }
 }
