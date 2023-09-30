@@ -22,7 +22,7 @@ import java.util.Date;
 /**
  * ViewHolder for almost every message type
  */
-public class BaseMessageViewHolder extends RecyclerView.ViewHolder implements InflaterListener {
+public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder implements InflaterListener {
 
     protected boolean isInitialised = false, isSelfMessage;
     private TextView messageText, emojiText, nicknameText, timeText, dateText;
@@ -44,6 +44,9 @@ public class BaseMessageViewHolder extends RecyclerView.ViewHolder implements In
         isSelfMessage = getItemViewType() < VIEW_TYPE_ROOM_MESSAGE;
     }
 
+    public boolean isInitialised() {
+        return isInitialised;
+    }
 
     @Override
     public void onViewInflated(View rootView) {
@@ -63,10 +66,6 @@ public class BaseMessageViewHolder extends RecyclerView.ViewHolder implements In
 
     public void bindMessage(Message message, Message previousMessage) {
         fillDateAndTime(message, previousMessage);
-    }
-
-    protected void updateViews() {
-
     }
 
     private <T extends View> T find(int id)

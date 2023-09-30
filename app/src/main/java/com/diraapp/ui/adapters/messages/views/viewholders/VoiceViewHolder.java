@@ -1,4 +1,4 @@
-package com.diraapp.ui.adapters.messages.views;
+package com.diraapp.ui.adapters.messages.views.viewholders;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -8,10 +8,11 @@ import androidx.annotation.NonNull;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.ui.adapters.messages.views.WithMessageContainerViewHolder;
 import com.diraapp.ui.components.VoiceMessageView;
 import com.masoudss.lib.WaveformSeekBar;
 
-public class VoiceViewHolder extends TextMessageViewHolder {
+public class VoiceViewHolder extends WithMessageContainerViewHolder {
 
     WaveformSeekBar waveformSeekBar;
     LinearLayout voiceLayout;
@@ -22,21 +23,16 @@ public class VoiceViewHolder extends TextMessageViewHolder {
     }
 
     @Override
-    public void updateViews() {
-        waveformSeekBar = itemView.findViewById(R.id.waveform_seek_bar);
-        playButton = itemView.findViewById(R.id.play_button);
-        voiceLayout = itemView.findViewById(VoiceMessageView.VOICE_CONTAINER_ID);
-    }
-
-    @Override
     public void onViewInflated(View rootView) {
         super.onViewInflated(rootView);
         View view = new VoiceMessageView(itemView.getContext());
         messageContainer.setVisibility(View.VISIBLE);
         postInflatedViewsContainer.addView(view);
 
+        waveformSeekBar = itemView.findViewById(R.id.waveform_seek_bar);
+        playButton = itemView.findViewById(R.id.play_button);
+        voiceLayout = itemView.findViewById(VoiceMessageView.VOICE_CONTAINER_ID);
         isInitialised = true;
-        updateViews();
     }
 
     @Override

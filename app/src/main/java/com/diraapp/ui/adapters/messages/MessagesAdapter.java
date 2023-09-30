@@ -7,8 +7,9 @@ import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.exceptions.UnknownViewTypeException;
 import com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter;
-import com.diraapp.ui.adapters.messages.legacy.LegacyViewHolder;
+import com.diraapp.ui.adapters.messages.viewholderfactories.BaseViewHolderFactory;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 
 import java.util.ArrayList;
@@ -25,9 +26,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
 
     private LegacyRoomMessagesAdapter.MessageAdapterListener messageAdapterListener;
 
-    public MessagesAdapter(List<Message> messages, AsyncLayoutInflater asyncLayoutInflater) {
+    private final BaseViewHolderFactory factory;
+
+    public MessagesAdapter(List<Message> messages, AsyncLayoutInflater asyncLayoutInflater,
+                           BaseViewHolderFactory factory) {
         this.messages = messages;
         this.layoutInflater = asyncLayoutInflater;
+        this.factory = factory;
     }
 
     public void setMessageAdapterListener(LegacyRoomMessagesAdapter.MessageAdapterListener messageAdapterListener) {
@@ -37,11 +42,18 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
     @NonNull
     @Override
     public BaseMessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        try {
+            factory.createViewHolder(viewType, parent);
+        } catch (UnknownViewTypeException e) {
+            throw new RuntimeException(e);
+        }
+        // Inflate empty view
         return null;
     }
 
     @Override
     public void onBindViewHolder(@NonNull BaseMessageViewHolder holder, int position) {
+        if (!holder.isInitialised()) return;
 
         Message message = messages.get(position);
 
