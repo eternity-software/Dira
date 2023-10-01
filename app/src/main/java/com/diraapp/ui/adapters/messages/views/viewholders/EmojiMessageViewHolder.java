@@ -1,28 +1,30 @@
 package com.diraapp.ui.adapters.messages.views.viewholders;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.ui.adapters.messages.views.NoMessageContainerViewHolder;
+import com.diraapp.exceptions.AlreadyInitializedException;
+import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 
-public class EmojiMessageViewHolder extends NoMessageContainerViewHolder {
+public class EmojiMessageViewHolder extends BaseMessageViewHolder {
     TextView emojiText;
 
-
-    public EmojiMessageViewHolder(@NonNull View itemView) {
+    public EmojiMessageViewHolder(@NonNull ViewGroup itemView) {
         super(itemView);
+        setOuterContainer(true);
     }
+
 
     @Override
     public void onViewInflated(View rootView) {
         super.onViewInflated(rootView);
 
         emojiText = itemView.findViewById(R.id.emoji_view);
-        isInitialised = true;
     }
 
     @Override

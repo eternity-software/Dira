@@ -13,7 +13,7 @@ public class MultiAttachmentMessageView extends AsymmetricGridView {
     private boolean isInit = false;
 
     public MultiAttachmentMessageView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        super(context, null);
         init();
     }
 
@@ -23,7 +23,7 @@ public class MultiAttachmentMessageView extends AsymmetricGridView {
     }
 
     private static AttributeSet createAttrSet() {
-        AttributeSet attributeSet = new AttributeSet() {
+        return new AttributeSet() {
             @Override
             public int getAttributeCount() {
                 return 0;
@@ -134,7 +134,6 @@ public class MultiAttachmentMessageView extends AsymmetricGridView {
                 return 0;
             }
         };
-        return attributeSet;
     }
 
     private void init() {

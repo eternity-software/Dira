@@ -1,4 +1,7 @@
 package com.diraapp.exceptions;
 
-public class UnknownViewTypeException extends Exception {
+/**
+ * Throws when an incorrect ViewType passed to ViewTypeFactory
+ */
+public class UnknownViewTypeException extends RuntimeException {
 }

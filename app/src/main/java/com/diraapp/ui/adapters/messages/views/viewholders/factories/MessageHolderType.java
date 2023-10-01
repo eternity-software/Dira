@@ -1,6 +1,6 @@
-package com.diraapp.ui.adapters.messages.viewholderfactories;
+package com.diraapp.ui.adapters.messages.views.viewholders.factories;
 
-public enum ViewHolderType {
+public enum MessageHolderType {
 
     SELF_TEXT_MESSAGE,
     ROOM_TEXT_MESSAGE,

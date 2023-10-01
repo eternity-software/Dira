@@ -1,8 +1,7 @@
-package com.diraapp.ui.adapters.messages.viewholderfactories;
+package com.diraapp.ui.adapters.messages.views.viewholders.factories;
 
 import android.view.View;
-
-import androidx.recyclerview.widget.RecyclerView;
+import android.view.ViewGroup;
 
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
@@ -17,12 +16,15 @@ import com.diraapp.ui.adapters.messages.views.viewholders.TextMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.VoiceViewHolder;
 import com.diraapp.utils.StringFormatter;
 
+/**
+ * A factory that creating a ViewHolder from its type
+ */
 public class RoomViewHolderFactory implements BaseViewHolderFactory {
 
     @Override
-    public BaseMessageViewHolder createViewHolder(int intType, View parent)
+    public BaseMessageViewHolder createViewHolder(int intType, ViewGroup parent)
             throws UnknownViewTypeException {
-        ViewHolderType type = ViewHolderType.values()[intType];
+        MessageHolderType type = MessageHolderType.values()[intType];
 
         switch (type){
             case ROOM_TEXT_MESSAGE:
@@ -47,44 +49,44 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
     }
 
     @Override
-    public ViewHolderType getViewHolderType(Message message, boolean isSelfMessage)
+    public MessageHolderType getViewHolderType(Message message, boolean isSelfMessage)
             throws UnknownViewTypeException {
         if (message.getAuthorId() == null) {
-            return ViewHolderType.ROOM_UPDATES;
+            return MessageHolderType.ROOM_UPDATES;
         }
 
         if (isSelfMessage) {
             if (message.getAttachments().size() > 0) {
                 Attachment attachment = message.getAttachments().get(0);
                 if (attachment.getAttachmentType() == AttachmentType.VOICE) {
-                    return ViewHolderType.SELF_VOICE_MESSAGE;
+                    return MessageHolderType.SELF_VOICE_MESSAGE;
                 } else if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
-                    return ViewHolderType.SELF_BUBBLE_MESSAGE;
+                    return MessageHolderType.SELF_BUBBLE_MESSAGE;
                 }
-                return ViewHolderType.SELF_ATTACHMENTS_MESSAGE;
+                return MessageHolderType.SELF_ATTACHMENTS_MESSAGE;
             } else if (message.getText().length() > 0) {
                 if (StringFormatter.isEmoji(message.getText()) &&
                         StringFormatter.getEmojiCount(message.getText()) < 4) {
-                    return ViewHolderType.SELF_EMOJI_MESSAGE;
+                    return MessageHolderType.SELF_EMOJI_MESSAGE;
                 }
-                return ViewHolderType.SELF_TEXT_MESSAGE;
+                return MessageHolderType.SELF_TEXT_MESSAGE;
             }
         }
 
         if (message.getAttachments().size() > 0) {
             Attachment attachment = message.getAttachments().get(0);
             if (attachment.getAttachmentType() == AttachmentType.VOICE) {
-                return ViewHolderType.ROOM_VOICE_MESSAGE;
+                return MessageHolderType.ROOM_VOICE_MESSAGE;
             } else if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
-                return ViewHolderType.ROOM_BUBBLE_MESSAGE;
+                return MessageHolderType.ROOM_BUBBLE_MESSAGE;
             }
-            return ViewHolderType.ROOM_ATTACHMENTS_MESSAGE;
+            return MessageHolderType.ROOM_ATTACHMENTS_MESSAGE;
         } else if (message.getText().length() > 0) {
             if (StringFormatter.isEmoji(message.getText()) &&
                     StringFormatter.getEmojiCount(message.getText()) < 4) {
-                return ViewHolderType.ROOM_EMOJI_MESSAGE;
+                return MessageHolderType.ROOM_EMOJI_MESSAGE;
             }
-            return ViewHolderType.ROOM_TEXT_MESSAGE;
+            return MessageHolderType.ROOM_TEXT_MESSAGE;
         }
         throw new UnknownViewTypeException();
     }

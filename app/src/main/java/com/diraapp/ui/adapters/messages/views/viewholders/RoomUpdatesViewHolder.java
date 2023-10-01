@@ -1,6 +1,7 @@
 package com.diraapp.ui.adapters.messages.views.viewholders;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -9,6 +10,7 @@ import androidx.annotation.NonNull;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.exceptions.AlreadyInitializedException;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.components.RoomMessageCustomClientDataView;
 
@@ -19,13 +21,14 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
     TextView roomUpdatesMainText;
     TextView roomUpdatesText;
 
-    public RoomUpdatesViewHolder(@NonNull View itemView) {
+    public RoomUpdatesViewHolder(@NonNull ViewGroup itemView) {
         super(itemView);
     }
 
+
     @Override
-    public void onViewInflated(View rootView) {
-        super.onViewInflated(rootView);
+    protected void postInflate() {
+        super.postInflate();
         View view = new RoomMessageCustomClientDataView(itemView.getContext());
         messageContainer.setVisibility(View.VISIBLE);
         postInflatedViewsContainer.addView(view);
@@ -34,7 +37,6 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
         roomUpdatesIcon = itemView.findViewById(R.id.room_updates_icon);
         roomUpdatesMainText = itemView.findViewById(R.id.room_updates_main_text);
         roomUpdatesText = itemView.findViewById(R.id.room_updates_text);
-        isInitialised = true;
     }
 
     @Override
