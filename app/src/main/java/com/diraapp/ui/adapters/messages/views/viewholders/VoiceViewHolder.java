@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.ui.adapters.messages.MessageAdapterConfig;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.components.VoiceMessageView;
 import com.masoudss.lib.WaveformSeekBar;
@@ -19,8 +20,8 @@ public class VoiceViewHolder extends BaseMessageViewHolder {
     LinearLayout voiceLayout;
     ImageView playButton;
 
-    public VoiceViewHolder(@NonNull ViewGroup itemView) {
-        super(itemView);
+    public VoiceViewHolder(@NonNull ViewGroup itemView, MessageAdapterConfig messageAdapterConfig) {
+        super(itemView, messageAdapterConfig);
     }
 
     @Override

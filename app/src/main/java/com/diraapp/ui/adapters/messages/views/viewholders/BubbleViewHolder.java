@@ -1,6 +1,5 @@
 package com.diraapp.ui.adapters.messages.views.viewholders;
 
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -8,17 +7,19 @@ import androidx.cardview.widget.CardView;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.ui.adapters.messages.MessageAdapterConfig;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
+import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayerState;
 
 public class BubbleViewHolder extends BaseMessageViewHolder {
 
-    DiraVideoPlayer bubblePlayer;
-    BubbleMessageView bubbleContainer;
+    private DiraVideoPlayer bubblePlayer;
+    private BubbleMessageView bubbleContainer;
 
-    public BubbleViewHolder(@NonNull ViewGroup itemView) {
-        super(itemView);
+    public BubbleViewHolder(@NonNull ViewGroup itemView, MessageAdapterConfig messageAdapterConfig) {
+        super(itemView, messageAdapterConfig);
         setOuterContainer(true);
     }
 
@@ -35,5 +36,25 @@ public class BubbleViewHolder extends BaseMessageViewHolder {
     @Override
     public void bindMessage(Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
+    }
+
+    @Override
+    public void onViewRecycled() {
+        super.onViewRecycled();
+        bubblePlayer.reset();
+    }
+
+    @Override
+    public void onViewDetached() {
+        super.onViewDetached();
+        bubblePlayer.pause();
+    }
+
+    @Override
+    public void onViewAttached() {
+        super.onViewAttached();
+
+        if (bubblePlayer.getState() == DiraVideoPlayerState.PAUSED)
+            bubblePlayer.play();
     }
 }

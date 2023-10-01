@@ -47,7 +47,6 @@ public class CreateRoomActivity extends DiraActivity implements CreateRoomContra
         });
 
 
-
         binding.buttonCreateNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

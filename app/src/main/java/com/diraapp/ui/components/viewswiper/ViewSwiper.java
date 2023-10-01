@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.utils.DiraVibrator;
-import com.diraapp.utils.Logger;
 import com.diraapp.utils.Numbers;
 
 public class ViewSwiper {
@@ -25,7 +24,7 @@ public class ViewSwiper {
 
     private float downY, downX;
 
-    private View focusedView = null;
+    private final View focusedView = null;
     private View downView = null;
 
     private ViewSwiperListener viewSwiperListener;
@@ -44,25 +43,23 @@ public class ViewSwiper {
         setSwipeListener();
     }
 
-    public boolean onMotionEvent( RecyclerView rv, MotionEvent event)
-    {
+    public boolean onMotionEvent(RecyclerView rv, MotionEvent event) {
         View child = rv.findChildViewUnder(event.getX(), event.getY());
         if (child == null && downView == null) return false;
 
-        if(child == null) child = downView;
+        if (child == null) child = downView;
 
-        if(isDown && child != downView) child = downView;
+        if (isDown && child != downView) child = downView;
 
 
         RecyclerView.ViewHolder viewHolder = rv.findContainingViewHolder(child);
 
-        if(viewHolder == null) return false;
+        if (viewHolder == null) return false;
 
         int position = viewHolder.getAdapterPosition();
 
 
-
-        if(focusedView != null && child != focusedView) focusedView.animate().x(0)
+        if (focusedView != null && child != focusedView) focusedView.animate().x(0)
                 .setInterpolator(new DecelerateInterpolator(2f)).setDuration(200);
 
         float k = 2.0f;
@@ -72,7 +69,7 @@ public class ViewSwiper {
 
         if (deltaX < 0) deltaX = 0;
 
-        if(deltaX * 3 < deltaY && event.getAction() == MotionEvent.ACTION_MOVE && !isSwiped)
+        if (deltaX * 3 < deltaY && event.getAction() == MotionEvent.ACTION_MOVE && !isSwiped)
             return false;
 
         boolean isIntercept = false;
@@ -90,22 +87,19 @@ public class ViewSwiper {
                 if (isDown) {
 
 
-                    if(deltaX != 0)
-                    {
+                    if (deltaX != 0) {
                         float newX = (child.getX() - deltaX) / k;
 
                         downView.setX(newX);
                         notifyScrollStateChanged(false);
-                        if(deltaX > rv.getWidth() * SWIPE_TRIGGER_PERCENT && !isSwiped)
-                        {
+                        if (deltaX > rv.getWidth() * SWIPE_TRIGGER_PERCENT && !isSwiped) {
                             isSwiped = true;
 
                             DiraVibrator.vibrateOneTime(rv.getContext());
 
                         }
 
-                        if(deltaX < rv.getWidth() * SWIPE_TRIGGER_PERCENT * 0.8 && isSwiped)
-                        {
+                        if (deltaX < rv.getWidth() * SWIPE_TRIGGER_PERCENT * 0.8 && isSwiped) {
                             isSwiped = false;
                         }
 
@@ -116,13 +110,11 @@ public class ViewSwiper {
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_HOVER_EXIT:
 
-                if(isDown)
-                {
+                if (isDown) {
                     isDown = false;
                     downX = 0;
                     downY = 0;
-                    if(isSwiped)
-                    {
+                    if (isSwiped) {
                         notifyViewSwiped(position);
                     }
                     downView.animate().x(0).setInterpolator(new DecelerateInterpolator(2f))
@@ -136,19 +128,16 @@ public class ViewSwiper {
     }
 
 
-    
-    private void notifyViewSwiped(int position)
-    {
+    private void notifyViewSwiped(int position) {
 
-        if(viewSwiperListener != null) {
+        if (viewSwiperListener != null) {
             viewSwiperListener.onSwiped(position);
         }
     }
 
-    private void notifyScrollStateChanged(boolean canScroll)
-    {
+    private void notifyScrollStateChanged(boolean canScroll) {
         this.canScroll = canScroll;
-        if(viewSwiperListener != null) {
+        if (viewSwiperListener != null) {
             viewSwiperListener.onScrollStateChanged(canScroll);
         }
     }
@@ -157,8 +146,8 @@ public class ViewSwiper {
         view.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent event) {
-               onMotionEvent(rv, event);
-               return !canScroll;
+                onMotionEvent(rv, event);
+                return !canScroll;
             }
 
             @Override

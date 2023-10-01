@@ -58,7 +58,7 @@ public class UpdaterService extends Service {
 
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver((BroadcastReceiver) br, intentFilter);
+        registerReceiver(br, intentFilter);
     }
 
     private boolean isOnline(Context context) {

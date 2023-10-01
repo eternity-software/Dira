@@ -71,14 +71,12 @@ public class VoiceMessageView extends LinearLayout {
             }
 
 
-                playButton.getBackground().setColorFilter(playColorBackground, PorterDuff.Mode.SRC_ATOP);
-                playButton.setColorFilter(playColor);
-                bar.setWaveBackgroundColor(waveBackgroundColor);
-                bar.setWaveProgressColor(wavesColor);
+            playButton.getBackground().setColorFilter(playColorBackground, PorterDuff.Mode.SRC_ATOP);
+            playButton.setColorFilter(playColor);
+            bar.setWaveBackgroundColor(waveBackgroundColor);
+            bar.setWaveProgressColor(wavesColor);
 
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

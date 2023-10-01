@@ -12,7 +12,6 @@ import android.graphics.RectF;
 import android.os.Build;
 import android.provider.MediaStore;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 
@@ -85,9 +84,7 @@ public class ImagesWorker {
     }
 
 
-
-    public static Bitmap resizeBitmap(Bitmap bitmap, int maxFrameSize)
-    {
+    public static Bitmap resizeBitmap(Bitmap bitmap, int maxFrameSize) {
 
         int height = bitmap.getHeight();
         int width = bitmap.getWidth();

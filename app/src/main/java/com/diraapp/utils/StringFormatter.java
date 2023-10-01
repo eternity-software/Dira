@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 
 public class StringFormatter {
 
+    public static final String EMPTY_STRING = "";
+
     // Обработка строки
     public static String format(String stirng) {
         String result;

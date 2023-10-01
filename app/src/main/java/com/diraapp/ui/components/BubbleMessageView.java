@@ -31,7 +31,7 @@ public class BubbleMessageView extends CardView {
         this.setRadius(side);
         this.setCardElevation(0);
         this.setCardBackgroundColor(ContextCompat.getColor(this.getContext(), R.color.gray));
-        this.setId((int) BUBBLE_CONTAINER_ID);
+        this.setId(BUBBLE_CONTAINER_ID);
 
 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);

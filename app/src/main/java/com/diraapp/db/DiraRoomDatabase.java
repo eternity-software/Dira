@@ -13,7 +13,6 @@ import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.db.migrations.MessageMigrationFrom17To18;
 import com.diraapp.db.migrations.RoomMigrationFrom17To18;
 
 @Database(entities = {Room.class, Message.class, Member.class},
@@ -37,11 +36,11 @@ import com.diraapp.db.migrations.RoomMigrationFrom17To18;
 @TypeConverters({UnreadIdsConverter.class})
 public abstract class DiraRoomDatabase extends RoomDatabase {
 
-    public static DiraRoomDatabase db;
     public static final String DB_NAME = "rooms_db";
+    public static DiraRoomDatabase db;
 
     public static DiraRoomDatabase getDatabase(Context applicationContext) {
-        if(db == null) db = androidx.room.Room.databaseBuilder(applicationContext,
+        if (db == null) db = androidx.room.Room.databaseBuilder(applicationContext,
                 DiraRoomDatabase.class, DB_NAME).enableMultiInstanceInvalidation().build();
         return db;
     }

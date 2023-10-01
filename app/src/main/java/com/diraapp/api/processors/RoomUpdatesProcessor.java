@@ -126,11 +126,7 @@ public class RoomUpdatesProcessor {
                 Message repliedMessage = messageDao.
                         getMessageById(newMessage.getRepliedMessageId());
 
-                if (repliedMessage != null) {
-                    newMessage.setRepliedMessage(repliedMessage);
-                } else {
-                    newMessage.setRepliedMessage(null);
-                }
+                newMessage.setRepliedMessage(repliedMessage);
             }
         }
 
@@ -147,9 +143,8 @@ public class RoomUpdatesProcessor {
 
                     String path = null;
 
-                    if(((RoomUpdate) update).getRoomUpdateExpireSec() != 0)
-                    {
-                        room.setUpdateExpireSec((int) ((RoomUpdate) update).getRoomUpdateExpireSec());
+                    if (((RoomUpdate) update).getRoomUpdateExpireSec() != 0) {
+                        room.setUpdateExpireSec(((RoomUpdate) update).getRoomUpdateExpireSec());
                     }
 
                     if (!oldName.equals(newName)) {
@@ -294,7 +289,7 @@ public class RoomUpdatesProcessor {
             }
 
         } else {
-            for (MessageReading mr: message.getMessageReadingList()) {
+            for (MessageReading mr : message.getMessageReadingList()) {
                 if (mr.getUserId().equals(messageReading.getUserId())) return;
             }
             message.getMessageReadingList().add(messageReading);

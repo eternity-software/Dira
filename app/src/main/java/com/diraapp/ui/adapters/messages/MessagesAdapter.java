@@ -9,38 +9,43 @@ import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.exceptions.UnknownViewTypeException;
 import com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter;
-import com.diraapp.ui.adapters.messages.views.viewholders.factories.BaseViewHolderFactory;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
+import com.diraapp.ui.adapters.messages.views.viewholders.factories.BaseViewHolderFactory;
+import com.diraapp.utils.CacheUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder> {
 
+    private final BaseViewHolderFactory factory;
     /**
      * List of messages to display
      */
     private List<Message> messages = new ArrayList<>();
-
-    private AsyncLayoutInflater layoutInflater;
-
+    private final AsyncLayoutInflater layoutInflater;
     private LegacyRoomMessagesAdapter.MessageAdapterListener messageAdapterListener;
+    private final MessageAdapterConfig messageAdapterConfig;
 
-    private final BaseViewHolderFactory factory;
+    private final CacheUtils cacheUtils;
 
-    public MessagesAdapter(List<Message> messages, AsyncLayoutInflater asyncLayoutInflater,
-                           BaseViewHolderFactory factory) {
+    public MessagesAdapter(MessageAdapterConfig messageAdapterConfig, List<Message> messages, Room room, AsyncLayoutInflater asyncLayoutInflater,
+                           BaseViewHolderFactory factory, CacheUtils cacheUtils) {
         this.messages = messages;
         this.layoutInflater = asyncLayoutInflater;
         this.factory = factory;
+        this.cacheUtils = cacheUtils;
+        this.messageAdapterConfig = messageAdapterConfig;
     }
+
     @NonNull
     @Override
     public BaseMessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        BaseMessageViewHolder viewHolder = factory.createViewHolder(viewType, parent);
+        BaseMessageViewHolder viewHolder = factory.createViewHolder(viewType,
+                parent, messageAdapterConfig);
 
         AsyncLayoutInflater.OnInflateFinishedListener listener = new AsyncLayoutInflater.OnInflateFinishedListener() {
             @Override
@@ -49,12 +54,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
             }
         };
 
-        if(viewHolder.isSelfMessage())
-        {
+        if (viewHolder.isSelfMessage()) {
             layoutInflater.inflate(R.layout.self_message, parent, listener);
-        }
-        else
-        {
+        } else {
             layoutInflater.inflate(R.layout.room_message, parent, listener);
         }
 
@@ -67,8 +69,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
 
         Message message = messages.get(position);
         Message previousMessage = null;
-        if(position < messages.size() - 1)
-        {
+        if (position < messages.size() - 1) {
             previousMessage = messages.get(position + 1);
         }
 
@@ -78,13 +79,20 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
 
     }
 
+
+    @Override
+    public int getItemViewType(int position) {
+        Message message = messages.get(position);
+        boolean isSelfMessage = message.getAuthorId().equals(cacheUtils.getString(CacheUtils.ID));
+        return factory.getViewHolderType(message, isSelfMessage).ordinal();
+    }
+
     public void setMessageAdapterListener(LegacyRoomMessagesAdapter.MessageAdapterListener messageAdapterListener) {
         this.messageAdapterListener = messageAdapterListener;
     }
 
-    private void notifyItemScrolled(Message message, int position)
-    {
-        if(messageAdapterListener == null) return;
+    private void notifyItemScrolled(Message message, int position) {
+        if (messageAdapterListener == null) return;
         if (position == messages.size() - 1) {
             messageAdapterListener.onFirstItemScrolled(message, position);
         } else if (position == 0) {

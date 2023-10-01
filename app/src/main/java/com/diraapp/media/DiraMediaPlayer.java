@@ -37,7 +37,7 @@ public class DiraMediaPlayer extends MediaPlayer {
 
     @Override
     public void setDataSource(String path) throws IOException, IllegalArgumentException, IllegalStateException, SecurityException {
-        if(isResetRequired)
+        if (isResetRequired)
             throw new ResetRequiredException();
         super.setDataSource(path);
         isResetRequired = true;
@@ -64,18 +64,14 @@ public class DiraMediaPlayer extends MediaPlayer {
 
     public void setProgress(float progress) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if(progress == 0)
-            {
-                seekTo((int) 1,MediaPlayer.SEEK_CLOSEST);
+            if (progress == 0) {
+                seekTo(1, MediaPlayer.SEEK_CLOSEST);
                 return;
             }
-            seekTo((int) (getDuration() * progress),MediaPlayer.SEEK_CLOSEST);
-        }
-        else
-        {
-            if(progress == 0)
-            {
-                seekTo((int) 1);
+            seekTo((int) (getDuration() * progress), MediaPlayer.SEEK_CLOSEST);
+        } else {
+            if (progress == 0) {
+                seekTo(1);
                 return;
             }
             seekTo((int) (getDuration() * progress));

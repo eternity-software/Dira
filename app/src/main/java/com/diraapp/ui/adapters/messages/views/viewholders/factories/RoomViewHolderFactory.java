@@ -1,12 +1,12 @@
 package com.diraapp.ui.adapters.messages.views.viewholders.factories;
 
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.UnknownViewTypeException;
+import com.diraapp.ui.adapters.messages.MessageAdapterConfig;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.AttachmentViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.BubbleViewHolder;
@@ -22,28 +22,28 @@ import com.diraapp.utils.StringFormatter;
 public class RoomViewHolderFactory implements BaseViewHolderFactory {
 
     @Override
-    public BaseMessageViewHolder createViewHolder(int intType, ViewGroup parent)
+    public BaseMessageViewHolder createViewHolder(int intType, ViewGroup parent, MessageAdapterConfig messageAdapterConfig)
             throws UnknownViewTypeException {
         MessageHolderType type = MessageHolderType.values()[intType];
 
-        switch (type){
+        switch (type) {
             case ROOM_TEXT_MESSAGE:
             case SELF_TEXT_MESSAGE:
-                return new TextMessageViewHolder(parent);
+                return new TextMessageViewHolder(parent, messageAdapterConfig);
             case ROOM_BUBBLE_MESSAGE:
             case SELF_BUBBLE_MESSAGE:
-                return new BubbleViewHolder(parent);
+                return new BubbleViewHolder(parent, messageAdapterConfig);
             case ROOM_VOICE_MESSAGE:
             case SELF_VOICE_MESSAGE:
-                return new VoiceViewHolder(parent);
+                return new VoiceViewHolder(parent, messageAdapterConfig);
             case ROOM_ATTACHMENTS_MESSAGE:
             case SELF_ATTACHMENTS_MESSAGE:
-                return new AttachmentViewHolder(parent);
+                return new AttachmentViewHolder(parent, messageAdapterConfig);
             case ROOM_EMOJI_MESSAGE:
             case SELF_EMOJI_MESSAGE:
-                return new EmojiMessageViewHolder(parent);
+                return new EmojiMessageViewHolder(parent, messageAdapterConfig);
             case ROOM_UPDATES:
-                return new RoomUpdatesViewHolder(parent);
+                return new RoomUpdatesViewHolder(parent, messageAdapterConfig);
         }
         throw new UnknownViewTypeException();
     }

@@ -1,7 +1,6 @@
 package com.diraapp.storage.attachments;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.db.entities.Attachment;

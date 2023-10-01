@@ -3,9 +3,7 @@ package com.diraapp.storage.images;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
-import android.os.Build;
 
 import androidx.annotation.NonNull;
 
@@ -16,7 +14,6 @@ import com.diraapp.storage.FileClassifier;
 import com.diraapp.ui.activities.room.RoomActivityPresenter;
 import com.diraapp.utils.CryptoUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -29,7 +26,6 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class FilesUploader {
-
 
 
     public static boolean uploadFile(String sourceFileUri,

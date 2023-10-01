@@ -1,8 +1,9 @@
 package com.diraapp.ui.adapters.messages.views;
 
-import static com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter.VIEW_TYPE_ROOM_MESSAGE;
 import static com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter.VIEW_TYPE_ROOM_MESSAGE_BUBBLE;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,15 +15,24 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.api.requests.MessageReadRequest;
+import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.AlreadyInitializedException;
+import com.diraapp.exceptions.UnablePerformRequestException;
+import com.diraapp.res.Theme;
+import com.diraapp.ui.adapters.messages.MessageAdapterConfig;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.MessageHolderType;
 import com.diraapp.ui.components.MessageReplyComponent;
 import com.diraapp.ui.components.dynamic.DynamicTextView;
+import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Numbers;
+import com.diraapp.utils.TimeConverter;
+import com.squareup.picasso.Picasso;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.io.File;
+import java.util.HashMap;
 
 /**
  * ViewHolder for almost every message type
@@ -30,35 +40,33 @@ import java.util.Date;
 public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder implements InflaterListener {
 
     protected boolean isInitialized = false, isSelfMessage, isOuterContainer = false;
-    private TextView messageText, emojiText, nicknameText, timeText, dateText;
 
-    private View profilePictureContainer;
-
-    private ImageView profilePicture;
-
+    protected TextView messageText;
     protected LinearLayout outerContainer, messageContainer, postInflatedViewsContainer;
     protected View messageBackground, rootView;
+    private TextView nicknameText, timeText, dateText;
+    private View profilePictureContainer;
+    private ImageView profilePicture;
+    private final MessageAdapterConfig messageAdapterConfig;
 
-    private LinearLayout replyContainer;
-    private CardView replyImageCard;
-    private ImageView replyImage;
-    private DynamicTextView replyText, replyAuthor;
+    private MessageReplyComponent replyComponent;
 
-    public BaseMessageViewHolder(@NonNull ViewGroup itemView) {
+    public BaseMessageViewHolder(@NonNull ViewGroup itemView, MessageAdapterConfig messageAdapterConfig) {
         super(itemView);
+        this.messageAdapterConfig = messageAdapterConfig;
 
-        isSelfMessage = getItemViewType() < VIEW_TYPE_ROOM_MESSAGE;
+        isSelfMessage = MessageHolderType.values()[getItemViewType()].isSelf();
 
         inflatePlaceholderView();
     }
 
     @Override
     public void onViewInflated(View rootView) {
-        if(isInitialized) throw new AlreadyInitializedException(MessageHolderType.values()[getItemViewType()]);
+        if (isInitialized)
+            throw new AlreadyInitializedException(MessageHolderType.values()[getItemViewType()]);
 
         this.rootView = rootView;
         messageText = find(R.id.message_text);
-        emojiText = find(R.id.emoji_view);
         nicknameText = find(R.id.nickname_text);
         timeText = find(R.id.time_view);
         dateText = find(R.id.date_view);
@@ -69,16 +77,13 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         messageBackground = find(R.id.message_back);
         postInflatedViewsContainer = find(R.id.views_container);
 
-        if(getItemViewType() != MessageHolderType.ROOM_UPDATES.ordinal())
+        if (getItemViewType() != MessageHolderType.ROOM_UPDATES.ordinal())
             postInflateReplyViews();
 
-        if(isOuterContainer)
-        {
+        if (isOuterContainer) {
             messageContainer.setVisibility(View.GONE);
             postInflatedViewsContainer.setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             messageContainer.setVisibility(View.VISIBLE);
             postInflatedViewsContainer.setVisibility(View.VISIBLE);
         }
@@ -92,8 +97,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     /**
      * Inflate a placeholder that will be displayed until the main inflating is completed
      */
-    public void inflatePlaceholderView()
-    {
+    public void inflatePlaceholderView() {
 
     }
 
@@ -101,20 +105,82 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
      * Inflate views after the completion of the main inflating
      */
     protected void postInflate() {
-        if(isInitialized) throw new AlreadyInitializedException(MessageHolderType.values()[getItemViewType()]);
+        if (isInitialized)
+            throw new AlreadyInitializedException(MessageHolderType.values()[getItemViewType()]);
     }
 
     /**
      * Fill views with message content
+     *
      * @param message
      * @param previousMessage
      */
     public void bindMessage(Message message, Message previousMessage) {
         fillDateAndTime(message, previousMessage);
+        checkReadStatus(message);
+        itemView.setClickable(true);
+        itemView.setOnClickListener((View v) -> {
+            BalloonMessageMenu balloonMessageMenu = new BalloonMessageMenu(messageAdapterConfig.getContext(),
+                    messageAdapterConfig.getMembers(),
+                    messageAdapterConfig.getCacheUtils().getString(CacheUtils.ID));
+            balloonMessageMenu.createBalloon(message, itemView);
+        });
+        bindUserPicture(message, previousMessage);
+        replyComponent.fillMessageReply(message.getRepliedMessage(), messageAdapterConfig);
     }
 
-    private <T extends View> T find(int id)
-    {
+    public void bindUserPicture(Message message, Message previousMessage) {
+        if (!isSelfMessage) {
+
+            boolean showProfilePicture = isProfilePictureRequired(message, previousMessage);
+
+            if (!showProfilePicture) {
+                profilePictureContainer.setVisibility(View.INVISIBLE);
+                nicknameText.setVisibility(View.GONE);
+            }
+
+            HashMap<String, Member> members = messageAdapterConfig.getMembers();
+            Member member = members.get(message.getAuthorId());
+            if (member != null) {
+                nicknameText.setText(member.getNickname());
+                if (showProfilePicture) {
+                    if (member.getImagePath() != null) {
+                        // TODO: custom image loader
+                        Picasso.get().load(new File(member.getImagePath())).into(profilePicture);
+                    } else {
+                        profilePicture.setImageResource(R.drawable.placeholder);
+                    }
+                    profilePictureContainer.setVisibility(View.VISIBLE);
+                    nicknameText.setText(message.getAuthorNickname());
+                    nicknameText.setVisibility(View.VISIBLE);
+                }
+            } else if (showProfilePicture) {
+                nicknameText.setText(message.getAuthorNickname());
+                nicknameText.setVisibility(View.VISIBLE);
+            }
+        } else if (message.getMessageReadingList() != null) {
+            if (message.getMessageReadingList().size() == 0) {
+                messageBackground.getBackground().setColorFilter(
+                        Theme.getColor(messageAdapterConfig.getContext(),
+                                R.color.unread_message_background), PorterDuff.Mode.SRC_IN);
+            } else {
+                messageBackground.getBackground().setColorFilter(
+                        Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
+            }
+        }
+    }
+
+    private boolean isProfilePictureRequired(Message message, Message previousMessage) {
+        if (previousMessage != null)
+            if (previousMessage.hasAuthor())
+                if (previousMessage.getAuthorId().equals(message.getAuthorId()) &&
+                        message.isSameDay(previousMessage) &&
+                        message.isSameYear(previousMessage))
+                    return false;
+        return true;
+    }
+
+    private <T extends View> T find(int id) {
         return rootView.findViewById(id);
     }
 
@@ -124,21 +190,8 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         boolean isSameYear = false;
 
         if (previousMessage != null) {
-            Date date = new Date(message.getTime());
-            Date datePrev = new Date(previousMessage.getTime());
-
-            Calendar calendar = Calendar.getInstance();
-            Calendar calendarPrev = Calendar.getInstance();
-
-            calendar.setTime(date);
-            calendarPrev.setTime(datePrev);
-
-            if (calendar.get(Calendar.DAY_OF_YEAR) == calendarPrev.get(Calendar.DAY_OF_YEAR)) {
-                isSameDay = true;
-            }
-            if (calendar.get(Calendar.YEAR) == calendarPrev.get(Calendar.YEAR)) {
-                isSameYear = true;
-            }
+            isSameDay = message.isSameDay(previousMessage);
+            isSameYear = message.isSameYear(previousMessage);
         }
 
         if (!isSameDay || !isSameYear) {
@@ -148,36 +201,57 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         } else {
             dateText.setVisibility(View.GONE);
         }
+
+        timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime()));
     }
 
     protected void postInflateReplyViews() throws AlreadyInitializedException {
-        if(isInitialized) throw new AlreadyInitializedException(MessageHolderType.values()[getItemViewType()]);
-        MessageReplyComponent replyComponent = new MessageReplyComponent(itemView.getContext(),
+        if (isInitialized)
+            throw new AlreadyInitializedException(MessageHolderType.values()[getItemViewType()]);
+        replyComponent = new MessageReplyComponent(itemView.getContext(),
                 VIEW_TYPE_ROOM_MESSAGE_BUBBLE, isSelfMessage);
 
-        if(isOuterContainer)
-        {
+        if (isOuterContainer) {
             outerContainer.addView(replyComponent);
-        }
-        else
-        {
+        } else {
             postInflatedViewsContainer.addView(replyComponent);
         }
 
-        replyImage = itemView.findViewById(R.id.message_reply_image);
-        replyImageCard = itemView.findViewById(R.id.message_reply_image_card);
-        replyContainer = itemView.findViewById(R.id.message_reply_container);
-        replyText = itemView.findViewById(R.id.message_reply_text);
-        replyAuthor = itemView.findViewById(R.id.message_reply_author_name);
+
+    }
+
+    private void checkReadStatus(Message message) {
+        String selfId = getSelfId();
+        if (!message.isReadable()) return;
+        if (message.getAuthorId().equals(selfId)) return;
+
+        message.setRead(true);
+
+        MessageReadRequest request = new MessageReadRequest(selfId, System.currentTimeMillis(),
+                message.getId(), message.getRoomSecret());
+        try {
+            UpdateProcessor.getInstance().sendRequest(request, messageAdapterConfig.getRoom().getServerAddress());
+        } catch (UnablePerformRequestException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected String getSelfId() {
+        return messageAdapterConfig.getCacheUtils().getString(CacheUtils.ID);
     }
 
     public void setOuterContainer(boolean outerContainer) {
         isOuterContainer = outerContainer;
     }
 
-    public void onViewRecycled(){}
-    public void onViewDetached(){}
-    public void onViewAttached(){}
+    public void onViewRecycled() {
+    }
+
+    public void onViewDetached() {
+    }
+
+    public void onViewAttached() {
+    }
 
     public boolean isInitialized() {
         return isInitialized;

@@ -123,11 +123,11 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
     private Room room;
     private List<Message> messages = new ArrayList<>();
     private HashMap<String, Member> members = new HashMap<>();
-    private Amplituda amplituda;
+    private final Amplituda amplituda;
 
-    private MessageReplyClickedListener replyClickedListener;
+    private MessageReplyListener replyClickedListener;
 
-    private Executor voiceWaveformsThread = Executors.newSingleThreadExecutor();
+    private final Executor voiceWaveformsThread = Executors.newSingleThreadExecutor();
 
     public LegacyRoomMessagesAdapter(DiraActivity context,
                                      RecyclerView recyclerView,
@@ -149,7 +149,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
         maxAutoLoadSize = cacheUtils.getLong(CacheUtils.AUTO_LOAD_SIZE);
     }
 
-    public void setReplyClickedListener(MessageReplyClickedListener replyClickedListener) {
+    public void setReplyClickedListener(MessageReplyListener replyClickedListener) {
         this.replyClickedListener = replyClickedListener;
     }
 
@@ -233,7 +233,6 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
         if (holder.bubblePlayer != null) player = holder.bubblePlayer;
 
 
-
         if (player != null) {
             if (player.getState() == DiraVideoPlayerState.PAUSED) {
                 player.play();
@@ -252,7 +251,6 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
             AttachmentsStorage.removeAttachmentsStorageListener(holder.attachmentsStorageListener);
             listeners.remove(holder.attachmentsStorageListener);
         }
-
 
 
         // holder.loading.setVisibility(View.GONE);
@@ -279,7 +277,6 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
         holder.videoPlayer.setVisibility(View.GONE);
         holder.dateText.setVisibility(View.GONE);
         holder.bubbleContainer.setVisibility(View.GONE); */
-
 
 
         if (!message.isRead() && message.getCustomClientData() == null) {
@@ -337,7 +334,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
             bindRoomUpdateMessage(message, holder);
         }
 
-        holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime(), context));
+        holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime()));
     }
 
     public void updateAttachment(LegacyViewHolder holder, Attachment attachment, File file, Message message) {
@@ -377,7 +374,6 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
         } else if (attachment.getAttachmentType() == AttachmentType.VIDEO || attachment.getAttachmentType() == AttachmentType.BUBBLE) {
 
 
-
             DiraVideoPlayer videoPlayer = holder.videoPlayer;
 
             if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
@@ -385,7 +381,6 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
                 videoPlayer.attachDebugIndicator(holder.imageView);
             } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
                 holder.imageView.setVisibility(View.VISIBLE);
-
 
 
                 videoPlayer.attachDebugIndicator(holder.viewsContainer);
@@ -442,8 +437,6 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
                             diraMediaPlayer.setDataSource(file.getPath());
 
 
-
-
                             diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                                 @Override
                                 public void onPrepared(MediaPlayer mp) {
@@ -453,7 +446,6 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
                                     ((DiraVideoPlayer) v).setSpeed(1f);
                                     ((DiraVideoPlayer) v).setProgress(0);
                                     diraMediaPlayer.setOnPreparedListener(null);
-
 
 
                                 }
@@ -469,8 +461,6 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
             // holder.loading.setVisibility(View.GONE);
 
 
-
-
             voiceWaveformsThread.execute(() -> {
 
 
@@ -482,7 +472,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
                     mmr.setDataSource(context, Uri.fromFile(file));
                     String dur = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
 
-                    if(dur.equals("0")) return;
+                    if (dur.equals("0")) return;
 
                     amplituda.processAudio(file)
                             .get(result -> {
@@ -511,7 +501,6 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
 
 
             });
-
 
 
             holder.waveformSeekBar.setProgress(attachment.getVoiceMessageStopProgress());
@@ -646,7 +635,6 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
                     });
 
 
-
                 }
             }
         }
@@ -666,7 +654,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
             if (members.containsKey(message.getAuthorId())) {
 
                 Member member = members.get(message.getAuthorId());
-                if(holder.nicknameText != null) {
+                if (holder.nicknameText != null) {
                     holder.nicknameText.setText(member.getNickname());
                     if (showProfilePicture) {
                         if (member.getImagePath() != null) {
@@ -873,7 +861,6 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
 
                             Bitmap previewBitmap = attachment.getBitmapPreview();
                             if (previewBitmap == null) {
-
 
 
                             } else {

@@ -43,11 +43,11 @@ import com.diraapp.db.migrations.MessageMigrationFrom17To18;
         MessageReadingConverter.class})
 public abstract class DiraMessageDatabase extends RoomDatabase {
 
-    private static DiraMessageDatabase db;
     public static final String DB_NAME = "messages_db";
+    private static DiraMessageDatabase db;
 
     public static DiraMessageDatabase getDatabase(Context applicationContext) {
-        if(db == null) db = androidx.room.Room.databaseBuilder(applicationContext,
+        if (db == null) db = androidx.room.Room.databaseBuilder(applicationContext,
                 DiraMessageDatabase.class, DB_NAME).enableMultiInstanceInvalidation().build();
         return db;
     }

@@ -10,7 +10,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -313,7 +312,6 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
                                     .sampling(8).from(ImagesWorker.getRoundedCroppedBitmap(bitmap1))
 
                                     .into(blurryBackground);
-
 
 
                         }

@@ -63,6 +63,7 @@ public class Member {
     }
 
     public String getNickname() {
+        if(nickname == null) return "unknown nickname";
         return nickname;
     }
 

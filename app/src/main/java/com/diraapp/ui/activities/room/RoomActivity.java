@@ -54,8 +54,8 @@ import com.diraapp.ui.activities.RoomInfoActivity;
 import com.diraapp.ui.activities.RoomSelectorActivity;
 import com.diraapp.ui.activities.resizer.FluidContentResizer;
 import com.diraapp.ui.adapters.MediaGridItemListener;
-import com.diraapp.ui.adapters.messages.legacy.MessageReplyClickedListener;
 import com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter;
+import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
 import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.FilePreview;
@@ -89,11 +89,6 @@ public class RoomActivity extends DiraActivity
     private String roomSecret;
     private LegacyRoomMessagesAdapter legacyRoomMessagesAdapter;
     private FilePickerBottomSheet filePickerBottomSheet;
-    private ActivityRoomBinding binding;
-    private RecordComponentsController recordComponentsController;
-    private RoomActivityContract.Presenter presenter;
-
-    private int lastVisiblePosition = 0;
     private final MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
         @Override
         public void onItemClick(int pos, final View view) {
@@ -106,6 +101,10 @@ public class RoomActivity extends DiraActivity
 
         }
     };
+    private ActivityRoomBinding binding;
+    private RecordComponentsController recordComponentsController;
+    private RoomActivityContract.Presenter presenter;
+    private int lastVisiblePosition = 0;
 
     public static void putRoomExtrasInIntent(Intent intent, String roomSecret, String roomName) {
         intent.putExtra(RoomSelectorActivity.PENDING_ROOM_SECRET, roomSecret);
@@ -224,7 +223,7 @@ public class RoomActivity extends DiraActivity
             @Override
             public void onClick(View view) {
 
-                performHeightAnimation( Numbers.dpToPx(48, RoomActivity.this), 0, binding.replyLayout)
+                performHeightAnimation(Numbers.dpToPx(48, RoomActivity.this), 0, binding.replyLayout)
                         .addListener(new Animator.AnimatorListener() {
                             @Override
                             public void onAnimationStart(@NonNull Animator animator) {
@@ -585,9 +584,7 @@ public class RoomActivity extends DiraActivity
             binding.replyText.setText(text);
 
 
-
-            if(binding.replyLayout.getVisibility() != View.VISIBLE)
-            {
+            if (binding.replyLayout.getVisibility() != View.VISIBLE) {
                 binding.replyLayout.setVisibility(View.VISIBLE);
                 performHeightAnimation(0, Numbers.dpToPx(48, this), binding.replyLayout);
             }
@@ -619,15 +616,16 @@ public class RoomActivity extends DiraActivity
         presenter.sendStatus(UserStatusType.RECORDING_BUBBLE);
     }
 
-    public void showKeyboard(final EditText ettext){
+    public void showKeyboard(final EditText ettext) {
         ettext.requestFocus();
-        ettext.postDelayed(new Runnable(){
-                               @Override public void run(){
-                                   InputMethodManager keyboard=(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                                   keyboard.showSoftInput(ettext,0);
+        ettext.postDelayed(new Runnable() {
+                               @Override
+                               public void run() {
+                                   InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                   keyboard.showSoftInput(ettext, 0);
                                }
                            }
-                ,100);
+                , 100);
     }
 
     @Override
@@ -653,7 +651,7 @@ public class RoomActivity extends DiraActivity
             });
 
             binding.recyclerView.setAdapter(legacyRoomMessagesAdapter);
-            legacyRoomMessagesAdapter.setReplyClickedListener((MessageReplyClickedListener) presenter);
+            legacyRoomMessagesAdapter.setReplyClickedListener((MessageReplyListener) presenter);
 
             presenter.loadMessages();
         });
@@ -768,7 +766,7 @@ public class RoomActivity extends DiraActivity
     @Override
     public void compressVideo(List<Uri> urisToCompress, String fileUri, VideoQuality videoQuality, Double videoHeight,
                               Double videoWidth, RoomActivityPresenter.RoomAttachmentCallback callback, String serverAddress, String encryptionKey, int
-                              bitrate) {
+                                      bitrate) {
         VideoCompressor.start(getApplicationContext(), urisToCompress,
                 true,
                 null,

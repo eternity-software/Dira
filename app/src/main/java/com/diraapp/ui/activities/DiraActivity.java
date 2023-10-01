@@ -51,6 +51,15 @@ public class DiraActivity extends AppCompatActivity {
         threadPoolExecutor.execute(runnable);
     }
 
+    public static Bitmap captureView(View view) {
+        Bitmap tBitmap = Bitmap.createBitmap(
+                view.getWidth(), view.getHeight(), Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(tBitmap);
+        view.draw(canvas);
+        canvas.setBitmap(null);
+        return tBitmap;
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,15 +74,6 @@ public class DiraActivity extends AppCompatActivity {
     public CacheUtils getCacheUtils() {
         if (cacheUtils == null) cacheUtils = new CacheUtils(getApplicationContext());
         return cacheUtils;
-    }
-
-    public static Bitmap captureView(View view) {
-        Bitmap tBitmap = Bitmap.createBitmap(
-                view.getWidth(), view.getHeight(), Bitmap.Config.RGB_565);
-        Canvas canvas = new Canvas(tBitmap);
-        view.draw(canvas);
-        canvas.setBitmap(null);
-        return tBitmap;
     }
 
     public ScaleAnimation preformScaleAnimation(float fromScale, float toScale, View view) {
@@ -116,19 +116,22 @@ public class DiraActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        for (DiraActivityListener listener : new ArrayList<>(activityListenerList)) listener.onPause();
+        for (DiraActivityListener listener : new ArrayList<>(activityListenerList))
+            listener.onPause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        for (DiraActivityListener listener : new ArrayList<>(activityListenerList)) listener.onDestroy();
+        for (DiraActivityListener listener : new ArrayList<>(activityListenerList))
+            listener.onDestroy();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        for (DiraActivityListener listener : new ArrayList<>(activityListenerList)) listener.onResume();
+        for (DiraActivityListener listener : new ArrayList<>(activityListenerList))
+            listener.onResume();
     }
 
     public void addListener(DiraActivityListener diraActivityListener) {

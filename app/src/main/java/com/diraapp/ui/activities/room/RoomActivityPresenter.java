@@ -28,7 +28,7 @@ import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
-import com.diraapp.ui.adapters.messages.legacy.MessageReplyClickedListener;
+import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
 import com.diraapp.ui.components.viewswiper.ViewSwiperListener;
 import com.diraapp.userstatus.UserStatus;
 import com.diraapp.utils.EncryptionUtil;
@@ -48,7 +48,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class RoomActivityPresenter implements RoomActivityContract.Presenter, UpdateListener,
-        ViewSwiperListener, MessageReplyClickedListener {
+        ViewSwiperListener, MessageReplyListener {
 
 
     private static final int MAX_ADAPTER_MESSAGES_COUNT = 200;
@@ -318,11 +318,11 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     private void loadReplies(List<Message> messages, MessageDao messageDao) {
         HashMap<String, Message> messageHashMap = new HashMap<>(messages.size());
 
-        for (Message m: messageList) {
+        for (Message m : messageList) {
             messageHashMap.put(m.getId(), m);
         }
 
-        for (Message message: messages) {
+        for (Message message : messages) {
             if (message.getRepliedMessageId() == null) continue;
             Message repliedMessage;
 
@@ -479,7 +479,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
         private long fileSize;
 
-        private String messageReplyId;
+        private final String messageReplyId;
 
         public RoomAttachmentCallback(String fileUri, String messageText, AttachmentType attachmentType, String messageReplyId) {
             this.fileUri = fileUri;
@@ -535,39 +535,33 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 attachment.setFileUrl(fileTempName);
 
 
-
-
                 attachment.setSize(new File(fileUri).length());
 
 
-                if(attachment.getSize() == 0) attachment.setSize(fileSize);
+                if (attachment.getSize() == 0) attachment.setSize(fileSize);
 
-                if(attachment.getAttachmentType() == AttachmentType.IMAGE ||
+                if (attachment.getAttachmentType() == AttachmentType.IMAGE ||
                         attachment.getAttachmentType() == AttachmentType.BUBBLE ||
                         attachment.getAttachmentType() == AttachmentType.VIDEO
-                )
-                {
+                ) {
 
                     String previewUri = fileUri;
                     Bitmap bitmap = null;
 
-                    if( attachment.getAttachmentType() == AttachmentType.VIDEO ||
-                            attachment.getAttachmentType() == AttachmentType.BUBBLE)
-                    {
+                    if (attachment.getAttachmentType() == AttachmentType.VIDEO ||
+                            attachment.getAttachmentType() == AttachmentType.BUBBLE) {
                         bitmap = ThumbnailUtils.createVideoThumbnail(previewUri, MediaStore.Video.Thumbnails.MINI_KIND);
-                    }
-                    else if( attachment.getAttachmentType() == AttachmentType.IMAGE )
-                    {
+                    } else if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
                         bitmap = view.getBitmap(previewUri);
                     }
 
 
-                    if(bitmap != null) {
+                    if (bitmap != null) {
                         float scaleFactor = bitmap.getHeight() / (float) getWidth();
 
                         if (scaleFactor < 0.3) scaleFactor = 0.3f;
                         if (scaleFactor > 4) scaleFactor = 4f;
-                       bitmap = Bitmap.createScaledBitmap(bitmap, (int) (10 * scaleFactor), 10, true);
+                        bitmap = Bitmap.createScaledBitmap(bitmap, (int) (10 * scaleFactor), 10, true);
                     }
                     attachment.setImagePreview(AppStorage.getBase64FromBitmap(bitmap));
                 }

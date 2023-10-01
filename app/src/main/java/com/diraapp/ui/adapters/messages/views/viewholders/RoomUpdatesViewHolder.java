@@ -10,19 +10,19 @@ import androidx.annotation.NonNull;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.exceptions.AlreadyInitializedException;
+import com.diraapp.ui.adapters.messages.MessageAdapterConfig;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.components.RoomMessageCustomClientDataView;
 
 public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
 
-    LinearLayout roomUpdatesLayout;
-    ImageView roomUpdatesIcon;
-    TextView roomUpdatesMainText;
-    TextView roomUpdatesText;
+    private LinearLayout roomUpdatesLayout;
+    private ImageView roomUpdatesIcon;
+    private TextView roomUpdatesMainText;
+    private TextView roomUpdatesText;
 
-    public RoomUpdatesViewHolder(@NonNull ViewGroup itemView) {
-        super(itemView);
+    public RoomUpdatesViewHolder(@NonNull ViewGroup itemView, MessageAdapterConfig messageAdapterConfig) {
+        super(itemView, messageAdapterConfig);
     }
 
 

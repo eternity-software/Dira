@@ -200,7 +200,7 @@ public class EditRoomActivity extends DiraActivity implements ServerSelectorBott
                         TextView textView = findViewById(R.id.room_server);
                         textView.setText(room.getServerAddress());
 
-                        if(hours != 0) {
+                        if (hours != 0) {
                             TextView updatesLifetimeInput = findViewById(R.id.room_updates_lifetime);
                             updatesLifetimeInput.setText(String.valueOf(hours));
                         }

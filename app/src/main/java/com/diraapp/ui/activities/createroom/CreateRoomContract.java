@@ -1,7 +1,6 @@
 package com.diraapp.ui.activities.createroom;
 
 import android.content.ClipboardManager;
-import android.graphics.Bitmap;
 
 public interface CreateRoomContract {
 
@@ -13,6 +12,7 @@ public interface CreateRoomContract {
         void onCopyButtonClick(ClipboardManager clipboardManager);
 
         void setServer(String serverAddress);
+
         void setUpdateExpireSec(int seconds);
     }
 

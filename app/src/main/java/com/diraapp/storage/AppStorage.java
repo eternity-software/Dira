@@ -262,9 +262,7 @@ public class AppStorage {
             );
 
             return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

@@ -41,15 +41,14 @@ import java.util.concurrent.Executors;
 public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceTextureListener {
 
     private static ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(1);
+    private final List<DiraVideoPlayerListener> diraVideoPlayerListenerList = new ArrayList<>();
     private DiraMediaPlayer mediaPlayer = new DiraMediaPlayer();
     private Surface surface = null;
     private DiraVideoPlayerState state = DiraVideoPlayerState.RESET;
     private PlayingTask currentPlayingTask;
     private boolean attachedActivity = false;
     private boolean attachedRecycler = false;
-
     private View debugIndicator;
-    private final List<DiraVideoPlayerListener> diraVideoPlayerListenerList = new ArrayList<>();
 
 
     public DiraVideoPlayer(@NonNull Context context) {
@@ -69,8 +68,9 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     /**
      * Initialization method
-     *
+     * <p>
      * Create player and register surface listener
+     *
      * @param context
      */
     private void init(Context context) {
@@ -90,9 +90,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
             }
             setupMediaPlayer(true);
 
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -100,6 +98,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     /**
      * Attach view, that will be colored when player state changes
+     *
      * @param view
      */
     public void attachDebugIndicator(View view) {
@@ -108,6 +107,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     /**
      * Attach activity for pausing player onPause
+     *
      * @param diraActivity
      */
     public void attachDiraActivity(DiraActivity diraActivity) {
@@ -129,6 +129,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     /**
      * Attach recycler view to player for enabling scroll optimization
+     *
      * @param recyclerView
      */
     public void attachRecyclerView(RecyclerView recyclerView) {
@@ -177,7 +178,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
      */
     public void play() {
         if (mediaPlayer == null) return;
-        if(state != DiraVideoPlayerState.PREPARING && state != DiraVideoPlayerState.PAUSED)
+        if (state != DiraVideoPlayerState.PREPARING && state != DiraVideoPlayerState.PAUSED)
             return;
         threadPoolExecutor.execute(() -> {
             try {
@@ -198,16 +199,17 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     /**
      * Play media directly from path
+     *
      * @param source
      */
     @Deprecated
-    public void play(String source)
-    {
+    public void play(String source) {
         play(new PlayingTask(source));
     }
 
     /**
      * Ask player to prepare media and play it as it ready
+     *
      * @param source PlayingTask instance for single media file
      */
     public void play(PlayingTask source) {
@@ -215,7 +217,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
         currentPlayingTask = source;
 
 
-       // Logger.logDebug(getClass().getSimpleName(), "Queued " + currentPlayingTask.getSourcePath());
+        // Logger.logDebug(getClass().getSimpleName(), "Queued " + currentPlayingTask.getSourcePath());
         Runnable play = new Runnable() {
             @Override
             public void run() {
@@ -223,7 +225,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
                     Logger.logDebug(getClass().getSimpleName(), "Playing " + currentPlayingTask.getSourcePath());
                     if (source != currentPlayingTask) return;
                     Logger.logDebug(getClass().getSimpleName(), "1 " + currentPlayingTask.getSourcePath());
-                    if(mediaPlayer.isReleased()) {
+                    if (mediaPlayer.isReleased()) {
                         return;
                     }
                     Logger.logDebug(getClass().getSimpleName(), "2 " + currentPlayingTask.getSourcePath());
@@ -238,7 +240,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
                         }
                     });
 
-                   // if(!isOnScreen()) return;
+                    // if(!isOnScreen()) return;
 
                     mediaPlayer.setDataSource(source.getSourcePath());
                     if (state == DiraVideoPlayerState.READY) {
@@ -269,6 +271,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     /**
      * Add listener that will be destroyed after receives specific state
+     *
      * @param listener
      */
     public void addSelfDestroyListener(DiraVideoPlayerListener listener) {
@@ -294,6 +297,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     /**
      * Add listener for tracking DiraVideoPlayer states
+     *
      * @param listener
      */
     public void addListener(DiraVideoPlayerListener listener) {
@@ -302,6 +306,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     /**
      * Remove listener for tracking DiraVideoPlayer states
+     *
      * @param listener
      */
     public void removeListener(DiraVideoPlayerListener listener) {
@@ -310,6 +315,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     /**
      * Seek to percent of media
+     *
      * @param progress Float from 0 to 1
      */
     public void setProgress(float progress) {
@@ -336,37 +342,34 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
         DiraMediaPlayer mediaPlayerToDestroy = mediaPlayer;
 
 
-
         PlayingTask localPlayingNow = currentPlayingTask;
 
         threadPoolExecutor.execute(() -> {
 
-                if(Objects.equals(localPlayingNow, currentPlayingTask)) {
-                 //   mediaPlayer = null;
-                    surface = null;
-                    if(!mediaPlayerToDestroy.isReleased())
-                    {
-                        mediaPlayerToDestroy.reset();
-                      //  mediaPlayerToDestroy.release();
-                    }
-
-                    currentPlayingTask = null;
-                    notifyStateChanged(DiraVideoPlayerState.RESET);
-
-                    // Auto-recreation after each reset
-                    setupMediaPlayer(true);
+            if (Objects.equals(localPlayingNow, currentPlayingTask)) {
+                //   mediaPlayer = null;
+                surface = null;
+                if (!mediaPlayerToDestroy.isReleased()) {
+                    mediaPlayerToDestroy.reset();
+                    //  mediaPlayerToDestroy.release();
                 }
+
+                currentPlayingTask = null;
+                notifyStateChanged(DiraVideoPlayerState.RESET);
+
+                // Auto-recreation after each reset
+                setupMediaPlayer(true);
+            }
 
 
         });
-
-
 
 
     }
 
     /**
      * Set playback speed (supported from Android M)
+     *
      * @param speed
      */
     public void setSpeed(float speed) {
@@ -381,6 +384,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     /**
      * System event that receives surface and passes it to DiraMediaPlayer
+     *
      * @param surfaceTexture
      * @param i
      * @param i1
@@ -402,23 +406,20 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     /**
      * Sets surfaces directly to DiraMediaPlayer if it is available
+     *
      * @param surface
      */
     private void setSurface(@NonNull Surface surface) {
 
         try {
             this.surface = surface;
-            if(mediaPlayer == null)
-            {
+            if (mediaPlayer == null) {
 
                 return;
             }
             mediaPlayer.setSurface(surface);
             notifyStateChanged(DiraVideoPlayerState.READY);
             mediaPlayer.start();
-
-
-
 
 
         } catch (Exception e) {
@@ -442,48 +443,43 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     /**
      * Create new DiraMediaPlayer and/or apply params to it
-     *
+     * <p>
      * Can be executed without notifying state change
+     *
      * @param notifyState
      */
     private void setupMediaPlayer(boolean notifyState) {
 
         try {
-                if (mediaPlayer == null) mediaPlayer = new DiraMediaPlayer();
-              //  if(state == DiraVideoPlayerState.PREPARING) return;
-                mediaPlayer.setVolume(0, 0);
+            if (mediaPlayer == null) mediaPlayer = new DiraMediaPlayer();
+            //  if(state == DiraVideoPlayerState.PREPARING) return;
+            mediaPlayer.setVolume(0, 0);
 
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setFlags(
-                            AudioAttributes.ALLOW_CAPTURE_BY_SYSTEM).build());
-                }
-                mediaPlayer.setAudioStreamType(AudioManager.USE_DEFAULT_STREAM_TYPE);
-                mediaPlayer.setLooping(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setFlags(
+                        AudioAttributes.ALLOW_CAPTURE_BY_SYSTEM).build());
+            }
+            mediaPlayer.setAudioStreamType(AudioManager.USE_DEFAULT_STREAM_TYPE);
+            mediaPlayer.setLooping(true);
 
-                if(notifyState)
-                {
-                    notifyStateChanged(DiraVideoPlayerState.IDLE);
-                }
-                else
-                {
-                    state = DiraVideoPlayerState.IDLE;
-                }
+            if (notifyState) {
+                notifyStateChanged(DiraVideoPlayerState.IDLE);
+            } else {
+                state = DiraVideoPlayerState.IDLE;
+            }
 
             if (surface != null) {
-                    mediaPlayer.setSurface(surface);
-                if(notifyState)
-                {
+                mediaPlayer.setSurface(surface);
+                if (notifyState) {
                     notifyStateChanged(DiraVideoPlayerState.READY);
-                }
-                else
-                {
+                } else {
                     state = DiraVideoPlayerState.READY;
                 }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }
@@ -516,9 +512,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
             for (DiraVideoPlayerListener listener : new ArrayList<>(diraVideoPlayerListenerList)) {
                 try {
                     listener.onStateChanged(diraVideoPlayerState);
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -529,6 +523,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     /**
      * Get current DiraVideoPlayer state
+     *
      * @return
      */
     public DiraVideoPlayerState getState() {

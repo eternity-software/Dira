@@ -11,12 +11,15 @@ import com.diraapp.db.converters.CustomClientDataConverter;
 import com.diraapp.db.converters.MessageReadingConverter;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
+import com.diraapp.exceptions.UnknownAuthorException;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.KeyGenerator;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 @Entity
 @TypeConverters({AttachmentConverter.class, CustomClientDataConverter.class,
@@ -69,6 +72,11 @@ public class Message {
 
     }
 
+    public boolean isReadable()
+    {
+        return !isRead() && !hasCustomClientData() && hasAuthor();
+    }
+
     public static Message generateMessage(CacheUtils cacheUtils, String roomSecret) {
         Message message = new Message();
 
@@ -80,6 +88,32 @@ public class Message {
         message.isRead = true;
         return message;
 
+    }
+
+    public boolean isSameDay(Message messageToCompare) {
+        Date date = new Date(getTime());
+        Date dateCompare = new Date(messageToCompare.getTime());
+
+        Calendar calendar = Calendar.getInstance();
+        Calendar calendarPrev = Calendar.getInstance();
+
+        calendar.setTime(date);
+        calendarPrev.setTime(dateCompare);
+
+        return calendar.get(Calendar.DAY_OF_YEAR) == calendarPrev.get(Calendar.DAY_OF_YEAR);
+    }
+
+    public boolean isSameYear(Message messageToCompare) {
+        Date date = new Date(getTime());
+        Date dateCompare = new Date(messageToCompare.getTime());
+
+        Calendar calendar = Calendar.getInstance();
+        Calendar calendarPrev = Calendar.getInstance();
+
+        calendar.setTime(date);
+        calendarPrev.setTime(dateCompare);
+
+        return calendar.get(Calendar.YEAR) == calendarPrev.get(Calendar.YEAR);
     }
 
     public long getLastTimeEncryptionKeyUpdated() {
@@ -114,7 +148,12 @@ public class Message {
         this.time = time;
     }
 
+    public boolean hasAuthor() {
+        return authorId != null;
+    }
+
     public String getAuthorId() {
+        if(authorId == null) throw new UnknownAuthorException();
         return authorId;
     }
 
@@ -147,6 +186,10 @@ public class Message {
 
     public void setAuthorNickname(String authorNickname) {
         this.authorNickname = authorNickname;
+    }
+
+    public boolean hasCustomClientData() {
+        return customClientData != null;
     }
 
     public CustomClientData getCustomClientData() {

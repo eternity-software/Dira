@@ -11,7 +11,6 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
-import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.MultiAttachmentMessageView;
@@ -23,15 +22,13 @@ import com.masoudss.lib.WaveformSeekBar;
 
 public class LegacyViewHolder extends RecyclerView.ViewHolder {
 
-    private boolean isInitialised = false;
-    private boolean isSelfMessage;
-
+    public LinearLayout messageContainer;
+    public LinearLayout viewsContainer;
+    public LinearLayout bubbleViewContainer;
     // TextMessageViewHolder ?
     TextView messageText;
     TextView emojiText;
-    public LinearLayout messageContainer;
     //
-
     TextView nicknameText;
     TextView timeText;
     TextView dateText;
@@ -40,8 +37,6 @@ public class LegacyViewHolder extends RecyclerView.ViewHolder {
     LinearLayout loading;
     ProgressBar attachmentProgressbar;
     LinearLayout messageBackground;
-    public LinearLayout viewsContainer;
-    public LinearLayout bubbleViewContainer;
     // Replies will stay here
     LinearLayout replyContainer;
     CardView replyImageCard;
@@ -49,47 +44,36 @@ public class LegacyViewHolder extends RecyclerView.ViewHolder {
     DynamicTextView replyText;
     DynamicTextView replyAuthor;
     AttachmentsStorageListener attachmentsStorageListener;
-
-
     // will be deleted(refactored)
     TextView buttonDownload;
     TextView sizeText;
     LinearLayout sizeContainer;
     TextView attachmentTooLargeText;
-    //
-
-
-
     // AttachmentViewHolder
     DiraVideoPlayer videoPlayer;
     ImageView imageView;
-    CardView imageContainer;
     //
-
-
+    CardView imageContainer;
     // RoomUpdatesViewHolder
     LinearLayout roomUpdatesLayout;
     ImageView roomUpdatesIcon;
+    //
     TextView roomUpdatesMainText;
     TextView roomUpdatesText;
-    //
-
-
     // VoiceViewHolder
     WaveformSeekBar waveformSeekBar;
     LinearLayout voiceLayout;
-    ImageView playButton;
     //
-
-
+    ImageView playButton;
     //BubbleViewHolder
     DiraVideoPlayer bubblePlayer;
     BubbleMessageView bubbleContainer;
     //
-
-
     // hz
     AsymmetricGridView multiAttachmentsView;
+    private boolean isInitialised = false;
+    //
+    private boolean isSelfMessage;
     //
 
     public LegacyViewHolder(@NonNull View itemView) {
@@ -150,8 +134,6 @@ public class LegacyViewHolder extends RecyclerView.ViewHolder {
 
         multiAttachmentsView = itemView.findViewById(MultiAttachmentMessageView.
                 MULTI_ATTACHMENT_MESSAGE_VIEW_ID);
-
-
 
 
         // only this should stay

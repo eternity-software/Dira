@@ -99,7 +99,7 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
                     }
                     holder.messageText.setText(message.getText());
                     holder.accentText.setText(authorPrefix + ": ");
-                    holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime(), context));
+                    holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime()));
 
                     hasMessageText = true;
                 } else if (message.getCustomClientData() instanceof RoomJoinClientData) {

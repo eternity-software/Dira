@@ -8,7 +8,6 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.diraapp.storage.AppStorage;
-import com.diraapp.storage.images.ImagesWorker;
 
 @Entity
 public class Attachment {
@@ -38,21 +37,18 @@ public class Attachment {
         return imagePreview;
     }
 
-    public Bitmap getBitmapPreview()
-    {
+    public void setImagePreview(String imagePreview) {
+        this.imagePreview = imagePreview;
+    }
+
+    public Bitmap getBitmapPreview() {
         try {
             return Bitmap.createScaledBitmap(AppStorage.getBitmapFromBase64(imagePreview), width, height, true);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(imagePreview);
             e.printStackTrace();
             return null;
         }
-    }
-
-    public void setImagePreview(String imagePreview) {
-        this.imagePreview = imagePreview;
     }
 
     public long getId() {
