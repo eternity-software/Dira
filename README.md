@@ -131,7 +131,7 @@ Distributed under the CC Non-commerical License. See `LICENSE` for more informat
 <!-- CONTACT -->
 ## Contact
 
-Contact us with [Official Discord Server](https://github.com/your_username/repo_name](https://discord.gg/MDJ2jTgFCv))
+Contact us with [Official Discord Server](https://discord.gg/MDJ2jTgFCv)
 
 
 
