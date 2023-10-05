@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
@@ -22,10 +21,9 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.AlreadyInitializedException;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.res.Theme;
-import com.diraapp.ui.adapters.messages.MessageAdapterConfig;
+import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.MessageHolderType;
 import com.diraapp.ui.components.MessageReplyComponent;
-import com.diraapp.ui.components.dynamic.DynamicTextView;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Numbers;
 import com.diraapp.utils.TimeConverter;
@@ -39,7 +37,13 @@ import java.util.HashMap;
  */
 public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder implements InflaterListener {
 
-    protected boolean isInitialized = false, isSelfMessage, isOuterContainer = false;
+    protected boolean isInitialized = false, isSelfMessage;
+
+    /**
+     * Indicates that message will be without background (ex. BubbleMessage)
+      */
+    protected boolean isOuterContainer = false;
+
 
     protected TextView messageText;
     protected LinearLayout outerContainer, messageContainer, postInflatedViewsContainer;
@@ -47,13 +51,13 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     private TextView nicknameText, timeText, dateText;
     private View profilePictureContainer;
     private ImageView profilePicture;
-    private final MessageAdapterConfig messageAdapterConfig;
+    private final MessageAdapterContract messageAdapterContract;
 
     private MessageReplyComponent replyComponent;
 
-    public BaseMessageViewHolder(@NonNull ViewGroup itemView, MessageAdapterConfig messageAdapterConfig) {
+    public BaseMessageViewHolder(@NonNull ViewGroup itemView, MessageAdapterContract messageAdapterContract) {
         super(itemView);
-        this.messageAdapterConfig = messageAdapterConfig;
+        this.messageAdapterContract = messageAdapterContract;
 
         isSelfMessage = MessageHolderType.values()[getItemViewType()].isSelf();
 
@@ -120,13 +124,13 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         checkReadStatus(message);
         itemView.setClickable(true);
         itemView.setOnClickListener((View v) -> {
-            BalloonMessageMenu balloonMessageMenu = new BalloonMessageMenu(messageAdapterConfig.getContext(),
-                    messageAdapterConfig.getMembers(),
-                    messageAdapterConfig.getCacheUtils().getString(CacheUtils.ID));
+            BalloonMessageMenu balloonMessageMenu = new BalloonMessageMenu(messageAdapterContract.getContext(),
+                    messageAdapterContract.getMembers(),
+                    messageAdapterContract.getCacheUtils().getString(CacheUtils.ID));
             balloonMessageMenu.createBalloon(message, itemView);
         });
         bindUserPicture(message, previousMessage);
-        replyComponent.fillMessageReply(message.getRepliedMessage(), messageAdapterConfig);
+        replyComponent.fillMessageReply(message.getRepliedMessage(), messageAdapterContract);
     }
 
     public void bindUserPicture(Message message, Message previousMessage) {
@@ -139,7 +143,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
                 nicknameText.setVisibility(View.GONE);
             }
 
-            HashMap<String, Member> members = messageAdapterConfig.getMembers();
+            HashMap<String, Member> members = messageAdapterContract.getMembers();
             Member member = members.get(message.getAuthorId());
             if (member != null) {
                 nicknameText.setText(member.getNickname());
@@ -161,7 +165,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         } else if (message.getMessageReadingList() != null) {
             if (message.getMessageReadingList().size() == 0) {
                 messageBackground.getBackground().setColorFilter(
-                        Theme.getColor(messageAdapterConfig.getContext(),
+                        Theme.getColor(messageAdapterContract.getContext(),
                                 R.color.unread_message_background), PorterDuff.Mode.SRC_IN);
             } else {
                 messageBackground.getBackground().setColorFilter(
@@ -230,14 +234,14 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         MessageReadRequest request = new MessageReadRequest(selfId, System.currentTimeMillis(),
                 message.getId(), message.getRoomSecret());
         try {
-            UpdateProcessor.getInstance().sendRequest(request, messageAdapterConfig.getRoom().getServerAddress());
+            UpdateProcessor.getInstance().sendRequest(request, messageAdapterContract.getRoom().getServerAddress());
         } catch (UnablePerformRequestException e) {
             e.printStackTrace();
         }
     }
 
     protected String getSelfId() {
-        return messageAdapterConfig.getCacheUtils().getString(CacheUtils.ID);
+        return messageAdapterContract.getCacheUtils().getString(CacheUtils.ID);
     }
 
     public void setOuterContainer(boolean outerContainer) {

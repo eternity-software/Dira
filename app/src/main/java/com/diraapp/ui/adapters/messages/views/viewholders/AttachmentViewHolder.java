@@ -10,7 +10,7 @@ import androidx.cardview.widget.CardView;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.ui.adapters.messages.MessageAdapterConfig;
+import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.components.RoomMessageVideoPlayer;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
@@ -22,8 +22,8 @@ public class AttachmentViewHolder extends BaseMessageViewHolder {
     private CardView imageContainer;
     private TextView messageText;
 
-    public AttachmentViewHolder(@NonNull ViewGroup itemView, MessageAdapterConfig messageAdapterConfig) {
-        super(itemView, messageAdapterConfig);
+    public AttachmentViewHolder(@NonNull ViewGroup itemView, MessageAdapterContract messageAdapterContract) {
+        super(itemView, messageAdapterContract);
     }
 
     @Override

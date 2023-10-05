@@ -30,7 +30,7 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
 import com.diraapp.ui.components.viewswiper.ViewSwiperListener;
-import com.diraapp.userstatus.UserStatus;
+import com.diraapp.api.userstatus.UserStatus;
 import com.diraapp.utils.EncryptionUtil;
 import com.diraapp.utils.Logger;
 

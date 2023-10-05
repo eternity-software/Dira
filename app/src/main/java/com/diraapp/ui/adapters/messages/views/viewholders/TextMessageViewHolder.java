@@ -6,15 +6,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.ui.adapters.messages.MessageAdapterConfig;
+import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 
 
 public class TextMessageViewHolder extends BaseMessageViewHolder {
 
 
-    public TextMessageViewHolder(@NonNull ViewGroup itemView, MessageAdapterConfig messageAdapterConfig) {
-        super(itemView, messageAdapterConfig);
+    public TextMessageViewHolder(@NonNull ViewGroup itemView, MessageAdapterContract messageAdapterContract) {
+        super(itemView, messageAdapterContract);
     }
 
 

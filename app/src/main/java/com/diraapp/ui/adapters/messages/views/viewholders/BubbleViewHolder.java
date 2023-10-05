@@ -7,7 +7,7 @@ import androidx.cardview.widget.CardView;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.ui.adapters.messages.MessageAdapterConfig;
+import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
@@ -18,8 +18,8 @@ public class BubbleViewHolder extends BaseMessageViewHolder {
     private DiraVideoPlayer bubblePlayer;
     private BubbleMessageView bubbleContainer;
 
-    public BubbleViewHolder(@NonNull ViewGroup itemView, MessageAdapterConfig messageAdapterConfig) {
-        super(itemView, messageAdapterConfig);
+    public BubbleViewHolder(@NonNull ViewGroup itemView, MessageAdapterContract messageAdapterContract) {
+        super(itemView, messageAdapterContract);
         setOuterContainer(true);
     }
 

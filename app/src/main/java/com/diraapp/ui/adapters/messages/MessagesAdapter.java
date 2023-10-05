@@ -28,24 +28,24 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
     private List<Message> messages = new ArrayList<>();
     private final AsyncLayoutInflater layoutInflater;
     private LegacyRoomMessagesAdapter.MessageAdapterListener messageAdapterListener;
-    private final MessageAdapterConfig messageAdapterConfig;
+    private final MessageAdapterContract messageAdapterContract;
 
     private final CacheUtils cacheUtils;
 
-    public MessagesAdapter(MessageAdapterConfig messageAdapterConfig, List<Message> messages, Room room, AsyncLayoutInflater asyncLayoutInflater,
+    public MessagesAdapter(MessageAdapterContract messageAdapterContract, List<Message> messages, Room room, AsyncLayoutInflater asyncLayoutInflater,
                            BaseViewHolderFactory factory, CacheUtils cacheUtils) {
         this.messages = messages;
         this.layoutInflater = asyncLayoutInflater;
         this.factory = factory;
         this.cacheUtils = cacheUtils;
-        this.messageAdapterConfig = messageAdapterConfig;
+        this.messageAdapterContract = messageAdapterContract;
     }
 
     @NonNull
     @Override
     public BaseMessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         BaseMessageViewHolder viewHolder = factory.createViewHolder(viewType,
-                parent, messageAdapterConfig);
+                parent, messageAdapterContract);
 
         AsyncLayoutInflater.OnInflateFinishedListener listener = new AsyncLayoutInflater.OnInflateFinishedListener() {
             @Override
