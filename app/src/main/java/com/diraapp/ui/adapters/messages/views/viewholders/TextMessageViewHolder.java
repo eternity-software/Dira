@@ -25,7 +25,6 @@ public class TextMessageViewHolder extends BaseMessageViewHolder {
     public void onViewInflated(View rootView) {
         super.onViewInflated(rootView);
         messageText.setVisibility(View.VISIBLE);
-
     }
 
     @Override
