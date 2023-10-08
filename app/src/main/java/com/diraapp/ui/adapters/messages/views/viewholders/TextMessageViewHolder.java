@@ -13,7 +13,6 @@ import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 public class TextMessageViewHolder extends BaseMessageViewHolder {
 
 
-
     public TextMessageViewHolder(@NonNull ViewGroup itemView,
                                  MessageAdapterContract messageAdapterContract,
                                  boolean isSelfMessage) {

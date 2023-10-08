@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,7 +25,6 @@ import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.MessageHolderType;
 import com.diraapp.ui.components.MessageReplyComponent;
 import com.diraapp.utils.CacheUtils;
-import com.diraapp.utils.Logger;
 import com.diraapp.utils.Numbers;
 import com.diraapp.utils.TimeConverter;
 import com.squareup.picasso.Picasso;
@@ -39,24 +37,19 @@ import java.util.HashMap;
  */
 public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder implements InflaterListener {
 
+    private final MessageAdapterContract messageAdapterContract;
     protected boolean isInitialized = false, isSelfMessage;
-
     /**
      * Indicates that message will be without background (ex. BubbleMessage)
-      */
+     */
     protected boolean isOuterContainer = false;
-
-
     protected TextView messageText;
     protected LinearLayout outerContainer, messageContainer, postInflatedViewsContainer;
     protected View messageBackground, rootView;
     private TextView nicknameText, timeText, dateText;
     private View profilePictureContainer;
     private ImageView profilePicture;
-    private final MessageAdapterContract messageAdapterContract;
-
     private MessageReplyComponent replyComponent;
-
 
 
     public BaseMessageViewHolder(@NonNull ViewGroup itemView, MessageAdapterContract messageAdapterContract,
@@ -68,7 +61,6 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
 
         inflatePlaceholderView();
     }
-
 
 
     @Override
@@ -184,14 +176,13 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     private boolean isProfilePictureRequired(Message message, Message previousMessage) {
         if (previousMessage != null)
             if (previousMessage.hasAuthor())
-                if (previousMessage.getAuthorId().equals(message.getAuthorId()) &&
-                        message.isSameDay(previousMessage) &&
-                        message.isSameYear(previousMessage))
-                    return false;
+                return !previousMessage.getAuthorId().equals(message.getAuthorId()) ||
+                        !message.isSameDay(previousMessage) ||
+                        !message.isSameYear(previousMessage);
         return true;
     }
 
-    protected  <T extends View> T find(int id) {
+    protected <T extends View> T find(int id) {
         return rootView.findViewById(id);
     }
 

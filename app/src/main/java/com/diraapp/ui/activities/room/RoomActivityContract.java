@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 
 import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
+import com.diraapp.api.userstatus.UserStatus;
 import com.diraapp.api.views.UserStatusType;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
@@ -12,7 +13,6 @@ import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.UnablePerformRequestException;
-import com.diraapp.api.userstatus.UserStatus;
 import com.diraapp.utils.CacheUtils;
 
 import java.util.ArrayList;
@@ -85,6 +85,7 @@ public interface RoomActivityContract {
         void initMembers();
 
         HashMap<String, Member> getMembers();
+
         Room getRoom();
 
         void loadMessagesBefore(Message message, int index);

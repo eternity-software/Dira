@@ -15,16 +15,12 @@ public class ViewSwiper {
 
     public static final int DEFAULT_DEATH_ZONE_DP = 40;
     public static final float SWIPE_TRIGGER_PERCENT = 0.1f;
-
+    private final View focusedView = null;
     private RecyclerView view;
-
     private boolean isDown = false;
     private boolean canScroll = true;
     private boolean isSwiped = false;
-
     private float downY, downX;
-
-    private final View focusedView = null;
     private View downView = null;
 
     private ViewSwiperListener viewSwiperListener;

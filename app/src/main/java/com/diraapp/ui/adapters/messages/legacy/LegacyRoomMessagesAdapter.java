@@ -120,14 +120,12 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
     private final long maxAutoLoadSize;
     private final DiraMediaPlayer diraMediaPlayer = new DiraMediaPlayer();
     private final MessageAdapterListener messageAdapterListener;
+    private final Amplituda amplituda;
+    private final Executor voiceWaveformsThread = Executors.newSingleThreadExecutor();
     private Room room;
     private List<Message> messages = new ArrayList<>();
     private HashMap<String, Member> members = new HashMap<>();
-    private final Amplituda amplituda;
-
     private MessageReplyListener replyClickedListener;
-
-    private final Executor voiceWaveformsThread = Executors.newSingleThreadExecutor();
 
     public LegacyRoomMessagesAdapter(DiraActivity context,
                                      RecyclerView recyclerView,

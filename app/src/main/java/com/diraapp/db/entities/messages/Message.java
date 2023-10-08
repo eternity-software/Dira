@@ -72,11 +72,6 @@ public class Message {
 
     }
 
-    public boolean isReadable()
-    {
-        return !isRead() && !hasCustomClientData() && hasAuthor();
-    }
-
     public static Message generateMessage(CacheUtils cacheUtils, String roomSecret) {
         Message message = new Message();
 
@@ -88,6 +83,10 @@ public class Message {
         message.isRead = true;
         return message;
 
+    }
+
+    public boolean isReadable() {
+        return !isRead() && !hasCustomClientData() && hasAuthor();
     }
 
     public boolean isSameDay(Message messageToCompare) {
@@ -153,7 +152,7 @@ public class Message {
     }
 
     public String getAuthorId() {
-        if(authorId == null) throw new UnknownAuthorException();
+        if (authorId == null) throw new UnknownAuthorException();
         return authorId;
     }
 

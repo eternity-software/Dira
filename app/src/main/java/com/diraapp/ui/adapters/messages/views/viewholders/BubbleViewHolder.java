@@ -31,7 +31,7 @@ public class BubbleViewHolder extends BaseMessageViewHolder {
     protected void postInflate() {
         super.postInflate();
         CardView bubble = new BubbleMessageView(itemView.getContext());
-      //  bubbleContainer = find(BubbleMessageView.BUBBLE_CONTAINER_ID);
+        //  bubbleContainer = find(BubbleMessageView.BUBBLE_CONTAINER_ID);
         outerContainer.addView(bubble);
         bubblePlayer = find(R.id.bubble_player);
     }
@@ -44,21 +44,21 @@ public class BubbleViewHolder extends BaseMessageViewHolder {
     @Override
     public void onViewRecycled() {
         super.onViewRecycled();
-        if(!isInitialized) return;
+        if (!isInitialized) return;
         bubblePlayer.reset();
     }
 
     @Override
     public void onViewDetached() {
         super.onViewDetached();
-        if(!isInitialized) return;
+        if (!isInitialized) return;
         bubblePlayer.pause();
     }
 
     @Override
     public void onViewAttached() {
         super.onViewAttached();
-        if(!isInitialized) return;
+        if (!isInitialized) return;
         if (bubblePlayer.getState() == DiraVideoPlayerState.PAUSED)
             bubblePlayer.play();
     }

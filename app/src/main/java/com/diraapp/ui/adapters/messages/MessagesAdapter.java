@@ -1,6 +1,5 @@
 package com.diraapp.ui.adapters.messages;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -14,12 +13,9 @@ import com.diraapp.R;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.media.DiraMediaPlayer;
-import com.diraapp.storage.attachments.AttachmentsStorage;
-import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.BaseViewHolderFactory;
-import com.diraapp.ui.components.FadingImageView;
 import com.diraapp.utils.CacheUtils;
 
 import java.util.ArrayList;
@@ -28,21 +24,18 @@ import java.util.List;
 public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder> {
 
     private final BaseViewHolderFactory factory;
+    private final AsyncLayoutInflater layoutInflater;
+    private final MessageAdapterContract messageAdapterContract;
+    private final CacheUtils cacheUtils;
     /**
      * List of messages to display
      */
     private List<Message> messages = new ArrayList<>();
-    private final AsyncLayoutInflater layoutInflater;
     private LegacyRoomMessagesAdapter.MessageAdapterListener messageAdapterListener;
-    private final MessageAdapterContract messageAdapterContract;
-
-    private final CacheUtils cacheUtils;
-
-
     /**
      * MediaPlayer for audio. Should be transferred to DiraActivity for event handling
      */
-    private DiraMediaPlayer diraMediaPlayer = new DiraMediaPlayer();
+    private final DiraMediaPlayer diraMediaPlayer = new DiraMediaPlayer();
 
 
     public MessagesAdapter(MessageAdapterContract messageAdapterContract, List<Message> messages, Room room, AsyncLayoutInflater asyncLayoutInflater,
@@ -121,8 +114,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
         }
     }
 
-    public void release()
-    {
+    public void release() {
         /*for (AttachmentsStorageListener attachmentsStorageListener : listeners) {
             AttachmentsStorage.removeAttachmentsStorageListener(attachmentsStorageListener);
         }*/

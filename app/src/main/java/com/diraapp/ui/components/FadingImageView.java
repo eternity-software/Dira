@@ -6,12 +6,11 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 
 public class FadingImageView extends androidx.appcompat.widget.AppCompatImageView {
+    private final Context c;
     private boolean mFadeRight;
     private boolean mFadeLeft;
     private boolean mFadeTop;
     private boolean mFadeBottom;
-
-    private final Context c;
 
 
     public FadingImageView(Context c, AttributeSet attrs, int defStyle) {
