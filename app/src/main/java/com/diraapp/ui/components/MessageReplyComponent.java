@@ -17,13 +17,11 @@ import com.diraapp.R;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.attachments.AttachmentsStorage;
-import com.diraapp.ui.adapters.messages.MessageAdapterConfig;
+import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter;
-import com.diraapp.ui.adapters.messages.legacy.LegacyViewHolder;
 import com.diraapp.ui.components.dynamic.DynamicTextView;
 import com.diraapp.ui.components.dynamic.ThemeImageView;
 import com.diraapp.utils.CacheUtils;
@@ -32,7 +30,6 @@ import com.diraapp.utils.StringFormatter;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.HashMap;
 
 public class MessageReplyComponent extends FrameLayout {
 
@@ -54,7 +51,7 @@ public class MessageReplyComponent extends FrameLayout {
         initView();
     }
 
-    public void fillMessageReply(Message message, MessageAdapterConfig config) {
+    public void fillMessageReply(Message message, MessageAdapterContract config) {
         if (message == null) {
             replyContainer.setVisibility(View.GONE);
             return;

@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.ui.adapters.messages.MessageAdapterConfig;
+import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.components.RoomMessageCustomClientDataView;
 
@@ -21,8 +21,8 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
     private TextView roomUpdatesMainText;
     private TextView roomUpdatesText;
 
-    public RoomUpdatesViewHolder(@NonNull ViewGroup itemView, MessageAdapterConfig messageAdapterConfig) {
-        super(itemView, messageAdapterConfig);
+    public RoomUpdatesViewHolder(@NonNull ViewGroup itemView, MessageAdapterContract messageAdapterContract) {
+        super(itemView, messageAdapterContract, false);
     }
 
 

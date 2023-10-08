@@ -7,7 +7,7 @@ import androidx.cardview.widget.CardView;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.ui.adapters.messages.MessageAdapterConfig;
+import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
@@ -18,8 +18,10 @@ public class BubbleViewHolder extends BaseMessageViewHolder {
     private DiraVideoPlayer bubblePlayer;
     private BubbleMessageView bubbleContainer;
 
-    public BubbleViewHolder(@NonNull ViewGroup itemView, MessageAdapterConfig messageAdapterConfig) {
-        super(itemView, messageAdapterConfig);
+    public BubbleViewHolder(@NonNull ViewGroup itemView,
+                            MessageAdapterContract messageAdapterContract,
+                            boolean isSelfMessage) {
+        super(itemView, messageAdapterContract, isSelfMessage);
         setOuterContainer(true);
     }
 
@@ -27,10 +29,9 @@ public class BubbleViewHolder extends BaseMessageViewHolder {
     protected void postInflate() {
         super.postInflate();
         CardView bubble = new BubbleMessageView(itemView.getContext());
-        bubbleContainer.addView(bubble);
-
-        bubbleContainer = itemView.findViewById(BubbleMessageView.BUBBLE_CONTAINER_ID);
-        bubblePlayer = itemView.findViewById(R.id.bubble_player);
+      //  bubbleContainer = find(BubbleMessageView.BUBBLE_CONTAINER_ID);
+        outerContainer.addView(bubble);
+        bubblePlayer = find(R.id.bubble_player);
     }
 
     @Override
@@ -41,19 +42,21 @@ public class BubbleViewHolder extends BaseMessageViewHolder {
     @Override
     public void onViewRecycled() {
         super.onViewRecycled();
+        if(!isInitialized) return;
         bubblePlayer.reset();
     }
 
     @Override
     public void onViewDetached() {
         super.onViewDetached();
+        if(!isInitialized) return;
         bubblePlayer.pause();
     }
 
     @Override
     public void onViewAttached() {
         super.onViewAttached();
-
+        if(!isInitialized) return;
         if (bubblePlayer.getState() == DiraVideoPlayerState.PAUSED)
             bubblePlayer.play();
     }

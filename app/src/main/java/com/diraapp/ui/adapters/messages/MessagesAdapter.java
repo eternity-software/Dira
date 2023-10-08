@@ -1,7 +1,9 @@
 package com.diraapp.ui.adapters.messages;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,9 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diraapp.R;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.media.DiraMediaPlayer;
+import com.diraapp.storage.attachments.AttachmentsStorage;
+import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.BaseViewHolderFactory;
+import com.diraapp.ui.components.FadingImageView;
 import com.diraapp.utils.CacheUtils;
 
 import java.util.ArrayList;
@@ -28,36 +34,48 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
     private List<Message> messages = new ArrayList<>();
     private final AsyncLayoutInflater layoutInflater;
     private LegacyRoomMessagesAdapter.MessageAdapterListener messageAdapterListener;
-    private final MessageAdapterConfig messageAdapterConfig;
+    private final MessageAdapterContract messageAdapterContract;
 
     private final CacheUtils cacheUtils;
 
-    public MessagesAdapter(MessageAdapterConfig messageAdapterConfig, List<Message> messages, Room room, AsyncLayoutInflater asyncLayoutInflater,
+    /**
+     * MediaPlayer for audio. Should be transferred to DiraActivity for event handling
+     */
+    private DiraMediaPlayer diraMediaPlayer = new DiraMediaPlayer();
+
+    public MessagesAdapter(MessageAdapterContract messageAdapterContract, List<Message> messages, Room room, AsyncLayoutInflater asyncLayoutInflater,
                            BaseViewHolderFactory factory, CacheUtils cacheUtils) {
         this.messages = messages;
         this.layoutInflater = asyncLayoutInflater;
         this.factory = factory;
         this.cacheUtils = cacheUtils;
-        this.messageAdapterConfig = messageAdapterConfig;
+        this.messageAdapterContract = messageAdapterContract;
     }
 
     @NonNull
     @Override
     public BaseMessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        FrameLayout container = new FrameLayout(messageAdapterContract.getContext());
+        container.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT));
+
         BaseMessageViewHolder viewHolder = factory.createViewHolder(viewType,
-                parent, messageAdapterConfig);
+                container, messageAdapterContract);
 
         AsyncLayoutInflater.OnInflateFinishedListener listener = new AsyncLayoutInflater.OnInflateFinishedListener() {
             @Override
-            public void onInflateFinished(@NonNull View view, int resid, @Nullable ViewGroup parent) {
+            public void onInflateFinished(@NonNull View view, int resid, @Nullable ViewGroup ignoredParent) {
+                container.addView(view);
                 viewHolder.onViewInflated(view);
             }
         };
 
+        //LayoutInflater.from(messageAdapterContract.getContext()).inflate(R.layout.self_message, parent, false);
         if (viewHolder.isSelfMessage()) {
-            layoutInflater.inflate(R.layout.self_message, parent, listener);
+            layoutInflater.inflate(R.layout.self_message, container, listener);
         } else {
-            layoutInflater.inflate(R.layout.room_message, parent, listener);
+            layoutInflater.inflate(R.layout.room_message, container, listener);
         }
 
         return viewHolder;
@@ -100,6 +118,15 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
         }
     }
 
+    public void release()
+    {
+        /*for (AttachmentsStorageListener attachmentsStorageListener : listeners) {
+            AttachmentsStorage.removeAttachmentsStorageListener(attachmentsStorageListener);
+        }*/
+        diraMediaPlayer.reset();
+        diraMediaPlayer.release();
+    }
+
     @Override
     public void onViewRecycled(@NonNull BaseMessageViewHolder holder) {
         super.onViewRecycled(holder);
@@ -121,5 +148,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
     @Override
     public int getItemCount() {
         return messages.size();
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
 }

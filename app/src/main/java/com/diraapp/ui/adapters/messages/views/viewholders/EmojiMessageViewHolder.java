@@ -8,14 +8,16 @@ import androidx.annotation.NonNull;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.ui.adapters.messages.MessageAdapterConfig;
+import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 
 public class EmojiMessageViewHolder extends BaseMessageViewHolder {
     private TextView emojiText;
 
-    public EmojiMessageViewHolder(@NonNull ViewGroup itemView, MessageAdapterConfig messageAdapterConfig) {
-        super(itemView, messageAdapterConfig);
+    public EmojiMessageViewHolder(@NonNull ViewGroup itemView,
+                                  MessageAdapterContract messageAdapterContract,
+                                  boolean isSelfMessage) {
+        super(itemView, messageAdapterContract, isSelfMessage);
         setOuterContainer(true);
     }
 

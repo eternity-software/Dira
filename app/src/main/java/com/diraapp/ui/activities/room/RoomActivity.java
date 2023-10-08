@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 import androidx.core.app.ActivityCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -54,8 +55,11 @@ import com.diraapp.ui.activities.RoomInfoActivity;
 import com.diraapp.ui.activities.RoomSelectorActivity;
 import com.diraapp.ui.activities.resizer.FluidContentResizer;
 import com.diraapp.ui.adapters.MediaGridItemListener;
+import com.diraapp.ui.adapters.messages.MessageAdapterContract;
+import com.diraapp.ui.adapters.messages.MessagesAdapter;
 import com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
+import com.diraapp.ui.adapters.messages.views.viewholders.factories.RoomViewHolderFactory;
 import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.FilePreview;
@@ -81,13 +85,14 @@ import okhttp3.Callback;
 
 
 public class RoomActivity extends DiraActivity
-        implements RoomActivityContract.View, ProcessorListener, UserStatusListener, RecordComponentsController.RecordListener {
+        implements RoomActivityContract.View, ProcessorListener, UserStatusListener,
+        RecordComponentsController.RecordListener, MessageAdapterContract {
 
     private static final int DO_NOT_NEED_TO_SCROLL = -1;
 
     private static final int IS_ROOM_OPENING = -1;
     private String roomSecret;
-    private LegacyRoomMessagesAdapter legacyRoomMessagesAdapter;
+    private MessagesAdapter messagesAdapter;
     private FilePickerBottomSheet filePickerBottomSheet;
     private final MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
         @Override
@@ -334,7 +339,7 @@ public class RoomActivity extends DiraActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        legacyRoomMessagesAdapter.release();
+        messagesAdapter.release();
         presenter.detachView();
         UpdateProcessor.getInstance().removeProcessorListener(this);
         UserStatusHandler.getInstance().removeListener(this);
@@ -421,7 +426,7 @@ public class RoomActivity extends DiraActivity
                     binding.userStatusAnimation.setVisibility(View.GONE);
                     membersCount.setTextColor(Theme.getColor(this, R.color.subtitle_color));
                     text = getString(R.string.members_count).replace("%s",
-                            String.valueOf(legacyRoomMessagesAdapter.getMembers().size() + 1));
+                            String.valueOf(presenter.getMembers().size() + 1));
                 } else {
                     membersCount.setTextColor(Theme.getColor(this, R.color.subtitle_color_accent));
 
@@ -433,7 +438,7 @@ public class RoomActivity extends DiraActivity
                     binding.userStatusAnimation.setVisibility(View.VISIBLE);
                     for (int i = 0; i < size; i++) {
                         UserStatus status = usersUserStatusList.get(i);
-                        Member member = legacyRoomMessagesAdapter.getMembers().get(status.getUserId());
+                        Member member = presenter.getMembers().get(status.getUserId());
                         if (member == null) continue;
                         if (member.getId().equals(userId)) continue;
 
@@ -483,7 +488,7 @@ public class RoomActivity extends DiraActivity
                     StringBuilder nickNames = new StringBuilder();
                     for (int i = 0; i < size; i++) {
                         UserStatus status = statuses.get(i);
-                        Member member = legacyRoomMessagesAdapter.getMembers().get(status.getUserId());
+                        Member member = presenter.getMembers().get(status.getUserId());
                         if (i != 0) nickNames.append(", ");
 
                         nickNames.append(member.getNickname());
@@ -560,8 +565,7 @@ public class RoomActivity extends DiraActivity
                 binding.replyImageCard.setVisibility(View.GONE);
             }
 
-            HashMap<String, Member> members = ((LegacyRoomMessagesAdapter) binding.recyclerView.getAdapter())
-                    .getMembers();
+            HashMap<String, Member> members = presenter.getMembers();
 
             String author = "";
             boolean isUnknown = true;
@@ -637,21 +641,13 @@ public class RoomActivity extends DiraActivity
 
             TextView roomName = findViewById(R.id.room_name);
             roomName.setText(room.getName());
-            if (legacyRoomMessagesAdapter != null) return;
-            legacyRoomMessagesAdapter = new LegacyRoomMessagesAdapter(RoomActivity.this, binding.recyclerView, room.getServerAddress(), room, new LegacyRoomMessagesAdapter.MessageAdapterListener() {
-                @Override
-                public void onFirstItemScrolled(Message message, int index) {
-                    presenter.loadMessagesBefore(message, index);
-                }
+            if (messagesAdapter != null) return;
+            messagesAdapter = new MessagesAdapter(this, new ArrayList<>(), room,
+                    new AsyncLayoutInflater(this), new RoomViewHolderFactory(),
+                    getCacheUtils());
 
-                @Override
-                public void onLastLoadedScrolled(Message message, int index) {
-                    presenter.loadNewerMessage(message, index);
-                }
-            });
+            binding.recyclerView.setAdapter(messagesAdapter);
 
-            binding.recyclerView.setAdapter(legacyRoomMessagesAdapter);
-            legacyRoomMessagesAdapter.setReplyClickedListener((MessageReplyListener) presenter);
 
             presenter.loadMessages();
         });
@@ -660,15 +656,15 @@ public class RoomActivity extends DiraActivity
     @Override
     public void notifyRecyclerMessage(Message message, boolean needUpdateList) {
         if (message.getAuthorId() != null) {
-            if (!message.getAuthorId().equals(legacyRoomMessagesAdapter.getSelfId())) {
-                legacyRoomMessagesAdapter.getRoom().addNewUnreadMessageId(message.getId());
+            if (!message.getAuthorId().equals(getCacheUtils().getString(CacheUtils.ID))) {
+                presenter.getRoom().addNewUnreadMessageId(message.getId());
             }
         }
         binding.recyclerView.post(new Runnable() {
             @Override
             public void run() {
                 if (needUpdateList) {
-                    legacyRoomMessagesAdapter.notifyItemInserted(0);
+                    messagesAdapter.notifyItemInserted(0);
                     int lastVisiblePos = ((LinearLayoutManager)
                             binding.recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
 
@@ -703,9 +699,9 @@ public class RoomActivity extends DiraActivity
     public void notifyMessagesChanged(int start, int last, int scrollPosition) {
         runOnUiThread(() -> {
             if (start == IS_ROOM_OPENING) {
-                legacyRoomMessagesAdapter.notifyDataSetChanged();
+                messagesAdapter.notifyDataSetChanged();
             } else {
-                legacyRoomMessagesAdapter.notifyItemRangeInserted(start, last);
+                messagesAdapter.notifyItemRangeInserted(start, last);
             }
 
             if (scrollPosition != DO_NOT_NEED_TO_SCROLL) {
@@ -721,37 +717,24 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void notifyAdapterItemChanged(int index) {
-        runOnUiThread(() -> legacyRoomMessagesAdapter.notifyItemChanged(index));
+        runOnUiThread(() -> messagesAdapter.notifyItemChanged(index));
     }
 
     @Override
     public void notifyAdapterItemsDeleted(int start, int count) {
         runOnUiThread(() -> {
-            legacyRoomMessagesAdapter.notifyItemRangeRemoved(start, count);
+            messagesAdapter.notifyItemRangeRemoved(start, count);
         });
         Logger.logDebug(this.getClass().getSimpleName(),
                 "Deleted items from start - " + start + " to " + (count - 1) +
-                        " size is " + legacyRoomMessagesAdapter.getItemCount());
+                        " size is " + messagesAdapter.getItemCount());
 
-    }
-
-    @Override
-    public void setMembers(HashMap<String, Member> members) {
-        if (legacyRoomMessagesAdapter == null) return;
-        legacyRoomMessagesAdapter.setMembers(members);
-        runOnUiThread(() -> updateUserStatus(roomSecret, new ArrayList<>()));
-
-    }
-
-    @Override
-    public void setRoom(Room room) {
-        legacyRoomMessagesAdapter.setRoom(room);
     }
 
     @Override
     public void setMessages(List<Message> messages) {
-        if (legacyRoomMessagesAdapter == null) return;
-        legacyRoomMessagesAdapter.setMessages(messages);
+        if (messagesAdapter == null) return;
+        messagesAdapter.setMessages(messages);
     }
 
     @Override
@@ -828,4 +811,23 @@ public class RoomActivity extends DiraActivity
         return DiraMessageDatabase.getDatabase(getApplicationContext());
     }
 
+    @Override
+    public Room getRoom() {
+        return presenter.getRoom();
+    }
+
+    @Override
+    public HashMap<String, Member> getMembers() {
+        return presenter.getMembers();
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public MessageReplyListener getReplyListener() {
+        return (MessageReplyListener) presenter;
+    }
 }

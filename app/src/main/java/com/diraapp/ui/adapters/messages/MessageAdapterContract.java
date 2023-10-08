@@ -9,13 +9,14 @@ import com.diraapp.utils.CacheUtils;
 
 import java.util.HashMap;
 
-public interface MessageAdapterConfig {
+public interface MessageAdapterContract {
     Room getRoom();
 
     HashMap<String, Member> getMembers();
 
     CacheUtils getCacheUtils();
 
+    @Deprecated
     Context getContext();
     MessageReplyListener getReplyListener();
 }

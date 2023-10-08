@@ -1,6 +1,7 @@
 package com.diraapp.ui.activities.room;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -28,9 +29,11 @@ import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
+import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
 import com.diraapp.ui.components.viewswiper.ViewSwiperListener;
 import com.diraapp.userstatus.UserStatus;
+import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.EncryptionUtil;
 import com.diraapp.utils.Logger;
 
@@ -62,6 +65,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     private boolean isNewestMessagesLoaded = false;
 
     private Message replyingMessage = null;
+
+    private HashMap<String, Member> members = new HashMap<>();
 
     public RoomActivityPresenter(String roomSecret, String selfId) {
         this.roomSecret = roomSecret;
@@ -160,12 +165,12 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     public void initMembers() {
         List<Member> memberList = view.getRoomDatabase().getMemberDao().getMembersByRoomSecret(roomSecret);
 
-        HashMap<String, Member> memberHashMap = new HashMap<>();
+        members = new HashMap<>();
 
         for (Member member : memberList) {
-            memberHashMap.put(member.getId(), member);
+            members.put(member.getId(), member);
         }
-        view.setMembers(memberHashMap);
+
     }
 
     @Override
@@ -467,6 +472,15 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         loadMessagesNearByTime(message.getTime());
     }
 
+    @Override
+    public Room getRoom() {
+        return room;
+    }
+
+    @Override
+    public HashMap<String, Member> getMembers() {
+        return members;
+    }
 
     public class RoomAttachmentCallback implements Callback {
 

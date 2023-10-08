@@ -38,10 +38,6 @@ public interface RoomActivityContract {
 
         void notifyAdapterItemsDeleted(int start, int last);
 
-        void setMembers(HashMap<String, Member> members);
-
-        void setRoom(Room room);
-
         void setMessages(List<Message> messages);
 
         void uploadFile(String sourceFileUri,
@@ -87,6 +83,9 @@ public interface RoomActivityContract {
         void initRoomInfo();
 
         void initMembers();
+
+        HashMap<String, Member> getMembers();
+        Room getRoom();
 
         void loadMessagesBefore(Message message, int index);
 
