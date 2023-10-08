@@ -73,7 +73,7 @@
 
             android:fontFamily="@font/montserratsemibold"
             android:includeFontPadding="false"
-            android:text="Anime fap boys"
+            android:text="Anime boys"
             android:textColor="@color/gray"
 
             app:themeColor="client_data_text_color"

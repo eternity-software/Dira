@@ -38,7 +38,7 @@ public class VoiceMessageView extends LinearLayout {
 
 
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View root = inflater.inflate(R.layout.room_message_voice, this);
+            View root = inflater.inflate(R.layout.message_voice, this);
 
             ImageView playButton = findViewById(R.id.play_button);
             WaveformSeekBar bar = findViewById(R.id.waveform_seek_bar);

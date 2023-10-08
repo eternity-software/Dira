@@ -9,6 +9,10 @@ import com.diraapp.utils.CacheUtils;
 
 import java.util.HashMap;
 
+/**
+ * Data that is used for MessagesAdapter to work properly
+ */
+
 public interface MessageAdapterContract {
     Room getRoom();
 
@@ -18,5 +22,6 @@ public interface MessageAdapterContract {
 
     @Deprecated
     Context getContext();
+
     MessageReplyListener getReplyListener();
 }

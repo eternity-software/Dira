@@ -18,10 +18,12 @@ public class BubbleViewHolder extends BaseMessageViewHolder {
     private DiraVideoPlayer bubblePlayer;
     private BubbleMessageView bubbleContainer;
 
+
     public BubbleViewHolder(@NonNull ViewGroup itemView,
                             MessageAdapterContract messageAdapterContract,
                             boolean isSelfMessage) {
         super(itemView, messageAdapterContract, isSelfMessage);
+
         setOuterContainer(true);
     }
 

@@ -21,7 +21,7 @@ public class RoomMessageCustomClientDataView extends LinearLayout {
         if (isInit) return;
 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.room_message_custom_clientdata, this);
+        inflater.inflate(R.layout.message_custom_clientdata, this);
 
         isInit = true;
     }

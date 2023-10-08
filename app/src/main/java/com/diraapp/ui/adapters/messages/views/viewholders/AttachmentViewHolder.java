@@ -26,6 +26,7 @@ public class AttachmentViewHolder extends BaseMessageViewHolder {
                                 MessageAdapterContract messageAdapterContract,
                                 boolean isSelfMessage) {
         super(itemView, messageAdapterContract, isSelfMessage);
+
     }
 
     @Override

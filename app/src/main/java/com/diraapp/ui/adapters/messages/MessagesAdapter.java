@@ -38,10 +38,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
 
     private final CacheUtils cacheUtils;
 
+
     /**
      * MediaPlayer for audio. Should be transferred to DiraActivity for event handling
      */
     private DiraMediaPlayer diraMediaPlayer = new DiraMediaPlayer();
+
 
     public MessagesAdapter(MessageAdapterContract messageAdapterContract, List<Message> messages, Room room, AsyncLayoutInflater asyncLayoutInflater,
                            BaseViewHolderFactory factory, CacheUtils cacheUtils) {
@@ -62,6 +64,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
 
         BaseMessageViewHolder viewHolder = factory.createViewHolder(viewType,
                 container, messageAdapterContract);
+
 
         AsyncLayoutInflater.OnInflateFinishedListener listener = new AsyncLayoutInflater.OnInflateFinishedListener() {
             @Override

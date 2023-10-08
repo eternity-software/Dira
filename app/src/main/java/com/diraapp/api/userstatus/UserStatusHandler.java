@@ -1,4 +1,4 @@
-package com.diraapp.userstatus;
+package com.diraapp.api.userstatus;
 
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.UpdateListener;

@@ -29,6 +29,7 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
         switch (type) {
             case ROOM_TEXT_MESSAGE:
             case SELF_TEXT_MESSAGE:
+
                 return new TextMessageViewHolder(parent, messageAdapterContract, isSelfMessage);
             case ROOM_BUBBLE_MESSAGE:
             case SELF_BUBBLE_MESSAGE:

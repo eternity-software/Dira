@@ -23,6 +23,7 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
 
     public RoomUpdatesViewHolder(@NonNull ViewGroup itemView, MessageAdapterContract messageAdapterContract) {
         super(itemView, messageAdapterContract, false);
+
     }
 
 

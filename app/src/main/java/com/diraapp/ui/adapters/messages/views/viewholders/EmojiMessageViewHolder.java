@@ -18,6 +18,7 @@ public class EmojiMessageViewHolder extends BaseMessageViewHolder {
                                   MessageAdapterContract messageAdapterContract,
                                   boolean isSelfMessage) {
         super(itemView, messageAdapterContract, isSelfMessage);
+
         setOuterContainer(true);
     }
 

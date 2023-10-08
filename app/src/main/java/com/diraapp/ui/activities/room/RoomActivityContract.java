@@ -12,7 +12,7 @@ import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.UnablePerformRequestException;
-import com.diraapp.userstatus.UserStatus;
+import com.diraapp.api.userstatus.UserStatus;
 import com.diraapp.utils.CacheUtils;
 
 import java.util.ArrayList;

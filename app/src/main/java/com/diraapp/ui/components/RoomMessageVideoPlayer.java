@@ -21,7 +21,7 @@ public class RoomMessageVideoPlayer extends LinearLayout {
         if (isInit) return;
 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.room_message_videoplayer, this);
+        inflater.inflate(R.layout.message_videoplayer, this);
 
         isInit = true;
     }

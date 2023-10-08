@@ -1,6 +1,6 @@
 package com.diraapp.api.requests;
 
-import com.diraapp.userstatus.UserStatus;
+import com.diraapp.api.userstatus.UserStatus;
 
 public class SendUserStatusRequest extends Request {
 

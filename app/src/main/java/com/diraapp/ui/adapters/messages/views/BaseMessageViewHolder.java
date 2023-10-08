@@ -39,7 +39,13 @@ import java.util.HashMap;
  */
 public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder implements InflaterListener {
 
-    protected boolean isInitialized = false, isSelfMessage, isOuterContainer = false;
+    protected boolean isInitialized = false, isSelfMessage;
+
+    /**
+     * Indicates that message will be without background (ex. BubbleMessage)
+      */
+    protected boolean isOuterContainer = false;
+
 
     protected TextView messageText;
     protected LinearLayout outerContainer, messageContainer, postInflatedViewsContainer;
@@ -50,6 +56,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     private final MessageAdapterContract messageAdapterContract;
 
     private MessageReplyComponent replyComponent;
+
 
 
     public BaseMessageViewHolder(@NonNull ViewGroup itemView, MessageAdapterContract messageAdapterContract,
