@@ -21,6 +21,7 @@ import com.diraapp.ui.adapters.messages.views.viewholders.AttachmentViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.DelayedMessageBind;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.BaseViewHolderFactory;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.Numbers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,8 +73,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
     public BaseMessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         FrameLayout container = new FrameLayout(messageAdapterContract.getContext());
-        container.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT));
+        ViewGroup.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT);
+
+        params.height = Numbers.dpToPx(38, messageAdapterContract.getContext());
+
+        container.setLayoutParams(params);
 
         BaseMessageViewHolder viewHolder = factory.createViewHolder(viewType,
                 container, messageAdapterContract, this);
@@ -82,7 +87,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
         AsyncLayoutInflater.OnInflateFinishedListener listener = new AsyncLayoutInflater.OnInflateFinishedListener() {
             @Override
             public void onInflateFinished(@NonNull View view, int resid, @Nullable ViewGroup ignoredParent) {
+               /* ViewGroup.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT);
+
+                container.setLayoutParams(params);*/
+
+                container.getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
                 container.addView(view);
+                container.requestLayout();
                 viewHolder.onViewInflated(view);
             }
         };
