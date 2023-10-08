@@ -138,12 +138,11 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
             balloonMessageMenu.createBalloon(message, itemView);
         });
         bindUserPicture(message, previousMessage);
-        if(hasReplySupport())
+        if (hasReplySupport())
             replyComponent.fillMessageReply(message.getRepliedMessage(), messageAdapterContract);
     }
 
-    public boolean hasReplySupport()
-    {
+    public boolean hasReplySupport() {
         return getItemViewType() != MessageHolderType.ROOM_UPDATES.ordinal();
     }
 

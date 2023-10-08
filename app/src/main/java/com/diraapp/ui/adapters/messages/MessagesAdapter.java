@@ -29,14 +29,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
     private final MessageAdapterContract messageAdapterContract;
     private final CacheUtils cacheUtils;
     /**
+     * MediaPlayer for audio. Should be transferred to DiraActivity for event handling
+     */
+    private final DiraMediaPlayer diraMediaPlayer = new DiraMediaPlayer();
+    /**
      * List of messages to display
      */
     private List<Message> messages = new ArrayList<>();
     private LegacyRoomMessagesAdapter.MessageAdapterListener messageAdapterListener;
-    /**
-     * MediaPlayer for audio. Should be transferred to DiraActivity for event handling
-     */
-    private final DiraMediaPlayer diraMediaPlayer = new DiraMediaPlayer();
 
 
     public MessagesAdapter(MessageAdapterContract messageAdapterContract, List<Message> messages, Room room, AsyncLayoutInflater asyncLayoutInflater,
@@ -103,7 +103,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
     public int getItemViewType(int position) {
         Message message = messages.get(position);
         boolean isSelfMessage = false;
-        if(message.hasAuthor())
+        if (message.hasAuthor())
             isSelfMessage = message.getAuthorId().equals(cacheUtils.getString(CacheUtils.ID));
         return factory.getViewHolderType(message, isSelfMessage).ordinal();
     }

@@ -2,6 +2,10 @@ package com.diraapp.ui.adapters.messages.views.viewholders;
 
 import com.diraapp.db.entities.messages.Message;
 
+/**
+ * Holds binding data until view not inflated
+ * Used in MessageAdapter's BaseViewHolder
+ */
 public class DelayedMessageBind {
     private Message message;
     private Message previousMessage;
