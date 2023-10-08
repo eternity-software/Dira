@@ -88,11 +88,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
 
         if (!holder.isInitialized()) {
             holder.setDelayedMessageBind(new DelayedMessageBind(message, previousMessage));
-            return;
+        }
+        else
+        {
+            holder.bindMessage(message, previousMessage);
         }
 
 
-        holder.bindMessage(message, previousMessage);
 
         notifyItemScrolled(message, position);
 
@@ -108,16 +110,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
         return factory.getViewHolderType(message, isSelfMessage).ordinal();
     }
 
-    public void setMessageAdapterListener(LegacyRoomMessagesAdapter.MessageAdapterListener messageAdapterListener) {
-        this.messageAdapterListener = messageAdapterListener;
-    }
 
     private void notifyItemScrolled(Message message, int position) {
-        if (messageAdapterListener == null) return;
+
         if (position == messages.size() - 1) {
-            messageAdapterListener.onFirstItemScrolled(message, position);
+            messageAdapterContract.onFirstMessageScrolled(message, position);
         } else if (position == 0) {
-            messageAdapterListener.onLastLoadedScrolled(message, position);
+            messageAdapterContract.onLastLoadedMessageDisplayed(message, position);
         }
     }
 
