@@ -22,6 +22,7 @@ import com.diraapp.exceptions.AlreadyInitializedException;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.res.Theme;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
+import com.diraapp.ui.adapters.messages.views.viewholders.DelayedMessageBind;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.MessageHolderType;
 import com.diraapp.ui.components.MessageReplyComponent;
 import com.diraapp.utils.CacheUtils;
@@ -51,6 +52,10 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     private ImageView profilePicture;
     private MessageReplyComponent replyComponent;
 
+    /**
+     * Delays bind if view has not been initialized
+     */
+    private DelayedMessageBind delayedMessageBind;
 
     public BaseMessageViewHolder(@NonNull ViewGroup itemView, MessageAdapterContract messageAdapterContract,
                                  boolean isSelfMessage) {
@@ -80,7 +85,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         messageBackground = find(R.id.message_back);
         postInflatedViewsContainer = find(R.id.views_container);
 
-        if (getItemViewType() != MessageHolderType.ROOM_UPDATES.ordinal())
+        if (hasReplySupport())
             postInflateReplyViews();
 
         if (isOuterContainer) {
@@ -94,6 +99,9 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         postInflate();
 
         isInitialized = true;
+
+        if (delayedMessageBind != null)
+            bindMessage(delayedMessageBind.getMessage(), delayedMessageBind.getPreviousMessage());
     }
 
 
@@ -110,6 +118,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     protected void postInflate() {
         if (isInitialized)
             throw new AlreadyInitializedException(MessageHolderType.values()[getItemViewType()]);
+
     }
 
     /**
@@ -129,7 +138,13 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
             balloonMessageMenu.createBalloon(message, itemView);
         });
         bindUserPicture(message, previousMessage);
-        replyComponent.fillMessageReply(message.getRepliedMessage(), messageAdapterContract);
+        if(hasReplySupport())
+            replyComponent.fillMessageReply(message.getRepliedMessage(), messageAdapterContract);
+    }
+
+    public boolean hasReplySupport()
+    {
+        return getItemViewType() != MessageHolderType.ROOM_UPDATES.ordinal();
     }
 
     public void bindUserPicture(Message message, Message previousMessage) {
@@ -143,23 +158,25 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
             }
 
             HashMap<String, Member> members = messageAdapterContract.getMembers();
-            Member member = members.get(message.getAuthorId());
-            if (member != null) {
-                nicknameText.setText(member.getNickname());
-                if (showProfilePicture) {
-                    if (member.getImagePath() != null) {
-                        // TODO: custom image loader
-                        Picasso.get().load(new File(member.getImagePath())).into(profilePicture);
-                    } else {
-                        profilePicture.setImageResource(R.drawable.placeholder);
+            if (message.hasAuthor()) {
+                Member member = members.get(message.getAuthorId());
+                if (member != null) {
+                    nicknameText.setText(member.getNickname());
+                    if (showProfilePicture) {
+                        if (member.getImagePath() != null) {
+                            // TODO: custom image loader
+                            Picasso.get().load(new File(member.getImagePath())).into(profilePicture);
+                        } else {
+                            profilePicture.setImageResource(R.drawable.placeholder);
+                        }
+                        profilePictureContainer.setVisibility(View.VISIBLE);
+                        nicknameText.setText(message.getAuthorNickname());
+                        nicknameText.setVisibility(View.VISIBLE);
                     }
-                    profilePictureContainer.setVisibility(View.VISIBLE);
+                } else if (showProfilePicture) {
                     nicknameText.setText(message.getAuthorNickname());
                     nicknameText.setVisibility(View.VISIBLE);
                 }
-            } else if (showProfilePicture) {
-                nicknameText.setText(message.getAuthorNickname());
-                nicknameText.setVisibility(View.VISIBLE);
             }
         } else if (message.getMessageReadingList() != null && messageBackground.getBackground() != null) {
             if (message.getMessageReadingList().size() == 0) {
@@ -175,10 +192,11 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
 
     private boolean isProfilePictureRequired(Message message, Message previousMessage) {
         if (previousMessage != null)
-            if (previousMessage.hasAuthor())
+            if (previousMessage.hasAuthor() && message.hasAuthor()) {
                 return !previousMessage.getAuthorId().equals(message.getAuthorId()) ||
                         !message.isSameDay(previousMessage) ||
                         !message.isSameYear(previousMessage);
+            }
         return true;
     }
 
@@ -261,5 +279,9 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
 
     public boolean isSelfMessage() {
         return isSelfMessage;
+    }
+
+    public void setDelayedMessageBind(DelayedMessageBind delayedMessageBind) {
+        this.delayedMessageBind = delayedMessageBind;
     }
 }

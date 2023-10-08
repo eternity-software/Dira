@@ -29,7 +29,6 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
         switch (type) {
             case ROOM_TEXT_MESSAGE:
             case SELF_TEXT_MESSAGE:
-
                 return new TextMessageViewHolder(parent, messageAdapterContract, isSelfMessage);
             case ROOM_BUBBLE_MESSAGE:
             case SELF_BUBBLE_MESSAGE:
@@ -46,13 +45,13 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
             case ROOM_UPDATES:
                 return new RoomUpdatesViewHolder(parent, messageAdapterContract);
         }
-        throw new UnknownViewTypeException();
+        throw new UnknownViewTypeException(intType);
     }
 
     @Override
     public MessageHolderType getViewHolderType(Message message, boolean isSelfMessage)
             throws UnknownViewTypeException {
-        if (message.getAuthorId() == null) {
+        if (!message.hasAuthor()) {
             return MessageHolderType.ROOM_UPDATES;
         }
 
@@ -89,6 +88,7 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
             }
             return MessageHolderType.ROOM_TEXT_MESSAGE;
         }
-        throw new UnknownViewTypeException();
+        message.setText("Unknown message type");
+        return MessageHolderType.ROOM_TEXT_MESSAGE;
     }
 }

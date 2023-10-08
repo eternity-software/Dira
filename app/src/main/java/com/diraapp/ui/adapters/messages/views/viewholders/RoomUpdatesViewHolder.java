@@ -34,6 +34,8 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
         messageContainer.setVisibility(View.VISIBLE);
         postInflatedViewsContainer.addView(view);
 
+        messageText.setVisibility(View.GONE);
+
         roomUpdatesLayout = itemView.findViewById(R.id.room_updates_layout);
         roomUpdatesIcon = itemView.findViewById(R.id.room_updates_icon);
         roomUpdatesMainText = itemView.findViewById(R.id.room_updates_main_text);

@@ -230,4 +230,23 @@ public class Message {
     public void setRepliedMessage(Message repliedMessage) {
         this.repliedMessage = repliedMessage;
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "id='" + id + '\'' +
+                ", authorId='" + authorId + '\'' +
+                ", roomSecret='" + roomSecret + '\'' +
+                ", text='" + text + '\'' +
+                ", authorNickname='" + authorNickname + '\'' +
+                ", time=" + time +
+                ", attachments=" + attachments +
+                ", customClientData=" + customClientData +
+                ", repliedMessageId='" + repliedMessageId + '\'' +
+                ", repliedMessage=" + repliedMessage +
+                ", isRead=" + isRead +
+                ", lastTimeEncryptionKeyUpdated=" + lastTimeEncryptionKeyUpdated +
+                ", messageReadingList=" + messageReadingList +
+                '}';
+    }
 }

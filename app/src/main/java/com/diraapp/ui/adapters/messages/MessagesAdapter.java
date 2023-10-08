@@ -15,6 +15,7 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
+import com.diraapp.ui.adapters.messages.views.viewholders.DelayedMessageBind;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.BaseViewHolderFactory;
 import com.diraapp.utils.CacheUtils;
 
@@ -79,13 +80,17 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
 
     @Override
     public void onBindViewHolder(@NonNull BaseMessageViewHolder holder, int position) {
-        if (!holder.isInitialized()) return;
-
         Message message = messages.get(position);
         Message previousMessage = null;
         if (position < messages.size() - 1) {
             previousMessage = messages.get(position + 1);
         }
+
+        if (!holder.isInitialized()) {
+            holder.setDelayedMessageBind(new DelayedMessageBind(message, previousMessage));
+            return;
+        }
+
 
         holder.bindMessage(message, previousMessage);
 
@@ -97,7 +102,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
     @Override
     public int getItemViewType(int position) {
         Message message = messages.get(position);
-        boolean isSelfMessage = message.getAuthorId().equals(cacheUtils.getString(CacheUtils.ID));
+        boolean isSelfMessage = false;
+        if(message.hasAuthor())
+            isSelfMessage = message.getAuthorId().equals(cacheUtils.getString(CacheUtils.ID));
         return factory.getViewHolderType(message, isSelfMessage).ordinal();
     }
 
