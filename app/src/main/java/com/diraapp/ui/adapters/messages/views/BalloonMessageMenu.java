@@ -55,6 +55,7 @@ public class BalloonMessageMenu {
 
     public void createBalloon(Message message, View view) {
         if (message.getMessageReadingList() == null) return;
+        if (!message.hasAuthor()) return;
         ArrayList<UserReadMessage> userReadMessages = new ArrayList<>(
                 message.getMessageReadingList().size());
 

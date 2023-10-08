@@ -6,6 +6,7 @@ import android.view.View;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.media.DiraMediaPlayer;
+import com.diraapp.db.entities.messages.Message;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
 import com.diraapp.ui.components.VideoPlayer;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
@@ -30,6 +31,11 @@ public interface MessageAdapterContract {
     Context getContext();
 
     MessageReplyListener getReplyListener();
+
+    void onFirstMessageScrolled(Message message, int index);
+
+    default void onLastLoadedMessageDisplayed(Message message, int index) {
+    }
 
     void openPreviewActivity(String filePath, boolean isVideo, View transitionSource);
 

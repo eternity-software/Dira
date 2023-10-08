@@ -18,6 +18,7 @@ import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.MessageAttachmentLoader;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.adapters.messages.views.viewholders.AttachmentViewHolder;
+import com.diraapp.ui.adapters.messages.views.viewholders.DelayedMessageBind;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.BaseViewHolderFactory;
 import com.diraapp.utils.CacheUtils;
 
@@ -35,6 +36,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
     private final AsyncLayoutInflater layoutInflater;
     private final MessageAdapterContract messageAdapterContract;
     private final CacheUtils cacheUtils;
+    /**
+     * MediaPlayer for audio. Should be transferred to DiraActivity for event handling
+     */
+    private final DiraMediaPlayer diraMediaPlayer = new DiraMediaPlayer();
     /**
      * List of messages to display
      */
@@ -94,8 +99,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
 
     @Override
     public void onBindViewHolder(@NonNull BaseMessageViewHolder holder, int position) {
-        if (!holder.isInitialized()) return;
-
         Message message = messages.get(position);
         Message previousMessage = null;
         if (position < messages.size() - 1) {
@@ -103,13 +106,22 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
         }
 
         if (holder instanceof AttachmentViewHolder) {
+
             messageAttachmentLoader.removeListener(((AttachmentViewHolder) holder)
                     .getAttachmentStorageListener());
             ((AttachmentViewHolder) holder).removeAttachmentStorageListener();
-            messageAttachmentLoader.loadMessageAttachment(message, (AttachmentViewHolder) holder);
         }
 
-        holder.bindMessage(message, previousMessage);
+        if (!holder.isInitialized()) {
+            holder.setDelayedMessageBind(new DelayedMessageBind(message, previousMessage));
+        } else {
+            if (holder instanceof AttachmentViewHolder) {
+                messageAttachmentLoader.loadMessageAttachment(message, (AttachmentViewHolder) holder);
+            }
+            holder.bindMessage(message, previousMessage);
+        }
+
+
 
         notifyItemScrolled(message, position);
 
@@ -119,20 +131,19 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
     @Override
     public int getItemViewType(int position) {
         Message message = messages.get(position);
-        boolean isSelfMessage = message.getAuthorId().equals(cacheUtils.getString(CacheUtils.ID));
+        boolean isSelfMessage = false;
+        if (message.hasAuthor())
+            isSelfMessage = message.getAuthorId().equals(cacheUtils.getString(CacheUtils.ID));
         return factory.getViewHolderType(message, isSelfMessage).ordinal();
     }
 
-    public void setMessageAdapterListener(LegacyRoomMessagesAdapter.MessageAdapterListener messageAdapterListener) {
-        this.messageAdapterListener = messageAdapterListener;
-    }
 
     private void notifyItemScrolled(Message message, int position) {
-        if (messageAdapterListener == null) return;
+
         if (position == messages.size() - 1) {
-            messageAdapterListener.onFirstItemScrolled(message, position);
+            messageAdapterContract.onFirstMessageScrolled(message, position);
         } else if (position == 0) {
-            messageAdapterListener.onLastLoadedScrolled(message, position);
+            messageAdapterContract.onLastLoadedMessageDisplayed(message, position);
         }
     }
 

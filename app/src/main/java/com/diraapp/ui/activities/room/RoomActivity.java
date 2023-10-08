@@ -846,4 +846,14 @@ public class RoomActivity extends DiraActivity
         player.attachDiraActivity(this);
         player.attachRecyclerView(binding.recyclerView);
     }
+
+    @Override
+    public void onFirstMessageScrolled(Message message, int index) {
+        presenter.loadMessagesBefore(message, index);
+    }
+
+    @Override
+    public void onLastLoadedMessageDisplayed(Message message, int index) {
+        presenter.loadNewerMessage(message, index);
+    }
 }

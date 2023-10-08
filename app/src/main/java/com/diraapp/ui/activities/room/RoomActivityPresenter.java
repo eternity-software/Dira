@@ -1,7 +1,6 @@
 package com.diraapp.ui.activities.room;
 
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -18,6 +17,7 @@ import com.diraapp.api.updates.MessageReadUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
+import com.diraapp.api.userstatus.UserStatus;
 import com.diraapp.api.views.UserStatusType;
 import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.entities.Attachment;
@@ -29,10 +29,8 @@ import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
-import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
 import com.diraapp.ui.components.viewswiper.ViewSwiperListener;
-import com.diraapp.api.userstatus.UserStatus;
 import com.diraapp.utils.EncryptionUtil;
 import com.diraapp.utils.Logger;
 
@@ -485,14 +483,11 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
         private final String messageText;
         private final AttachmentType attachmentType;
-
+        private final String messageReplyId;
         private int height;
         private int width;
         private String fileUri;
-
         private long fileSize;
-
-        private final String messageReplyId;
 
         public RoomAttachmentCallback(String fileUri, String messageText, AttachmentType attachmentType, String messageReplyId) {
             this.fileUri = fileUri;

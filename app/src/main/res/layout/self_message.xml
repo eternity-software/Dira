@@ -114,8 +114,9 @@
                 android:layout_marginBottom="8dp"
                 android:autoLink="all"
 
+                android:visibility="gone"
                 android:fontFamily="@font/montserratsemibold"
-                android:text="Самсой"
+                android:text=""
                 android:textColor="@color/self_message_color"
                 android:textColorLink="@color/self_message_color_link"
 

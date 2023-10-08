@@ -2,6 +2,7 @@ package com.diraapp.ui.adapters.messages.views.viewholders.factories;
 
 public enum MessageHolderType {
 
+
     SELF_TEXT_MESSAGE(true),
     ROOM_TEXT_MESSAGE(false),
     SELF_BUBBLE_MESSAGE(true),
@@ -13,7 +14,6 @@ public enum MessageHolderType {
     SELF_EMOJI_MESSAGE(true),
     ROOM_EMOJI_MESSAGE(false),
     ROOM_UPDATES(false);
-
     private final boolean isSelf;
 
     MessageHolderType(boolean isSelf) {
