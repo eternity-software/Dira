@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
+import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 
 
 public class TextMessageViewHolder extends BaseMessageViewHolder {
@@ -15,8 +16,9 @@ public class TextMessageViewHolder extends BaseMessageViewHolder {
 
     public TextMessageViewHolder(@NonNull ViewGroup itemView,
                                  MessageAdapterContract messageAdapterContract,
+                                 ViewHolderManagerContract viewHolderManagerContract,
                                  boolean isSelfMessage) {
-        super(itemView, messageAdapterContract, isSelfMessage);
+        super(itemView, messageAdapterContract, viewHolderManagerContract, isSelfMessage);
 
     }
 

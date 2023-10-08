@@ -8,7 +8,8 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.UnknownViewTypeException;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
-import com.diraapp.ui.adapters.messages.views.viewholders.AttachmentViewHolder;
+import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
+import com.diraapp.ui.adapters.messages.views.viewholders.VideoViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.BubbleViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.EmojiMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.RoomUpdatesViewHolder;
@@ -22,7 +23,9 @@ import com.diraapp.utils.StringFormatter;
 public class RoomViewHolderFactory implements BaseViewHolderFactory {
 
     @Override
-    public BaseMessageViewHolder createViewHolder(int intType, ViewGroup parent, MessageAdapterContract messageAdapterContract)
+    public BaseMessageViewHolder createViewHolder(int intType, ViewGroup parent,
+                                                  MessageAdapterContract messageAdapterContract,
+                                                  ViewHolderManagerContract viewHolderManagerContract)
             throws UnknownViewTypeException {
         MessageHolderType type = MessageHolderType.values()[intType];
         boolean isSelfMessage = type.isSelf();
@@ -30,21 +33,27 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
             case ROOM_TEXT_MESSAGE:
             case SELF_TEXT_MESSAGE:
 
-                return new TextMessageViewHolder(parent, messageAdapterContract, isSelfMessage);
+                return new TextMessageViewHolder(parent, messageAdapterContract,
+                        viewHolderManagerContract, isSelfMessage);
             case ROOM_BUBBLE_MESSAGE:
             case SELF_BUBBLE_MESSAGE:
-                return new BubbleViewHolder(parent, messageAdapterContract, isSelfMessage);
+                return new BubbleViewHolder(parent, messageAdapterContract,
+                        viewHolderManagerContract, isSelfMessage);
             case ROOM_VOICE_MESSAGE:
             case SELF_VOICE_MESSAGE:
-                return new VoiceViewHolder(parent, messageAdapterContract, isSelfMessage);
+                return new VoiceViewHolder(parent, messageAdapterContract,
+                        viewHolderManagerContract, isSelfMessage);
             case ROOM_ATTACHMENTS_MESSAGE:
             case SELF_ATTACHMENTS_MESSAGE:
-                return new AttachmentViewHolder(parent, messageAdapterContract, isSelfMessage);
+                return new VideoViewHolder(parent, messageAdapterContract,
+                        viewHolderManagerContract, isSelfMessage);
             case ROOM_EMOJI_MESSAGE:
             case SELF_EMOJI_MESSAGE:
-                return new EmojiMessageViewHolder(parent, messageAdapterContract, isSelfMessage);
+                return new EmojiMessageViewHolder(parent, messageAdapterContract,
+                        viewHolderManagerContract, isSelfMessage);
             case ROOM_UPDATES:
-                return new RoomUpdatesViewHolder(parent, messageAdapterContract);
+                return new RoomUpdatesViewHolder(parent, messageAdapterContract,
+                        viewHolderManagerContract);
         }
         throw new UnknownViewTypeException();
     }

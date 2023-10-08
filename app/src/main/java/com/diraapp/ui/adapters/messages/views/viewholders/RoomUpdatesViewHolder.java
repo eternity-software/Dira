@@ -12,6 +12,7 @@ import com.diraapp.R;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
+import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.RoomMessageCustomClientDataView;
 
 public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
@@ -21,8 +22,9 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
     private TextView roomUpdatesMainText;
     private TextView roomUpdatesText;
 
-    public RoomUpdatesViewHolder(@NonNull ViewGroup itemView, MessageAdapterContract messageAdapterContract) {
-        super(itemView, messageAdapterContract, false);
+    public RoomUpdatesViewHolder(@NonNull ViewGroup itemView, MessageAdapterContract messageAdapterContract,
+                                 ViewHolderManagerContract viewHolderManagerContract) {
+        super(itemView, messageAdapterContract, viewHolderManagerContract, false);
 
     }
 
@@ -43,5 +45,10 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
     @Override
     public void bindMessage(Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
+    }
+
+    @Override
+    public void postInflateReplyViews() {
+
     }
 }

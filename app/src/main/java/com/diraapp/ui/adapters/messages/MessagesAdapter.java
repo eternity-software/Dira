@@ -15,13 +15,21 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
+import com.diraapp.ui.adapters.messages.views.MessageAttachmentLoader;
+import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
+import com.diraapp.ui.adapters.messages.views.viewholders.AttachmentViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.BaseViewHolderFactory;
 import com.diraapp.utils.CacheUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
-public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder> {
+import linc.com.amplituda.Amplituda;
+
+public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
+        implements ViewHolderManagerContract {
 
     private final BaseViewHolderFactory factory;
     private final AsyncLayoutInflater layoutInflater;
@@ -36,15 +44,22 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
      * MediaPlayer for audio. Should be transferred to DiraActivity for event handling
      */
     private final DiraMediaPlayer diraMediaPlayer = new DiraMediaPlayer();
+    private final Amplituda amplituda;
+    private final Executor voiceWaveformsThread = Executors.newSingleThreadExecutor();
+    private final MessageAttachmentLoader messageAttachmentLoader;
 
 
-    public MessagesAdapter(MessageAdapterContract messageAdapterContract, List<Message> messages, Room room, AsyncLayoutInflater asyncLayoutInflater,
+    public MessagesAdapter(MessageAdapterContract messageAdapterContract, List<Message> messages,
+                           Room room, AsyncLayoutInflater asyncLayoutInflater,
                            BaseViewHolderFactory factory, CacheUtils cacheUtils) {
         this.messages = messages;
         this.layoutInflater = asyncLayoutInflater;
         this.factory = factory;
         this.cacheUtils = cacheUtils;
         this.messageAdapterContract = messageAdapterContract;
+        amplituda = new Amplituda(messageAdapterContract.getContext());
+
+        messageAttachmentLoader = new MessageAttachmentLoader(room, messageAdapterContract.getContext());
     }
 
     @NonNull
@@ -56,7 +71,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
                 FrameLayout.LayoutParams.WRAP_CONTENT));
 
         BaseMessageViewHolder viewHolder = factory.createViewHolder(viewType,
-                container, messageAdapterContract);
+                container, messageAdapterContract, this);
 
 
         AsyncLayoutInflater.OnInflateFinishedListener listener = new AsyncLayoutInflater.OnInflateFinishedListener() {
@@ -85,6 +100,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
         Message previousMessage = null;
         if (position < messages.size() - 1) {
             previousMessage = messages.get(position + 1);
+        }
+
+        if (holder instanceof AttachmentViewHolder) {
+            messageAttachmentLoader.removeListener(((AttachmentViewHolder) holder)
+                    .getAttachmentStorageListener());
+            ((AttachmentViewHolder) holder).removeAttachmentStorageListener();
+            messageAttachmentLoader.loadMessageAttachment(message, (AttachmentViewHolder) holder);
         }
 
         holder.bindMessage(message, previousMessage);
@@ -118,6 +140,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
         /*for (AttachmentsStorageListener attachmentsStorageListener : listeners) {
             AttachmentsStorage.removeAttachmentsStorageListener(attachmentsStorageListener);
         }*/
+        messageAttachmentLoader.release();
         diraMediaPlayer.reset();
         diraMediaPlayer.release();
     }
@@ -147,5 +170,20 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
 
     public void setMessages(List<Message> messages) {
         this.messages = messages;
+    }
+
+    @Override
+    public Amplituda getAmplituda() {
+        return amplituda;
+    }
+
+    @Override
+    public DiraMediaPlayer getDiraMediaPlayer() {
+        return diraMediaPlayer;
+    }
+
+    @Override
+    public Executor getVoiceMessageThread() {
+        return voiceWaveformsThread;
     }
 }

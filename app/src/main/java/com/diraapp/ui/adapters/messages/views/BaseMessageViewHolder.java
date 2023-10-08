@@ -38,6 +38,8 @@ import java.util.HashMap;
 public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder implements InflaterListener {
 
     private final MessageAdapterContract messageAdapterContract;
+
+    private final ViewHolderManagerContract viewHolderManagerContract;
     protected boolean isInitialized = false, isSelfMessage;
     /**
      * Indicates that message will be without background (ex. BubbleMessage)
@@ -53,9 +55,10 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
 
 
     public BaseMessageViewHolder(@NonNull ViewGroup itemView, MessageAdapterContract messageAdapterContract,
-                                 boolean isSelfMessage) {
+                                 ViewHolderManagerContract viewHolderManagerContract, boolean isSelfMessage) {
         super(itemView);
         this.messageAdapterContract = messageAdapterContract;
+        this.viewHolderManagerContract = viewHolderManagerContract;
 
         this.isSelfMessage = isSelfMessage;
 
@@ -96,6 +99,13 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         isInitialized = true;
     }
 
+    public MessageAdapterContract getMessageAdapterContract() {
+        return messageAdapterContract;
+    }
+
+    public ViewHolderManagerContract getViewHolderManagerContract() {
+        return viewHolderManagerContract;
+    }
 
     /**
      * Inflate a placeholder that will be displayed until the main inflating is completed

@@ -18,6 +18,7 @@ import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
 
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,7 +45,7 @@ public class DiraKeyProtocolProcessor {
     public void onDiffieHellmanInit(DhInitUpdate dhInitUpdate) {
         Room room = roomDao.getRoomBySecretName(dhInitUpdate.getRoomSecret());
         if (room != null) {
-            Random random = new Random();
+            Random random = new SecureRandom();
             BigInteger mainBigint = new BigInteger(2048, random);
             BigInteger bigIntegerTwo = BigInteger.valueOf(2);
             room.setClientSecret(mainBigint.add(bigIntegerTwo).toString());
@@ -74,6 +75,7 @@ public class DiraKeyProtocolProcessor {
                 DhKey dhKey = keyReceivedUpdate.getDhKey();
                 Logger.logDebug(this.getClass().getSimpleName(), "Received N=" + dhKey.getN());
                 BigInteger G = new BigInteger(dhKey.getG());
+                if (G.equals(BigInteger.ONE)) return;
                 BigInteger P = new BigInteger(dhInfo.getP());
                 BigInteger clientSecret = new BigInteger(room.getClientSecret());
 

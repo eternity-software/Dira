@@ -1,51 +1,43 @@
 package com.diraapp.ui.adapters.messages.views.viewholders;
 
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 
-import com.diraapp.R;
+import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
-import com.diraapp.ui.components.RoomMessageVideoPlayer;
-import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
+import com.diraapp.ui.adapters.messages.views.MessageAttachmentLoader;
+import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 
-public class AttachmentViewHolder extends BaseMessageViewHolder {
+import java.io.File;
 
-    private DiraVideoPlayer videoPlayer;
-    private ImageView imageView;
-    private CardView imageContainer;
-    private TextView messageText;
+public abstract class AttachmentViewHolder extends BaseMessageViewHolder {
 
-    public AttachmentViewHolder(@NonNull ViewGroup itemView,
-                                MessageAdapterContract messageAdapterContract,
-                                boolean isSelfMessage) {
-        super(itemView, messageAdapterContract, isSelfMessage);
+    private MessageAttachmentLoader.MessageAttachmentStorageListener attachmentStorageListener = null;
 
+    public AttachmentViewHolder(@NonNull ViewGroup itemView, MessageAdapterContract messageAdapterContract,
+                                ViewHolderManagerContract viewHolderManagerContract, boolean isSelfMessage) {
+        super(itemView, messageAdapterContract, viewHolderManagerContract, isSelfMessage);
     }
 
-    @Override
-    protected void postInflate() {
-        super.postInflate();
-        View view = new RoomMessageVideoPlayer(itemView.getContext());
-        messageContainer.setVisibility(View.VISIBLE);
-        postInflatedViewsContainer.addView(view);
-        imageView = itemView.findViewById(R.id.image_view);
-        videoPlayer = itemView.findViewById(R.id.video_player);
-        imageContainer = itemView.findViewById(R.id.image_container);
-        messageText = itemView.findViewById(R.id.message_text);
+    public void setAttachmentStorageListener(MessageAttachmentLoader.MessageAttachmentStorageListener attachmentStorageListener) {
+        this.attachmentStorageListener = attachmentStorageListener;
     }
 
-    @Override
-    public void bindMessage(Message message, Message previousMessage) {
-        super.bindMessage(message, previousMessage);
-        videoPlayer.reset();
-        imageView.setVisibility(View.GONE);
-        videoPlayer.setVisibility(View.GONE);
+    public MessageAttachmentLoader.MessageAttachmentStorageListener getAttachmentStorageListener() {
+        return attachmentStorageListener;
     }
+
+    public void removeAttachmentStorageListener() {
+        if (attachmentStorageListener != null) {
+            attachmentStorageListener.removeViewHolder();
+        }
+        attachmentStorageListener = null;
+    }
+
+    public abstract void onAttachmentLoaded(Attachment attachment, File file, Message message);
+
+    public abstract void onLoadFailed();
 }

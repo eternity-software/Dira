@@ -46,6 +46,7 @@ import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.AppStorage;
@@ -54,6 +55,7 @@ import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.images.FilesUploader;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.ImageSendActivity;
+import com.diraapp.ui.activities.PreviewActivity;
 import com.diraapp.ui.activities.RoomInfoActivity;
 import com.diraapp.ui.activities.RoomSelectorActivity;
 import com.diraapp.ui.activities.resizer.FluidContentResizer;
@@ -66,6 +68,8 @@ import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.FilePreview;
 import com.diraapp.ui.components.RecordComponentsController;
+import com.diraapp.ui.components.VideoPlayer;
+import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.viewswiper.ViewSwiper;
 import com.diraapp.ui.components.viewswiper.ViewSwiperListener;
 import com.diraapp.utils.CacheUtils;
@@ -80,6 +84,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import linc.com.amplituda.Amplituda;
 import okhttp3.Callback;
 
 
@@ -828,5 +833,17 @@ public class RoomActivity extends DiraActivity
     @Override
     public MessageReplyListener getReplyListener() {
         return (MessageReplyListener) presenter;
+    }
+
+    @Override
+    public void openPreviewActivity(String filePath, boolean isVideo, View transitionSource) {
+        PreviewActivity.open(this, filePath,
+                isVideo, transitionSource);
+    }
+
+    @Override
+    public void attachVideoPlayer(DiraVideoPlayer player) {
+        player.attachDiraActivity(this);
+        player.attachRecyclerView(binding.recyclerView);
     }
 }
