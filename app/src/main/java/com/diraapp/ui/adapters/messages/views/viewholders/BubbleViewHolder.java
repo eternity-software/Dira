@@ -15,6 +15,7 @@ import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.storage.AppStorage;
+import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.ui.activities.PreviewActivity;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
@@ -44,7 +45,7 @@ public class BubbleViewHolder extends AttachmentViewHolder {
     @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
         //bubblePlayer.attachDebugIndicator(imageView);
-        getMessageAdapterContract().attachVideoPlayer(bubblePlayer);
+
         bubblePlayer.play(file.getPath());
 
         try {
@@ -64,8 +65,7 @@ public class BubbleViewHolder extends AttachmentViewHolder {
                     }
                     diraMediaPlayer.reset();
                     diraMediaPlayer.setDataSource(file.getPath());
-
-
+                    
                     diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                         @Override
                         public void onPrepared(MediaPlayer mp) {
@@ -100,11 +100,19 @@ public class BubbleViewHolder extends AttachmentViewHolder {
         //  bubbleContainer = find(BubbleMessageView.BUBBLE_CONTAINER_ID);
         outerContainer.addView(bubble);
         bubblePlayer = find(R.id.bubble_player);
+        getMessageAdapterContract().attachVideoPlayer(bubblePlayer);
     }
 
     @Override
     public void bindMessage(Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
+        Attachment bubbleAttachment = message.getAttachments().get(0);
+
+        if(!AttachmentsStorage.isAttachmentSaving(bubbleAttachment))
+            onAttachmentLoaded(bubbleAttachment,
+                    AttachmentsStorage.getFileFromAttachment(bubbleAttachment,
+                    itemView.getContext(), message.getRoomSecret()), message);
+
     }
 
     @Override

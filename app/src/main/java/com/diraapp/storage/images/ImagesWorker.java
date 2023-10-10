@@ -1,6 +1,7 @@
 package com.diraapp.storage.images;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,9 +11,12 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 
 import java.io.ByteArrayOutputStream;
+
+import id.zelory.compressor.Compressor;
 
 
 public class ImagesWorker {
@@ -98,6 +102,7 @@ public class ImagesWorker {
 
         return bitmap;
     }
+
 
     public static Bitmap compressBitmap(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();

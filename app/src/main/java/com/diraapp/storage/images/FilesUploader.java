@@ -1,16 +1,19 @@
 package com.diraapp.storage.images;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
+import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.room.RoomActivityPresenter;
 import com.diraapp.utils.CryptoUtils;
 
@@ -30,7 +33,7 @@ public class FilesUploader {
 
     public static boolean uploadFile(String sourceFileUri,
                                      Callback callback,
-                                     Context context,
+                                     DiraActivity context,
                                      boolean deleteAfterUpload,
                                      String serverAddress,
                                      String encryptionKey) throws IOException {
@@ -42,22 +45,20 @@ public class FilesUploader {
 
                 //bitmap = ImageRotationFix.rotateImageIfRequired(context, AppStorage.getBitmapFromUrl(sourceFileUri), Uri.fromFile(new File(sourceFileUri)));
 
+
                 if (bitmap == null) {
                     bitmap = AppStorage.getBitmapFromPath(sourceFileUri);
                 }
 
-                bitmap = ImagesWorker.compressBitmap(bitmap);
-                bitmap = ImagesWorker.resizeBitmap(bitmap, 2000);
+
 
                 if (callback instanceof RoomActivityPresenter.RoomAttachmentCallback) {
                     ((RoomActivityPresenter.RoomAttachmentCallback) callback).
                             setWidthAndHeight(bitmap.getWidth(), bitmap.getHeight());
                 }
 
-                deleteAfterUpload = true;
+               // deleteAfterUpload = true;
 
-                sourceFileUri = AppStorage.saveToInternalStorage(bitmap,
-                        null, context);
             } else if (callback instanceof RoomActivityPresenter.RoomAttachmentCallback) {
                 RoomActivityPresenter.RoomAttachmentCallback roomAttachmentCallback =
                         (RoomActivityPresenter.RoomAttachmentCallback) callback;

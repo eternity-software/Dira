@@ -68,6 +68,8 @@ dependencies {
 
 
     implementation 'jp.wasabeef:blurry:4.0.1'
+    implementation 'id.zelory:compressor:3.0.1'
+
 
     api 'com.otaliastudios:cameraview:2.7.2'
 

@@ -72,6 +72,10 @@ public class Message {
 
     }
 
+    public Attachment getSingleAttachment()
+    {
+        return attachments.get(0);
+    }
     public static Message generateMessage(CacheUtils cacheUtils, String roomSecret) {
         Message message = new Message();
 

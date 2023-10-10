@@ -53,6 +53,7 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
 import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.images.FilesUploader;
+import com.diraapp.storage.images.ImageCompressor;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.ImageSendActivity;
 import com.diraapp.ui.activities.PreparedActivity;
@@ -745,7 +746,24 @@ public class RoomActivity extends DiraActivity
     @Override
     public void uploadFile(String sourceFileUri, Callback callback, boolean deleteAfterUpload, String serverAddress, String encryptionKey) {
         try {
-            FilesUploader.uploadFile(sourceFileUri, callback, getApplicationContext(), deleteAfterUpload, serverAddress, encryptionKey);
+            if(FileClassifier.isImageFile(sourceFileUri))
+            {
+                ImageCompressor.compress(RoomActivity.this, new File(sourceFileUri), new com.diraapp.storage.images.Callback() {
+                    @Override
+                    public void onComplete(boolean status, @Nullable File file) {
+                        try {
+                            FilesUploader.uploadFile(file.getPath(), callback, RoomActivity.this, deleteAfterUpload, serverAddress, encryptionKey);
+                        } catch (IOException e) {
+
+                        }
+                    }
+                });
+            }
+            else
+            {
+                FilesUploader.uploadFile(sourceFileUri, callback, RoomActivity.this, deleteAfterUpload, serverAddress, encryptionKey);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -778,7 +796,7 @@ public class RoomActivity extends DiraActivity
                             try {
                                 FilesUploader.uploadFile(path,
                                         callback.setFileUri(path),
-                                        getApplicationContext(), true,
+                                        RoomActivity.this, true,
                                         serverAddress, encryptionKey);
                             } catch (Exception e) {
                                 e.printStackTrace();

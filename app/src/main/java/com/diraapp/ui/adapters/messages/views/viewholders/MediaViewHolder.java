@@ -46,7 +46,8 @@ public class MediaViewHolder extends AttachmentViewHolder {
     @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
         if(file == null) return;
-        AtomicBoolean isMainImageLoaded = new AtomicBoolean(false);
+
+
         DiraActivity.runGlobalBackground(() -> {
 
             Bitmap previewBitmap = attachment.getBitmapPreview();
@@ -55,7 +56,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
 
             } else {
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    if(!isMainImageLoaded.get()) imageView.setImageBitmap(previewBitmap);
+                    imageView.setImageBitmap(previewBitmap);
                 });
 
             }
@@ -65,7 +66,6 @@ public class MediaViewHolder extends AttachmentViewHolder {
             DiraActivity.runGlobalBackground(() -> {
                 Bitmap bitmap = AppStorage.getBitmapFromPath(file.getPath(), this.itemView.getContext());
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    isMainImageLoaded.set(true);
                     imageView.setImageBitmap(bitmap);
                 });
             });

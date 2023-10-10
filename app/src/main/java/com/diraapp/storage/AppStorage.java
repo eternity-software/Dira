@@ -161,9 +161,9 @@ public class AppStorage {
     }
 
     public static String getStringSize(long size) {
-        long kb = 1024;
-        long mb = kb * 1024;
-        long gb = mb * 1024;
+        long kb = 1000;
+        long mb = kb * 1000;
+        long gb = mb * 1000;
 
         if (size >= gb) {
             return String.format("%.1f GB", (float) size / gb);

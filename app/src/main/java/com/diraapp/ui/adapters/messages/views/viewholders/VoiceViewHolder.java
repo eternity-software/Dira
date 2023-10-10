@@ -16,6 +16,7 @@ import com.diraapp.R;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.media.DiraMediaPlayer;
+import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
@@ -52,6 +53,7 @@ public class VoiceViewHolder extends AttachmentViewHolder {
                 mmr.setDataSource(getMessageAdapterContract().getContext(), Uri.fromFile(file));
                 String dur = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
 
+                if(dur == null) return;
                 if (dur.equals("0")) return;
 
                 getViewHolderManagerContract().getAmplituda().processAudio(file)
@@ -161,6 +163,11 @@ public class VoiceViewHolder extends AttachmentViewHolder {
     @Override
     public void bindMessage(Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
+
+        if(!AttachmentsStorage.isAttachmentSaving(message.getSingleAttachment()))
+            onAttachmentLoaded(message.getSingleAttachment(),
+                    AttachmentsStorage.getFileFromAttachment(message.getSingleAttachment(),
+                            itemView.getContext(), message.getRoomSecret()), message);
     }
 
 }
