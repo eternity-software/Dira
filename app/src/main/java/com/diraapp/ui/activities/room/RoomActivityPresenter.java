@@ -180,15 +180,20 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 int notifyingIndex = messageList.size() - 1;
                 messageList.addAll(oldMessages);
                 loadReplies(oldMessages, messageDao);
+
+                boolean isMessagesRemoved = messageList.size() > MAX_ADAPTER_MESSAGES_COUNT;
+                if (isMessagesRemoved) {
+                    messageList.subList(0, MessageDao.LOADING_COUNT).clear();
+                    isMessagesRemoved = true;
+                }
+
                 view.notifyMessageChangedWithoutScroll(
                         index + 1, index + oldMessages.size());
 
                 view.notifyAdapterItemChanged(notifyingIndex);
 
-                if (messageList.size() > MAX_ADAPTER_MESSAGES_COUNT) {
-                    messageList.subList(0, MessageDao.LOADING_COUNT).clear();
+                if (isMessagesRemoved) {
                     view.notifyAdapterItemsDeleted(0, MessageDao.LOADING_COUNT);
-
                     isNewestMessagesLoaded = false;
                 }
             } catch (Exception e) {
@@ -212,7 +217,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                         newestLoaded.getTime());
 
                 if (newMessages.size() == 0) {
-
                     isNewestMessagesLoaded = true;
                     return;
                 }
@@ -221,11 +225,18 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     messageList.add(0, m);
                 }
                 loadReplies(newMessages, messageDao);
+                isNewestMessagesLoaded = messageList.get(0).getId().equals(room.getLastMessageId());
+
+                boolean isMessagesRemoved = messageList.size() > MAX_ADAPTER_MESSAGES_COUNT;
+                int size = messageList.size();
+
+                if (isMessagesRemoved) {
+                    messageList.subList(size - MessageDao.LOADING_COUNT + 1, size).clear();
+                }
+
                 view.notifyMessagesChanged(0, newMessages.size(), newMessages.size());
 
-                if (messageList.size() > MAX_ADAPTER_MESSAGES_COUNT) {
-                    int size = messageList.size();
-                    messageList.subList(size - MessageDao.LOADING_COUNT + 1, size).clear();
+                if (isMessagesRemoved) {
                     view.notifyAdapterItemsDeleted(size - MessageDao.LOADING_COUNT,
                             MessageDao.LOADING_COUNT);
                 }
