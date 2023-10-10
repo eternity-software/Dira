@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
+import com.diraapp.BuildConfig;
 import com.diraapp.R;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
@@ -44,8 +45,7 @@ public class BubbleViewHolder extends AttachmentViewHolder {
 
     @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
-        //bubblePlayer.attachDebugIndicator(imageView);
-
+        if(file == null) return;
         bubblePlayer.play(file.getPath());
 
         try {
@@ -59,13 +59,15 @@ public class BubbleViewHolder extends AttachmentViewHolder {
             public void onClick(View v) {
                 DiraMediaPlayer diraMediaPlayer = getViewHolderManagerContract().getDiraMediaPlayer();
 
+                if(BuildConfig.DEBUG) bubblePlayer.showDebugLog();
+
                 try {
                     if (diraMediaPlayer.isPlaying()) {
                         diraMediaPlayer.stop();
                     }
                     diraMediaPlayer.reset();
                     diraMediaPlayer.setDataSource(file.getPath());
-                    
+
                     diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                         @Override
                         public void onPrepared(MediaPlayer mp) {
@@ -75,7 +77,6 @@ public class BubbleViewHolder extends AttachmentViewHolder {
                             ((DiraVideoPlayer) v).setSpeed(1f);
                             ((DiraVideoPlayer) v).setProgress(0);
                             diraMediaPlayer.setOnPreparedListener(null);
-
 
                         }
                     });
@@ -100,6 +101,7 @@ public class BubbleViewHolder extends AttachmentViewHolder {
         //  bubbleContainer = find(BubbleMessageView.BUBBLE_CONTAINER_ID);
         outerContainer.addView(bubble);
         bubblePlayer = find(R.id.bubble_player);
+        bubblePlayer.attachDebugIndicator(outerContainer);
         getMessageAdapterContract().attachVideoPlayer(bubblePlayer);
     }
 
@@ -119,7 +121,7 @@ public class BubbleViewHolder extends AttachmentViewHolder {
     public void onViewRecycled() {
         super.onViewRecycled();
         if (!isInitialized) return;
-        bubblePlayer.reset();
+        bubblePlayer.stop();
     }
 
     @Override

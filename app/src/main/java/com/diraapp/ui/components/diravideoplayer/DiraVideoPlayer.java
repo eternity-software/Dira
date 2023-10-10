@@ -26,6 +26,7 @@ import com.diraapp.device.PerformanceTester;
 import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.DiraActivityListener;
+import com.diraapp.ui.components.DiraPopup;
 import com.diraapp.utils.Logger;
 
 import java.util.ArrayList;
@@ -49,6 +50,8 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
     private boolean attachedActivity = false;
     private boolean attachedRecycler = false;
     private View debugIndicator;
+
+    private List<String> debugLog = new ArrayList<>();
 
 
     public DiraVideoPlayer(@NonNull Context context) {
@@ -223,6 +226,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
             public void run() {
                 try {
                     Logger.logDebug(getClass().getSimpleName(), "Playing " + currentPlayingTask.getSourcePath());
+                    log("Playing " );
                     if (source != currentPlayingTask) return;
                     Logger.logDebug(getClass().getSimpleName(), "1 " + currentPlayingTask.getSourcePath());
                     if (mediaPlayer.isReleased()) {
@@ -473,6 +477,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
                 mediaPlayer.setSurface(surface);
                 if (notifyState) {
                     notifyStateChanged(DiraVideoPlayerState.READY);
+                    play(currentPlayingTask);
                 } else {
                     state = DiraVideoPlayerState.READY;
                 }
@@ -491,6 +496,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
      */
     public void notifyStateChanged(DiraVideoPlayerState diraVideoPlayerState) {
         Logger.logDebug(getClass().getSimpleName(), "New state " + diraVideoPlayerState.name());
+        log("New state " + diraVideoPlayerState.name());
         state = diraVideoPlayerState;
         new Handler(Looper.getMainLooper()).post(() -> {
             if (debugIndicator != null && BuildConfig.DEBUG) {
@@ -548,5 +554,23 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     }
 
+    public void showDebugLog()
+    {
+        DiraPopup diraPopup = new DiraPopup(getContext());
+        String logs = "";
+        for(String log : debugLog)
+            logs += log + "\n";
+        diraPopup.show("DiraVideoPlayer Log", logs, null, null, null);
+    }
+
+
+    private void log(String s)
+    {
+        if(debugLog.size() > 10)
+        {
+            debugLog.remove(0);
+        }
+        debugLog.add(s);
+    }
 
 }
