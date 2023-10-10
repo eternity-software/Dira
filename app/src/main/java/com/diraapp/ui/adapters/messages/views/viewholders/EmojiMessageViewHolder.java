@@ -26,14 +26,15 @@ public class EmojiMessageViewHolder extends BaseMessageViewHolder {
 
 
     @Override
-    public void onViewInflated(View rootView) {
-        super.onViewInflated(rootView);
-
+    protected void postInflate() {
+        super.postInflate();
         emojiText = itemView.findViewById(R.id.emoji_view);
+        emojiText.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void bindMessage(Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
+        emojiText.setText(message.getText());
     }
 }

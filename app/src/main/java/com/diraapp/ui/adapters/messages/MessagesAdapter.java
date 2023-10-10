@@ -46,10 +46,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
      */
     private List<Message> messages = new ArrayList<>();
     private LegacyRoomMessagesAdapter.MessageAdapterListener messageAdapterListener;
-    /**
-     * MediaPlayer for audio. Should be transferred to DiraActivity for event handling
-     */
-    private final DiraMediaPlayer diraMediaPlayer = new DiraMediaPlayer();
+
     private final Amplituda amplituda;
     private final Executor voiceWaveformsThread = Executors.newSingleThreadExecutor();
     private final MessageAttachmentLoader messageAttachmentLoader;

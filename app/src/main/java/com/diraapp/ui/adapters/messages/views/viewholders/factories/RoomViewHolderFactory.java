@@ -9,7 +9,7 @@ import com.diraapp.exceptions.UnknownViewTypeException;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
-import com.diraapp.ui.adapters.messages.views.viewholders.VideoViewHolder;
+import com.diraapp.ui.adapters.messages.views.viewholders.MediaViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.BubbleViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.EmojiMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.RoomUpdatesViewHolder;
@@ -32,8 +32,6 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
         switch (type) {
             case ROOM_TEXT_MESSAGE:
             case SELF_TEXT_MESSAGE:
-                return new TextMessageViewHolder(parent, messageAdapterContract, isSelfMessage);
-
                 return new TextMessageViewHolder(parent, messageAdapterContract,
                         viewHolderManagerContract, isSelfMessage);
             case ROOM_BUBBLE_MESSAGE:
@@ -46,7 +44,7 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
                         viewHolderManagerContract, isSelfMessage);
             case ROOM_ATTACHMENTS_MESSAGE:
             case SELF_ATTACHMENTS_MESSAGE:
-                return new VideoViewHolder(parent, messageAdapterContract,
+                return new MediaViewHolder(parent, messageAdapterContract,
                         viewHolderManagerContract, isSelfMessage);
             case ROOM_EMOJI_MESSAGE:
             case SELF_EMOJI_MESSAGE:

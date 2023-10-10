@@ -1,7 +1,6 @@
 package com.diraapp.ui.adapters.messages.views.viewholders;
 
 import android.graphics.Bitmap;
-import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
@@ -19,25 +18,24 @@ import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.storage.AppStorage;
+import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.ui.activities.DiraActivity;
-import com.diraapp.ui.activities.PreviewActivity;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
-import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.RoomMessageVideoPlayer;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class VideoViewHolder extends AttachmentViewHolder {
+public class MediaViewHolder extends AttachmentViewHolder {
 
     private DiraVideoPlayer videoPlayer;
     private ImageView imageView;
     private CardView imageContainer;
     private TextView messageText;
 
-    public VideoViewHolder(@NonNull ViewGroup itemView,
+    public MediaViewHolder(@NonNull ViewGroup itemView,
                            MessageAdapterContract messageAdapterContract,
                            ViewHolderManagerContract viewHolderManagerContract,
                            boolean isSelfMessage) {
@@ -47,11 +45,27 @@ public class VideoViewHolder extends AttachmentViewHolder {
 
     @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
+        if(file == null) return;
+        AtomicBoolean isMainImageLoaded = new AtomicBoolean(false);
+        DiraActivity.runGlobalBackground(() -> {
+
+            Bitmap previewBitmap = attachment.getBitmapPreview();
+            if (previewBitmap == null) {
+
+
+            } else {
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    if(!isMainImageLoaded.get()) imageView.setImageBitmap(previewBitmap);
+                });
+
+            }
+        });
         if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
             imageView.setVisibility(View.VISIBLE);
             DiraActivity.runGlobalBackground(() -> {
                 Bitmap bitmap = AppStorage.getBitmapFromPath(file.getPath(), this.itemView.getContext());
                 new Handler(Looper.getMainLooper()).post(() -> {
+                    isMainImageLoaded.set(true);
                     imageView.setImageBitmap(bitmap);
                 });
             });
@@ -61,8 +75,9 @@ public class VideoViewHolder extends AttachmentViewHolder {
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getMessageAdapterContract().openPreviewActivity(file.getPath(),
-                            attachment.getAttachmentType() == AttachmentType.VIDEO, imageContainer);
+                    getMessageAdapterContract().preparePreviewActivity(file.getPath(),
+                            attachment.getAttachmentType() == AttachmentType.VIDEO,
+                            attachment.getBitmapPreview(), imageContainer).start();
                 }
             });
 
@@ -102,8 +117,9 @@ public class VideoViewHolder extends AttachmentViewHolder {
             videoPlayer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getMessageAdapterContract().openPreviewActivity(file.getPath(),
-                            attachment.getAttachmentType() == AttachmentType.VIDEO, imageContainer);
+                    getMessageAdapterContract().preparePreviewActivity(file.getPath(),
+                            attachment.getAttachmentType() == AttachmentType.VIDEO,
+                            attachment.getBitmapPreview(), imageContainer).start();
                 }
             });
         }
@@ -124,6 +140,7 @@ public class VideoViewHolder extends AttachmentViewHolder {
         videoPlayer = itemView.findViewById(R.id.video_player);
         imageContainer = itemView.findViewById(R.id.image_container);
         messageText = itemView.findViewById(R.id.message_text);
+        imageView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -133,26 +150,21 @@ public class VideoViewHolder extends AttachmentViewHolder {
         imageView.setVisibility(View.GONE);
         videoPlayer.setVisibility(View.GONE);
 
-        imageView.setVisibility(View.VISIBLE);
-        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
 
-        // remade for multi attachmentMessages
+
         Attachment attachment = message.getAttachments().get(0);
-        Bitmap bmp = Bitmap.createBitmap(attachment.getWidth(), attachment.getHeight(), conf);
+        Bitmap bmp = Bitmap.createBitmap(attachment.getWidth(),
+                attachment.getHeight(),
+                Bitmap.Config.ARGB_8888);
 
         imageView.setImageBitmap(bmp);
 
-        DiraActivity.runGlobalBackground(() -> {
 
-            Bitmap previewBitmap = attachment.getBitmapPreview();
-            if (previewBitmap == null) {
+        if (!AttachmentsStorage.isAttachmentSaving(attachment))
+            onAttachmentLoaded(attachment, AttachmentsStorage.getFileFromAttachment(attachment,
+                    itemView.getContext(), message.getRoomSecret()), message);
 
-
-            } else {
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    imageView.setImageBitmap(previewBitmap);
-                });
-            }
-        });
     }
+
+
 }

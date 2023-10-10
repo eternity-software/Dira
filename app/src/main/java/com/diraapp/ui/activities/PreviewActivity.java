@@ -6,6 +6,8 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -32,22 +34,29 @@ import com.diraapp.ui.components.PreviewImageView;
 import com.diraapp.ui.components.VideoPlayer;
 import com.diraapp.utils.Numbers;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Objects;
 
-public class PreviewActivity extends AppCompatActivity {
+public class PreviewActivity extends DiraActivity {
 
     public static final String URI = "uri";
     public static final String IS_VIDEO = "is_video";
     public static final String EXTRA_CLIP_RECT = "rect";
+    public static final String PREVIEW = "preview";
     private VideoPlayer videoPlayer;
     private boolean isShown = false;
     private PreviewImageView previewImageView;
 
-    public static void open(final DiraActivity from, String filePath, boolean isVideo, View transitionSource) {
+    public static void open(final DiraActivity from, String filePath, Bitmap previewImage, boolean isVideo, View transitionSource) {
+        prepareActivity(from, filePath, previewImage, isVideo, transitionSource).start();
+    }
+
+    public static PreparedActivity prepareActivity(final DiraActivity from, String filePath, Bitmap previewImage, boolean isVideo, View transitionSource)
+    {
         Intent intent = new Intent(from, PreviewActivity.class);
         intent.putExtra(PreviewActivity.URI, filePath);
         intent.putExtra(PreviewActivity.IS_VIDEO, isVideo);
@@ -56,8 +65,18 @@ public class PreviewActivity extends AppCompatActivity {
         transitionSource.getLocalVisibleRect(localVisibleRect);
         transitionSource.setClipBounds(localVisibleRect);
         transitionSource.setTransitionName(from.getString(R.string.transition_image_shared));
-
         intent.putExtra(PreviewActivity.EXTRA_CLIP_RECT, localVisibleRect);
+
+        if(previewImage != null) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            previewImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+
+
+            intent.putExtra(PREVIEW, byteArray);
+        }
+
+
 
         from.addListener(new DiraActivityListener() {
             @Override
@@ -71,8 +90,9 @@ public class PreviewActivity extends AppCompatActivity {
                 from,
                 Pair.create(transitionSource, from.getString(R.string.transition_image_shared)));
 
-        from.startActivity(intent, options.toBundle());
+        return new PreparedActivity(from, intent, options);
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +105,19 @@ public class PreviewActivity extends AppCompatActivity {
 
         previewImageView = findViewById(R.id.image_view);
 
-        if (isVideo) {
-            previewImageView.setImageBitmap(ThumbnailUtils.createVideoThumbnail(uri, MediaStore.Video.Thumbnails.MINI_KIND));
+        if(getIntent().hasExtra(PREVIEW)) {
+            byte[] byteArray = getIntent().getByteArrayExtra(PREVIEW);
+            Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            previewImageView.setImageBitmap(bmp);
+            if (isVideo) {
+                runBackground(() -> {
+                    Bitmap previewBitmap = ThumbnailUtils.createVideoThumbnail(uri, MediaStore.Video.Thumbnails.MINI_KIND);
+                    runOnUiThread(() -> {
+                        previewImageView.setImageBitmap(previewBitmap);
+                    });
+                });
+
+            }
         }
 
         Transition transition =
@@ -252,7 +283,12 @@ public class PreviewActivity extends AppCompatActivity {
 
         } else {
             videoPlayer.setVisibility(View.GONE);
-            previewImageView.setImageBitmap(AppStorage.getBitmapFromPath(uri));
+            DiraActivity.runGlobalBackground(() -> {
+                Bitmap bitmap = AppStorage.getBitmapFromPath(uri);
+                runOnUiThread(() -> {
+                    previewImageView.setImageBitmap(bitmap);
+                });
+            });
         }
 
     }

@@ -55,6 +55,7 @@ import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.images.FilesUploader;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.ImageSendActivity;
+import com.diraapp.ui.activities.PreparedActivity;
 import com.diraapp.ui.activities.PreviewActivity;
 import com.diraapp.ui.activities.RoomInfoActivity;
 import com.diraapp.ui.activities.RoomSelectorActivity;
@@ -836,8 +837,8 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
-    public void openPreviewActivity(String filePath, boolean isVideo, View transitionSource) {
-        PreviewActivity.open(this, filePath,
+    public PreparedActivity preparePreviewActivity(String filePath, boolean isVideo, Bitmap preview, View transitionSource) {
+        return PreviewActivity.prepareActivity(this, filePath, preview,
                 isVideo, transitionSource);
     }
 

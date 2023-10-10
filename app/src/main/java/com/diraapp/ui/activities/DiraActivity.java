@@ -4,6 +4,8 @@ import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -49,6 +51,11 @@ public class DiraActivity extends AppCompatActivity {
 
     public static void runGlobalBackground(Runnable runnable) {
         threadPoolExecutor.execute(runnable);
+    }
+
+    public static void runOnMainThread(Runnable runnable)
+    {
+        new Handler(Looper.getMainLooper()).post(runnable);
     }
 
     public static Bitmap captureView(View view) {

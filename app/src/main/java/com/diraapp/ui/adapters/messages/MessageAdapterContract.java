@@ -1,12 +1,14 @@
 package com.diraapp.ui.adapters.messages;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.View;
 
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.ui.activities.PreparedActivity;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
 import com.diraapp.ui.components.VideoPlayer;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
@@ -37,7 +39,7 @@ public interface MessageAdapterContract {
     default void onLastLoadedMessageDisplayed(Message message, int index) {
     }
 
-    void openPreviewActivity(String filePath, boolean isVideo, View transitionSource);
+    PreparedActivity preparePreviewActivity(String filePath, boolean isVideo, Bitmap preview, View transitionSource);
 
     void attachVideoPlayer(DiraVideoPlayer player);
 }

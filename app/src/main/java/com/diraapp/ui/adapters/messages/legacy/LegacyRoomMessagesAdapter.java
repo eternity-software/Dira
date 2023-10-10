@@ -364,8 +364,8 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
             holder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PreviewActivity.open(context, file.getPath(),
-                            attachment.getAttachmentType() == AttachmentType.VIDEO, holder.imageContainer);
+                    PreviewActivity.open(context, file.getPath(), null,
+                            attachment.getAttachmentType() == AttachmentType.VIDEO,  holder.imageContainer);
                 }
             });
             // holder.loading.setVisibility(View.GONE);
@@ -423,7 +423,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
                     if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
 
 
-                        PreviewActivity.open(context, file.getPath(),
+                        PreviewActivity.open(context, file.getPath(), null,
                                 attachment.getAttachmentType() == AttachmentType.VIDEO, holder.imageContainer);
                     } else {
 
