@@ -53,4 +53,8 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
     public void postInflateReplyViews() {
 
     }
+
+    public void updateMessageReading(Message message) {
+
+    }
 }

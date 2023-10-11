@@ -370,7 +370,7 @@
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="@+id/recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
@@ -379,9 +379,9 @@
             android:id="@+id/bubble_frame"
             android:layout_width="300dp"
             android:layout_height="300dp"
+            app:cardBackgroundColor="@android:color/transparent"
             app:cardCornerRadius="300dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@android:color/transparent"
 
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -412,6 +412,35 @@
                 app:cameraVideoSizeSmallest="false" />
         </androidx.cardview.widget.CardView>
 
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/scroll_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="15dp"
+        android:paddingBottom="13dp"
+        android:paddingEnd="15dp"
+        android:paddingTop="17dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="80dp"
+        android:background="@drawable/medium_light_gray_round"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.diraapp.ui.components.dynamic.ThemeImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0"
+
+            app:themeImageColor="white"
+
+            android:src="@drawable/ic_scroll_arrow"
+            app:tint="@color/dark" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

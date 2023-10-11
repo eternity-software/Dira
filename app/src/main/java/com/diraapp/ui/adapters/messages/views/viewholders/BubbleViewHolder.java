@@ -46,6 +46,8 @@ public class BubbleViewHolder extends AttachmentViewHolder {
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
         //bubblePlayer.attachDebugIndicator(imageView);
 
+        // file could be null (how?)
+        if (file == null) return;
         bubblePlayer.play(file.getPath());
 
         try {

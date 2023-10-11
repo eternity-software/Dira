@@ -18,10 +18,12 @@ import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.messages.MessageType;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter;
+import com.diraapp.ui.adapters.messages.views.viewholders.factories.MessageHolderType;
 import com.diraapp.ui.components.dynamic.DynamicTextView;
 import com.diraapp.ui.components.dynamic.ThemeImageView;
 import com.diraapp.utils.CacheUtils;
@@ -33,7 +35,7 @@ import java.io.File;
 
 public class MessageReplyComponent extends FrameLayout {
 
-    private final int messageType;
+    private final MessageHolderType messageType;
 
     private final boolean isSelfMessage;
 
@@ -46,7 +48,7 @@ public class MessageReplyComponent extends FrameLayout {
 
     public MessageReplyComponent(Context context, int messageType, boolean isSelfMessage) {
         super(context);
-        this.messageType = messageType;
+        this.messageType = MessageHolderType.values()[messageType];
         this.isSelfMessage = isSelfMessage;
         initView();
     }
@@ -103,7 +105,7 @@ public class MessageReplyComponent extends FrameLayout {
             }
         } else {
             text = message.getText();
-            if (text == null) text = "";
+            if (text == null) text = StringFormatter.EMPTY_STRING;
             replyText.setTextColor(Theme.getColor
                     (getContext(), textColorId));
         }
@@ -152,12 +154,13 @@ public class MessageReplyComponent extends FrameLayout {
                 ViewGroup.LayoutParams.WRAP_CONTENT);
 
         LinearLayout layout = this.findViewById(R.id.message_reply_container);
-        if (messageType == LegacyRoomMessagesAdapter.VIEW_TYPE_ROOM_MESSAGE_ATTACHMENTS |
-                messageType == LegacyRoomMessagesAdapter.VIEW_TYPE_ROOM_MESSAGE_MULTI_ATTACHMENTS) {
+        if (messageType == MessageHolderType.ROOM_ATTACHMENTS_MESSAGE |
+                messageType == MessageHolderType.SELF_ATTACHMENTS_MESSAGE) {
             int margin = Numbers.dpToPx(8, this.getContext());
             params.setMargins(margin / 2, (int) (1.5 * margin), 0, margin);
             layout.setLayoutParams(params);
-        } else if (messageType == LegacyRoomMessagesAdapter.VIEW_TYPE_ROOM_MESSAGE_BUBBLE) {
+        } else if (messageType == MessageHolderType.ROOM_BUBBLE_MESSAGE ||
+                    messageType == MessageHolderType.SELF_BUBBLE_MESSAGE) {
             int padding = Numbers.dpToPx(6, this.getContext());
             layout = this.findViewById(R.id.message_reply_container);
             layout.setPadding(padding, padding, padding, padding);

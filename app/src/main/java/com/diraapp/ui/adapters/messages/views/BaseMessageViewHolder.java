@@ -26,6 +26,7 @@ import com.diraapp.ui.adapters.messages.views.viewholders.DelayedMessageBind;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.MessageHolderType;
 import com.diraapp.ui.components.MessageReplyComponent;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.Logger;
 import com.diraapp.utils.Numbers;
 import com.diraapp.utils.TimeConverter;
 import com.squareup.picasso.Picasso;
@@ -85,7 +86,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         profilePictureContainer = find(R.id.picture_container);
         outerContainer = find(R.id.bubble_view_container);
         messageContainer = find(R.id.message_container);
-        messageBackground = find(R.id.message_back);
+        messageBackground = find(R.id.message_background);
         postInflatedViewsContainer = find(R.id.views_container);
 
         if (hasReplySupport())
@@ -187,15 +188,8 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
                     nicknameText.setVisibility(View.VISIBLE);
                 }
             }
-        } else if (message.getMessageReadingList() != null && messageBackground.getBackground() != null) {
-            if (message.getMessageReadingList().size() == 0) {
-                messageBackground.getBackground().setColorFilter(
-                        Theme.getColor(messageAdapterContract.getContext(),
-                                R.color.unread_message_background), PorterDuff.Mode.SRC_IN);
-            } else {
-                messageBackground.getBackground().setColorFilter(
-                        Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
-            }
+        } else {
+            updateMessageReading(message);
         }
     }
 
@@ -238,7 +232,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         if (isInitialized)
             throw new AlreadyInitializedException(MessageHolderType.values()[getItemViewType()]);
         replyComponent = new MessageReplyComponent(itemView.getContext(),
-                VIEW_TYPE_ROOM_MESSAGE_BUBBLE, isSelfMessage);
+                getItemViewType(), isSelfMessage);
 
         if (isOuterContainer) {
             outerContainer.addView(replyComponent);
@@ -247,6 +241,21 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         }
 
 
+    }
+
+    public void updateMessageReading(Message message) {
+        if (!isSelfMessage) return;
+        if (message.getMessageReadingList() != null && messageBackground.getBackground() != null) {
+            Logger.logDebug("Message binding..", String.valueOf(message.getMessageReadingList().size()));
+            if (message.getMessageReadingList().size() == 0) {
+                messageBackground.getBackground().setColorFilter(
+                        Theme.getColor(messageAdapterContract.getContext(),
+                                R.color.unread_message_background), PorterDuff.Mode.SRC_IN);
+            } else {
+                messageBackground.getBackground().setColorFilter(
+                        Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
+            }
+        }
     }
 
     private void checkReadStatus(Message message) {

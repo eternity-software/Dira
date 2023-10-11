@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -46,7 +48,6 @@ import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.AppStorage;
@@ -70,7 +71,6 @@ import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.FilePreview;
 import com.diraapp.ui.components.RecordComponentsController;
-import com.diraapp.ui.components.VideoPlayer;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.viewswiper.ViewSwiper;
 import com.diraapp.ui.components.viewswiper.ViewSwiperListener;
@@ -86,7 +86,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import linc.com.amplituda.Amplituda;
 import okhttp3.Callback;
 
 
@@ -613,6 +612,58 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
+    public void setOnScrollListener() {
+
+        LinearLayout arrow = findViewById(R.id.scroll_arrow);
+        arrow.setVisibility(View.GONE);
+
+        arrow.setOnClickListener((View view) -> {
+            presenter.onScrollArrowPressed();
+        });
+
+
+        //set scroll listener
+        final boolean[] isArrowShowed = {false};
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            binding.recyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+
+                int arrowAppearance = 20;
+                int arrowDisappearance = -20;
+                @Override
+                public void onScrollChange(View view, int scrollX, int scrollY, int oldX, int oldY) {
+                    int dy = scrollY - oldY;
+                    LinearLayoutManager layoutManager = (LinearLayoutManager)
+                            binding.recyclerView.getLayoutManager();
+                    if (layoutManager == null) return;
+                    int position = layoutManager.findFirstVisibleItemPosition();
+
+                    if (position < 4) {
+                        if (!isArrowShowed[0]) return;
+                        isArrowShowed[0] = false;
+                        arrow.setVisibility(View.GONE);
+                        return;
+                    }
+
+                    if (dy > arrowAppearance) {
+                        if (isArrowShowed[0]) return;
+                        arrow.setVisibility(View.VISIBLE);
+                        isArrowShowed[0] = true;
+                        Logger.logDebug("arrow a", "a");
+                    } else if (dy < arrowDisappearance) {
+                        if (!isArrowShowed[0]) return;
+                        // arrow disappears
+
+                        arrow.setVisibility(View.GONE);
+                        isArrowShowed[0] = false;
+                        Logger.logDebug("arrow da", "da");
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
     public void onMediaMessageRecorded(String path, AttachmentType attachmentType) {
         presenter.uploadAttachmentAndSendMessage(attachmentType, path, "");
     }
@@ -654,8 +705,9 @@ public class RoomActivity extends DiraActivity
 
             binding.recyclerView.setAdapter(messagesAdapter);
 
+            setOnScrollListener();
 
-            presenter.loadMessages();
+            presenter.loadMessagesAtRoomStart();
         });
     }
 
@@ -735,6 +787,18 @@ public class RoomActivity extends DiraActivity
                 "Deleted items from start - " + start + " to " + (count - 1) +
                         " size is " + messagesAdapter.getItemCount());
 
+    }
+
+    @Override
+    public boolean isMessageVisible(int position) {
+        LinearLayoutManager manager = (LinearLayoutManager) binding.
+                recyclerView.getLayoutManager();
+        if (manager == null) return false;
+
+        int first = manager.findFirstVisibleItemPosition();
+        int last = manager.findLastVisibleItemPosition();
+
+        return position >= first && position <= last;
     }
 
     @Override

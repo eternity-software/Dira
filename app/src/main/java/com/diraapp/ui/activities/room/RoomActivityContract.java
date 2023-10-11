@@ -38,6 +38,8 @@ public interface RoomActivityContract {
 
         void notifyAdapterItemsDeleted(int start, int last);
 
+        boolean isMessageVisible(int position);
+
         void setMessages(List<Message> messages);
 
         void uploadFile(String sourceFileUri,
@@ -73,6 +75,8 @@ public interface RoomActivityContract {
         void smoothScrollTo(int index);
 
         Bitmap getBitmap(String path);
+
+        void setOnScrollListener();
     }
 
     interface Presenter {
@@ -94,7 +98,9 @@ public interface RoomActivityContract {
 
         void sendStatus(UserStatusType userStatusType);
 
-        void loadMessages();
+        void loadMessagesAtRoomStart();
+
+        void loadRoomBottomMessages();
 
         void loadMessagesNearByTime(long time);
 
@@ -105,6 +111,8 @@ public interface RoomActivityContract {
         void sendMessage(Message message) throws UnablePerformRequestException;
 
         void setReplyingMessage(Message message);
+
+        void onScrollArrowPressed();
     }
 
 }

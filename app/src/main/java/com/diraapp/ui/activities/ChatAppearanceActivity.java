@@ -1,15 +1,20 @@
 package com.diraapp.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.LanguageParsingException;
@@ -18,16 +23,23 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.adapters.ChatBackgroundAdapter;
 import com.diraapp.ui.adapters.ColorThemeAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
+import com.diraapp.ui.adapters.messages.MessageAdapterContract;
+import com.diraapp.ui.adapters.messages.MessagesAdapter;
 import com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter;
+import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
+import com.diraapp.ui.adapters.messages.views.viewholders.factories.RoomViewHolderFactory;
 import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.appearance.ChatBackground;
 import com.diraapp.ui.appearance.ColorTheme;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.FilePreview;
+import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -41,7 +53,7 @@ public class ChatAppearanceActivity extends DiraActivity {
 
     private ChatBackgroundAdapter chatBackgroundAdapter;
 
-    private LegacyRoomMessagesAdapter legacyRoomMessagesAdapter;
+    private MessagesAdapter messagesAdapter;
 
     private FilePickerBottomSheet bottomSheet;
 
@@ -121,10 +133,20 @@ public class ChatAppearanceActivity extends DiraActivity {
 
         Message senderMessage = new Message();
 
+        int height = -1;
+        ImageView backgroundView = findViewById(R.id.example_background);
+        RecyclerView recycler = findViewById(R.id.example_messages);
+        CardView exampleContainer = findViewById(R.id.example_container);
         if (rand == -1) {
             rand = new Random().nextInt(2);
             rand++;
+        } else {
+            height = exampleContainer.getMeasuredHeight();
         }
+
+        Member ame = new Member("0000", "Ame", null, secretName, System.currentTimeMillis());
+        HashMap<String, Member> members = new HashMap<>();
+        members.put(ame.getId(), ame);
 
         senderMessage.setText(this.getResources().getString(AppStorage.getResId("chat_appearance_example_message_self_" + rand, R.string.class)));
         senderMessage.setAuthorId(authorName);
@@ -132,27 +154,64 @@ public class ChatAppearanceActivity extends DiraActivity {
 
         Message secondMessage = new Message();
         secondMessage.setText(this.getResources().getString(AppStorage.getResId("chat_appearance_example_message_" + rand, R.string.class)));
-        secondMessage.setAuthorNickname("Ame");
-        secondMessage.setAuthorId("0000");
+        secondMessage.setAuthorNickname(ame.getNickname());
+        secondMessage.setAuthorId(ame.getId());
+        senderMessage.setRead(true);
         secondMessage.setLastTimeEncryptionKeyUpdated(keyTime);
 
         List<Message> messages = new ArrayList<>();
         messages.add(secondMessage);
         messages.add(senderMessage);
 
-        RecyclerView recycler = findViewById(R.id.example_messages);
-        legacyRoomMessagesAdapter = new LegacyRoomMessagesAdapter(this, recycler, null, room, new LegacyRoomMessagesAdapter.MessageAdapterListener() {
+        MessageAdapterContract contract = new MessageAdapterContract() {
             @Override
-            public void onFirstItemScrolled(Message message, int index) {
-
+            public Room getRoom() {
+                return room;
             }
-        });
-        legacyRoomMessagesAdapter.setMessages(messages);
 
-        ImageView backgroundView = findViewById(R.id.example_background);
+            @Override
+            public HashMap<String, Member> getMembers() {
+                return members;
+            }
+
+            @Override
+            public CacheUtils getCacheUtils() {
+                return cacheUtils;
+            }
+
+            @Override
+            public Context getContext() {
+                return ChatAppearanceActivity.this.getBaseContext();
+            }
+
+            @Override
+            public MessageReplyListener getReplyListener() {
+                return null;
+            }
+
+            @Override
+            public void onFirstMessageScrolled(Message message, int index) {}
+
+            @Override
+            public PreparedActivity preparePreviewActivity(String filePath, boolean isVideo, Bitmap preview, View transitionSource) {
+                return null;
+            }
+
+            @Override
+            public void attachVideoPlayer(DiraVideoPlayer player) {
+            }
+        };
+
+        messagesAdapter = new MessagesAdapter(contract, messages, room,
+                new AsyncLayoutInflater(this.getBaseContext()), new RoomViewHolderFactory(), cacheUtils);
+
         AppTheme.getInstance().getChatBackground().applyBackground(backgroundView);
 
-        recycler.setAdapter(legacyRoomMessagesAdapter);
+        recycler.setAdapter(messagesAdapter);
+
+        if (height != -1) {
+            exampleContainer.getLayoutParams().height = height;
+        }
     }
 
     private void initPickImageButton() {

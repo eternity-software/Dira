@@ -65,6 +65,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     private HashMap<String, Member> members = new HashMap<>();
 
+    private Message lastReadMessage;
+
     public RoomActivityPresenter(String roomSecret, String selfId) {
         this.roomSecret = roomSecret;
         this.selfId = selfId;
@@ -102,7 +104,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
             MessageReadUpdate readUpdate = (MessageReadUpdate) update;
 
-            if (((MessageReadUpdate) update).getUserId().equals(selfId)) return;
             Message thisMessage = null;
             int index = 0;
 
@@ -115,6 +116,13 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 }
             }
             if (thisMessage == null) return;
+            if (((MessageReadUpdate) update).getUserId().equals(selfId)) {
+
+                if (thisMessage.getTime() > lastReadMessage.getTime()) {
+                    lastReadMessage = thisMessage;
+                }
+                return;
+            }
 
             MessageReading thisReading = new MessageReading(readUpdate.getUserId(),
                     readUpdate.getReadTime());
@@ -265,7 +273,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     }
 
     @Override
-    public void loadMessages() {
+    public void loadMessagesAtRoomStart() {
         view.runBackground(() -> {
             MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
 
@@ -273,7 +281,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
             int size = room.getUnreadMessagesIds().size();
             if (size == 0) {
-                messageList = messageDao.getLatestMessagesInRoom(roomSecret);
+                loadRoomBottomMessages();
             } else {
                 Message message = messageDao.getMessageById(room.getUnreadMessagesIds().get(0));
 
@@ -290,15 +298,25 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 } else {
                     scrollTo = MessageDao.LOADING_COUNT_HALF - 1;
                 }
+
+                loadReplies(messageList, messageDao);
+                view.setMessages(messageList);
+                view.notifyOnRoomOpenMessagesLoaded(scrollTo);
             }
 
-            loadReplies(messageList, messageDao);
-
             initMembers();
-            view.setMessages(messageList);
-            view.notifyOnRoomOpenMessagesLoaded(scrollTo);
         });
 
+    }
+
+    @Override
+    public void loadRoomBottomMessages() {
+        MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
+        messageList = messageDao.getLatestMessagesInRoom(roomSecret);
+        loadReplies(messageList, messageDao);
+        view.setMessages(messageList);
+        view.notifyOnRoomOpenMessagesLoaded(0);
+        isNewestMessagesLoaded = true;
     }
 
     @Override
@@ -457,6 +475,65 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     @Override
     public void setReplyingMessage(Message message) {
         replyingMessage = message;
+    }
+
+    @Override
+    public void onScrollArrowPressed() {
+        view.runBackground(() -> {
+            final int NOT_FOUND = -1;
+            final int START_VAL = -2;
+            int position = START_VAL;
+
+            if (messageList.size() == 0) return;
+
+            MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
+            if (lastReadMessage == null) {
+                String lastReadMessageId = null;
+                if (room.getUnreadMessagesIds().size() > 0) {
+                    lastReadMessageId = room.getUnreadMessagesIds().get(0);
+                } else {
+                    lastReadMessageId = room.getLastMessageId();
+                }
+
+                for (int i = 0; i < messageList.size(); i++) {
+                    Message m = messageList.get(i);
+                    if (m.getId().equals(lastReadMessageId)) {
+                        position = i;
+                        lastReadMessage = m;
+                        break;
+                    }
+                }
+
+                if (position == START_VAL) {
+                    lastReadMessage = messageDao.getMessageById(lastReadMessageId);
+                    position = NOT_FOUND;
+                }
+            }
+
+            if (position == START_VAL) {
+                position = messageList.indexOf(lastReadMessage);
+            }
+
+            if (position == NOT_FOUND) {
+                if (lastReadMessage == null) {
+                    Logger.logDebug("huyhuhy", "huy11111");
+                    return;
+                }
+                if (!lastReadMessage.getRoomSecret().equals(roomSecret)) return;
+                loadMessagesNearByTime(lastReadMessage.getTime());
+                return;
+            }
+
+            // if lastReadMessage is loaded
+            if (room.getUnreadMessagesIds().size() > 0 && view.isMessageVisible(position)) {
+                Logger.logDebug("gaga", "gaga1");
+                if (isNewestMessagesLoaded) view.smoothScrollTo(0);
+                else loadRoomBottomMessages();
+                return;
+            }
+
+            view.smoothScrollTo(position);
+        });
     }
 
     @Override
