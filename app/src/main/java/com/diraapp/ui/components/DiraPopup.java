@@ -2,6 +2,7 @@ package com.diraapp.ui.components;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,16 +12,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.diraapp.R;
+import com.diraapp.ui.activities.DiraActivity;
 
 public class DiraPopup {
 
-    private final Activity context;
+    private final Context context;
     private EditText input;
     private boolean cancellable = true;
     private AlertDialog alertDialog;
 
 
-    public DiraPopup(Activity context) {
+    public DiraPopup(Context context) {
         this.context = context;
 
     }
@@ -35,7 +37,7 @@ public class DiraPopup {
 
     private void showToast(String string) {
         if (context == null) return;
-        context.runOnUiThread(new Runnable() {
+        DiraActivity.runOnMainThread(new Runnable() {
             @Override
             public void run() {
                 Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
@@ -44,7 +46,7 @@ public class DiraPopup {
     }
 
     public void show(String title, String text, String inputHint, Drawable background, Runnable onClick) {
-        LayoutInflater inflater = context.getLayoutInflater();
+        LayoutInflater inflater = LayoutInflater.from(context);
         View dialoglayout = inflater.inflate(R.layout.popup_window, null);
 
         TextView titleView = dialoglayout.findViewById(R.id.text_title);
@@ -104,8 +106,8 @@ public class DiraPopup {
         return alertDialog;
     }
 
-    public void show(String title, String text, int resId, Runnable on) {
-        LayoutInflater inflater = context.getLayoutInflater();
+    public void show(String title, String text, int resId) {
+        LayoutInflater inflater = LayoutInflater.from(context);
         View dialoglayout = inflater.inflate(R.layout.popup_window, null);
 
         TextView titleView = dialoglayout.findViewById(R.id.text_title);
