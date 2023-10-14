@@ -18,6 +18,8 @@ import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
 import com.diraapp.api.userstatus.UserStatus;
+import com.diraapp.api.userstatus.UserStatusHandler;
+import com.diraapp.api.userstatus.UserStatusListener;
 import com.diraapp.api.views.UserStatusType;
 import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.entities.Attachment;
@@ -162,7 +164,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
             view.fillRoomInfo(roomPicture, room);
 
-
         });
     }
 
@@ -175,6 +176,11 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         for (Member member : memberList) {
             members.put(member.getId(), member);
         }
+
+        ArrayList<UserStatus> userStatusList = UserStatusHandler.getInstance().
+                getUserStatuses(roomSecret);
+
+        ((UserStatusListener) view).updateRoomStatus(roomSecret, userStatusList);
 
     }
 
@@ -515,10 +521,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             }
 
             if (position == NOT_FOUND) {
-                if (lastReadMessage == null) {
-                    Logger.logDebug("huyhuhy", "huy11111");
-                    return;
-                }
+                if (lastReadMessage == null) return;
                 if (!lastReadMessage.getRoomSecret().equals(roomSecret)) return;
                 loadMessagesNearByTime(lastReadMessage.getTime());
                 return;
@@ -526,7 +529,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
             // if lastReadMessage is loaded
             if (room.getUnreadMessagesIds().size() > 0 && view.isMessageVisible(position)) {
-                Logger.logDebug("gaga", "gaga1");
                 if (isNewestMessagesLoaded) view.smoothScrollTo(0);
                 else loadRoomBottomMessages();
                 return;

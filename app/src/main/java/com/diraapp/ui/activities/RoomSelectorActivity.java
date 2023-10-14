@@ -404,7 +404,7 @@ public class RoomSelectorActivity extends AppCompatActivity
     }
 
     @Override
-    public void updateUserStatus(String secretName, ArrayList<UserStatus> userUserStatusList) {
+    public void updateRoomStatus(String secretName, ArrayList<UserStatus> userUserStatusList) {
         //
     }
 }

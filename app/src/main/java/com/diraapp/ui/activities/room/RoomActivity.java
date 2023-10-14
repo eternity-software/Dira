@@ -411,7 +411,7 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
-    public void updateUserStatus(String roomSecret, ArrayList<UserStatus> usersUserStatusList) {
+    public void updateRoomStatus(String roomSecret, ArrayList<UserStatus> usersUserStatusList) {
         runOnUiThread(() -> {
             try {
 

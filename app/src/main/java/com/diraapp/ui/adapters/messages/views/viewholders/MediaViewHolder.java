@@ -24,6 +24,8 @@ import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.RoomMessageVideoPlayer;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
+import com.diraapp.utils.Logger;
+import com.diraapp.utils.StringFormatter;
 
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -47,20 +49,6 @@ public class MediaViewHolder extends AttachmentViewHolder {
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
         if(file == null) return;
 
-
-        DiraActivity.runGlobalBackground(() -> {
-
-            Bitmap previewBitmap = attachment.getBitmapPreview();
-            if (previewBitmap == null) {
-
-
-            } else {
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    imageView.setImageBitmap(previewBitmap);
-                });
-
-            }
-        });
         if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
             imageView.setVisibility(View.VISIBLE);
             DiraActivity.runGlobalBackground(() -> {
@@ -147,17 +135,31 @@ public class MediaViewHolder extends AttachmentViewHolder {
     public void bindMessage(Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
         videoPlayer.reset();
-        imageView.setVisibility(View.GONE);
+        imageView.setVisibility(View.VISIBLE);
         videoPlayer.setVisibility(View.GONE);
 
-
+        String text = message.getText();
+        if ((text != null) && (!StringFormatter.EMPTY_STRING.equals(text))) {
+            messageText.setText(text);
+            messageText.setVisibility(View.VISIBLE);
+        } else {
+            messageText.setVisibility(View.GONE);
+        }
 
         Attachment attachment = message.getAttachments().get(0);
-        Bitmap bmp = Bitmap.createBitmap(attachment.getWidth(),
-                attachment.getHeight(),
-                Bitmap.Config.ARGB_8888);
+        DiraActivity.runGlobalBackground(() -> {
+            Bitmap previewBitmap = attachment.getBitmapPreview();
+            if (previewBitmap == null) {
+                previewBitmap = Bitmap.createBitmap(attachment.getWidth(),
+                        attachment.getHeight(),
+                        Bitmap.Config.ARGB_8888);
 
-        imageView.setImageBitmap(bmp);
+            }
+            Bitmap finalPreviewBitmap = previewBitmap;
+            new Handler(Looper.getMainLooper()).post(() -> {
+                imageView.setImageBitmap(finalPreviewBitmap);
+            });
+        });
 
 
         if (!AttachmentsStorage.isAttachmentSaving(attachment))

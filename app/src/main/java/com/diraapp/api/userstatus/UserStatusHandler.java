@@ -91,7 +91,7 @@ public class UserStatusHandler implements UpdateListener {
     private void notifyListeners(String secretName) {
         ArrayList<UserStatus> userStatuses = getUserStatuses(secretName);
         for (UserStatusListener listener : listenerList) {
-            listener.updateUserStatus(secretName, userStatuses);
+            listener.updateRoomStatus(secretName, userStatuses);
         }
     }
 

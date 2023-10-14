@@ -64,7 +64,7 @@ public interface RoomActivityContract {
 
         CacheUtils getCacheUtils();
 
-        void updateUserStatus(String roomSecret, ArrayList<UserStatus> usersUserStatusList);
+        void updateRoomStatus(String roomSecret, ArrayList<UserStatus> usersUserStatusList);
 
         void runBackground(Runnable runnable);
 
