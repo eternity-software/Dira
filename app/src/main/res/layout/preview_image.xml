@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/previewImageView"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="2dp"
+        android:layout_weight="1"
+        android:background="@color/dark"
+
+
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/RoundedCornersTheme"
+        app:srcCompat="@drawable/placeholder" />
+
+    <RelativeLayout
+        android:id="@+id/videoInfo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.diraapp.ui.components.FileParingImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:alpha="0.3"
+            app:shapeAppearanceOverlay="@style/RoundedCornersTheme"
+            app:srcCompat="@color/dark" />
+
+        <TextView
+            android:id="@+id/durationView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:paddingLeft="5dp"
+            android:paddingBottom="5dp"
+            android:text="0:00"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+</RelativeLayout>

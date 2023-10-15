@@ -179,6 +179,11 @@ public class Message {
         return text;
     }
 
+    public boolean isDiraMessage()
+    {
+        return authorId.equals("Dira");
+    }
+
     public void setText(String text) {
         this.text = text;
     }

@@ -716,7 +716,7 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void notifyRecyclerMessage(Message message, boolean needUpdateList) {
-        if (message.getAuthorId() != null) {
+        if (message.hasAuthor()) {
             if (!message.getAuthorId().equals(getCacheUtils().getString(CacheUtils.ID))) {
                 presenter.getRoom().addNewUnreadMessageId(message.getId());
             }

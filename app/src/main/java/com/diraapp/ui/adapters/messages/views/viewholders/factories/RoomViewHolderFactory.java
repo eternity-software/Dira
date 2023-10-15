@@ -60,7 +60,7 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
     @Override
     public MessageHolderType getViewHolderType(Message message, boolean isSelfMessage)
             throws UnknownViewTypeException {
-        if (!message.hasAuthor()) {
+        if (message.isDiraMessage()) {
             return MessageHolderType.ROOM_UPDATES;
         }
 
