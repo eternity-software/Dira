@@ -124,9 +124,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
         if (!holder.isInitialized()) {
             holder.setDelayedMessageBind(new DelayedMessageBind(message, previousMessage));
         } else {
-            if (holder instanceof AttachmentViewHolder) {
-                messageAttachmentLoader.loadMessageAttachment(message, (AttachmentViewHolder) holder);
-            }
             holder.bindMessage(message, previousMessage);
         }
 
@@ -205,5 +202,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
     @Override
     public Executor getVoiceMessageThread() {
         return voiceWaveformsThread;
+    }
+
+    @Override
+    public MessageAttachmentLoader getMessageAttachmentLoader() {
+        return messageAttachmentLoader;
     }
 }

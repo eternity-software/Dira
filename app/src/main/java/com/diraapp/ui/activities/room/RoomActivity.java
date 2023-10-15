@@ -614,16 +614,19 @@ public class RoomActivity extends DiraActivity
     @Override
     public void setOnScrollListener() {
 
-        LinearLayout arrow = findViewById(R.id.scroll_arrow);
-        arrow.setVisibility(View.GONE);
+        LinearLayout arrow = binding.scrollArrow;
+        performScaleAnimation(1, 0, arrow);
+
 
         arrow.setOnClickListener((View view) -> {
             presenter.onScrollArrowPressed();
         });
 
 
-        //set scroll listener
         final boolean[] isArrowShowed = {false};
+
+        // Dirty code bellow. Fix is required
+        // Note: it is supporting only API >= M
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
             binding.recyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
@@ -641,20 +644,20 @@ public class RoomActivity extends DiraActivity
                     if (position < 4) {
                         if (!isArrowShowed[0]) return;
                         isArrowShowed[0] = false;
-                        arrow.setVisibility(View.GONE);
+                        performScaleAnimation(1, 0, arrow);
                         return;
                     }
 
                     if (dy > arrowAppearance) {
                         if (isArrowShowed[0]) return;
-                        arrow.setVisibility(View.VISIBLE);
+                        performScaleAnimation(0, 1, arrow);
                         isArrowShowed[0] = true;
                         Logger.logDebug("arrow a", "a");
                     } else if (dy < arrowDisappearance) {
                         if (!isArrowShowed[0]) return;
                         // arrow disappears
 
-                        arrow.setVisibility(View.GONE);
+                        performScaleAnimation(1, 0, arrow);
                         isArrowShowed[0] = false;
                         Logger.logDebug("arrow da", "da");
                     }

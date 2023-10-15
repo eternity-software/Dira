@@ -37,6 +37,8 @@ public class MediaViewHolder extends AttachmentViewHolder {
     private CardView imageContainer;
     private TextView messageText;
 
+    private Attachment currentAttachment;
+
     public MediaViewHolder(@NonNull ViewGroup itemView,
                            MessageAdapterContract messageAdapterContract,
                            ViewHolderManagerContract viewHolderManagerContract,
@@ -73,8 +75,8 @@ public class MediaViewHolder extends AttachmentViewHolder {
 
             imageView.setVisibility(View.VISIBLE);
 
-            //videoPlayer.attachDebugIndicator(viewsContainer);
             videoPlayer.setVisibility(View.VISIBLE);
+            videoPlayer.attachDebugIndicator(postInflatedViewsContainer);
             DiraVideoPlayer finalVideoPlayer = videoPlayer;
             imageView.post(new Runnable() {
                 @Override
@@ -92,7 +94,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
                 }
             });
 
-            getMessageAdapterContract().attachVideoPlayer(videoPlayer);
+
             videoPlayer.play(file.getPath());
 
 
@@ -129,14 +131,18 @@ public class MediaViewHolder extends AttachmentViewHolder {
         imageContainer = itemView.findViewById(R.id.image_container);
         messageText = itemView.findViewById(R.id.message_text);
         imageView.setVisibility(View.VISIBLE);
+        getMessageAdapterContract().attachVideoPlayer(videoPlayer);
     }
 
     @Override
     public void bindMessage(Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
+
         videoPlayer.reset();
-        imageView.setVisibility(View.VISIBLE);
         videoPlayer.setVisibility(View.GONE);
+        imageView.setVisibility(View.VISIBLE);
+
+
 
         String text = message.getText();
         if ((text != null) && (!StringFormatter.EMPTY_STRING.equals(text))) {
@@ -147,6 +153,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
         }
 
         Attachment attachment = message.getAttachments().get(0);
+        currentAttachment = attachment;
         DiraActivity.runGlobalBackground(() -> {
             Bitmap previewBitmap = attachment.getBitmapPreview();
             if (previewBitmap == null) {
@@ -157,14 +164,16 @@ public class MediaViewHolder extends AttachmentViewHolder {
             }
             Bitmap finalPreviewBitmap = previewBitmap;
             new Handler(Looper.getMainLooper()).post(() -> {
+                if(currentAttachment != attachment) return;
                 imageView.setImageBitmap(finalPreviewBitmap);
+                if (!AttachmentsStorage.isAttachmentSaving(attachment))
+                    onAttachmentLoaded(attachment, AttachmentsStorage.getFileFromAttachment(attachment,
+                            itemView.getContext(), message.getRoomSecret()), message);
             });
         });
 
 
-        if (!AttachmentsStorage.isAttachmentSaving(attachment))
-            onAttachmentLoaded(attachment, AttachmentsStorage.getFileFromAttachment(attachment,
-                    itemView.getContext(), message.getRoomSecret()), message);
+
 
     }
 

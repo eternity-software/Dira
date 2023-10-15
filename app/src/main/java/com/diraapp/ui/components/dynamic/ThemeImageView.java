@@ -15,6 +15,8 @@ public class ThemeImageView extends androidx.appcompat.widget.AppCompatImageView
 
     private CharSequence localId;
 
+    private Boolean isPreviewLoading = false;
+
     public ThemeImageView(Context context) {
         super(context);
     }

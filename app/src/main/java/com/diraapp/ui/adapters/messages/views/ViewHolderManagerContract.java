@@ -13,4 +13,5 @@ public interface ViewHolderManagerContract {
     DiraMediaPlayer getDiraMediaPlayer();
 
     Executor getVoiceMessageThread();
+    MessageAttachmentLoader getMessageAttachmentLoader();
 }

@@ -158,7 +158,7 @@ public class RecordComponentsController {
 
                         }
 
-                        context.preformScaleAnimation(lastScale, 0, recordRipple);
+                        context.performScaleAnimation(lastScale, 0, recordRipple);
                     }
                 }
                 return true;
@@ -184,7 +184,7 @@ public class RecordComponentsController {
         }
 
         recordBubbleLayout.setVisibility(View.VISIBLE);
-        context.preformScaleAnimation(0.5f, 1, bubbleContainer);
+        context.performScaleAnimation(0.5f, 1, bubbleContainer);
         camera.close();
         camera.setLifecycleOwner(context);
         camera.open();
@@ -226,7 +226,7 @@ public class RecordComponentsController {
         }
 
         vibrateRecording();
-        context.preformScaleAnimation(0, 2, recordRipple).setAnimationListener(new Animation.AnimationListener() {
+        context.performScaleAnimation(0, 2, recordRipple).setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
 
@@ -314,17 +314,17 @@ public class RecordComponentsController {
         if (showRecordButton) {
             if (!isRecordButtonVisible) {
                 isRecordButtonVisible = true;
-                context.preformScaleAnimation(0, 1, recordButton);
+                context.performScaleAnimation(0, 1, recordButton);
                 recordButton.setEnabled(true);
-                context.preformScaleAnimation(1, 0, sendButton);
+                context.performScaleAnimation(1, 0, sendButton);
             }
 
         } else {
             if (isRecordButtonVisible) {
                 isRecordButtonVisible = false;
                 recordButton.setEnabled(false);
-                context.preformScaleAnimation(recordButton.getScaleX(), 0, recordButton);
-                context.preformScaleAnimation(0, 1, sendButton);
+                context.performScaleAnimation(recordButton.getScaleX(), 0, recordButton);
+                context.performScaleAnimation(0, 1, sendButton);
             }
         }
     }

@@ -83,7 +83,7 @@ public class DiraActivity extends AppCompatActivity {
         return cacheUtils;
     }
 
-    public ScaleAnimation preformScaleAnimation(float fromScale, float toScale, View view) {
+    public ScaleAnimation performScaleAnimation(float fromScale, float toScale, View view) {
         ScaleAnimation scaleOut = new ScaleAnimation(fromScale, toScale,
                 fromScale, toScale, Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 0.5f);

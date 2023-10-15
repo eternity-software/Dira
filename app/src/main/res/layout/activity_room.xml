@@ -417,28 +417,29 @@
 
     <LinearLayout
         android:id="@+id/scroll_arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingStart="15dp"
-        android:paddingBottom="13dp"
-        android:paddingEnd="15dp"
-        android:paddingTop="17dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="80dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/medium_light_gray_round"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingHorizontal="8dp"
+        android:paddingTop="17dp"
+        android:paddingBottom="13dp"
+        app:layout_constraintBottom_toBottomOf="@+id/recycler_view"
         app:layout_constraintEnd_toEndOf="parent">
 
         <com.diraapp.ui.components.dynamic.ThemeImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="0"
-
-            app:themeImageColor="white"
+            android:paddingHorizontal="6dp"
+            android:paddingBottom="2dp"
 
             android:src="@drawable/ic_scroll_arrow"
+
+            app:themeImageColor="white"
             app:tint="@color/dark" />
 
     </LinearLayout>
