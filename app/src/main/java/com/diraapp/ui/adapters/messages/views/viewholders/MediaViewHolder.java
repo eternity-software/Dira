@@ -24,6 +24,7 @@ import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.RoomMessageVideoPlayer;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
+import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayerState;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.StringFormatter;
 
@@ -38,6 +39,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
     private TextView messageText;
 
     private Attachment currentAttachment;
+    private File currentPlayingFile;
 
     public MediaViewHolder(@NonNull ViewGroup itemView,
                            MessageAdapterContract messageAdapterContract,
@@ -143,7 +145,6 @@ public class MediaViewHolder extends AttachmentViewHolder {
         imageView.setVisibility(View.VISIBLE);
 
 
-
         String text = message.getText();
         if ((text != null) && (!StringFormatter.EMPTY_STRING.equals(text))) {
             messageText.setText(text);
@@ -166,15 +167,36 @@ public class MediaViewHolder extends AttachmentViewHolder {
             new Handler(Looper.getMainLooper()).post(() -> {
                 if(currentAttachment != attachment) return;
                 imageView.setImageBitmap(finalPreviewBitmap);
+                currentPlayingFile = AttachmentsStorage.getFileFromAttachment(attachment,
+                        itemView.getContext(), message.getRoomSecret());
                 if (!AttachmentsStorage.isAttachmentSaving(attachment))
-                    onAttachmentLoaded(attachment, AttachmentsStorage.getFileFromAttachment(attachment,
-                            itemView.getContext(), message.getRoomSecret()), message);
+                    onAttachmentLoaded(attachment,currentPlayingFile, message);
             });
         });
 
 
+    }
 
 
+    public void onViewRecycled() {
+        super.onViewRecycled();
+        if (!isInitialized) return;
+        videoPlayer.stop();
+    }
+
+    @Override
+    public void onViewDetached() {
+        super.onViewDetached();
+        if (!isInitialized) return;
+        videoPlayer.pause();
+    }
+
+    @Override
+    public void onViewAttached() {
+        super.onViewAttached();
+        if (!isInitialized) return;
+        if (videoPlayer.getState() == DiraVideoPlayerState.PAUSED && currentPlayingFile != null)
+            videoPlayer.play(currentPlayingFile.getPath());
     }
 
 

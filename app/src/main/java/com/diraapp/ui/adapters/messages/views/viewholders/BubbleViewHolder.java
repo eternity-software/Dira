@@ -1,10 +1,7 @@
 package com.diraapp.ui.adapters.messages.views.viewholders;
 
 import android.media.MediaPlayer;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -12,14 +9,10 @@ import androidx.cardview.widget.CardView;
 import com.diraapp.BuildConfig;
 import com.diraapp.R;
 import com.diraapp.db.entities.Attachment;
-import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.media.DiraMediaPlayer;
-import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentsStorage;
-import com.diraapp.ui.activities.PreviewActivity;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
-import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
@@ -45,7 +38,7 @@ public class BubbleViewHolder extends AttachmentViewHolder {
 
     @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
-        if(file == null) return;
+        if (file == null) return;
         bubblePlayer.play(file.getPath());
 
         try {
@@ -54,38 +47,35 @@ public class BubbleViewHolder extends AttachmentViewHolder {
             e.printStackTrace();
         }
 
-        bubblePlayer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DiraMediaPlayer diraMediaPlayer = getViewHolderManagerContract().getDiraMediaPlayer();
+        bubblePlayer.setOnClickListener(v -> {
+            DiraMediaPlayer diraMediaPlayer = getViewHolderManagerContract().getDiraMediaPlayer();
 
-                if(BuildConfig.DEBUG) bubblePlayer.showDebugLog();
+            if (BuildConfig.DEBUG) bubblePlayer.showDebugLog();
 
-                try {
-                    if (diraMediaPlayer.isPlaying()) {
-                        diraMediaPlayer.stop();
-                    }
-                    diraMediaPlayer.reset();
-                    diraMediaPlayer.setDataSource(file.getPath());
-
-                    diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-
-                            diraMediaPlayer.start();
-                            //timeText.setText(AppStorage.getStringSize(attachment.getSize()));
-                            ((DiraVideoPlayer) v).setSpeed(1f);
-                            ((DiraVideoPlayer) v).setProgress(0);
-                            diraMediaPlayer.setOnPreparedListener(null);
-
-                        }
-                    });
-                    diraMediaPlayer.prepareAsync();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            try {
+                if (diraMediaPlayer.isPlaying()) {
+                    diraMediaPlayer.stop();
                 }
+                diraMediaPlayer.reset();
+                diraMediaPlayer.setDataSource(file.getPath());
 
+                diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+
+                        diraMediaPlayer.start();
+                        //timeText.setText(AppStorage.getStringSize(attachment.getSize()));
+                        ((DiraVideoPlayer) v).setSpeed(1f);
+                        ((DiraVideoPlayer) v).setProgress(0);
+                        diraMediaPlayer.setOnPreparedListener(null);
+
+                    }
+                });
+                diraMediaPlayer.prepareAsync();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
         });
     }
 
@@ -111,10 +101,10 @@ public class BubbleViewHolder extends AttachmentViewHolder {
         bubblePlayer.reset();
         Attachment bubbleAttachment = message.getAttachments().get(0);
 
-        if(!AttachmentsStorage.isAttachmentSaving(bubbleAttachment))
+        if (!AttachmentsStorage.isAttachmentSaving(bubbleAttachment))
             onAttachmentLoaded(bubbleAttachment,
                     AttachmentsStorage.getFileFromAttachment(bubbleAttachment,
-                    itemView.getContext(), message.getRoomSecret()), message);
+                            itemView.getContext(), message.getRoomSecret()), message);
 
     }
 
