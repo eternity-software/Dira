@@ -50,9 +50,11 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     protected TextView messageText;
     protected LinearLayout outerContainer, messageContainer, postInflatedViewsContainer;
     protected View messageBackground, rootView;
-    private TextView nicknameText, timeText, dateText;
-    private View profilePictureContainer;
-    private ImageView profilePicture;
+    protected TextView nicknameText;
+    protected ImageView profilePicture;
+    protected View profilePictureContainer;
+    private TextView timeText;
+    private TextView dateText;
     private MessageReplyComponent replyComponent;
 
     /**

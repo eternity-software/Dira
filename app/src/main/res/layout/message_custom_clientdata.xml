@@ -18,17 +18,16 @@
             app:cardBackgroundColor="@android:color/transparent"
             app:cardCornerRadius="100dp"
             app:cardElevation="0dp"
-            android:layout_width="40dp"
-            android:layout_height="40dp">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <com.diraapp.ui.components.dynamic.ThemeImageView
                 android:id="@+id/room_updates_icon"
                 app:tint="@color/dark"
                 android:background="@android:color/transparent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="6dp"
-                android:scaleType="fitXY"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="centerCrop"
                 app:themeImageColor="client_data_icon_color"
                 android:src="@drawable/ic_room_updates" />
 
