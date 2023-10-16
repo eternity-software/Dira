@@ -16,7 +16,6 @@ import android.provider.MediaStore;
 
 import java.io.ByteArrayOutputStream;
 
-import id.zelory.compressor.Compressor;
 
 
 public class ImagesWorker {

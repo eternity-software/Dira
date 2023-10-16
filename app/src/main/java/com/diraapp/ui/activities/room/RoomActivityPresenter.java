@@ -97,6 +97,14 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             room.setLastMessageId(message.getId());
 
             view.notifyRecyclerMessage(newMessageUpdate.getMessage(), needUpdateList);
+
+            if (message.hasAuthor()) {
+                if (message.getAuthorId().equals(selfId)) return;
+
+                room.getUnreadMessagesIds().add(message.getId());
+                view.updateScrollArrowIndicator();
+
+            }
         } else if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
             initRoomInfo();
         } else if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
@@ -120,9 +128,24 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             if (thisMessage == null) return;
             if (((MessageReadUpdate) update).getUserId().equals(selfId)) {
 
-                if (thisMessage.getTime() > lastReadMessage.getTime()) {
+                if (lastReadMessage == null) lastReadMessage = thisMessage;
+                else if (thisMessage.getTime() > lastReadMessage.getTime()) {
                     lastReadMessage = thisMessage;
                 }
+
+                int pos = room.getUnreadMessagesIds().indexOf(thisMessage.getId());
+//                if (pos == -1) return;
+//                room.getUnreadMessagesIds().subList(0, pos + 1).clear();
+
+                ArrayList<String> toDelete = new ArrayList<>();
+                if (pos != -1) {
+                    for (int i = 0; i <= pos; i++) {
+                        toDelete.add(room.getUnreadMessagesIds().get(i));
+                    }
+                    room.removeFromUnreadMessages(toDelete);
+                }
+
+                view.updateScrollArrowIndicator();
                 return;
             }
 

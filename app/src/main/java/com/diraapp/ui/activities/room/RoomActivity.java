@@ -116,6 +116,8 @@ public class RoomActivity extends DiraActivity
     private RoomActivityContract.Presenter presenter;
     private int lastVisiblePosition = 0;
 
+    private boolean isScrollIndicatorShown = true;
+
     public static void putRoomExtrasInIntent(Intent intent, String roomSecret, String roomName) {
         intent.putExtra(RoomSelectorActivity.PENDING_ROOM_SECRET, roomSecret);
         intent.putExtra(RoomSelectorActivity.PENDING_ROOM_NAME, roomName);
@@ -614,23 +616,21 @@ public class RoomActivity extends DiraActivity
     @Override
     public void setOnScrollListener() {
 
+        updateScrollArrowIndicator();
+
         LinearLayout arrow = binding.scrollArrow;
         performScaleAnimation(1, 0, arrow);
-
 
         arrow.setOnClickListener((View view) -> {
             presenter.onScrollArrowPressed();
         });
 
-
-        final boolean[] isArrowShowed = {false};
-
         // Dirty code bellow. Fix is required
         // Note: it is supporting only API >= M
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
             binding.recyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
 
+                boolean isArrowShowed = false;
                 int arrowAppearance = 20;
                 int arrowDisappearance = -20;
                 @Override
@@ -641,28 +641,40 @@ public class RoomActivity extends DiraActivity
                     if (layoutManager == null) return;
                     int position = layoutManager.findFirstVisibleItemPosition();
 
-                    if (position < 4) {
-                        if (!isArrowShowed[0]) return;
-                        isArrowShowed[0] = false;
+                    if (position < 2) {
+                        if (!isArrowShowed) return;
+                        isArrowShowed = false;
                         performScaleAnimation(1, 0, arrow);
                         return;
                     }
 
                     if (dy > arrowAppearance) {
-                        if (isArrowShowed[0]) return;
+                        if (isArrowShowed) return;
                         performScaleAnimation(0, 1, arrow);
-                        isArrowShowed[0] = true;
-                        Logger.logDebug("arrow a", "a");
+                        isArrowShowed = true;
                     } else if (dy < arrowDisappearance) {
-                        if (!isArrowShowed[0]) return;
+                        if (!isArrowShowed) return;
                         // arrow disappears
 
                         performScaleAnimation(1, 0, arrow);
-                        isArrowShowed[0] = false;
-                        Logger.logDebug("arrow da", "da");
+                        isArrowShowed = false;
                     }
                 }
             });
+        }
+    }
+
+    @Override
+    public void updateScrollArrowIndicator() {
+        if (getRoom().getUnreadMessagesIds().size() == 0 && isScrollIndicatorShown) {
+            performScaleAnimation(1, 0, binding.scrollArrowUnreadIndicator);
+            isScrollIndicatorShown = false;
+            return;
+        }
+
+        if (!isScrollIndicatorShown) {
+            performScaleAnimation(0, 1, binding.scrollArrowUnreadIndicator);
+            isScrollIndicatorShown = true;
         }
     }
 
@@ -798,8 +810,8 @@ public class RoomActivity extends DiraActivity
                 recyclerView.getLayoutManager();
         if (manager == null) return false;
 
-        int first = manager.findFirstVisibleItemPosition();
-        int last = manager.findLastVisibleItemPosition();
+        int first = manager.findFirstVisibleItemPosition() - 1;
+        int last = manager.findLastVisibleItemPosition() + 1;
 
         return position >= first && position <= last;
     }

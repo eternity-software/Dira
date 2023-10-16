@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark"
+    android:clipChildren="false"
     tools:context=".ui.activities.room.RoomActivity">
 
     <ImageView
@@ -417,30 +418,46 @@
 
     <LinearLayout
         android:id="@+id/scroll_arrow"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/medium_light_gray_round"
-        android:orientation="horizontal"
-        android:paddingHorizontal="8dp"
-        android:paddingTop="17dp"
-        android:paddingBottom="13dp"
-        app:layout_constraintBottom_toBottomOf="@+id/recycler_view"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/recycler_view" >
+
+        <LinearLayout
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/medium_light_gray_round"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            android:paddingTop="17dp"
+            android:paddingBottom="13dp" >
+
+            <com.diraapp.ui.components.dynamic.ThemeImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0"
+                android:paddingHorizontal="6dp"
+                android:paddingBottom="2dp"
+
+                android:src="@drawable/ic_scroll_arrow"
+
+                app:themeImageColor="white"
+                app:tint="@color/dark" />
+
+        </LinearLayout>
 
         <com.diraapp.ui.components.dynamic.ThemeImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0"
-            android:paddingHorizontal="6dp"
-            android:paddingBottom="2dp"
-
-            android:src="@drawable/ic_scroll_arrow"
-
-            app:themeImageColor="white"
-            app:tint="@color/dark" />
+            android:id="@+id/scroll_arrow_unread_indicator"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            app:themeImageColor="accent"
+            android:layout_marginStart="-18dp"
+            android:layout_marginTop="-2dp"
+            android:src="@drawable/color_circle"/>
 
     </LinearLayout>
 

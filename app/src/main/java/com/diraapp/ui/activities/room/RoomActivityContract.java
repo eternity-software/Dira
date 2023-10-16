@@ -77,6 +77,8 @@ public interface RoomActivityContract {
         Bitmap getBitmap(String path);
 
         void setOnScrollListener();
+
+        void updateScrollArrowIndicator();
     }
 
     interface Presenter {
