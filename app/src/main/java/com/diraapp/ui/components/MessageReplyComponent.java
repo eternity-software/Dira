@@ -153,39 +153,42 @@ public class MessageReplyComponent extends FrameLayout {
         FrameLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        LinearLayout layout = this.findViewById(R.id.message_reply_container);
+        replyContainer = findViewById(R.id.message_reply_container);
         if (messageType == MessageHolderType.ROOM_ATTACHMENTS_MESSAGE |
                 messageType == MessageHolderType.SELF_ATTACHMENTS_MESSAGE) {
             int margin = Numbers.dpToPx(8, this.getContext());
             params.setMargins(margin / 2, (int) (1.5 * margin), 0, margin);
-            layout.setLayoutParams(params);
+            replyContainer.setLayoutParams(params);
         } else if (messageType == MessageHolderType.ROOM_BUBBLE_MESSAGE ||
-                    messageType == MessageHolderType.SELF_BUBBLE_MESSAGE) {
+                    messageType == MessageHolderType.SELF_BUBBLE_MESSAGE ||
+                    messageType == MessageHolderType.ROOM_EMOJI_MESSAGE ||
+                    messageType == MessageHolderType.SELF_EMOJI_MESSAGE) {
             int padding = Numbers.dpToPx(6, this.getContext());
-            layout = this.findViewById(R.id.message_reply_container);
-            layout.setPadding(padding, padding, padding, padding);
+            replyContainer = this.findViewById(R.id.message_reply_container);
+            replyContainer.setPadding(padding, padding, padding, padding);
 
             int margin = Numbers.dpToPx(4, this.getContext());
             params.setMargins(margin, margin, margin, margin);
 
             if (isSelfMessage) params.gravity = Gravity.RIGHT;
-            layout.setLayoutParams(params);
+            replyContainer.setLayoutParams(params);
 
-            layout.setBackground(this.getContext().getResources().
-                    getDrawable(R.drawable.rounded_accent_rectangle));
-            layout.getBackground().setColorFilter(Theme.getColor(
+            replyContainer.setBackground(this.getContext().getResources().
+                    getDrawable(R.drawable.rounded_dark_background));
+            replyContainer.getBackground().setColorFilter(Theme.getColor(
                     this.getContext(), R.color.gray_trans), PorterDuff.Mode.SRC_ATOP);
         }
 
         if (isSelfMessage) {
-            ((ThemeImageView) this.findViewById(R.id.message_reply_line)).setColorFilter(
-                    Theme.getColor(this.getContext(), R.color.self_reply_color));
+            ((ThemeImageView) this.findViewById(R.id.message_reply_line)).
+                    getBackground().setColorFilter(
+                    Theme.getColor(this.getContext(), R.color.self_reply_color),
+                    PorterDuff.Mode.SRC_IN);
             ((TextView) this.findViewById(R.id.message_reply_author_name)).setTextColor(
                     Theme.getColor(this.getContext(), R.color.self_reply_color));
         }
         replyImage = findViewById(R.id.message_reply_image);
         replyImageCard = findViewById(R.id.message_reply_image_card);
-        replyContainer = findViewById(R.id.message_reply_container);
         replyText = findViewById(R.id.message_reply_text);
         replyAuthor = findViewById(R.id.message_reply_author_name);
         isInit = true;
