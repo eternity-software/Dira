@@ -1,7 +1,5 @@
 package com.diraapp.ui.adapters.messages.views;
 
-import static com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter.VIEW_TYPE_ROOM_MESSAGE_BUBBLE;
-
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.view.View;

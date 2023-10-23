@@ -53,8 +53,7 @@ public class DiraActivity extends AppCompatActivity {
         threadPoolExecutor.execute(runnable);
     }
 
-    public static void runOnMainThread(Runnable runnable)
-    {
+    public static void runOnMainThread(Runnable runnable) {
         new Handler(Looper.getMainLooper()).post(runnable);
     }
 

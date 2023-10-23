@@ -9,7 +9,6 @@
 
     <ImageView
         android:id="@+id/play_button"
-        app:tint="@color/gray"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="center_vertical"
@@ -18,18 +17,21 @@
         android:background="@drawable/light_round"
         android:backgroundTint="@color/accent_medium"
         android:padding="8dp"
-        android:src="@drawable/ic_play" />
+        android:src="@drawable/ic_play"
+        app:tint="@color/gray" />
 
     <com.masoudss.lib.WaveformSeekBar
         android:id="@+id/waveform_seek_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:paddingVertical="2dp"
         app:wave_background_color="@color/accent_medium"
         app:wave_corner_radius="2dp"
+
         app:wave_gap="2dp"
+
         app:wave_gravity="center"
         app:wave_max_progress="10"
-
-        android:paddingVertical="2dp"
-
         app:wave_min_height="5dp"
         app:wave_padding_left="2dp"
         app:wave_padding_right="2dp"
@@ -37,9 +39,7 @@
         app:wave_progress="0"
         app:wave_progress_color="@color/red"
         app:wave_visible_progress="0"
-        app:wave_width="3dp"
-        android:layout_width="wrap_content"
 
 
-        android:layout_height="50dp" />
+        app:wave_width="3dp" />
 </merge>

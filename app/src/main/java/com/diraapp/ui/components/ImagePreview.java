@@ -16,7 +16,6 @@ import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Room;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentsStorage;
-import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.ui.activities.DiraActivity;
 
@@ -69,14 +68,12 @@ public class ImagePreview extends RelativeLayout {
         return imageView;
     }
 
-    public void setImage(File imageFile)
-    {
+    public void setImage(File imageFile) {
         Attachment currentAttachment = attachment;
         DiraActivity.runGlobalBackground(() -> {
             Bitmap bitmap = AppStorage.getBitmapFromPath(imageFile.getPath(), getContext());
             new Handler(Looper.getMainLooper()).post(() -> {
-                if(attachment == currentAttachment)
-                {
+                if (attachment == currentAttachment) {
                     loadedBitmap = bitmap;
                     imageView.setImageBitmap(bitmap);
                     isMainImageLoaded = true;
@@ -110,9 +107,7 @@ public class ImagePreview extends RelativeLayout {
 
                         try {
                             onReady.run();
-                        }
-                        catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         if (file != null) {
@@ -138,18 +133,15 @@ public class ImagePreview extends RelativeLayout {
         });
     }
 
-    private void setAttachmentInfo(Attachment attachment, boolean isLoading)
-    {
+    private void setAttachmentInfo(Attachment attachment, boolean isLoading) {
         downloadOverlay.setVisibility(VISIBLE);
         sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()));
-        if(isLoading)
-        {
+        if (isLoading) {
             progressBar.setVisibility(VISIBLE);
             downloadButton.setImageBitmap(null);
-            downloadButton.setOnClickListener(v -> {});
-        }
-        else
-        {
+            downloadButton.setOnClickListener(v -> {
+            });
+        } else {
             progressBar.setVisibility(GONE);
             downloadButton.setOnClickListener(v -> {
                 SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(getContext(), false,

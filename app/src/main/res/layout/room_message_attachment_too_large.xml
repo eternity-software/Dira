@@ -20,9 +20,9 @@
         android:textColor="@color/dark"
 
 
-        app:themeColor="atl_title_color"
         android:textIsSelectable="true"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        app:themeColor="atl_title_color" />
 
     <com.diraapp.ui.components.dynamic.DynamicTextView
         android:id="@+id/size_view"
@@ -30,16 +30,16 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
         android:layout_marginBottom="8dp"
-        app:themeColor="atl_text_color"
         android:autoLink="all"
         android:fontFamily="@font/montserratsemibold"
         android:includeFontPadding="false"
         android:text="3000 mb"
-
         android:textColor="@color/gray"
 
         android:textIsSelectable="true"
-        android:textSize="13sp" />
+
+        android:textSize="13sp"
+        app:themeColor="atl_text_color" />
 
     <com.diraapp.ui.components.dynamic.DynamicTextView
         android:id="@+id/download_button"
@@ -51,15 +51,15 @@
         android:background="@drawable/gray_rounded"
         android:backgroundTint="@color/dark"
         android:fontFamily="@font/montserratsemibold"
-        app:themeColor="atl_button_text_color"
-        app:themeColorBackground="atl_button_color"
-
-
         android:gravity="center"
         android:text="@string/download"
+
+
         android:textColor="@color/white"
+        android:textSize="13sp"
+        app:themeColor="atl_button_text_color"
 
 
-        android:textSize="13sp" />
+        app:themeColorBackground="atl_button_color" />
 </LinearLayout>
 

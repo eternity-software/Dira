@@ -192,7 +192,7 @@ public class RoomUpdatesProcessor {
                             }
                         }
                     }
-                    if(!newMessage.hasAuthor())
+                    if (!newMessage.hasAuthor())
                         newMessage.setAuthorId("Dira");
                     messageDao.insertAll(newMessage);
                 }
@@ -204,8 +204,6 @@ public class RoomUpdatesProcessor {
 
         }
     }
-
-
 
 
     private void compareStartupTimes(Room room) {

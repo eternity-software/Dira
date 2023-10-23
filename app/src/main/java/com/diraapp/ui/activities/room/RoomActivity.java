@@ -633,6 +633,7 @@ public class RoomActivity extends DiraActivity
                 boolean isArrowShowed = false;
                 int arrowAppearance = 20;
                 int arrowDisappearance = -20;
+
                 @Override
                 public void onScrollChange(View view, int scrollX, int scrollY, int oldX, int oldY) {
                     int dy = scrollY - oldY;
@@ -825,8 +826,7 @@ public class RoomActivity extends DiraActivity
     @Override
     public void uploadFile(String sourceFileUri, Callback callback, boolean deleteAfterUpload, String serverAddress, String encryptionKey) {
         try {
-            if(FileClassifier.isImageFile(sourceFileUri))
-            {
+            if (FileClassifier.isImageFile(sourceFileUri)) {
                 ImageCompressor.compress(RoomActivity.this, new File(sourceFileUri), new com.diraapp.storage.images.Callback() {
                     @Override
                     public void onComplete(boolean status, @Nullable File file) {
@@ -837,9 +837,7 @@ public class RoomActivity extends DiraActivity
                         }
                     }
                 });
-            }
-            else
-            {
+            } else {
                 FilesUploader.uploadFile(sourceFileUri, callback, RoomActivity.this, deleteAfterUpload, serverAddress, encryptionKey);
             }
 

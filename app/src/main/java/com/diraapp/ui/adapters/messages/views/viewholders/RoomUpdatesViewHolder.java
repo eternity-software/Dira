@@ -12,11 +12,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 import com.diraapp.R;
-import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.customclientdata.KeyGenerateStartClientData;
 import com.diraapp.db.entities.messages.customclientdata.KeyGeneratedClientData;
@@ -26,11 +24,9 @@ import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeCl
 import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
 import com.diraapp.res.Theme;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
-import com.diraapp.ui.adapters.messages.legacy.LegacyViewHolder;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.RoomMessageCustomClientDataView;
-import com.diraapp.utils.Logger;
 import com.diraapp.utils.Numbers;
 import com.squareup.picasso.Picasso;
 

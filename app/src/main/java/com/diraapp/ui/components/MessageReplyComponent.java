@@ -18,11 +18,9 @@ import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.db.entities.messages.MessageType;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
-import com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.MessageHolderType;
 import com.diraapp.ui.components.dynamic.DynamicTextView;
 import com.diraapp.ui.components.dynamic.ThemeImageView;
@@ -160,9 +158,9 @@ public class MessageReplyComponent extends FrameLayout {
             params.setMargins(margin / 2, (int) (1.5 * margin), 0, margin);
             replyContainer.setLayoutParams(params);
         } else if (messageType == MessageHolderType.ROOM_BUBBLE_MESSAGE ||
-                    messageType == MessageHolderType.SELF_BUBBLE_MESSAGE ||
-                    messageType == MessageHolderType.ROOM_EMOJI_MESSAGE ||
-                    messageType == MessageHolderType.SELF_EMOJI_MESSAGE) {
+                messageType == MessageHolderType.SELF_BUBBLE_MESSAGE ||
+                messageType == MessageHolderType.ROOM_EMOJI_MESSAGE ||
+                messageType == MessageHolderType.SELF_EMOJI_MESSAGE) {
             int padding = Numbers.dpToPx(6, this.getContext());
             replyContainer = this.findViewById(R.id.message_reply_container);
             replyContainer.setPadding(padding, padding, padding, padding);
@@ -182,8 +180,8 @@ public class MessageReplyComponent extends FrameLayout {
         if (isSelfMessage) {
             ((ThemeImageView) this.findViewById(R.id.message_reply_line)).
                     getBackground().setColorFilter(
-                    Theme.getColor(this.getContext(), R.color.self_reply_color),
-                    PorterDuff.Mode.SRC_IN);
+                            Theme.getColor(this.getContext(), R.color.self_reply_color),
+                            PorterDuff.Mode.SRC_IN);
             ((TextView) this.findViewById(R.id.message_reply_author_name)).setTextColor(
                     Theme.getColor(this.getContext(), R.color.self_reply_color));
         }

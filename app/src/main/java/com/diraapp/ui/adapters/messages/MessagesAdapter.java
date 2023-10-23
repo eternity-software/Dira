@@ -41,15 +41,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
      * MediaPlayer for audio. Should be transferred to DiraActivity for event handling
      */
     private final DiraMediaPlayer diraMediaPlayer = new DiraMediaPlayer();
+    private final Amplituda amplituda;
+    private final Executor voiceWaveformsThread = Executors.newSingleThreadExecutor();
+    private final MessageAttachmentLoader messageAttachmentLoader;
     /**
      * List of messages to display
      */
     private List<Message> messages = new ArrayList<>();
     private LegacyRoomMessagesAdapter.MessageAdapterListener messageAdapterListener;
-
-    private final Amplituda amplituda;
-    private final Executor voiceWaveformsThread = Executors.newSingleThreadExecutor();
-    private final MessageAttachmentLoader messageAttachmentLoader;
 
 
     public MessagesAdapter(MessageAdapterContract messageAdapterContract, List<Message> messages,
@@ -126,7 +125,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
         } else {
             holder.bindMessage(message, previousMessage);
         }
-
 
 
         notifyItemScrolled(message, position);

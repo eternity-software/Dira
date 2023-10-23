@@ -93,10 +93,10 @@
             android:background="@drawable/gray_rounded"
             android:onClick="editImageButtonClick"
             android:padding="8dp"
-            app:themeImageColor="accent_image_button_color"
+            app:srcCompat="@drawable/ic_brush"
             app:themeBackgroundTint="gray"
 
-            app:srcCompat="@drawable/ic_brush" />
+            app:themeImageColor="accent_image_button_color" />
 
         <com.diraapp.ui.components.dynamic.ThemeImageView
             android:id="@+id/sendButton"
@@ -109,11 +109,11 @@
             android:background="@drawable/accent_rounded"
             android:onClick="sendButtonClick"
 
-            app:themeImageColor="accent_button_color"
-            app:themeBackgroundTint="accent_button_background"
-
             android:padding="8dp"
-            app:srcCompat="@drawable/ic_send" />
+            app:srcCompat="@drawable/ic_send"
+
+            app:themeBackgroundTint="accent_button_background"
+            app:themeImageColor="accent_button_color" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

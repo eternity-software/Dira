@@ -3,26 +3,26 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/image_container"
-    app:cardCornerRadius="14dp"
-    app:cardElevation="0dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:elevation="0dp"
     app:cardBackgroundColor="@color/gray"
 
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp">
 
     <com.diraapp.ui.components.ImagePreview
-        android:visibility="gone"
         android:id="@+id/image_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
         android:elevation="0dp"
-        android:adjustViewBounds="true" />
+        android:visibility="gone" />
 
     <com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer
-        android:visibility="gone"
         android:id="@+id/video_player"
         android:layout_width="wrap_content"
+        android:layout_height="200dp"
         android:elevation="0dp"
-        android:layout_height="200dp" />
+        android:visibility="gone" />
 </androidx.cardview.widget.CardView>

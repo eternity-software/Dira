@@ -1,24 +1,18 @@
 package com.diraapp.ui.adapters.messages.views;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.View;
 
-import com.diraapp.DiraApplication;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
-import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.messages.views.viewholders.AttachmentViewHolder;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
-import com.felipecsl.asymmetricgridview.library.model.AsymmetricItem;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -97,9 +91,8 @@ public class MessageAttachmentLoader {
 
     public class MessageAttachmentStorageListener implements AttachmentsStorageListener {
 
-        private AttachmentViewHolder holder;
-
         private final Message message;
+        private AttachmentViewHolder holder;
 
         public MessageAttachmentStorageListener(AttachmentViewHolder holder, Message message) {
             this.holder = holder;

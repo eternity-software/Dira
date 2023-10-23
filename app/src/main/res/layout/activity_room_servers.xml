@@ -12,14 +12,14 @@
         android:id="@+id/button_back"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        app:themeImageColor="accent_image_button_color"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:background="?actionBarItemBackground"
         android:padding="10dp"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:themeImageColor="accent_image_button_color" />
 
     <ScrollView
         android:id="@+id/scrollView2"

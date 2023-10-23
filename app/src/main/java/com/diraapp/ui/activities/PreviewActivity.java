@@ -7,9 +7,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,7 +20,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
@@ -36,7 +33,6 @@ import com.diraapp.ui.components.TouchImageView;
 import com.diraapp.ui.components.VideoPlayer;
 import com.diraapp.utils.Numbers;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -46,11 +42,11 @@ import java.util.Objects;
 public class PreviewActivity extends DiraActivity {
 
 
-    private static Bitmap bitmapPool;
     public static final String URI = "uri";
     public static final String IS_VIDEO = "is_video";
     public static final String EXTRA_CLIP_RECT = "rect";
     public static final String PREVIEW = "preview";
+    private static Bitmap bitmapPool;
     private VideoPlayer videoPlayer;
     private boolean isShown = false;
     private TouchImageView touchImageView;
@@ -60,8 +56,7 @@ public class PreviewActivity extends DiraActivity {
         prepareActivity(from, filePath, previewImage, isVideo, transitionSource).start();
     }
 
-    public static PreparedActivity prepareActivity(final DiraActivity from, String filePath, Bitmap previewImage, boolean isVideo, View transitionSource)
-    {
+    public static PreparedActivity prepareActivity(final DiraActivity from, String filePath, Bitmap previewImage, boolean isVideo, View transitionSource) {
         Intent intent = new Intent(from, PreviewActivity.class);
         intent.putExtra(PreviewActivity.URI, filePath);
         intent.putExtra(PreviewActivity.IS_VIDEO, isVideo);
@@ -73,7 +68,6 @@ public class PreviewActivity extends DiraActivity {
         intent.putExtra(PreviewActivity.EXTRA_CLIP_RECT, localVisibleRect);
 
         bitmapPool = previewImage;
-
 
 
         from.addListener(new DiraActivityListener() {

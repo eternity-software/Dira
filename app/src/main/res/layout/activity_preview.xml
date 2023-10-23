@@ -10,7 +10,6 @@
     tools:context=".ui.activities.PreviewActivity">
 
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/imageContainer"
         android:layout_width="match_parent"

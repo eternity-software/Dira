@@ -16,10 +16,10 @@
         android:layout_marginTop="20dp"
         android:background="?actionBarItemBackground"
         android:padding="10dp"
-        app:themeImageColor="accent_image_button_color"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:themeImageColor="accent_image_button_color" />
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -83,13 +83,13 @@
                 android:paddingVertical="14dp">
 
                 <com.diraapp.ui.components.dynamic.DynamicTextView
-                    app:themeColor="accent_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserratsemibold"
                     android:text="@string/memory_management_delete_images"
                     android:textColor="@color/accent"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    app:themeColor="accent_text" />
 
                 <TextView
 
@@ -116,14 +116,14 @@
                 android:paddingVertical="14dp">
 
                 <com.diraapp.ui.components.dynamic.DynamicTextView
-                    app:themeColor="accent_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:fontFamily="@font/montserratsemibold"
+
                     android:text="@string/memory_management_delete_videos"
                     android:textColor="@color/accent"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    app:themeColor="accent_text" />
 
                 <TextView
 

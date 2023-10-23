@@ -226,7 +226,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
             public void run() {
                 try {
                     Logger.logDebug(getClass().getSimpleName(), "Playing " + currentPlayingTask.getSourcePath());
-                    log("Playing " );
+                    log("Playing ");
                     if (source != currentPlayingTask) return;
                     Logger.logDebug(getClass().getSimpleName(), "1 " + currentPlayingTask.getSourcePath());
                     if (mediaPlayer.isReleased()) {
@@ -554,20 +554,17 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     }
 
-    public void showDebugLog()
-    {
+    public void showDebugLog() {
         DiraPopup diraPopup = new DiraPopup(getContext());
         String logs = "";
-        for(String log : debugLog)
+        for (String log : debugLog)
             logs += log + "\n";
         diraPopup.show("DiraVideoPlayer Log", logs, null, null, null);
     }
 
 
-    private void log(String s)
-    {
-        if(debugLog.size() > 10)
-        {
+    private void log(String s) {
+        if (debugLog.size() > 10) {
             debugLog.remove(0);
         }
         debugLog.add(s);

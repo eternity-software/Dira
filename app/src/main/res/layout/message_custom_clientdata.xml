@@ -15,21 +15,21 @@
         android:layout_marginVertical="8dp">
 
         <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:cardBackgroundColor="@android:color/transparent"
             app:cardCornerRadius="100dp"
-            app:cardElevation="0dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            app:cardElevation="0dp">
 
             <com.diraapp.ui.components.dynamic.ThemeImageView
                 android:id="@+id/room_updates_icon"
-                app:tint="@color/dark"
-                android:background="@android:color/transparent"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:background="@android:color/transparent"
                 android:scaleType="centerCrop"
+                android:src="@drawable/ic_room_updates"
                 app:themeImageColor="client_data_icon_color"
-                android:src="@drawable/ic_room_updates" />
+                app:tint="@color/dark" />
 
         </androidx.cardview.widget.CardView>
 
@@ -56,10 +56,10 @@
             android:text="Room name changed"
             android:textColor="@color/dark"
 
-            app:themeColor="client_data_title_color"
-
             android:textIsSelectable="true"
-            android:textSize="14sp" />
+
+            android:textSize="14sp"
+            app:themeColor="client_data_title_color" />
 
         <com.diraapp.ui.components.dynamic.DynamicTextView
             android:id="@+id/room_updates_text"
@@ -75,10 +75,10 @@
             android:text="Anime boys"
             android:textColor="@color/gray"
 
-            app:themeColor="client_data_text_color"
-
             android:textIsSelectable="true"
-            android:textSize="13sp" />
+
+            android:textSize="13sp"
+            app:themeColor="client_data_text_color" />
 
     </LinearLayout>
 

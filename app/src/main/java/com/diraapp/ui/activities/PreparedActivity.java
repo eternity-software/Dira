@@ -19,8 +19,7 @@ public class PreparedActivity {
         return intent;
     }
 
-    public void start()
-    {
+    public void start() {
         activity.startActivity(intent, options.toBundle());
     }
 }

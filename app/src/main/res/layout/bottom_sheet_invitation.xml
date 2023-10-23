@@ -30,11 +30,11 @@
             android:layout_gravity="center_vertical"
             android:layout_marginVertical="12dp"
             android:layout_weight="1"
-            app:themeColor="accent_text"
             android:fontFamily="@font/montserratbold"
             android:text="Code error occured"
             android:textColor="@color/accent"
-            android:textSize="28sp" />
+            android:textSize="28sp"
+            app:themeColor="accent_text" />
 
         <ImageView
             android:id="@+id/copy_invitation_code"

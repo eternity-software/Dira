@@ -1,6 +1,5 @@
 package com.diraapp.ui.components;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;

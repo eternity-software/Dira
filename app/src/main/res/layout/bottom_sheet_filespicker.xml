@@ -52,9 +52,9 @@
                         android:layout_gravity="center_vertical"
                         android:background="@drawable/gray_rounded"
                         android:paddingHorizontal="8dp"
-                        app:themeImageColor="light_gray"
+                        app:srcCompat="@drawable/ic_camera"
                         app:themeBackgroundTint="gray"
-                        app:srcCompat="@drawable/ic_camera" />
+                        app:themeImageColor="light_gray" />
 
                     <com.diraapp.ui.components.dynamic.ThemeImageView
                         android:id="@+id/convCreateButton"
@@ -64,9 +64,9 @@
                         android:layout_marginLeft="16dp"
                         android:background="@drawable/gray_rounded"
                         android:paddingHorizontal="8dp"
+                        app:srcCompat="@drawable/ic_image"
                         app:themeBackgroundTint="gray"
-                        app:themeImageColor="light_gray"
-                        app:srcCompat="@drawable/ic_image" />
+                        app:themeImageColor="light_gray" />
                 </LinearLayout>
 
 

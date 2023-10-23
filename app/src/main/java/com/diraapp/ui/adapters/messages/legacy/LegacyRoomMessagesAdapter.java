@@ -59,8 +59,8 @@ import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.MessageAttachmentToLargeView;
 import com.diraapp.ui.components.MessageReplyComponent;
 import com.diraapp.ui.components.MultiAttachmentMessageView;
-import com.diraapp.ui.components.RoomMessageCustomClientDataView;
 import com.diraapp.ui.components.RoomMediaMessage;
+import com.diraapp.ui.components.RoomMessageCustomClientDataView;
 import com.diraapp.ui.components.VoiceMessageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayerState;
@@ -365,7 +365,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
                 @Override
                 public void onClick(View v) {
                     PreviewActivity.open(context, file.getPath(), null,
-                            attachment.getAttachmentType() == AttachmentType.VIDEO,  holder.imageContainer);
+                            attachment.getAttachmentType() == AttachmentType.VIDEO, holder.imageContainer);
                 }
             });
             // holder.loading.setVisibility(View.GONE);

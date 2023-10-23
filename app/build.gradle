@@ -59,7 +59,8 @@ android {
     }
 
     configurations {
-        all*.exclude module: 'support-v4' // This removes all other versions of `support-v4` if gets duplicated from all the artifacts.
+        all*.exclude module: 'support-v4'
+        // This removes all other versions of `support-v4` if gets duplicated from all the artifacts.
     }
 }
 
@@ -76,7 +77,7 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.0'
 
-    implementation  'com.github.massoudss:waveformSeekBar:5.0.2'
+    implementation 'com.github.massoudss:waveformSeekBar:5.0.2'
 
     // Amplitude will allow you to call setSampleFrom() with files, URLs, Uri and resources
     // Important: Only works with api level 21 and higher

@@ -22,12 +22,12 @@ public abstract class AttachmentViewHolder extends BaseMessageViewHolder {
         super(itemView, messageAdapterContract, viewHolderManagerContract, isSelfMessage);
     }
 
-    public void setAttachmentStorageListener(MessageAttachmentLoader.MessageAttachmentStorageListener attachmentStorageListener) {
-        this.attachmentStorageListener = attachmentStorageListener;
-    }
-
     public MessageAttachmentLoader.MessageAttachmentStorageListener getAttachmentStorageListener() {
         return attachmentStorageListener;
+    }
+
+    public void setAttachmentStorageListener(MessageAttachmentLoader.MessageAttachmentStorageListener attachmentStorageListener) {
+        this.attachmentStorageListener = attachmentStorageListener;
     }
 
     public void removeAttachmentStorageListener() {

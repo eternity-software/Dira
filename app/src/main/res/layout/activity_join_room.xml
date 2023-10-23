@@ -17,10 +17,10 @@
         android:layout_marginTop="20dp"
         android:background="?actionBarItemBackground"
         android:padding="10dp"
-        app:themeImageColor="accent_image_button_color"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:themeImageColor="accent_image_button_color" />
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -84,10 +84,10 @@
                 android:layout_weight="1"
                 android:background="?selectableItemBackground"
                 android:fontFamily="@font/montserratsemibold"
-                app:themeColor="accent_dark"
                 android:text="@string/room_servers_official"
                 android:textColor="@color/accent_dark"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                app:themeColor="accent_dark" />
 
             <TextView
 
@@ -145,10 +145,10 @@
         android:padding="16dp"
         android:src="@drawable/ic_next"
 
-        app:themeImageColor="accent_button_color"
-        app:themeBackgroundTint="accent_button_background"
-
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:themeBackgroundTint="accent_button_background"
+        app:themeImageColor="accent_button_color" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

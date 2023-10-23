@@ -188,7 +188,8 @@ public class ChatAppearanceActivity extends DiraActivity {
             }
 
             @Override
-            public void onFirstMessageScrolled(Message message, int index) {}
+            public void onFirstMessageScrolled(Message message, int index) {
+            }
 
             @Override
             public PreparedActivity preparePreviewActivity(String filePath, boolean isVideo, Bitmap preview, View transitionSource) {

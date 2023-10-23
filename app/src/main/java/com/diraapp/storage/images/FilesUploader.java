@@ -1,13 +1,10 @@
 package com.diraapp.storage.images;
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.db.entities.AttachmentType;
@@ -51,13 +48,12 @@ public class FilesUploader {
                 }
 
 
-
                 if (callback instanceof RoomActivityPresenter.RoomAttachmentCallback) {
                     ((RoomActivityPresenter.RoomAttachmentCallback) callback).
                             setWidthAndHeight(bitmap.getWidth(), bitmap.getHeight());
                 }
 
-               // deleteAfterUpload = true;
+                // deleteAfterUpload = true;
 
             } else if (callback instanceof RoomActivityPresenter.RoomAttachmentCallback) {
                 RoomActivityPresenter.RoomAttachmentCallback roomAttachmentCallback =

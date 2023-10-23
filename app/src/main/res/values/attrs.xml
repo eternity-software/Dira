@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<declare-styleable name="DynamicTextView">
-    <attr name="localizableKey" format="string" />
-    <attr name="themeColor" format="string" />
-    <attr name="themeColorLink" format="string" />
-    <attr name="themeColorBackground" format="string" />
-</declare-styleable>
-<declare-styleable name="DynamicButton">
-    <attr name="localizableButtonKey" format="string" />
-    <attr name="themeButtonBackground" format="string" />
-    <attr name="themeButtonText" format="string" />
-</declare-styleable>
-<declare-styleable name="DynamicEditText">
-    <attr name="localizableHint" format="string" />
-</declare-styleable>
-<declare-styleable name="ThemeImageView">
-    <attr name="themeImageColor" format="string" />
-    <attr name="themeBackgroundTint" format="string" />
-</declare-styleable>
-<declare-styleable name="ThemeLinearLayout">
-    <attr name="themeBackgroundColor" format="string" />
-</declare-styleable>
-<declare-styleable name="DynamicCardView">
-    <attr name="themeBackgroundCardTint" format="string" />
-</declare-styleable>
-<declare-styleable name="FileParingImageView">
-    <attr name="themeBackgroundFileTint" format="string" />
-</declare-styleable>
-<declare-styleable name="ThemePreview">
-    <attr name="themePreviewBackground" format="integer" />
-    <attr name="themePreviewMyMessageColor" format="integer" />
-    <attr name="themePreviewChatMessageColor" format="integer" />
-    <attr name="themePreviewName" format="string" />
-</declare-styleable>
+    <declare-styleable name="DynamicTextView">
+        <attr name="localizableKey" format="string" />
+        <attr name="themeColor" format="string" />
+        <attr name="themeColorLink" format="string" />
+        <attr name="themeColorBackground" format="string" />
+    </declare-styleable>
+    <declare-styleable name="DynamicButton">
+        <attr name="localizableButtonKey" format="string" />
+        <attr name="themeButtonBackground" format="string" />
+        <attr name="themeButtonText" format="string" />
+    </declare-styleable>
+    <declare-styleable name="DynamicEditText">
+        <attr name="localizableHint" format="string" />
+    </declare-styleable>
+    <declare-styleable name="ThemeImageView">
+        <attr name="themeImageColor" format="string" />
+        <attr name="themeBackgroundTint" format="string" />
+    </declare-styleable>
+    <declare-styleable name="ThemeLinearLayout">
+        <attr name="themeBackgroundColor" format="string" />
+    </declare-styleable>
+    <declare-styleable name="DynamicCardView">
+        <attr name="themeBackgroundCardTint" format="string" />
+    </declare-styleable>
+    <declare-styleable name="FileParingImageView">
+        <attr name="themeBackgroundFileTint" format="string" />
+    </declare-styleable>
+    <declare-styleable name="ThemePreview">
+        <attr name="themePreviewBackground" format="integer" />
+        <attr name="themePreviewMyMessageColor" format="integer" />
+        <attr name="themePreviewChatMessageColor" format="integer" />
+        <attr name="themePreviewName" format="string" />
+    </declare-styleable>
 </resources>

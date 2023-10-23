@@ -18,8 +18,8 @@
         android:fontFamily="@font/montserratsemibold"
         android:text="@string/room_servers_official"
         android:textColor="@color/accent"
-        app:themeColor="accent_text"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        app:themeColor="accent_text" />
 
     <ImageView
         android:id="@+id/button_delete"

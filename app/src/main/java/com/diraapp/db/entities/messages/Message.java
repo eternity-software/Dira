@@ -72,10 +72,6 @@ public class Message {
 
     }
 
-    public Attachment getSingleAttachment()
-    {
-        return attachments.get(0);
-    }
     public static Message generateMessage(CacheUtils cacheUtils, String roomSecret) {
         Message message = new Message();
 
@@ -87,6 +83,10 @@ public class Message {
         message.isRead = true;
         return message;
 
+    }
+
+    public Attachment getSingleAttachment() {
+        return attachments.get(0);
     }
 
     public boolean isReadable() {
@@ -179,13 +179,12 @@ public class Message {
         return text;
     }
 
-    public boolean isDiraMessage()
-    {
-        return authorId.equals("Dira");
-    }
-
     public void setText(String text) {
         this.text = text;
+    }
+
+    public boolean isDiraMessage() {
+        return authorId.equals("Dira");
     }
 
     public String getAuthorNickname() {

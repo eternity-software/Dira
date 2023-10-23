@@ -5,9 +5,7 @@ import androidx.lifecycle.lifecycleScope
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.Constraint
 import id.zelory.compressor.constraint.default
-import id.zelory.compressor.constraint.format
 import id.zelory.compressor.constraint.quality
-import id.zelory.compressor.constraint.resolution
 import id.zelory.compressor.constraint.size
 import kotlinx.coroutines.launch
 import java.io.File
@@ -22,7 +20,6 @@ fun AppCompatActivity.compress(
     lifecycleScope.launch {
         try {
             outputFile = Compressor.compress(context, inputFile) {
-
 
 
                 if (constraints.isEmpty()) {

@@ -14,12 +14,12 @@
         android:layout_height="50dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        app:themeImageColor="accent_image_button_color"
         android:background="?actionBarItemBackground"
         android:padding="10dp"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:themeImageColor="accent_image_button_color" />
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -63,8 +63,8 @@
                 <com.diraapp.ui.components.dynamic.ThemeImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
-                    app:themeImageColor="accent_image_button_color"
-                    android:src="@drawable/memory_management_icon" />
+                    android:src="@drawable/memory_management_icon"
+                    app:themeImageColor="accent_image_button_color" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -103,8 +103,8 @@
                 <com.diraapp.ui.components.dynamic.ThemeImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
-                    app:themeImageColor="accent_image_button_color"
-                    android:src="@drawable/ic_server" />
+                    android:src="@drawable/ic_server"
+                    app:themeImageColor="accent_image_button_color" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -179,8 +179,8 @@
                 android:fontFamily="@font/montserratsemibold"
                 android:text="@string/settings_privacy_policy"
                 android:textColor="@color/accent"
-                app:themeColor="accent_text"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                app:themeColor="accent_text" />
 
             <TextView
                 android:id="@+id/version_view"

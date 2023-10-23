@@ -130,8 +130,6 @@
                 android:layout_marginStart="12dp"
 
 
-                app:themeColorBackground="accent_button_background"
-                app:themeColor="accent_button_text_color"
                 android:background="@drawable/accent_rounded"
                 android:fontFamily="@font/montserratsemibold"
                 android:gravity="center"
@@ -139,7 +137,9 @@
                 android:paddingVertical="12dp"
                 android:text="@string/action_button"
                 android:textColor="@color/dark"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                app:themeColor="accent_button_text_color"
+                app:themeColorBackground="accent_button_background" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

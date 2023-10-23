@@ -33,10 +33,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
     private final int threadCount = 0;
     private final LayoutInflater mInflater;
-    private ArrayList<FileInfo> mediaElements = new ArrayList<>();
     private final WaterfallBalancer waterfallBalancer;
     private final Activity context;
     private final MediaGridItemListener itemClickListener;
+    private ArrayList<FileInfo> mediaElements = new ArrayList<>();
     private Runnable transitionReenter;
 
     /**
@@ -80,8 +80,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
             DiraActivity.runOnMainThread(() ->
                     notifyDataSetChanged());
         }).start();
-
-
 
 
         //   Collections.reverse(images);
@@ -218,7 +216,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 //        cursor.close();
 
 
-
         ArrayList<FileInfo> listOfAllMedia = new ArrayList<FileInfo>();
         while (cursor.moveToNext()) {
             String absolutePathOfImage = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
@@ -235,8 +232,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         return listOfAllMedia;
     }
 
-    private CursorLoader getCursorLoader(boolean isOnlyImages)
-    {
+    private CursorLoader getCursorLoader(boolean isOnlyImages) {
         String[] projection = {
                 MediaStore.Files.FileColumns._ID,
                 MediaStore.Files.FileColumns.DATA,
@@ -259,8 +255,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         }
 
 
-
-
         Uri queryUri = MediaStore.Files.getContentUri("external");
 
         CursorLoader cursorLoader = new CursorLoader(
@@ -272,7 +266,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
                 MediaStore.Files.FileColumns.DATE_ADDED + " DESC" // Sort order.
         );
 
-       return cursorLoader;
+        return cursorLoader;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
