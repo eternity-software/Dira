@@ -104,6 +104,7 @@ public class PreviewActivity extends DiraActivity {
         touchImageView = findViewById(R.id.image_view);
 
         touchImageView.setImageBitmap(bitmapPool);
+        bitmapPool = null;
 
         Transition transition =
                 TransitionInflater.from(this)

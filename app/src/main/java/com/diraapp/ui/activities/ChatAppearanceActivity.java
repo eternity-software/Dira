@@ -25,7 +25,6 @@ import com.diraapp.ui.adapters.ColorThemeAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.MessagesAdapter;
-import com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.RoomViewHolderFactory;
 import com.diraapp.ui.appearance.AppTheme;
@@ -36,7 +35,6 @@ import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.FilePreview;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.utils.CacheUtils;
-import com.diraapp.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;

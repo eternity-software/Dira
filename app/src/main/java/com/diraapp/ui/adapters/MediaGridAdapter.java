@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.transition.Transition;
 import android.transition.TransitionListenerAdapter;
@@ -20,6 +21,7 @@ import com.diraapp.device.PerformanceClass;
 import com.diraapp.device.PerformanceTester;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.images.WaterfallBalancer;
+import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.bottomsheet.filepicker.FileInfo;
 import com.diraapp.ui.components.FilePreview;
 
@@ -31,7 +33,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
     private final int threadCount = 0;
     private final LayoutInflater mInflater;
-    private final ArrayList<FileInfo> mediaElements;
+    private ArrayList<FileInfo> mediaElements = new ArrayList<>();
     private final WaterfallBalancer waterfallBalancer;
     private final Activity context;
     private final MediaGridItemListener itemClickListener;
@@ -69,7 +71,19 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         this.mInflater = LayoutInflater.from(context);
         this.itemClickListener = itemClickListener;
         this.context = context;
-        mediaElements = getGallery(onlyImages);
+
+        // Must be executed on new Thread
+        new Thread(() -> {
+            Looper.prepare();
+            CursorLoader cursorLoader = getCursorLoader(onlyImages);
+            mediaElements = loadGallery(cursorLoader.loadInBackground());
+            DiraActivity.runOnMainThread(() ->
+                    notifyDataSetChanged());
+        }).start();
+
+
+
+
         //   Collections.reverse(images);
         waterfallBalancer = new WaterfallBalancer(context, getHardwareDependBalancerCount(), recyclerView);
 
@@ -170,7 +184,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         }
     }
 
-    private ArrayList<FileInfo> getGallery(boolean onlyImages) {
+    private ArrayList<FileInfo> loadGallery(Cursor cursor) {
 //            Uri uri;
 //            Cursor cursor;
 //            int column_index_data, column_index_folder_name;
@@ -203,7 +217,26 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 //        }
 //        cursor.close();
 
+
+
         ArrayList<FileInfo> listOfAllMedia = new ArrayList<FileInfo>();
+        while (cursor.moveToNext()) {
+            String absolutePathOfImage = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
+            String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE));
+            String title = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.TITLE));
+
+            if (mimeType.startsWith("image") || mimeType.startsWith("video")) {
+                listOfAllMedia.add(new FileInfo(title, absolutePathOfImage, mimeType));
+            }
+        }
+        cursor.close();
+
+
+        return listOfAllMedia;
+    }
+
+    private CursorLoader getCursorLoader(boolean isOnlyImages)
+    {
         String[] projection = {
                 MediaStore.Files.FileColumns._ID,
                 MediaStore.Files.FileColumns.DATA,
@@ -220,10 +253,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
                 + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                 + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 
-        if (onlyImages) {
+        if (isOnlyImages) {
             selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                     + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
         }
+
+
 
 
         Uri queryUri = MediaStore.Files.getContentUri("external");
@@ -237,20 +272,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
                 MediaStore.Files.FileColumns.DATE_ADDED + " DESC" // Sort order.
         );
 
-        Cursor cursor = cursorLoader.loadInBackground();
-        while (cursor.moveToNext()) {
-            String absolutePathOfImage = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
-            String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE));
-            String title = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.TITLE));
-
-            if (mimeType.startsWith("image") || mimeType.startsWith("video")) {
-                listOfAllMedia.add(new FileInfo(title, absolutePathOfImage, mimeType));
-            }
-        }
-        cursor.close();
-
-
-        return listOfAllMedia;
+       return cursorLoader;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
