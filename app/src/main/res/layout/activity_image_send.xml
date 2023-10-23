@@ -29,7 +29,7 @@
 
 
             android:scaleType="fitCenter"
-            android:src="@drawable/placeholder"
+            android:src="@drawable/full_placeholder"
             android:transitionName="@string/transition_image_prepare"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

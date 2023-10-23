@@ -43,7 +43,7 @@
                 android:adjustViewBounds="true"
 
                 android:scaleType="fitCenter"
-                android:src="@drawable/placeholder" />
+                android:src="@drawable/full_placeholder" />
         </androidx.cardview.widget.CardView>
 
 
