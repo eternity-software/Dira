@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
-        <com.diraapp.ui.components.PreviewImageView
+        <com.diraapp.ui.components.TouchImageView
             android:id="@+id/fileImageView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

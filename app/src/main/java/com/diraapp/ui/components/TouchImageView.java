@@ -22,7 +22,7 @@ import androidx.annotation.Nullable;
  *
  * @author Mikahil Karlov
  */
-public class PreviewImageView extends FileParingImageView {
+public class TouchImageView extends FileParingImageView {
 
     private View imageContainer;
     private boolean isZoomed = false;
@@ -39,18 +39,18 @@ public class PreviewImageView extends FileParingImageView {
 
     private long lastClickedTimestamp;
 
-    public PreviewImageView(Context context) {
+    public TouchImageView(Context context) {
         super(context);
         init();
     }
 
 
-    public PreviewImageView(Context context, @Nullable AttributeSet attrs) {
+    public TouchImageView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public PreviewImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public TouchImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }

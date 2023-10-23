@@ -60,7 +60,7 @@ import com.diraapp.ui.components.MessageAttachmentToLargeView;
 import com.diraapp.ui.components.MessageReplyComponent;
 import com.diraapp.ui.components.MultiAttachmentMessageView;
 import com.diraapp.ui.components.RoomMessageCustomClientDataView;
-import com.diraapp.ui.components.RoomMessageVideoPlayer;
+import com.diraapp.ui.components.RoomMediaMessage;
 import com.diraapp.ui.components.VoiceMessageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayerState;
@@ -1188,7 +1188,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
         } else if (viewType == VIEW_TYPE_ROOM_MESSAGE_ATTACHMENTS_TOO_LARGE) {
             view = new MessageAttachmentToLargeView(context, isSelfMessage);
         } else if (viewType == VIEW_TYPE_ROOM_MESSAGE_ATTACHMENTS) {
-            view = new RoomMessageVideoPlayer(context);
+            view = new RoomMediaMessage(context);
         } else if (viewType == VIEW_TYPE_CLIENT_DATA) {
             view = new RoomMessageCustomClientDataView(context);
         } else if (viewType == VIEW_TYPE_ROOM_MESSAGE_MULTI_ATTACHMENTS) {

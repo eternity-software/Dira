@@ -8,11 +8,11 @@ import androidx.annotation.NonNull;
 
 import com.diraapp.R;
 
-public class RoomMessageVideoPlayer extends LinearLayout {
+public class RoomMediaMessage extends LinearLayout {
 
     private boolean isInit = false;
 
-    public RoomMessageVideoPlayer(@NonNull Context context) {
+    public RoomMediaMessage(@NonNull Context context) {
         super(context);
         initView();
     }
@@ -21,7 +21,7 @@ public class RoomMessageVideoPlayer extends LinearLayout {
         if (isInit) return;
 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.message_videoplayer, this);
+        inflater.inflate(R.layout.message_media, this);
 
         isInit = true;
     }

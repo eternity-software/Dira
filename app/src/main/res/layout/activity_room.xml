@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark"
-    android:clipChildren="false"
+
     tools:context=".ui.activities.room.RoomActivity">
 
     <ImageView
@@ -29,7 +29,7 @@
         android:layout_height="0dp"
 
         android:nestedScrollingEnabled="false"
-
+        android:clipChildren="true"
 
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 
@@ -62,7 +62,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:clipChildren="true"
+
         app:layout_constraintTop_toTopOf="parent">
 
         <com.diraapp.ui.components.dynamic.ThemeImageView
@@ -423,6 +423,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginEnd="16dp"
+
         android:layout_marginBottom="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/recycler_view" >
@@ -456,8 +457,8 @@
             android:layout_width="14dp"
             android:layout_height="14dp"
             app:themeImageColor="accent"
-            android:layout_marginStart="-18dp"
-            android:layout_marginTop="-2dp"
+            android:layout_marginStart="-14dp"
+
             android:src="@drawable/color_circle"/>
 
     </LinearLayout>

@@ -1,46 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+
+    android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/previewImageView"
+        android:id="@+id/preview_image"
 
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_margin="2dp"
-        android:layout_weight="1"
-        android:background="@color/dark"
+        android:layout_height="wrap_content"
 
-
+        android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        app:shapeAppearanceOverlay="@style/RoundedCornersTheme"
-        app:srcCompat="@drawable/placeholder" />
+        android:elevation="0dp"
+
+       />
 
     <RelativeLayout
-        android:id="@+id/videoInfo"
+        android:id="@+id/download_overlay"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.diraapp.ui.components.FileParingImageView
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="2dp"
-            android:alpha="0.3"
-            app:shapeAppearanceOverlay="@style/RoundedCornersTheme"
+
+            android:alpha="0.6"
             app:srcCompat="@color/dark" />
 
-        <TextView
-            android:id="@+id/durationView"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="bottom"
-            android:paddingLeft="5dp"
-            android:paddingBottom="5dp"
-            android:text="0:00"
-            android:textColor="@color/white" />
+            android:orientation="vertical"
+            android:gravity="center">
+
+
+            <ImageView
+                android:id="@+id/button_download"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                app:srcCompat="@drawable/ic_download"
+
+
+                android:background="@drawable/color_circle"
+                android:backgroundTint="@color/gray_trans"
+                android:padding="8dp"
+                app:tint="@color/white" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:visibility="gone"
+                android:layout_marginTop="-42dp"
+                android:indeterminate="true"
+                android:indeterminateTintMode="src_atop"
+                android:indeterminateTint="@color/white"
+               />
+            <TextView
+                android:id="@+id/size_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+
+                android:fontFamily="@font/montserratsemibold"
+                android:gravity="center"
+
+                android:textSize="12dp"
+                android:text="0.0 MB"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
     </RelativeLayout>
 
-</RelativeLayout>
+</merge>

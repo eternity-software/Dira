@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    android:background="#A8000000"
+    android:background="#C8000000"
     tools:context=".ui.activities.PreviewActivity">
 
 
@@ -36,7 +36,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.diraapp.ui.components.PreviewImageView
+            <com.diraapp.ui.components.TouchImageView
                 android:id="@+id/image_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

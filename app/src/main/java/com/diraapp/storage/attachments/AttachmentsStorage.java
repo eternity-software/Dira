@@ -42,7 +42,7 @@ public class AttachmentsStorage {
                                     if (saveAttachment(saveAttachmentTask.getContext(),
                                             saveAttachmentTask.getAttachment(),
                                             saveAttachmentTask.getRoomSecret(),
-                                            true, address, UpdateProcessor.getInstance().getRoom(saveAttachmentTask.getRoomSecret()).getEncryptionKey()) != null) {
+                                            saveAttachmentTask.isSizeLimited(), address, UpdateProcessor.getInstance().getRoom(saveAttachmentTask.getRoomSecret()).getEncryptionKey()) != null) {
                                         for (AttachmentsStorageListener attachmentsStorageListener : attachmentsStorageListeners) {
                                             try {
                                                 attachmentsStorageListener.onAttachmentDownloaded(saveAttachmentTask.getAttachment());
@@ -113,15 +113,15 @@ public class AttachmentsStorage {
         return false;
     }
 
-    public static File saveAttachment(Context context, Attachment attachment, String roomSecret, boolean autoLoad, String address, String encryptionKey) throws IOException {
-        return saveAttachment(context, attachment, roomSecret, autoLoad, null, address, encryptionKey);
+    public static File saveAttachment(Context context, Attachment attachment, String roomSecret, boolean sizeLimited, String address, String encryptionKey) throws IOException {
+        return saveAttachment(context, attachment, roomSecret, sizeLimited, null, address, encryptionKey);
     }
 
-    public static File saveAttachment(Context context, Attachment attachment, String roomSecret, boolean autoLoad, DownloadHandler downloadHandler, String address, String encryptionKey) throws IOException {
+    public static File saveAttachment(Context context, Attachment attachment, String roomSecret, boolean sizeLimited, DownloadHandler downloadHandler, String address, String encryptionKey) throws IOException {
         File localFile = new File(context.getExternalCacheDir(), roomSecret + "_" + attachment.getFileUrl());
         CacheUtils cacheUtils = new CacheUtils(context);
 
-        if (!autoLoad | attachment.getSize() < cacheUtils.getLong(CacheUtils.AUTO_LOAD_SIZE)) {
+        if (!sizeLimited | attachment.getSize() < cacheUtils.getLong(CacheUtils.AUTO_LOAD_SIZE)) {
             AppStorage.downloadFile(UpdateProcessor.getInstance(context).getFileServer(address) + "/download/" + attachment.getFileUrl(), localFile, downloadHandler);
 
 

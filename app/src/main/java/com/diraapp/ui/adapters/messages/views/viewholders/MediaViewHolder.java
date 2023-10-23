@@ -1,13 +1,9 @@
 package com.diraapp.ui.adapters.messages.views.viewholders;
 
-import android.graphics.Bitmap;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,29 +13,26 @@ import com.diraapp.R;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentsStorage;
-import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
-import com.diraapp.ui.components.RoomMessageVideoPlayer;
+import com.diraapp.ui.components.ImagePreview;
+import com.diraapp.ui.components.RoomMediaMessage;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayerState;
-import com.diraapp.utils.Logger;
 import com.diraapp.utils.StringFormatter;
 
 import java.io.File;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MediaViewHolder extends AttachmentViewHolder {
 
     private DiraVideoPlayer videoPlayer;
-    private ImageView imageView;
+    private ImagePreview imageView;
     private CardView imageContainer;
     private TextView messageText;
 
     private Attachment currentAttachment;
-    private File currentPlayingFile;
+    private File currentMediaFile;
 
     public MediaViewHolder(@NonNull ViewGroup itemView,
                            MessageAdapterContract messageAdapterContract,
@@ -51,25 +44,18 @@ public class MediaViewHolder extends AttachmentViewHolder {
 
     @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
-        if(file == null) return;
+        if (file == null) return;
 
         if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
             imageView.setVisibility(View.VISIBLE);
-            DiraActivity.runGlobalBackground(() -> {
-                Bitmap bitmap = AppStorage.getBitmapFromPath(file.getPath(), this.itemView.getContext());
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    imageView.setImageBitmap(bitmap);
-                });
-            });
+            imageView.setImage(file);
 
-            // Causing "blink"
-            // Picasso.get().load(Uri.fromFile(file)).into(holder.imageView);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     getMessageAdapterContract().preparePreviewActivity(file.getPath(),
                             attachment.getAttachmentType() == AttachmentType.VIDEO,
-                            attachment.getBitmapPreview(), imageContainer).start();
+                            imageView.getLoadedBitmap(), imageContainer).start();
                 }
             });
 
@@ -100,18 +86,12 @@ public class MediaViewHolder extends AttachmentViewHolder {
             videoPlayer.play(file.getPath());
 
 
-            try {
-                //loading.setVisibility(View.GONE);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
             videoPlayer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     getMessageAdapterContract().preparePreviewActivity(file.getPath(),
                             attachment.getAttachmentType() == AttachmentType.VIDEO,
-                            attachment.getBitmapPreview(), imageContainer).start();
+                            imageView.getLoadedBitmap(), imageContainer).start();
                 }
             });
         }
@@ -125,7 +105,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
     @Override
     protected void postInflate() {
         super.postInflate();
-        View view = new RoomMessageVideoPlayer(itemView.getContext());
+        View view = new RoomMediaMessage(itemView.getContext());
         messageContainer.setVisibility(View.VISIBLE);
         postInflatedViewsContainer.addView(view);
         imageView = itemView.findViewById(R.id.image_view);
@@ -155,24 +135,14 @@ public class MediaViewHolder extends AttachmentViewHolder {
 
         Attachment attachment = message.getAttachments().get(0);
         currentAttachment = attachment;
-        DiraActivity.runGlobalBackground(() -> {
-            Bitmap previewBitmap = attachment.getBitmapPreview();
-            if (previewBitmap == null) {
-                previewBitmap = Bitmap.createBitmap(attachment.getWidth(),
-                        attachment.getHeight(),
-                        Bitmap.Config.ARGB_8888);
-
-            }
-            Bitmap finalPreviewBitmap = previewBitmap;
-            new Handler(Looper.getMainLooper()).post(() -> {
-                if(currentAttachment != attachment) return;
-                imageView.setImageBitmap(finalPreviewBitmap);
-                currentPlayingFile = AttachmentsStorage.getFileFromAttachment(attachment,
-                        itemView.getContext(), message.getRoomSecret());
-                if (!AttachmentsStorage.isAttachmentSaving(attachment))
-                    onAttachmentLoaded(attachment,currentPlayingFile, message);
-            });
+        currentMediaFile = AttachmentsStorage.getFileFromAttachment(attachment,
+                itemView.getContext(), message.getRoomSecret());
+        imageView.setAttachment(attachment, getMessageAdapterContract().getRoom(), currentMediaFile,  () -> {
+            if(currentAttachment != attachment) return;
+            if (!AttachmentsStorage.isAttachmentSaving(attachment))
+                onAttachmentLoaded(attachment, currentMediaFile, message);
         });
+
 
 
     }
@@ -195,8 +165,8 @@ public class MediaViewHolder extends AttachmentViewHolder {
     public void onViewAttached() {
         super.onViewAttached();
         if (!isInitialized) return;
-        if (videoPlayer.getState() == DiraVideoPlayerState.PAUSED && currentPlayingFile != null)
-            videoPlayer.play(currentPlayingFile.getPath());
+        if (videoPlayer.getState() == DiraVideoPlayerState.PAUSED && currentMediaFile != null)
+            videoPlayer.play(currentMediaFile.getPath());
     }
 
 

@@ -90,20 +90,6 @@
                     android:orientation="vertical"
                     app:themeBackgroundColor="message_background">
 
-                    <LinearLayout
-                        android:id="@+id/loading_attachment_layout"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:gravity="center"
-                        android:visibility="gone">
-
-                        <ProgressBar
-                            android:id="@+id/attachment_progressbar"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_gravity="center" />
-                    </LinearLayout>
-
 
                     <LinearLayout
                         android:id="@+id/views_container"

@@ -6,14 +6,14 @@ import com.diraapp.db.entities.Attachment;
 
 public class SaveAttachmentTask {
     private Context context;
-    private boolean isAutoLoad;
+    private boolean isSizeLimited;
 
     private Attachment attachment;
     private String roomSecret;
 
-    public SaveAttachmentTask(Context context, boolean isAutoLoad, Attachment attachment, String roomSecret) {
+    public SaveAttachmentTask(Context context, boolean isSizeLimited, Attachment attachment, String roomSecret) {
         this.context = context;
-        this.isAutoLoad = isAutoLoad;
+        this.isSizeLimited = isSizeLimited;
 
         this.attachment = attachment;
         this.roomSecret = roomSecret;
@@ -35,12 +35,12 @@ public class SaveAttachmentTask {
         this.context = context;
     }
 
-    public boolean isAutoLoad() {
-        return isAutoLoad;
+    public boolean isSizeLimited() {
+        return isSizeLimited;
     }
 
-    public void setAutoLoad(boolean autoLoad) {
-        isAutoLoad = autoLoad;
+    public void setSizeLimited(boolean sizeLimited) {
+        isSizeLimited = sizeLimited;
     }
 
 

@@ -28,7 +28,7 @@ import androidx.core.app.SharedElementCallback;
 import com.diraapp.R;
 import com.diraapp.transition.Transitions;
 import com.diraapp.ui.components.FilePreview;
-import com.diraapp.ui.components.PreviewImageView;
+import com.diraapp.ui.components.TouchImageView;
 import com.diraapp.ui.components.VideoPlayer;
 import com.diraapp.utils.ImageRotationFix;
 
@@ -46,7 +46,7 @@ public class ImageSendActivity extends DiraActivity {
     private String imageUri;
     private String finalImageUri;
     private Bitmap imageToSend;
-    private PreviewImageView imageView;
+    private TouchImageView imageView;
     private boolean isShown = false;
     private VideoPlayer videoPlayer;
     private boolean isVideo;
@@ -115,7 +115,7 @@ public class ImageSendActivity extends DiraActivity {
             imageView.setImageBitmap(imageBuffer);
         }
 
-        imageView.setActionsListener(new PreviewImageView.ImageActionsListener() {
+        imageView.setActionsListener(new TouchImageView.ImageActionsListener() {
 
             @Override
             public void onSlideDown() {
