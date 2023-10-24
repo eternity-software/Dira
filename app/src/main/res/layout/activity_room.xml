@@ -397,7 +397,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.otaliastudios.cameraview.CameraView
+            <!--<com.otaliastudios.cameraview.CameraView
                 android:id="@+id/camera"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -418,7 +418,7 @@
                 app:cameraVideoSizeMaxWidth="500"
                 app:cameraVideoSizeMinHeight="100"
                 app:cameraVideoSizeMinWidth="100"
-                app:cameraVideoSizeSmallest="false" />
+                app:cameraVideoSizeSmallest="false" />-->
         </androidx.cardview.widget.CardView>
 
 
