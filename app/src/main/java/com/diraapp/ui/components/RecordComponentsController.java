@@ -119,9 +119,10 @@ public class RecordComponentsController {
                         "Bubble captured");
                 if (recordListener != null && isSaving && secondsRecording > 1) {
                     recordListener.onMediaMessageRecorded(result.getFile().getPath(), AttachmentType.BUBBLE);
-                    camera.close();
-                    camera.setLifecycleOwner(null);
+
                 }
+                camera.close();
+                camera.setLifecycleOwner(null);
             }
 
             @Override

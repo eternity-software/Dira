@@ -86,8 +86,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:nestedScrollingEnabled="true"
-
-                    android:paddingBottom="90dp"
+                    android:paddingBottom="40dp"
                     android:stretchMode="columnWidth"
                     app:fastScrollEnabled="true"
                     app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
@@ -119,7 +118,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:animateLayoutChanges="true"
-
+        android:visibility="gone"
         android:background="@drawable/message_input"
         android:elevation="10dp"
         android:orientation="horizontal">
