@@ -1,15 +1,28 @@
 package com.diraapp.ui.components;
 
 import android.content.Context;
+import android.util.AttributeSet;
+import android.util.DebugUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+
+import com.diraapp.utils.android.DeviceUtils;
 
 public class HeightLimitedCardView extends CardView {
 
     private int maxHeight;
     public HeightLimitedCardView(@NonNull Context context) {
         super(context);
+    }
+
+    public HeightLimitedCardView(@NonNull Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public HeightLimitedCardView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
     }
 
     public void setMaxHeight(int maxHeight) {

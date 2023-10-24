@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.diraapp.ui.components.HeightLimitedCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/image_container"
     android:layout_width="wrap_content"
@@ -25,4 +25,4 @@
         android:layout_height="200dp"
         android:elevation="0dp"
         android:visibility="gone" />
-</androidx.cardview.widget.CardView>
+</com.diraapp.ui.components.HeightLimitedCardView>

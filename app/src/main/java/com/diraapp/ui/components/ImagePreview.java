@@ -134,7 +134,6 @@ public class ImagePreview extends RelativeLayout {
                 if (this.attachment != attachment | isMainImageLoaded) return;
                 loadedBitmap = finalPreviewBitmap;
                 imageView.setImageBitmap(finalPreviewBitmap);
-                requestLayout();
 
                 DiraActivity.runOnMainThread(() -> {
                     try {
@@ -157,6 +156,7 @@ public class ImagePreview extends RelativeLayout {
 
                                     });
                                     overlay.setVisibility(VISIBLE);
+                                    progressBar.setVisibility(GONE);
                                     sizeTextView.setVisibility(GONE);
                                     downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_play));
                                 }

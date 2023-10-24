@@ -116,8 +116,9 @@ public class MessageAttachmentLoader {
                     boolean isMessageAttachment = false;
                     for(Attachment messageAttachment : message.getAttachments())
                     {
-                        if(attachment.getFileUrl().equals(messageAttachment.getFileUrl()))
-                            isMessageAttachment = true;
+                        if(messageAttachment != null)
+                             if(attachment.getFileUrl().equals(messageAttachment.getFileUrl()))
+                                 isMessageAttachment = true;
                     }
                     if (isMessageAttachment) {
 

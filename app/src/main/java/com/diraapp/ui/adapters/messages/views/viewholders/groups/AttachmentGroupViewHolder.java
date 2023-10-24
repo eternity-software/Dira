@@ -11,9 +11,11 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
+import com.diraapp.R;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.res.Theme;
 import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
@@ -39,6 +41,9 @@ public class AttachmentGroupViewHolder extends AttachmentViewHolder {
     boolean isVerticalLayout = false;
 
     private List<ImagePreview> imagePreviewList = new ArrayList<>();
+    private List<ImagePreview> previewImagePool = new ArrayList<>();
+
+    private int lastPickedPoolIndex = 0;
     public AttachmentGroupViewHolder(@NonNull ViewGroup itemView,
                                      MessageAdapterContract messageAdapterContract,
                                      ViewHolderManagerContract viewHolderManagerContract,
@@ -54,6 +59,8 @@ public class AttachmentGroupViewHolder extends AttachmentViewHolder {
         HeightLimitedCardView cardView = new HeightLimitedCardView(itemView.getContext());
         cardView.setMaxHeight(DeviceUtils.dpToPx(400f, rootView.getContext()));
         cardView.setCardElevation(0f);
+        cardView.setClipChildren(true);
+        cardView.setCardBackgroundColor(Theme.getColor(itemView.getContext(), R.color.dark));
         cardView.setRadius(DeviceUtils.dpToPx(14f, rootView.getContext()));
         mother = generateLinearLayout();
         firstLayer = generateLinearLayout();
@@ -64,6 +71,11 @@ public class AttachmentGroupViewHolder extends AttachmentViewHolder {
         mother.addView(secondLayer);
         mother.addView(thirdLayer);
         cardView.addView(mother);
+
+        for(int i = 0; i < 12; i++)
+        {
+            generateImagePreview();
+        }
 
         postInflatedViewsContainer.addView(cardView);
     }
@@ -87,7 +99,7 @@ public class AttachmentGroupViewHolder extends AttachmentViewHolder {
         int attachmentIndex = 0;
         for(Attachment attachment : message.getAttachments())
         {
-            ImagePreview imagePreview = generateImagePreview();
+            ImagePreview imagePreview = getImagePreview();
             imagePreview.setAttachment(attachment, getMessageAdapterContract().getRoom(),
                     AttachmentsStorage.getFileFromAttachment(attachment, itemView.getContext(),
                             getMessageAdapterContract().getRoom().getSecretName()), null);
@@ -134,10 +146,6 @@ public class AttachmentGroupViewHolder extends AttachmentViewHolder {
                 onAttachmentLoaded(attachment, currentMediaFile, message);
 
         }
-        firstLayer.requestLayout();
-        secondLayer.requestLayout();
-        thirdLayer.requestLayout();
-        mother.requestLayout();
 
 
 
@@ -145,6 +153,20 @@ public class AttachmentGroupViewHolder extends AttachmentViewHolder {
 
     }
 
+    private ImagePreview getImagePreview()
+    {
+         ImagePreview imagePreview = previewImagePool.get(lastPickedPoolIndex);
+        if(lastPickedPoolIndex + 1 > previewImagePool.size() - 1)
+        {
+            lastPickedPoolIndex = 0;
+        }
+        else
+        {
+            lastPickedPoolIndex++;
+        }
+        imagePreviewList.add(imagePreview);
+        return imagePreview;
+    }
     private ImagePreview generateImagePreview()
     {
         ImagePreview imagePreview = new ImagePreview(itemView.getContext());
@@ -160,7 +182,7 @@ public class AttachmentGroupViewHolder extends AttachmentViewHolder {
 
         imagePreview.getImageView().setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-        imagePreviewList.add(imagePreview);
+        previewImagePool.add(imagePreview);
         return imagePreview;
     }
 
