@@ -141,7 +141,8 @@ public class MediaViewHolder extends AttachmentViewHolder {
         currentAttachment = attachment;
         currentMediaFile = AttachmentsStorage.getFileFromAttachment(attachment,
                 itemView.getContext(), message.getRoomSecret());
-        previewImage.setAttachment(attachment, getMessageAdapterContract().getRoom(), currentMediaFile, () -> {
+        previewImage.setAttachment(attachment, getMessageAdapterContract().getRoom(),
+                currentMediaFile, () -> {
             if (currentAttachment != attachment) return;
             if (!AttachmentsStorage.isAttachmentSaving(attachment))
                 onAttachmentLoaded(attachment, currentMediaFile, message);

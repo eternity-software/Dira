@@ -152,9 +152,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
     }
 
     public void release() {
-        /*for (AttachmentsStorageListener attachmentsStorageListener : listeners) {
-            AttachmentsStorage.removeAttachmentsStorageListener(attachmentsStorageListener);
-        }*/
         messageAttachmentLoader.release();
         diraMediaPlayer.reset();
         diraMediaPlayer.release();

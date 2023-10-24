@@ -103,8 +103,7 @@ public class ImagePreview extends RelativeLayout {
         });
     }
 
-    private void setImageBitmap(Bitmap bitmap)
-    {
+    private void setImageBitmap(Bitmap bitmap) {
         DiraActivity.runOnMainThread(() -> {
             imageView.setImageBitmap(bitmap);
             loadedBitmap = bitmap;
@@ -113,9 +112,8 @@ public class ImagePreview extends RelativeLayout {
     }
 
 
-
     public void setAttachment(Attachment attachment, Room room, File file, Runnable onReady) {
-        if(attachment == null) return;
+        if (attachment == null) return;
 
         this.room = room;
         isMainImageLoaded = false;
@@ -123,6 +121,7 @@ public class ImagePreview extends RelativeLayout {
         overlay.setVisibility(GONE);
         imageView.setImageBitmap(null);
         DiraActivity.runGlobalBackground(() -> {
+            if (this.attachment != attachment | isMainImageLoaded) return;
 
             final Bitmap dummyBitmap = Bitmap.createBitmap(attachment.getWidth(),
                     attachment.getHeight(),
@@ -136,7 +135,6 @@ public class ImagePreview extends RelativeLayout {
             }
             Bitmap finalPreviewBitmap = previewBitmap;
             new Handler(Looper.getMainLooper()).post(() -> {
-                if (this.attachment != attachment | isMainImageLoaded) return;
                 loadedBitmap = finalPreviewBitmap;
                 imageView.setImageBitmap(finalPreviewBitmap);
 
@@ -144,8 +142,8 @@ public class ImagePreview extends RelativeLayout {
                     try {
 
                         try {
-                            if(onReady != null)
-                              onReady.run();
+                            if (onReady != null)
+                                onReady.run();
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -153,8 +151,7 @@ public class ImagePreview extends RelativeLayout {
                         if (file != null) {
 
                             if (!AttachmentsStorage.isAttachmentSaving(attachment)) {
-                                if(attachment.getAttachmentType() == AttachmentType.VIDEO)
-                                {
+                                if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
                                     DiraActivity.runGlobalBackground(() -> {
 
                                         setImageBitmap(ThumbnailUtils.createVideoThumbnail(file.getPath(), MediaStore.Video.Thumbnails.MINI_KIND));
@@ -164,9 +161,7 @@ public class ImagePreview extends RelativeLayout {
                                     progressBar.setVisibility(GONE);
                                     sizeTextView.setVisibility(GONE);
                                     downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_play));
-                                }
-                                else
-                                {
+                                } else {
                                     DiraActivity.runGlobalBackground(() -> {
 
                                         setImage(AttachmentsStorage.getFileFromAttachment(attachment, getContext(), room.getSecretName()));
@@ -191,9 +186,8 @@ public class ImagePreview extends RelativeLayout {
         });
     }
 
-    public void hideDownloadOverlay()
-    {
-        if(!isInitialized) return;
+    public void hideDownloadOverlay() {
+        if (!isInitialized) return;
         overlay.setVisibility(GONE);
     }
 

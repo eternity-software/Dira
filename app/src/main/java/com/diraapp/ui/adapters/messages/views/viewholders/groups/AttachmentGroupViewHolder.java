@@ -34,9 +34,9 @@ public class AttachmentGroupViewHolder extends AttachmentViewHolder {
 
     LinearLayout mother;
 
-    LinearLayout firstLayer ;
-    LinearLayout secondLayer ;
-    LinearLayout thirdLayer ;
+    LinearLayout firstLayer;
+    LinearLayout secondLayer;
+    LinearLayout thirdLayer;
 
     boolean isVerticalLayout = false;
 
@@ -44,6 +44,7 @@ public class AttachmentGroupViewHolder extends AttachmentViewHolder {
     private List<ImagePreview> previewImagePool = new ArrayList<>();
 
     private int lastPickedPoolIndex = 0;
+
     public AttachmentGroupViewHolder(@NonNull ViewGroup itemView,
                                      MessageAdapterContract messageAdapterContract,
                                      ViewHolderManagerContract viewHolderManagerContract,
@@ -73,8 +74,7 @@ public class AttachmentGroupViewHolder extends AttachmentViewHolder {
         mother.addView(thirdLayer);
         cardView.addView(mother);
 
-        for(int i = 0; i < 12; i++)
-        {
+        for (int i = 0; i < 12; i++) {
             generateImagePreview();
         }
 
@@ -98,41 +98,34 @@ public class AttachmentGroupViewHolder extends AttachmentViewHolder {
         int attachmentCount = message.getAttachments().size();
 
         int attachmentIndex = 0;
-        for(Attachment attachment : message.getAttachments())
-        {
+        for (Attachment attachment : message.getAttachments()) {
             ImagePreview imagePreview = getImagePreview();
             imagePreview.setAttachment(attachment, getMessageAdapterContract().getRoom(),
                     AttachmentsStorage.getFileFromAttachment(attachment, itemView.getContext(),
                             getMessageAdapterContract().getRoom().getSecretName()), null);
 
-            if(attachmentIndex == 0 |
-                    (attachmentCount > 3 && attachmentIndex < 3 && !isVerticalLayout))
-            {
+            if (attachmentIndex == 0 |
+                    (attachmentCount > 3 && attachmentIndex < 3 && !isVerticalLayout)) {
                 firstLayer.addView(imagePreview);
             } else if (attachmentIndex < 3 |
                     (attachmentCount > 6 && attachmentIndex < 5 && isVerticalLayout) |
                     (!isVerticalLayout && attachmentCount > 3 && attachmentIndex < 6)) {
                 secondLayer.addView(imagePreview);
                 secondLayer.setVisibility(View.VISIBLE);
-            }
-            else if (attachmentIndex < 10) {
+            } else if (attachmentIndex < 10) {
                 thirdLayer.addView(imagePreview);
 
                 thirdLayer.setVisibility(View.VISIBLE);
             }
-            if(attachmentIndex == 0)
-            {
-                if(attachment.getWidth() / (float) attachment.getHeight() > 1.5f)
-                {
+            if (attachmentIndex == 0) {
+                if (attachment.getWidth() / (float) attachment.getHeight() > 1.5f) {
                     isVerticalLayout = true;
                     mother.setOrientation(LinearLayout.VERTICAL);
                     firstLayer.setOrientation(LinearLayout.HORIZONTAL);
                     secondLayer.setOrientation(LinearLayout.HORIZONTAL);
                     thirdLayer.setOrientation(LinearLayout.HORIZONTAL);
 
-                }
-                else
-                {
+                } else {
                     isVerticalLayout = false;
                     mother.setOrientation(LinearLayout.HORIZONTAL);
                     firstLayer.setOrientation(LinearLayout.VERTICAL);
@@ -149,27 +142,20 @@ public class AttachmentGroupViewHolder extends AttachmentViewHolder {
         }
 
 
-
-
-
     }
 
-    private ImagePreview getImagePreview()
-    {
-         ImagePreview imagePreview = previewImagePool.get(lastPickedPoolIndex);
-        if(lastPickedPoolIndex + 1 > previewImagePool.size() - 1)
-        {
+    private ImagePreview getImagePreview() {
+        ImagePreview imagePreview = previewImagePool.get(lastPickedPoolIndex);
+        if (lastPickedPoolIndex + 1 > previewImagePool.size() - 1) {
             lastPickedPoolIndex = 0;
-        }
-        else
-        {
+        } else {
             lastPickedPoolIndex++;
         }
         imagePreviewList.add(imagePreview);
         return imagePreview;
     }
-    private ImagePreview generateImagePreview()
-    {
+
+    private ImagePreview generateImagePreview() {
         ImagePreview imagePreview = new ImagePreview(itemView.getContext());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
@@ -183,13 +169,12 @@ public class AttachmentGroupViewHolder extends AttachmentViewHolder {
 
         imagePreview.getImageView().setScaleType(ImageView.ScaleType.CENTER_CROP);
         int padding = DeviceUtils.dpToPx(1f, rootView.getContext());
-        imagePreview.setPadding(padding,padding,padding,padding);
+        imagePreview.setPadding(padding, padding, padding, padding);
         previewImagePool.add(imagePreview);
         return imagePreview;
     }
 
-    private LinearLayout generateLinearLayout()
-    {
+    private LinearLayout generateLinearLayout() {
         LinearLayout mom = new LinearLayout(itemView.getContext());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -201,9 +186,8 @@ public class AttachmentGroupViewHolder extends AttachmentViewHolder {
     @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
 
-        for(ImagePreview imagePreview : new ArrayList<>(imagePreviewList))
-        {
-            if(imagePreview.getAttachment() != null && attachment != null) {
+        for (ImagePreview imagePreview : new ArrayList<>(imagePreviewList)) {
+            if (imagePreview.getAttachment() != null && attachment != null) {
                 if (imagePreview.getAttachment().getFileUrl().equals(attachment.getFileUrl())) {
                     imagePreview.hideDownloadOverlay();
                     imagePreview.setAttachment(attachment, getMessageAdapterContract().getRoom(),
