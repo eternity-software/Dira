@@ -124,16 +124,15 @@ public class ImagePreview extends RelativeLayout {
         imageView.setImageBitmap(null);
         DiraActivity.runGlobalBackground(() -> {
 
-            Bitmap previewBitmap = Bitmap.createBitmap(attachment.getWidth(),
+            final Bitmap dummyBitmap = Bitmap.createBitmap(attachment.getWidth(),
                     attachment.getHeight(),
                     Bitmap.Config.ARGB_8888);
-            Bitmap finalTempPreviewBitmap = previewBitmap;
-            DiraActivity.runOnMainThread(() -> imageView.setImageBitmap(finalTempPreviewBitmap));
-            previewBitmap = attachment.getBitmapPreview();
+
+            DiraActivity.runOnMainThread(() -> imageView.setImageBitmap(dummyBitmap));
+
+            Bitmap previewBitmap = attachment.getBitmapPreview();
             if (previewBitmap == null) {
-                previewBitmap = Bitmap.createBitmap(attachment.getWidth(),
-                        attachment.getHeight(),
-                        Bitmap.Config.ARGB_8888);
+                previewBitmap = dummyBitmap;
             }
             Bitmap finalPreviewBitmap = previewBitmap;
             new Handler(Looper.getMainLooper()).post(() -> {
