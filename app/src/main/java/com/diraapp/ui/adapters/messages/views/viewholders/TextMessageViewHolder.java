@@ -28,12 +28,20 @@ public class TextMessageViewHolder extends AttachmentViewHolder {
     @Override
     public void onViewInflated(View rootView) {
         super.onViewInflated(rootView);
-        messageText.setVisibility(View.VISIBLE);
+        //messageText.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void bindMessage(Message message, Message previousMessage) {
-        super.bindMessage(message, previousMessage);
+       super.bindMessage(message, previousMessage);
+
+        if(message.getText().length() == 0)
+        {
+            messageText.setVisibility(View.GONE);
+            return;
+        }
+
+        messageText.setVisibility(View.VISIBLE);
         messageText.setText(message.getText());
     }
 

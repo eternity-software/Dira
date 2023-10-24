@@ -17,6 +17,7 @@ import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.adapters.messages.views.viewholders.AttachmentViewHolder;
+import com.diraapp.ui.adapters.messages.views.viewholders.TextMessageViewHolder;
 import com.diraapp.ui.components.HeightLimitedCardView;
 import com.diraapp.ui.components.ImagePreview;
 import com.diraapp.utils.android.DeviceUtils;
@@ -25,7 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AttachmentGroupViewHolder extends AttachmentViewHolder {
+public class AttachmentGroupViewHolder extends TextMessageViewHolder {
 
 
     LinearLayout mother;
