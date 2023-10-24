@@ -95,6 +95,10 @@ public interface RoomActivityContract {
 
         Room getRoom();
 
+        int getItemsCount();
+
+        boolean isNewestMessagesLoaded();
+
         void loadMessagesBefore(Message message, int index);
 
         void loadNewerMessage(Message message, int index);

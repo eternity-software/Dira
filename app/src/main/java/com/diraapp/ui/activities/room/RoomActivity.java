@@ -661,7 +661,7 @@ public class RoomActivity extends DiraActivity
                     if (layoutManager == null) return;
                     int position = layoutManager.findFirstVisibleItemPosition();
 
-                    if (position < 2) {
+                    if (position < 2 & presenter.isNewestMessagesLoaded()) {
                         if (!isArrowShowed) return;
                         isArrowShowed = false;
                         performScaleAnimation(1, 0, arrow);
@@ -797,10 +797,14 @@ public class RoomActivity extends DiraActivity
     @Override
     public void notifyMessagesChanged(int start, int last, int scrollPosition) {
         runOnUiThread(() -> {
+
+            Logger.logDebug("notifying added", "adding item " + binding.recyclerView.getChildCount());
+            binding.recyclerView.stopScroll();
             if (start == IS_ROOM_OPENING) {
+                binding.recyclerView.getRecycledViewPool().clear();
                 messagesAdapter.notifyDataSetChanged();
             } else {
-                messagesAdapter.notifyItemRangeInserted(start, last);
+                messagesAdapter.notifyItemRangeInserted(start, last - 1);
             }
 
             if (scrollPosition != DO_NOT_NEED_TO_SCROLL) {
@@ -811,22 +815,31 @@ public class RoomActivity extends DiraActivity
                 }
                 binding.recyclerView.scrollToPosition(scrollPosition);
             }
+            Logger.logDebug("notifying added", "item has been added successfully ||| " +
+                    presenter.getItemsCount() + " adapter - " + messagesAdapter.getItemCount());
         });
     }
 
     @Override
     public void notifyAdapterItemChanged(int index) {
+        Logger.logDebug("notifying changed", "item changing");
         runOnUiThread(() -> messagesAdapter.notifyItemChanged(index));
+
+        Logger.logDebug("notifying changed", "item has been changed successfully"+ " ||| " +
+                presenter.getItemsCount() + " adapter - " + messagesAdapter.getItemCount());
     }
 
     @Override
     public void notifyAdapterItemsDeleted(int start, int count) {
         runOnUiThread(() -> {
-            messagesAdapter.notifyItemRangeRemoved(start, count);
+            Logger.logDebug("notifying adapter", "Deleted items");
+            messagesAdapter.notifyItemRangeRemoved(start, count - 1);
+            binding.recyclerView.stopScroll();
+            Logger.logDebug("notifying adapter",
+                    "Deleted items from start - " + start + " to " + (count - 1) +
+                            " size is " + messagesAdapter.getItemCount() + " ||| " +
+                            presenter.getItemsCount() + " adapter - " + messagesAdapter.getItemCount());
         });
-        Logger.logDebug(this.getClass().getSimpleName(),
-                "Deleted items from start - " + start + " to " + (count - 1) +
-                        " size is " + messagesAdapter.getItemCount());
 
     }
 

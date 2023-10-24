@@ -215,7 +215,13 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 List<Message> oldMessages = messageDao.getBeforeMessagesInRoom(roomSecret, message.getTime());
                 if (oldMessages.size() == 0) return;
                 int notifyingIndex = messageList.size() - 1;
+//                List<Message> newMessages = messageList;
+//                newMessages.addAll(oldMessages);
+//
+//                messageList = newMessages;
+
                 messageList.addAll(oldMessages);
+
                 loadReplies(oldMessages, messageDao);
 
                 boolean isMessagesRemoved = messageList.size() > MAX_ADAPTER_MESSAGES_COUNT;
@@ -254,6 +260,9 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     isNewestMessagesLoaded = true;
                     return;
                 }
+
+//                newMessages.addAll(messageList);
+//                messageList = newMessages;
 
                 for (Message m : newMessages) {
                     messageList.add(0, m);
@@ -535,7 +544,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
             MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
             if (lastReadMessage == null) {
-                String lastReadMessageId = null;
+                String lastReadMessageId;
                 if (room.getUnreadMessagesIds().size() > 0) {
                     lastReadMessageId = room.getUnreadMessagesIds().get(0);
                 } else {
@@ -603,6 +612,16 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     @Override
     public Room getRoom() {
         return room;
+    }
+
+    @Override
+    public int getItemsCount() {
+        return messageList.size();
+    }
+
+    @Override
+    public boolean isNewestMessagesLoaded() {
+        return isNewestMessagesLoaded;
     }
 
     @Override
