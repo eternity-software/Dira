@@ -71,6 +71,7 @@ public class RecordComponentsController {
     private long lastTimeRecordButtonUp = 0;
     private boolean isRecordButtonVisible = true;
 
+    private View recordIndicator;
     private RecordListener recordListener;
     private float lastScale = 1;
 
@@ -88,6 +89,7 @@ public class RecordComponentsController {
                                       ImageView recordRipple,
                                       TextView recordingStatusText,
                                       TextView recordingTipText,
+                                      View recordIndicator,
                                       DiraActivity context,
                                       LinearLayout recordingStatusBar,
                                       CameraView camera,
@@ -98,6 +100,7 @@ public class RecordComponentsController {
         this.recordRipple = recordRipple;
         this.context = context;
         this.recordingStatusText = recordingStatusText;
+        this.recordIndicator = recordIndicator;
         this.recordingTipText = recordingTipText;
         this.camera = camera;
         this.recordingStatusBar = recordingStatusBar;
@@ -170,6 +173,13 @@ public class RecordComponentsController {
                             AlphaAnimation animation = new AlphaAnimation(0, 1);
                             animation.setDuration(100);
                             recordingStatusBar.startAnimation(animation);
+
+                            AlphaAnimation recordAnimation = new AlphaAnimation(0, 1);
+                            recordAnimation.setDuration(500);
+                            recordAnimation.setRepeatMode(Animation.REVERSE);
+                            recordAnimation.setRepeatCount(Animation.INFINITE);
+
+                            recordIndicator.startAnimation(recordAnimation);
 
                             recordListener.onMediaMessageRecordingStart(AttachmentType.VOICE);
                             initVoiceIndicator();
@@ -386,26 +396,28 @@ public class RecordComponentsController {
         }
 
         Thread timer = new Thread(() -> {
+            long lastTimeCheck = 0;
+            // Note: do not use sleep here
             while (isRecording)
             {
                 try {
 
+                    if(System.currentTimeMillis() - lastTimeCheck > 1000) {
+                        int time = secondsRecording * 1000;
+                        int minutes = time / (60 * 1000);
+                        int seconds = (time / 1000) % 60;
+                        String secondsString = String.valueOf(seconds);
 
-                    int time = secondsRecording * 1000;
-                    int minutes = time / (60 * 1000);
-                    int seconds = (time / 1000) % 60;
-                    String secondsString = String.valueOf(seconds);
-
-                    if(seconds < 10)
-                    {
-                        secondsString = "0" + seconds;
+                        if (seconds < 10) {
+                            secondsString = "0" + seconds;
+                        }
+                        secondsRecording++;
+                        String finalSecondsString = secondsString;
+                        context.runOnUiThread(() -> {
+                            recordingStatusText.setText(context.getString(R.string.recording_prefix) + " " + minutes + ":" + finalSecondsString);
+                        });
+                        lastTimeCheck = System.currentTimeMillis();
                     }
-                    secondsRecording++;
-                    String finalSecondsString = secondsString;
-                    context.runOnUiThread(() -> {
-                        recordingStatusText.setText(context.getString(R.string.recording_prefix) + " " + minutes + ":" + finalSecondsString);
-                    });
-                    Thread.sleep(1000);
                 }
                 catch (Exception e)
                 {

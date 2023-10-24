@@ -163,7 +163,7 @@ public class RoomActivity extends DiraActivity
         UpdateProcessor.getInstance().addProcessorListener(this);
 
         recordComponentsController = new RecordComponentsController(binding.recordButton,
-                binding.recordRipple,  binding.recordingText,  binding.recordingTip,
+                binding.recordRipple,  binding.recordingText,  binding.recordingTip, binding.recordingIndicator,
                 this, binding.recordingStatusBar,
                 binding.camera, slidrInterface, binding.bubbleRecordingLayout, binding.bubbleFrame);
 

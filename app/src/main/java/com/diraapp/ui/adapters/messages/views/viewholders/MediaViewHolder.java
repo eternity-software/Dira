@@ -60,7 +60,6 @@ public class MediaViewHolder extends AttachmentViewHolder {
                             previewImage.getLoadedBitmap(), previewImage.getImageView()).start();
                 }
             });
-
         } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
 
             previewImage.setVisibility(View.VISIBLE);
@@ -86,9 +85,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
                 }
             });
 
-
             videoPlayer.play(file.getPath());
-
 
             videoPlayer.setOnClickListener(new View.OnClickListener() {
                 @Override

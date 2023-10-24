@@ -484,18 +484,26 @@
         android:background="@drawable/message_input"
         android:visibility="gone"
         android:elevation="1dp"
-        android:paddingLeft="14dp"
+        android:paddingLeft="18dp"
         app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recycler_view"
         app:themeBackgroundColor="gray">
-
+        <ImageView
+            android:id="@+id/recording_indicator"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/circle"
+            android:backgroundTint="@color/red"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginLeft="14dp"
             android:layout_gravity="center_vertical">
+
             <TextView
                 android:id="@+id/recording_text"
                 android:layout_width="wrap_content"
@@ -505,7 +513,7 @@
 
 
                 android:maxLines="1"
-                android:text="Recording 0:40"
+                android:text="0:00"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:transitionName="name"

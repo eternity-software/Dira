@@ -65,6 +65,9 @@
     <string name="permissions_request_title">Dira нуждается во внимании</string>
     <string name="permissions_request_text">Фоновое подключение и другие разрешения необходимы для правильной работы приложения.</string>
     <string name="user_status_voice">%s записывает голосовое</string>
+    <string name="recording_prefix">Запись</string>
+    <string name="recording_tip_stop">Отпустите для отмены</string>
+    <string name="recording_tip_send">Отпустите для отправки</string>
     <string name="members_title">Участники</string>
     <string name="delete_member_title">Забыть участника</string>
     <string name="delete_member_text">Вы можете забыть этого участника локально. Если участник активен, он появится снова.</string>
