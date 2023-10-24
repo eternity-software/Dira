@@ -782,10 +782,6 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void notifyOnRoomOpenMessagesLoaded(int scrollPosition) {
-        if (scrollPosition == 0) {
-            notifyMessagesChanged(IS_ROOM_OPENING, 0, DO_NOT_NEED_TO_SCROLL);
-            return;
-        }
         notifyMessagesChanged(IS_ROOM_OPENING, 0, scrollPosition);
     }
 
