@@ -219,10 +219,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 loadReplies(oldMessages, messageDao);
 
                 boolean isMessagesRemoved = messageList.size() > MAX_ADAPTER_MESSAGES_COUNT;
-                if (isMessagesRemoved) {
-                    messageList.subList(0, MessageDao.LOADING_COUNT).clear();
-                    isMessagesRemoved = true;
-                }
 
                 view.notifyMessageChangedWithoutScroll(
                         index + 1, index + oldMessages.size());
@@ -230,6 +226,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 view.notifyAdapterItemChanged(notifyingIndex);
 
                 if (isMessagesRemoved) {
+                    messageList.subList(0, MessageDao.LOADING_COUNT).clear();
                     view.notifyAdapterItemsDeleted(0, MessageDao.LOADING_COUNT);
                     isNewestMessagesLoaded = false;
                 }
@@ -267,13 +264,10 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 boolean isMessagesRemoved = messageList.size() > MAX_ADAPTER_MESSAGES_COUNT;
                 int size = messageList.size();
 
-                if (isMessagesRemoved) {
-                    messageList.subList(size - MessageDao.LOADING_COUNT + 1, size).clear();
-                }
-
                 view.notifyMessagesChanged(0, newMessages.size(), newMessages.size());
 
                 if (isMessagesRemoved) {
+                    messageList.subList(size - MessageDao.LOADING_COUNT + 1, size).clear();
                     view.notifyAdapterItemsDeleted(size - MessageDao.LOADING_COUNT,
                             MessageDao.LOADING_COUNT);
                 }
@@ -471,7 +465,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         });
 
     }
-
 
 
     @Override
