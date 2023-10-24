@@ -112,7 +112,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
             @Override
             public void onLastItemLoaded(int pos, View view) {
-                onItemClickListener.onItemClick(pos, view);
+                onItemClickListener.onLastItemLoaded(pos, view);
             }
 
             @Override

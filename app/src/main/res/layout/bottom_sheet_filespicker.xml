@@ -87,7 +87,7 @@
                     android:gravity="center"
                     android:nestedScrollingEnabled="true"
 
-                    android:paddingBottom="20dp"
+                    android:paddingBottom="90dp"
                     android:stretchMode="columnWidth"
                     app:fastScrollEnabled="true"
                     app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"

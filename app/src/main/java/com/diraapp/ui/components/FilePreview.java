@@ -21,6 +21,7 @@ public class FilePreview extends RelativeLayout {
     private RelativeLayout videoInfoView;
     private TextView durationView;
     private TextView selectionTextButton;
+    private View selectionTextContainer;
     private boolean isInitialized = false;
 
     public FilePreview(Context context, AttributeSet attrs) {
@@ -39,6 +40,7 @@ public class FilePreview extends RelativeLayout {
             videoInfoView = findViewById(R.id.videoInfo);
             durationView = findViewById(R.id.durationView);
             selectionTextButton = findViewById(R.id.select_button);
+            selectionTextContainer = findViewById(R.id.select_button_container);
             isInitialized = true;
         }
 
@@ -50,7 +52,7 @@ public class FilePreview extends RelativeLayout {
         position++;
         if(isSelected)
         {
-            selectionTextButton.getBackground().setColorFilter(Theme.getColor(getContext(), R.color.accent), PorterDuff.Mode.SRC_ATOP);
+            selectionTextButton.getBackground().setColorFilter(Theme.getColor(getContext(), R.color.accent_dark), PorterDuff.Mode.SRC_ATOP);
             selectionTextButton.setText(String.valueOf(position));
         }
         else
@@ -62,6 +64,10 @@ public class FilePreview extends RelativeLayout {
 
     public TextView getSelectionTextButton() {
         return selectionTextButton;
+    }
+
+    public View getSelectionTextContainer() {
+        return selectionTextContainer;
     }
 
     public void setSelectionTextButton(TextView selectionTextButton) {

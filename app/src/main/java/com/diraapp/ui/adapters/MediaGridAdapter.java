@@ -164,7 +164,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
                 }
                 picturesView.updateUi(selectorFileInfo.isSelected(), selectedFiles.indexOf(selectorFileInfo));
                 picturesView.getSelectionTextButton().setVisibility(View.VISIBLE);
-                picturesView.getSelectionTextButton().setOnClickListener(v -> {
+                picturesView.getSelectionTextContainer().setOnClickListener(v -> {
 
                     if(!selectorFileInfo.isSelected())
                     {

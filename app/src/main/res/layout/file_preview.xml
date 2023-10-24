@@ -4,17 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.diraapp.ui.components.FileParingImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.diraapp.ui.components.FileParingImageView
         android:id="@+id/fileImageView"
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_margin="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
+
+
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="2dp"
         android:layout_weight="1"
         android:background="@color/dark"
-
-
         android:scaleType="centerCrop"
         app:shapeAppearanceOverlay="@style/RoundedCornersTheme"
         app:srcCompat="@drawable/ic_camera" />
@@ -43,16 +46,26 @@
             android:textColor="@color/white" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/select_button"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+    <FrameLayout
+        android:id="@+id/select_button_container"
+        android:layout_width="40dp"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="8dp"
-        android:text="0"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:fontFamily="@font/montserratalternates_medium"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/circle_unselected" />
+        android:paddingEnd="8dp"
+        android:paddingTop="8dp"
+
+        android:layout_height="40dp">
+        <TextView
+            android:id="@+id/select_button"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="right"
+
+            android:text="10"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:fontFamily="@font/montserratalternates_semibold"
+
+            android:background="@drawable/circle_unselected" />
+    </FrameLayout>
+
 </RelativeLayout>
