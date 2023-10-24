@@ -82,6 +82,8 @@ public class PreviewActivity extends DiraActivity {
                 from,
                 Pair.create(transitionSource, from.getString(R.string.transition_image_shared)));
 
+
+
         return new PreparedActivity(from, intent, options);
     }
 

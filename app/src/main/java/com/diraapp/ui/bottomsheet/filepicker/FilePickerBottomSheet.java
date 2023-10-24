@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 import com.diraapp.storage.images.WaterfallBalancer;
+import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.MediaGridAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.utils.Numbers;
@@ -26,6 +27,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class FilePickerBottomSheet extends BottomSheetDialogFragment {
@@ -42,9 +44,14 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     private Runnable onDismiss;
 
     private boolean onlyImages = false;
+    private boolean isMultiSelection = false;
+
+    private View inputContainer;
+
+    FrameLayout bottomSheet;
 
 
-    public ArrayList<FileInfo> getMedia() {
+    public ArrayList<SelectorFileInfo> getMedia() {
         return mediaGridAdapter.getMediaElements();
     }
 
@@ -77,8 +84,39 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         return v;
     }
 
+    public void setMultiSelection(boolean isMultiSelect)
+    {
+        isMultiSelection = isMultiSelect;
+    }
+
     public void setRunnable(MediaGridItemListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
+        this.onItemClickListener = new MediaGridItemListener() {
+            @Override
+            public void onItemClick(int pos, View view) {
+                onItemClickListener.onItemClick(pos, view);
+            }
+
+            @Override
+            public void onLastItemLoaded(int pos, View view) {
+                onItemClickListener.onItemClick(pos, view);
+            }
+
+            @Override
+            public void onItemSelected(SelectorFileInfo selectorFileInfo,
+                                       List<SelectorFileInfo> selectorFileInfoList) {
+                if(selectorFileInfoList.size() == 0)
+                {
+                    inputContainer.setVisibility(View.GONE);
+                }
+                else
+                {
+
+                    inputContainer.setVisibility(View.VISIBLE);
+                    BottomSheetBehavior.from(bottomSheet)
+                            .setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+            }
+        };
     }
 
     @Override
@@ -111,7 +149,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
 
 
-        final FrameLayout bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+        bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 
 
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -145,9 +183,15 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         RecyclerView gallery = bottomSheet.findViewById(R.id.gridView);
         gallery.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 
+        inputContainer = bottomSheet.findViewById(R.id.linearLayout3);
+
+        bottomSheet.findViewById(R.id.sendButton).setOnClickListener(v -> {
+
+        });
 
         final TextView debugText = view.findViewById(R.id.debugText);
-        mediaGridAdapter = new MediaGridAdapter(getActivity(), onItemClickListener, gallery, onlyImages);
+        mediaGridAdapter = new MediaGridAdapter((DiraActivity) getActivity(), onItemClickListener, gallery, onlyImages);
+        mediaGridAdapter.setMultiSelect(isMultiSelection);
         mediaGridAdapter.setBalancerCallback(new WaterfallBalancer.BalancerCallback() {
             @Override
             public void onActiveWaterfallsCountChange(final int count) {

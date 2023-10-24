@@ -36,7 +36,7 @@ import com.diraapp.ui.adapters.MediaGridAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.bottomsheet.InvitationCodeBottomSheet;
 import com.diraapp.ui.bottomsheet.RoomEncryptionBottomSheet;
-import com.diraapp.ui.bottomsheet.filepicker.FileInfo;
+import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.diraapp.ui.components.DiraPopup;
 import com.diraapp.ui.components.FadingImageView;
 import com.diraapp.utils.CacheUtils;
@@ -211,7 +211,7 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
 
     private void loadAttachments() {
         runBackground(() -> {
-            ArrayList<FileInfo> attachments = new ArrayList<>();
+            ArrayList<SelectorFileInfo> attachments = new ArrayList<>();
 
             for (Message message : DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getAllMessages(roomSecret)) {
                 if (message.getAttachments() != null) {
@@ -228,7 +228,7 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
                             }
 
                             if (file != null) {
-                                attachments.add(new FileInfo(file.getName(), file.getPath(), mimeType));
+                                attachments.add(new SelectorFileInfo(file.getName(), file.getPath(), mimeType));
                             }
                         }
                     }
@@ -239,10 +239,10 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
             mediaGridAdapter = new MediaGridAdapter(RoomInfoActivity.this, attachments, new MediaGridItemListener() {
                 @Override
                 public void onItemClick(int pos, View view) {
-                    FileInfo fileInfo = attachments.get(pos);
+                    SelectorFileInfo selectorFileInfo = attachments.get(pos);
                     Intent intent = new Intent(getApplicationContext(), PreviewActivity.class);
-                    intent.putExtra(PreviewActivity.URI, fileInfo.getFilePath());
-                    intent.putExtra(PreviewActivity.IS_VIDEO, fileInfo.isVideo());
+                    intent.putExtra(PreviewActivity.URI, selectorFileInfo.getFilePath());
+                    intent.putExtra(PreviewActivity.IS_VIDEO, selectorFileInfo.isVideo());
                     startActivity(intent);
                 }
 

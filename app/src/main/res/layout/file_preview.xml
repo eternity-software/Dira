@@ -43,4 +43,16 @@
             android:textColor="@color/white" />
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/select_button"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="8dp"
+        android:text="0"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:fontFamily="@font/montserratalternates_medium"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/circle_unselected" />
 </RelativeLayout>

@@ -8,6 +8,7 @@ import com.diraapp.api.userstatus.UserStatus;
 import com.diraapp.api.views.UserStatusType;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
+import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
@@ -53,7 +54,7 @@ public interface RoomActivityContract {
                            VideoQuality videoQuality,
                            Double videoHeight,
                            Double videoWidth,
-                           RoomActivityPresenter.RoomAttachmentCallback callback,
+                           RoomActivityPresenter.AttachmentHandler callback,
                            String serverAddress,
                            String encryptionKey,
                            int bitrate);
@@ -108,13 +109,15 @@ public interface RoomActivityContract {
 
         boolean sendTextMessage(String text);
 
-        void uploadAttachmentAndSendMessage(AttachmentType attachmentType, String fileUri, String messageText);
+        void uploadAttachment(AttachmentType attachmentType, RoomActivityPresenter.AttachmentReadyListener attachmentReadyListener, String fileUri);
 
         void sendMessage(Message message) throws UnablePerformRequestException;
 
         void setReplyingMessage(Message message);
 
         void onScrollArrowPressed();
+
+        void sendMessage(ArrayList<Attachment> attachments, String messageText);
     }
 
 }

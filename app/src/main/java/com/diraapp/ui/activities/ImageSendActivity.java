@@ -33,6 +33,7 @@ import com.diraapp.ui.components.VideoPlayer;
 import com.diraapp.utils.ImageRotationFix;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -78,7 +79,7 @@ public class ImageSendActivity extends DiraActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         imageUri = getIntent().getExtras().getString("uri");
-        setContentView(R.layout.activity_image_send);
+        setContentView(R.layout.activity_media_send);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         final String type = getIntent().getExtras().getString("type");
         final int imagePurpose = getIntent().getExtras().getInt("purpose");
@@ -347,7 +348,9 @@ public class ImageSendActivity extends DiraActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
         Intent intent = new Intent();
-        intent.putExtra("uri", finalImageUri);
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add(finalImageUri);
+        intent.putExtra("uris", strings);
         intent.putExtra("text", editText.getText().toString());
         setResult(CODE, intent);
         finish();

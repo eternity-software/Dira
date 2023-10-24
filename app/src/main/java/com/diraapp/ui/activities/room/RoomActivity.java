@@ -202,6 +202,7 @@ public class RoomActivity extends DiraActivity
             }
         });
         filePickerBottomSheet = new FilePickerBottomSheet();
+        filePickerBottomSheet.setMultiSelection(true);
         filePickerBottomSheet.setRunnable(mediaGridItemListener);
 
         binding.attachButton.setOnClickListener(new View.OnClickListener() {
@@ -312,16 +313,31 @@ public class RoomActivity extends DiraActivity
                     }
                 }
                 final String messageText = data.getStringExtra("text");
-                String fileUri = data.getStringExtra("uri");
+
+                List<String> fileUris = data.getExtras().getStringArrayList("uris");
 
 
                 try {
+                    ArrayList<Attachment> attachments = new ArrayList<>();
                     presenter.sendStatus(UserStatusType.SENDING_FILE);
-                    if (FileClassifier.isVideoFile(fileUri)) {
-                        presenter.uploadAttachmentAndSendMessage(AttachmentType.VIDEO, fileUri, messageText);
-                    } else {
-                        presenter.uploadAttachmentAndSendMessage(AttachmentType.IMAGE, fileUri, messageText);
+                    if(fileUris.size() == 1)
+                    {
+                        RoomActivityPresenter.AttachmentReadyListener attachmentReadyListener = attachment -> {
+                            attachments.add(attachment);
+                            presenter.sendMessage(attachments, messageText);
+                        };
+                        String fileUri = fileUris.get(0);
+                        if (FileClassifier.isVideoFile(fileUri)) {
+                            presenter.uploadAttachment(AttachmentType.VIDEO, attachmentReadyListener, fileUri);
+                        } else {
+                            presenter.uploadAttachment(AttachmentType.IMAGE, attachmentReadyListener, fileUri);
+                        }
                     }
+                    else
+                    {
+                        System.out.println("WOw! Several attachments!");
+                    }
+
 
 
                 } catch (Exception e) {
@@ -681,7 +697,13 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void onMediaMessageRecorded(String path, AttachmentType attachmentType) {
-        presenter.uploadAttachmentAndSendMessage(attachmentType, path, "");
+
+        ArrayList<Attachment> attachments = new ArrayList<>();
+        RoomActivityPresenter.AttachmentReadyListener attachmentReadyListener = attachment -> {
+            attachments.add(attachment);
+            presenter.sendMessage(attachments, "");
+        };
+        presenter.uploadAttachment(attachmentType, attachmentReadyListener, path);
     }
 
     @Override
@@ -848,7 +870,7 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void compressVideo(List<Uri> urisToCompress, String fileUri, VideoQuality videoQuality, Double videoHeight,
-                              Double videoWidth, RoomActivityPresenter.RoomAttachmentCallback callback, String serverAddress, String encryptionKey, int
+                              Double videoWidth, RoomActivityPresenter.AttachmentHandler callback, String serverAddress, String encryptionKey, int
                                       bitrate) {
         VideoCompressor.start(getApplicationContext(), urisToCompress,
                 true,

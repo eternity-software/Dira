@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
 
-import com.diraapp.ui.bottomsheet.filepicker.FileInfo;
+import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.google.android.material.imageview.ShapeableImageView;
 
 /**
@@ -15,7 +15,7 @@ import com.google.android.material.imageview.ShapeableImageView;
  */
 public class FileParingImageView extends ShapeableImageView {
 
-    private FileInfo fileInfo;
+    private SelectorFileInfo selectorFileInfo;
     private Bitmap bitmap;
 
     public FileParingImageView(Context context) {
@@ -41,11 +41,11 @@ public class FileParingImageView extends ShapeableImageView {
         return bitmap;
     }
 
-    public FileInfo getFileInfo() {
-        return fileInfo;
+    public SelectorFileInfo getFileInfo() {
+        return selectorFileInfo;
     }
 
-    public void setFileInfo(FileInfo filePath) {
-        this.fileInfo = filePath;
+    public void setFileInfo(SelectorFileInfo filePath) {
+        this.selectorFileInfo = filePath;
     }
 }

@@ -428,13 +428,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
 
     @Override
-    public void uploadAttachmentAndSendMessage(AttachmentType attachmentType, String fileUri, String messageText) {
-        String replyId;
-        if (replyingMessage != null) replyId = replyingMessage.getId();
-        else {
-            replyId = null;
-        }
-        view.setReplyMessage(null);
+    public void uploadAttachment(AttachmentType attachmentType, AttachmentReadyListener attachmentReadyListener, String fileUri) {
+
         view.runBackground(() -> {
             Logger.logDebug(this.getClass().getSimpleName(),
                     "Uploading started.. ");
@@ -462,20 +457,50 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
                 view.compressVideo(urisToCompress, fileUri, videoQuality,
                         videoHeight, videoWidth,
-                        new RoomActivityPresenter.RoomAttachmentCallback(null, messageText,
-                                attachmentType, replyId),
+                        new AttachmentHandler(null, attachmentReadyListener,
+                                attachmentType),
                         room.getServerAddress(), room.getEncryptionKey(), bitrate);
 
             } else {
                 view.uploadFile(fileUri,
-                        new RoomAttachmentCallback(fileUri, messageText, attachmentType,
-                                replyId),
+                        new AttachmentHandler(fileUri, attachmentReadyListener, attachmentType),
                         false,
                         room.getServerAddress(),
                         room.getEncryptionKey());
             }
         });
 
+    }
+
+
+
+    @Override
+    public void sendMessage(ArrayList<Attachment> attachments, String messageText) {
+        String replyId;
+        if (replyingMessage != null) replyId = replyingMessage.getId();
+        else {
+            replyId = null;
+        }
+
+        view.setReplyMessage(null);
+        Message message = Message.generateMessage(view.getCacheUtils(), roomSecret);
+        message.setRepliedMessageId(replyId);
+
+        message.setLastTimeEncryptionKeyUpdated(room.getTimeEncryptionKeyUpdated());
+
+        if (room.getEncryptionKey().equals("")) {
+            message.setText(messageText);
+        } else {
+            message.setText(EncryptionUtil.encrypt(messageText, room.getEncryptionKey()));
+        }
+
+        message.setAttachments(attachments);
+
+        try {
+            sendMessage(message);
+        } catch (UnablePerformRequestException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -592,21 +617,18 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         return members;
     }
 
-    public class RoomAttachmentCallback implements Callback {
-
-        private final String messageText;
+    public class AttachmentHandler implements Callback {
         private final AttachmentType attachmentType;
-        private final String messageReplyId;
         private int height;
         private int width;
         private String fileUri;
         private long fileSize;
+        private AttachmentReadyListener attachmentReadyListener;
 
-        public RoomAttachmentCallback(String fileUri, String messageText, AttachmentType attachmentType, String messageReplyId) {
+        public AttachmentHandler(String fileUri, AttachmentReadyListener attachmentReadyListener, AttachmentType attachmentType) {
             this.fileUri = fileUri;
-            this.messageText = messageText;
             this.attachmentType = attachmentType;
-            this.messageReplyId = messageReplyId;
+            this.attachmentReadyListener = attachmentReadyListener;
         }
 
         public AttachmentType getAttachmentType() {
@@ -626,7 +648,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             return width;
         }
 
-        public RoomAttachmentCallback setFileUri(String fileUri) {
+        public AttachmentHandler setFileUri(String fileUri) {
             this.fileUri = fileUri;
             fileSize = new File(fileUri).length();
             return this;
@@ -694,26 +716,18 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     attachment.setWidth(this.width);
                 }
 
-                Message message = Message.generateMessage(view.getCacheUtils(), roomSecret);
-                message.setRepliedMessageId(messageReplyId);
+                attachmentReadyListener.onReady(attachment);
 
-                message.setLastTimeEncryptionKeyUpdated(room.getTimeEncryptionKeyUpdated());
-
-                if (room.getEncryptionKey().equals("")) {
-                    message.setText(messageText);
-                } else {
-                    message.setText(EncryptionUtil.encrypt(messageText, room.getEncryptionKey()));
-                }
-
-                message.getAttachments().add(attachment);
-
-                sendMessage(message);
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
+
     }
 
+    public interface AttachmentReadyListener {
+        void onReady(Attachment attachment);
+    }
 }

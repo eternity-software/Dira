@@ -220,6 +220,7 @@ public class ChatAppearanceActivity extends DiraActivity {
             @Override
             public void onClick(View view) {
                 bottomSheet = new FilePickerBottomSheet();
+                bottomSheet.setOnlyImages(true);
                 bottomSheet.show(getSupportFragmentManager(), "blocked");
 
                 bottomSheet.setRunnable(new MediaGridItemListener() {

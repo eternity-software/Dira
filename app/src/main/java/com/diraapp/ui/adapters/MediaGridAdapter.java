@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,10 +24,14 @@ import com.diraapp.device.PerformanceTester;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.images.WaterfallBalancer;
 import com.diraapp.ui.activities.DiraActivity;
-import com.diraapp.ui.bottomsheet.filepicker.FileInfo;
+import com.diraapp.ui.anim.BounceInterpolator;
+import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.diraapp.ui.components.FilePreview;
+import com.diraapp.utils.DiraVibrator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 
 public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.ViewHolder> {
@@ -34,10 +40,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     private final int threadCount = 0;
     private final LayoutInflater mInflater;
     private final WaterfallBalancer waterfallBalancer;
-    private final Activity context;
+    private final DiraActivity context;
     private final MediaGridItemListener itemClickListener;
-    private ArrayList<FileInfo> mediaElements = new ArrayList<>();
+    private ArrayList<SelectorFileInfo> mediaElements = new ArrayList<>();
     private Runnable transitionReenter;
+
+    private boolean multiSelect = false;
+
+    private List<SelectorFileInfo> selectedFiles = new ArrayList<>();
+    private HashMap<FilePreview, SelectorFileInfo> selectedViews = new HashMap<>();
 
     /**
      * Constructor for custom files arrays
@@ -46,7 +57,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
      * @param itemClickListener
      * @param recyclerView
      */
-    public MediaGridAdapter(final Activity context, ArrayList<FileInfo> mediaElements, MediaGridItemListener itemClickListener, RecyclerView recyclerView) {
+    public MediaGridAdapter(final DiraActivity context, ArrayList<SelectorFileInfo> mediaElements, MediaGridItemListener itemClickListener, RecyclerView recyclerView) {
         this.mInflater = LayoutInflater.from(context);
         this.itemClickListener = itemClickListener;
         this.context = context;
@@ -59,6 +70,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
     }
 
+    public void setMultiSelect(boolean multiSelect) {
+        this.multiSelect = multiSelect;
+    }
+
     /**
      * Constructor to get whole device memory
      *
@@ -66,7 +81,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
      * @param itemClickListener
      * @param recyclerView
      */
-    public MediaGridAdapter(final Activity context, MediaGridItemListener itemClickListener, RecyclerView recyclerView,
+    public MediaGridAdapter(final DiraActivity context, MediaGridItemListener itemClickListener, RecyclerView recyclerView,
                             boolean onlyImages) {
         this.mInflater = LayoutInflater.from(context);
         this.itemClickListener = itemClickListener;
@@ -112,15 +127,76 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         return viewHolder;
     }
 
+    public void updateExistingSelectedViews()
+    {
+        for(FilePreview filePreview : selectedViews.keySet())
+        {
+            SelectorFileInfo selectorFileInfo = selectedViews.get(filePreview);
+            filePreview.updateUi(selectorFileInfo.isSelected(), selectedFiles.indexOf(selectorFileInfo));
+        }
+    }
+
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         FilePreview picturesView = holder.fileParingImageView;
-        picturesView.setFileInfo(mediaElements.get(position));
+        SelectorFileInfo selectorFileInfo = mediaElements.get(position);
+        picturesView.setFileInfo(selectorFileInfo);
 
         try {
 
             picturesView.getFileParingImageView().setBackgroundColor(Theme.getColor(context, R.color.dark));
             picturesView.getFileParingImageView().setImageDrawable(null);
+
+            if(multiSelect)
+            {
+                selectedViews.remove(picturesView);
+                if(selectorFileInfo.isSelected())
+                {
+                    selectedViews.put(picturesView, selectorFileInfo);
+                }
+                picturesView.updateUi(selectorFileInfo.isSelected(), selectedFiles.indexOf(selectorFileInfo));
+                picturesView.getSelectionTextButton().setVisibility(View.VISIBLE);
+                picturesView.getSelectionTextButton().setOnClickListener(v -> {
+
+                    if(!selectorFileInfo.isSelected())
+                    {
+                        if(selectedFiles.size() < 10)
+                        {
+                            selectorFileInfo.setSelected(true);
+                            selectedFiles.add(selectorFileInfo);
+
+                            selectedViews.put(picturesView, selectorFileInfo);
+                            final Animation animation = AnimationUtils.loadAnimation(context, R.anim.bounce);
+
+                            // Use bounce interpolator with amplitude 0.1 and frequency 15
+                            BounceInterpolator interpolator = new BounceInterpolator(0.5, 2);
+                            animation.setInterpolator(interpolator);
+                            picturesView.startAnimation(animation);
+                            updateExistingSelectedViews();
+                            itemClickListener.onItemSelected(selectorFileInfo, selectedFiles);
+                        }
+                        else
+                        {
+                            DiraVibrator.vibrateOneTime(context);
+                        }
+
+                    }
+                    else
+                    {
+                        selectorFileInfo.setSelected(false);
+                        selectedViews.remove(picturesView);
+                        selectedFiles.remove(selectorFileInfo);
+                        updateExistingSelectedViews();
+                        itemClickListener.onItemSelected(selectorFileInfo, selectedFiles);
+                    }
+
+                    picturesView.updateUi(selectorFileInfo.isSelected(), selectedFiles.indexOf(selectorFileInfo));
+                });
+            }
+            else
+            {
+                picturesView.getSelectionTextButton().setVisibility(View.GONE);
+            }
 
             waterfallBalancer.add(picturesView);
 
@@ -139,12 +215,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         return mediaElements.size();
     }
 
-    public ArrayList<FileInfo> getMediaElements() {
+    public ArrayList<SelectorFileInfo> getMediaElements() {
         return mediaElements;
     }
 
     // Convenience method for getting data at click position
-    public FileInfo getItem(int id) {
+    public SelectorFileInfo getItem(int id) {
         return mediaElements.get(id);
     }
 
@@ -182,7 +258,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         }
     }
 
-    private ArrayList<FileInfo> loadGallery(Cursor cursor) {
+    private ArrayList<SelectorFileInfo> loadGallery(Cursor cursor) {
 //            Uri uri;
 //            Cursor cursor;
 //            int column_index_data, column_index_folder_name;
@@ -216,14 +292,14 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 //        cursor.close();
 
 
-        ArrayList<FileInfo> listOfAllMedia = new ArrayList<FileInfo>();
+        ArrayList<SelectorFileInfo> listOfAllMedia = new ArrayList<SelectorFileInfo>();
         while (cursor.moveToNext()) {
             String absolutePathOfImage = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
             String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE));
             String title = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.TITLE));
 
             if (mimeType.startsWith("image") || mimeType.startsWith("video")) {
-                listOfAllMedia.add(new FileInfo(title, absolutePathOfImage, mimeType));
+                listOfAllMedia.add(new SelectorFileInfo(title, absolutePathOfImage, mimeType));
             }
         }
         cursor.close();

@@ -48,17 +48,17 @@ public class FilesUploader {
                 }
 
 
-                if (callback instanceof RoomActivityPresenter.RoomAttachmentCallback) {
-                    ((RoomActivityPresenter.RoomAttachmentCallback) callback).
+                if (callback instanceof RoomActivityPresenter.AttachmentHandler) {
+                    ((RoomActivityPresenter.AttachmentHandler) callback).
                             setWidthAndHeight(bitmap.getWidth(), bitmap.getHeight());
                 }
 
                 // deleteAfterUpload = true;
 
-            } else if (callback instanceof RoomActivityPresenter.RoomAttachmentCallback) {
-                RoomActivityPresenter.RoomAttachmentCallback roomAttachmentCallback =
-                        (RoomActivityPresenter.RoomAttachmentCallback) callback;
-                if (roomAttachmentCallback.getAttachmentType() == AttachmentType.VIDEO) {
+            } else if (callback instanceof RoomActivityPresenter.AttachmentHandler) {
+                RoomActivityPresenter.AttachmentHandler attachmentHandler =
+                        (RoomActivityPresenter.AttachmentHandler) callback;
+                if (attachmentHandler.getAttachmentType() == AttachmentType.VIDEO) {
                     MediaMetadataRetriever retriever = new MediaMetadataRetriever();
                     retriever.setDataSource(sourceFileUri);
                     int width = Integer.parseInt(retriever.
@@ -67,7 +67,7 @@ public class FilesUploader {
                             extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
                     retriever.release();
 
-                    roomAttachmentCallback.setWidthAndHeight(width, height);
+                    attachmentHandler.setWidthAndHeight(width, height);
                 }
             }
 

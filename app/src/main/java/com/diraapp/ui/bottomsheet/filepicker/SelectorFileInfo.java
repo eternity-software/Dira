@@ -9,17 +9,27 @@ import android.provider.MediaStore;
 
 import java.util.concurrent.TimeUnit;
 
-public class FileInfo {
+public class SelectorFileInfo {
     private final String name;
     private final String filePath;
     private final String mimeType;
 
+    private boolean isSelected = false;
 
-    public FileInfo(String name, String filePath, String mimeType) {
+
+    public SelectorFileInfo(String name, String filePath, String mimeType) {
         this.name = name;
         this.filePath = filePath;
         this.mimeType = mimeType;
         //this.duration = getFormattedVideoDuration(context);
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public static String getFormattedVideoDuration(Context context, String filePath) {
