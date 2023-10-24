@@ -35,6 +35,7 @@
     <string name="personality_tip_text">Это Ваша стандартная информация об аккаунте, которая будет отправлена во все новые чаты</string>
     <string name="personality_settings_button">Настройки и внешний вид</string>
     <string name="you">Вы</string>
+    <string name="unknown">Неизвестный</string>
     <string name="type_message_hint">Сообщение</string>
     <string name="members_count">%s участников</string>
     <string name="edit_room">Изменить комнату</string>
@@ -133,4 +134,9 @@
     <string name="crash_text">Острая курочка во фритюре пришла и сломала приложение, простите пожалуйста</string>
     <string name="crash_button_reopen">Открыть Dira</string>
     <string name="crash_button_copy">Скопировать ошибку</string>
+    <string name="message_type_bubble">Пузырёк</string>
+    <string name="message_type_voice">Голосовое сообщение</string>
+    <string name="message_type_video">Видео сообщение</string>
+    <string name="message_type_attachments">Группа вложений</string>
+    <string name="message_type_image">Изображение</string>
 </resources>

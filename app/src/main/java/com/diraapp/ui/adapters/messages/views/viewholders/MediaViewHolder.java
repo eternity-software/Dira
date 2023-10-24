@@ -50,7 +50,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
 
         if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
             previewImage.setVisibility(View.VISIBLE);
-            //previewImage.setImage(file);
+            previewImage.setImage(file);
 
             previewImage.setOnClickListener(new View.OnClickListener() {
                 @Override

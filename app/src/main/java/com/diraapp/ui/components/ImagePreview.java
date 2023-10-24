@@ -23,13 +23,14 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.ui.activities.DiraActivity;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.io.File;
 
 public class ImagePreview extends RelativeLayout {
 
     private View rootView;
-    private ImageView imageView;
+    private ShapeableImageView imageView;
     private TextView sizeTextView;
     private boolean isInitialized = false;
     private View overlay;

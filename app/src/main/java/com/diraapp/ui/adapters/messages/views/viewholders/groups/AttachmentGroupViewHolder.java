@@ -60,8 +60,9 @@ public class AttachmentGroupViewHolder extends AttachmentViewHolder {
         cardView.setMaxHeight(DeviceUtils.dpToPx(400f, rootView.getContext()));
         cardView.setCardElevation(0f);
         cardView.setClipChildren(true);
-        cardView.setCardBackgroundColor(Theme.getColor(itemView.getContext(), R.color.dark));
+        cardView.setCardBackgroundColor(Theme.getColor(itemView.getContext(), R.color.gray));
         cardView.setRadius(DeviceUtils.dpToPx(14f, rootView.getContext()));
+
         mother = generateLinearLayout();
         firstLayer = generateLinearLayout();
         secondLayer = generateLinearLayout();
@@ -181,7 +182,8 @@ public class AttachmentGroupViewHolder extends AttachmentViewHolder {
         imagePreview.getImageView().setLayoutParams(imageParams);
 
         imagePreview.getImageView().setScaleType(ImageView.ScaleType.CENTER_CROP);
-
+        int padding = DeviceUtils.dpToPx(1f, rootView.getContext());
+        imagePreview.setPadding(padding,padding,padding,padding);
         previewImagePool.add(imagePreview);
         return imagePreview;
     }

@@ -43,7 +43,7 @@
 
     <style name="RoundedCornersTheme" parent="">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">2dp</item>
+        <item name="cornerSize">6dp</item>
     </style>
 
     <style name="AppSlideTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
