@@ -184,7 +184,7 @@ public class Message {
     }
 
     public boolean isDiraMessage() {
-        if(authorId == null) return true;
+        if (authorId == null) return true;
         return authorId.equals("Dira");
     }
 

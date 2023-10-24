@@ -32,10 +32,10 @@ import java.util.List;
 
 
 public class FilePickerBottomSheet extends BottomSheetDialogFragment {
+    FrameLayout bottomSheet;
     private View view;
     private ArrayList<String> images;
     private MediaGridAdapter mediaGridAdapter;
-
     /**
      * This will not work properly with FragmentManager
      * <p>
@@ -43,14 +43,9 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
      */
     private MediaGridItemListener onItemClickListener;
     private Runnable onDismiss;
-
     private boolean onlyImages = false;
     private boolean isMultiSelection = false;
-
     private View inputContainer;
-
-    FrameLayout bottomSheet;
-
     private MultiFilesListener multiFilesListener;
 
     private String messageText;
@@ -98,8 +93,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         this.messageText = messageText;
     }
 
-    public void setMultiSelection(boolean isMultiSelect)
-    {
+    public void setMultiSelection(boolean isMultiSelect) {
         isMultiSelection = isMultiSelect;
     }
 
@@ -118,14 +112,11 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
             @Override
             public void onItemSelected(SelectorFileInfo selectorFileInfo,
                                        List<SelectorFileInfo> selectorFileInfoList) {
-                if(selectorFileInfoList.size() == 0)
-                {
+                if (selectorFileInfoList.size() == 0) {
                     inputContainer.setVisibility(View.GONE);
-                }
-                else
-                {
+                } else {
 
-                    if(multiFilesListener != null) {
+                    if (multiFilesListener != null) {
                         inputContainer.setVisibility(View.VISIBLE);
                         BottomSheetBehavior.from(bottomSheet)
                                 .setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -200,7 +191,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         gallery.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 
         EditText messageInput = bottomSheet.findViewById(R.id.message_box);
-        if(messageText != null)
+        if (messageText != null)
             messageInput.setText(messageText);
         inputContainer = bottomSheet.findViewById(R.id.linearLayout3);
 
@@ -247,8 +238,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
     }
 
-    public interface MultiFilesListener
-    {
+    public interface MultiFilesListener {
         void onSelectedFilesSent(List<SelectorFileInfo> selectorFileInfoList, String messageText);
     }
 }

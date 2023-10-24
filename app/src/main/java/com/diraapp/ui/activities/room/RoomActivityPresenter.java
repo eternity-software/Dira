@@ -473,7 +473,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     }
 
 
-
     @Override
     public void sendMessage(ArrayList<Attachment> attachments, String messageText) {
         String replyId;
@@ -617,6 +616,10 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         return members;
     }
 
+    public interface AttachmentReadyListener {
+        void onReady(Attachment attachment);
+    }
+
     public class AttachmentHandler implements Callback {
         private final AttachmentType attachmentType;
         private int height;
@@ -725,9 +728,5 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         }
 
 
-    }
-
-    public interface AttachmentReadyListener {
-        void onReady(Attachment attachment);
     }
 }

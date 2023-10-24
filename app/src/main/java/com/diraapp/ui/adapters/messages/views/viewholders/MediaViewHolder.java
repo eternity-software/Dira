@@ -45,7 +45,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
     @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
         if (file == null) return;
-        if(attachment != currentAttachment) return;
+        if (attachment != currentAttachment) return;
         previewImage.hideDownloadOverlay();
 
         if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
@@ -80,7 +80,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
                     AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
                     alphaAnimation.setDuration(500);
 
-                  //  finalVideoPlayer.setVisibility(View.GONE);
+                    //  finalVideoPlayer.setVisibility(View.GONE);
                     alphaAnimation.setFillAfter(true);
                     finalVideoPlayer.startAnimation(alphaAnimation);
                 }
@@ -143,10 +143,10 @@ public class MediaViewHolder extends AttachmentViewHolder {
                 itemView.getContext(), message.getRoomSecret());
         previewImage.setAttachment(attachment, getMessageAdapterContract().getRoom(),
                 currentMediaFile, () -> {
-            if (currentAttachment != attachment) return;
-            if (!AttachmentsStorage.isAttachmentSaving(attachment))
-                onAttachmentLoaded(attachment, currentMediaFile, message);
-        });
+                    if (currentAttachment != attachment) return;
+                    if (!AttachmentsStorage.isAttachmentSaving(attachment))
+                        onAttachmentLoaded(attachment, currentMediaFile, message);
+                });
 
 
     }

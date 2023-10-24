@@ -25,7 +25,7 @@ public class AttachmentsStorage {
 
     public static void saveAttachmentAsync(SaveAttachmentTask saveAttachmentTask, String address) {
         if (isAttachmentSaving(saveAttachmentTask.getAttachment())) return;
-        if(saveAttachmentTask.getAttachment() == null) return;
+        if (saveAttachmentTask.getAttachment() == null) return;
         if (attachmentDownloader == null) {
             attachmentDownloader = new Thread(new Runnable() {
                 @Override
@@ -108,7 +108,7 @@ public class AttachmentsStorage {
     }
 
     public static boolean isAttachmentSaving(Attachment attachmentToCompare) {
-        if(attachmentToCompare == null) return false;
+        if (attachmentToCompare == null) return false;
         for (SaveAttachmentTask saveAttachmentTask : saveAttachmentTaskList) {
             if (saveAttachmentTask.getAttachment().getFileUrl().equals(attachmentToCompare.getFileUrl())) {
                 return true;
@@ -143,7 +143,7 @@ public class AttachmentsStorage {
 
 
     public static File getFileFromAttachment(@NotNull Attachment attachment, Context context, String roomSecret) {
-        if(attachment == null) return null;
+        if (attachment == null) return null;
         File localFile = new File(context.getExternalCacheDir(), roomSecret + "_" + attachment.getFileUrl());
 
         if (!localFile.exists()) return null;

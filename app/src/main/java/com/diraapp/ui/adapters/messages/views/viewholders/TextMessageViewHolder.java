@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
-import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 
 import java.io.File;

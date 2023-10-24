@@ -204,8 +204,7 @@ public class UpdateProcessor {
                  * Save attachments
                  */
                 for (Attachment attachment : ((NewMessageUpdate) update).getMessage().getAttachments()) {
-                    if(attachment != null)
-                    {
+                    if (attachment != null) {
                         SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment,
                                 ((NewMessageUpdate) update).getMessage().getRoomSecret());
 

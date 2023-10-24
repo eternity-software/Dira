@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
@@ -83,7 +82,6 @@ public class PreviewActivity extends DiraActivity {
                 Pair.create(transitionSource, from.getString(R.string.transition_image_shared)));
 
 
-
         return new PreparedActivity(from, intent, options);
     }
 
@@ -101,7 +99,6 @@ public class PreviewActivity extends DiraActivity {
 
         touchImageView.setImageBitmap(bitmapPool);
         bitmapPool = null;
-
 
 
         getWindow().getSharedElementEnterTransition()
@@ -224,7 +221,6 @@ public class PreviewActivity extends DiraActivity {
 
             }
         });
-
 
 
         TextView sizeView = findViewById(R.id.size_view);

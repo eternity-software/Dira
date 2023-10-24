@@ -204,8 +204,8 @@
     <!-- Message types -->
     <string name="message_type_bubble">Bubble message</string>
     <string name="message_type_voice">Voice message</string>
-    <string name="message_type_video" >Video message</string>
-    <string name="message_type_attachments" >Group of attachments</string>
+    <string name="message_type_video">Video message</string>
+    <string name="message_type_attachments">Group of attachments</string>
     <string name="message_type_image">Image</string>
 
     <!-- NON-LANGUAGE STRINGS -->
@@ -213,8 +213,6 @@
     <!--Transitions -->
     <string name="transition_image_prepare" translatable="false">img_prepare_transition</string>
     <string name="transition_image_shared" translatable="false">image_shared_transition</string>
-
-
 
 
 </resources>

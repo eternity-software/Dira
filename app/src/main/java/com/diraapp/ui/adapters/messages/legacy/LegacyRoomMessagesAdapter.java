@@ -58,7 +58,6 @@ import com.diraapp.ui.adapters.messagetooltipread.UserReadMessage;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.MessageAttachmentToLargeView;
 import com.diraapp.ui.components.MessageReplyComponent;
-import com.diraapp.ui.components.MultiAttachmentMessageView;
 import com.diraapp.ui.components.RoomMediaMessage;
 import com.diraapp.ui.components.RoomMessageCustomClientDataView;
 import com.diraapp.ui.components.VoiceMessageView;
@@ -66,10 +65,10 @@ import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayerState;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
-import com.diraapp.utils.android.DeviceUtils;
 import com.diraapp.utils.StringFormatter;
 import com.diraapp.utils.TimeConverter;
 import com.diraapp.utils.Timer;
+import com.diraapp.utils.android.DeviceUtils;
 import com.masoudss.lib.SeekBarOnProgressChanged;
 import com.masoudss.lib.WaveformSeekBar;
 import com.skydoves.balloon.Balloon;
@@ -1191,7 +1190,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
         } else if (viewType == VIEW_TYPE_CLIENT_DATA) {
             view = new RoomMessageCustomClientDataView(context);
         } else if (viewType == VIEW_TYPE_ROOM_MESSAGE_MULTI_ATTACHMENTS) {
-          //  view = MultiAttachmentMessageView.createNewMultiAttachmentView(context);
+            //  view = MultiAttachmentMessageView.createNewMultiAttachmentView(context);
         }
 
         if (!bubbleAdded) {

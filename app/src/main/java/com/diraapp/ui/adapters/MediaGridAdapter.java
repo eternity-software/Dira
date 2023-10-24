@@ -69,10 +69,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
     }
 
-    public void setMultiSelect(boolean multiSelect) {
-        this.multiSelect = multiSelect;
-    }
-
     /**
      * Constructor to get whole device memory
      *
@@ -87,7 +83,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         this.context = context;
 
 
-        for(int i = 0; i < 50; i++)
+        for (int i = 0; i < 50; i++)
             mediaElements.add(new SelectorFileInfo("", "", ""));
 
         // Must be executed on new Thread
@@ -104,6 +100,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         waterfallBalancer = new WaterfallBalancer(context, getHardwareDependBalancerCount(), recyclerView);
 
         registerTransitionListener();
+    }
+
+    public void setMultiSelect(boolean multiSelect) {
+        this.multiSelect = multiSelect;
     }
 
     private int getHardwareDependBalancerCount() {
@@ -130,10 +130,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         return viewHolder;
     }
 
-    public void updateExistingSelectedViews()
-    {
-        for(FilePreview filePreview : selectedViews.keySet())
-        {
+    public void updateExistingSelectedViews() {
+        for (FilePreview filePreview : selectedViews.keySet()) {
             SelectorFileInfo selectorFileInfo = selectedViews.get(filePreview);
             filePreview.updateUi(selectorFileInfo.isSelected(), selectedFiles.indexOf(selectorFileInfo));
         }
@@ -154,21 +152,17 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
             picturesView.getFileParingImageView().setBackgroundColor(Theme.getColor(context, R.color.dark));
             picturesView.getFileParingImageView().setImageDrawable(null);
 
-            if(multiSelect)
-            {
+            if (multiSelect) {
                 selectedViews.remove(picturesView);
-                if(selectorFileInfo.isSelected())
-                {
+                if (selectorFileInfo.isSelected()) {
                     selectedViews.put(picturesView, selectorFileInfo);
                 }
                 picturesView.updateUi(selectorFileInfo.isSelected(), selectedFiles.indexOf(selectorFileInfo));
                 picturesView.getSelectionTextButton().setVisibility(View.VISIBLE);
                 picturesView.getSelectionTextContainer().setOnClickListener(v -> {
 
-                    if(!selectorFileInfo.isSelected())
-                    {
-                        if(selectedFiles.size() < 10)
-                        {
+                    if (!selectorFileInfo.isSelected()) {
+                        if (selectedFiles.size() < 10) {
                             selectorFileInfo.setSelected(true);
                             selectedFiles.add(selectorFileInfo);
 
@@ -181,15 +175,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
                             picturesView.startAnimation(animation);
                             updateExistingSelectedViews();
                             itemClickListener.onItemSelected(selectorFileInfo, selectedFiles);
-                        }
-                        else
-                        {
+                        } else {
                             DiraVibrator.vibrateOneTime(context);
                         }
 
-                    }
-                    else
-                    {
+                    } else {
                         selectorFileInfo.setSelected(false);
                         selectedViews.remove(picturesView);
                         selectedFiles.remove(selectorFileInfo);
@@ -199,9 +189,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
                     picturesView.updateUi(selectorFileInfo.isSelected(), selectedFiles.indexOf(selectorFileInfo));
                 });
-            }
-            else
-            {
+            } else {
                 picturesView.getSelectionTextButton().setVisibility(View.GONE);
             }
 

@@ -8,9 +8,8 @@ import com.diraapp.R;
 
 import org.xmlpull.v1.XmlPullParser;
 
-public class EmptyAttributeSet  {
-    public static AttributeSet get(Resources resources)
-    {
+public class EmptyAttributeSet {
+    public static AttributeSet get(Resources resources) {
         XmlPullParser parser = resources.getXml(R.xml.backup_rules);
         return Xml.asAttributeSet(parser);
 

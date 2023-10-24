@@ -11,5 +11,6 @@ public interface MediaGridItemListener {
 
     void onLastItemLoaded(int pos, View view);
 
-    default void onItemSelected(SelectorFileInfo selectorFileInfo, List<SelectorFileInfo> selectorFileInfoList){}
+    default void onItemSelected(SelectorFileInfo selectorFileInfo, List<SelectorFileInfo> selectorFileInfoList) {
+    }
 }
