@@ -133,7 +133,7 @@
     <string name="users_status_bubble">%s записывают пузырёк</string>
     <string name="users_status_file">%s отпраляет файл</string>
     <string name="user_status_file">%s отпраляют файлы</string>
-    <string name="crash_title">О МОЯ КУРИЦА</string>
+    <string name="crash_title">Очень жаль, но…</string>
     <string name="crash_text">Острая курочка во фритюре пришла и сломала приложение, простите пожалуйста</string>
     <string name="crash_button_reopen">Открыть Dira</string>
     <string name="crash_button_copy">Скопировать ошибку</string>
