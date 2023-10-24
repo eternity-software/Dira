@@ -31,7 +31,7 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.ui.components.TouchImageView;
 import com.diraapp.ui.components.VideoPlayer;
-import com.diraapp.utils.Numbers;
+import com.diraapp.utils.android.DeviceUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -119,11 +119,11 @@ public class PreviewActivity extends DiraActivity {
                         ObjectAnimator animator;
                         if (isShown) {
 
-                            animator = ObjectAnimator.ofFloat(card, "radius", Numbers.dpToPx(14, getApplicationContext()));
+                            animator = ObjectAnimator.ofFloat(card, "radius", DeviceUtils.dpToPx(14, getApplicationContext()));
 
                         } else {
                             isShown = true;
-                            animator = ObjectAnimator.ofFloat(card, "radius", Numbers.dpToPx(0, getApplicationContext()));
+                            animator = ObjectAnimator.ofFloat(card, "radius", DeviceUtils.dpToPx(0, getApplicationContext()));
 
                         }
 

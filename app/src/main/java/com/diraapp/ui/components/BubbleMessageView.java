@@ -9,7 +9,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 import com.diraapp.R;
-import com.diraapp.utils.Numbers;
+import com.diraapp.utils.android.DeviceUtils;
 
 public class BubbleMessageView extends CardView {
 
@@ -24,7 +24,7 @@ public class BubbleMessageView extends CardView {
     private void initView() {
         if (isInit) return;
 
-        int side = Numbers.dpToPx(200, this.getContext());
+        int side = DeviceUtils.dpToPx(200, this.getContext());
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(side, side);
         this.setLayoutParams(params);

@@ -4,16 +4,17 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import com.felipecsl.asymmetricgridview.library.widget.AsymmetricGridView;
 
-public class MultiAttachmentMessageView extends AsymmetricGridView {
+
+
+public class MultiAttachmentMessageView  {
 
     public static final int MULTI_ATTACHMENT_MESSAGE_VIEW_ID = 732987529;
 
     private boolean isInit = false;
 
     public MultiAttachmentMessageView(Context context, AttributeSet attrs) {
-        super(context, null);
+
         init();
     }
 
@@ -141,9 +142,6 @@ public class MultiAttachmentMessageView extends AsymmetricGridView {
 
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-        this.setLayoutParams(params);
-        this.setAllowReordering(true);
-        this.setId(MULTI_ATTACHMENT_MESSAGE_VIEW_ID);
 
         isInit = true;
     }

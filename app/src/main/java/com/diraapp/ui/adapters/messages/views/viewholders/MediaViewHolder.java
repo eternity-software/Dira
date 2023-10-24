@@ -45,11 +45,12 @@ public class MediaViewHolder extends AttachmentViewHolder {
     @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
         if (file == null) return;
+        if(attachment != currentAttachment) return;
         previewImage.hideDownloadOverlay();
 
         if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
             previewImage.setVisibility(View.VISIBLE);
-            previewImage.setImage(file);
+            //previewImage.setImage(file);
 
             previewImage.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -71,13 +72,15 @@ public class MediaViewHolder extends AttachmentViewHolder {
                 @Override
                 public void run() {
                     FrameLayout.LayoutParams params = new FrameLayout.LayoutParams
-                            (previewImage.getMeasuredWidth(), previewImage.getMeasuredHeight());
+                            (previewImage.getLayoutParams().width,
+                                    previewImage.getLayoutParams().height);
                     finalVideoPlayer.setLayoutParams(params);
 
 
                     AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
                     alphaAnimation.setDuration(500);
 
+                  //  finalVideoPlayer.setVisibility(View.GONE);
                     alphaAnimation.setFillAfter(true);
                     finalVideoPlayer.startAnimation(alphaAnimation);
                 }

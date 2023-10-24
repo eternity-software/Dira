@@ -27,7 +27,7 @@ import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.RoomMessageCustomClientDataView;
-import com.diraapp.utils.Numbers;
+import com.diraapp.utils.android.DeviceUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -164,7 +164,7 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
         roomUpdatesIcon.setImageTintList(ColorStateList.valueOf(
                 Theme.getColor(itemView.getContext(), R.color.client_data_icon_color)));
         roomUpdatesIcon.getBackground().setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
-        int padding = Numbers.dpToPx(6, itemView.getContext());
+        int padding = DeviceUtils.dpToPx(6, itemView.getContext());
         roomUpdatesIcon.setPadding(padding, padding, padding, padding);
     }
 }

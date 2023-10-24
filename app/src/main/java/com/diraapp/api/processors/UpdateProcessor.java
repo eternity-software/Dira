@@ -204,10 +204,14 @@ public class UpdateProcessor {
                  * Save attachments
                  */
                 for (Attachment attachment : ((NewMessageUpdate) update).getMessage().getAttachments()) {
-                    SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment,
-                            ((NewMessageUpdate) update).getMessage().getRoomSecret());
+                    if(attachment != null)
+                    {
+                        SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment,
+                                ((NewMessageUpdate) update).getMessage().getRoomSecret());
 
-                    AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, address);
+                        AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, address);
+                    }
+
                 }
             } else if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
                 roomUpdatesProcessor.updateRoom(update);

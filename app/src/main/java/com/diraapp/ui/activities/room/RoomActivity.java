@@ -77,7 +77,7 @@ import com.diraapp.ui.components.viewswiper.ViewSwiper;
 import com.diraapp.ui.components.viewswiper.ViewSwiperListener;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
-import com.diraapp.utils.Numbers;
+import com.diraapp.utils.android.DeviceUtils;
 import com.diraapp.utils.SliderActivity;
 import com.squareup.picasso.Picasso;
 
@@ -241,7 +241,7 @@ public class RoomActivity extends DiraActivity
             @Override
             public void onClick(View view) {
 
-                performHeightAnimation(Numbers.dpToPx(48, RoomActivity.this), 0, binding.replyLayout)
+                performHeightAnimation(DeviceUtils.dpToPx(48, RoomActivity.this), 0, binding.replyLayout)
                         .addListener(new Animator.AnimatorListener() {
                             @Override
                             public void onAnimationStart(@NonNull Animator animator) {
@@ -618,7 +618,7 @@ public class RoomActivity extends DiraActivity
 
             if (binding.replyLayout.getVisibility() != View.VISIBLE) {
                 binding.replyLayout.setVisibility(View.VISIBLE);
-                performHeightAnimation(0, Numbers.dpToPx(48, this), binding.replyLayout);
+                performHeightAnimation(0, DeviceUtils.dpToPx(48, this), binding.replyLayout);
             }
 
         });

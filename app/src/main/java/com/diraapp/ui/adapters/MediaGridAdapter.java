@@ -1,6 +1,5 @@
 package com.diraapp.ui.adapters;
 
-import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -27,7 +26,7 @@ import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.anim.BounceInterpolator;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.diraapp.ui.components.FilePreview;
-import com.diraapp.utils.DiraVibrator;
+import com.diraapp.utils.android.DiraVibrator;
 
 import java.util.ArrayList;
 import java.util.HashMap;

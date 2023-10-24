@@ -29,7 +29,7 @@ import com.diraapp.res.Theme;
 import com.diraapp.ui.components.BorderScaleView;
 import com.diraapp.ui.components.DrawingView;
 import com.diraapp.utils.ImageRotationFix;
-import com.diraapp.utils.Numbers;
+import com.diraapp.utils.android.DeviceUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -239,9 +239,9 @@ public class ImageEdit extends DiraActivity {
                         int maxDpOffset = 200;
                         int maxDpSize = 100;
                         int minDpOffset = 2;
-                        int maxPxOffset = Numbers.dpToPx(maxDpOffset, ImageEdit.this);
-                        int maxPxSize = Numbers.dpToPx(maxDpSize, ImageEdit.this);
-                        int minPxOffset = Numbers.dpToPx(minDpOffset, ImageEdit.this);
+                        int maxPxOffset = DeviceUtils.dpToPx(maxDpOffset, ImageEdit.this);
+                        int maxPxSize = DeviceUtils.dpToPx(maxDpSize, ImageEdit.this);
+                        int minPxOffset = DeviceUtils.dpToPx(minDpOffset, ImageEdit.this);
                         if (offset < maxPxOffset && minPxOffset < offset) {
                             brushEditor.setY(startY - offset);
 

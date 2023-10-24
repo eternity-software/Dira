@@ -66,11 +66,10 @@ import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayerState;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
-import com.diraapp.utils.Numbers;
+import com.diraapp.utils.android.DeviceUtils;
 import com.diraapp.utils.StringFormatter;
 import com.diraapp.utils.TimeConverter;
 import com.diraapp.utils.Timer;
-import com.felipecsl.asymmetricgridview.library.model.AsymmetricItem;
 import com.masoudss.lib.SeekBarOnProgressChanged;
 import com.masoudss.lib.WaveformSeekBar;
 import com.skydoves.balloon.Balloon;
@@ -319,7 +318,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
 
         if (!isSameDay || !isSameYear) {
 
-            String dateString = Numbers.getDateFromTimestamp(message.getTime(), !isSameYear);
+            String dateString = DeviceUtils.getDateFromTimestamp(message.getTime(), !isSameYear);
             holder.dateText.setVisibility(View.VISIBLE);
             holder.dateText.setText(dateString);
         } else {
@@ -871,7 +870,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
                     } else if (i == 0 & attachmentCount > 1) {
                         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
 
-                        final ArrayList<AsymmetricItem> items = new ArrayList<>(attachmentCount);
+
                         for (int j = 0; j < attachmentCount; j++) {
                             Attachment attachment1 = message.getAttachments().get(j);
                             Bitmap bmp = Bitmap.createBitmap(attachment1.getWidth(),
@@ -1074,7 +1073,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
 
             if (size > 4) {
                 int height = 4 * 48;
-                height = Numbers.dpToPx(height, context);
+                height = DeviceUtils.dpToPx(height, context);
 
                 recyclerLayout.getLayoutParams().height = height;
                 recyclerLayout.requestLayout();
@@ -1192,7 +1191,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
         } else if (viewType == VIEW_TYPE_CLIENT_DATA) {
             view = new RoomMessageCustomClientDataView(context);
         } else if (viewType == VIEW_TYPE_ROOM_MESSAGE_MULTI_ATTACHMENTS) {
-            view = MultiAttachmentMessageView.createNewMultiAttachmentView(context);
+          //  view = MultiAttachmentMessageView.createNewMultiAttachmentView(context);
         }
 
         if (!bubbleAdded) {

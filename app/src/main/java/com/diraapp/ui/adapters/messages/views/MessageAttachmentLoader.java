@@ -48,9 +48,12 @@ public class MessageAttachmentLoader {
         AttachmentsStorage.addAttachmentsStorageListener(listener);
         listeners.add(listener);
 
-        long attachmentSize = 0;
+        long attachmentsSize = 0;
         for (Attachment attachment : message.getAttachments()) {
-            attachmentSize += attachment.getSize();
+            if(attachment != null)
+            {
+                attachmentsSize += attachment.getSize();
+            }
         }
 
         int attachmentCount = message.getAttachments().size();
@@ -63,7 +66,7 @@ public class MessageAttachmentLoader {
 
                 holder.onAttachmentLoaded(attachment, file, message);
             } else {
-                if (attachmentSize > maxAutoLoadSize) {
+                if (attachmentsSize > maxAutoLoadSize) {
                     // notify that AttachmentToLarge
                 } else {
                     if (!AttachmentsStorage.isAttachmentSaving(attachment)) {
@@ -109,7 +112,14 @@ public class MessageAttachmentLoader {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    if (attachment.getFileUrl().equals(message.getAttachments().get(0).getFileUrl())) {
+
+                    boolean isMessageAttachment = false;
+                    for(Attachment messageAttachment : message.getAttachments())
+                    {
+                        if(attachment.getFileUrl().equals(messageAttachment.getFileUrl()))
+                            isMessageAttachment = true;
+                    }
+                    if (isMessageAttachment) {
 
                         File file = AttachmentsStorage.getFileFromAttachment(attachment, context, message.getRoomSecret());
 

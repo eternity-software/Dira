@@ -22,7 +22,7 @@ import com.diraapp.storage.images.WaterfallBalancer;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.MediaGridAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
-import com.diraapp.utils.Numbers;
+import com.diraapp.utils.android.DeviceUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -182,8 +182,8 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
                 final CardView cardView = view.findViewById(R.id.appBar);
 
 
-                float pix = Numbers.dpToPx(20, getContext()) * (1 - slideOffset);
-                float maxPix = Numbers.dpToPx(20, getContext());
+                float pix = DeviceUtils.dpToPx(20, getContext()) * (1 - slideOffset);
+                float maxPix = DeviceUtils.dpToPx(20, getContext());
 
                 if (pix < maxPix) {
                     cardView.setRadius(pix);

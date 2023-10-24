@@ -25,7 +25,7 @@ import com.diraapp.ui.adapters.messages.views.viewholders.factories.MessageHolde
 import com.diraapp.ui.components.MessageReplyComponent;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
-import com.diraapp.utils.Numbers;
+import com.diraapp.utils.android.DeviceUtils;
 import com.diraapp.utils.TimeConverter;
 import com.squareup.picasso.Picasso;
 
@@ -218,7 +218,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         }
 
         if (!isSameDay || !isSameYear) {
-            String dateString = Numbers.getDateFromTimestamp(message.getTime(), !isSameYear);
+            String dateString = DeviceUtils.getDateFromTimestamp(message.getTime(), !isSameYear);
             dateText.setVisibility(View.VISIBLE);
             dateText.setText(dateString);
         } else {

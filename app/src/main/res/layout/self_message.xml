@@ -39,7 +39,7 @@
         android:background="@drawable/unread_message_background_drawable"
         android:gravity="end"
         android:orientation="horizontal"
-        android:paddingLeft="60dp"
+        android:paddingLeft="32dp"
         android:paddingRight="4dp">
 
         <com.diraapp.ui.components.dynamic.DynamicTextView

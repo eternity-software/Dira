@@ -1,11 +1,11 @@
-package com.diraapp.utils;
+package com.diraapp.utils.android;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.text.format.DateFormat;
 import android.util.TypedValue;
 
-public class Numbers {
+public class DeviceUtils {
 
 
     // Конвертируем dp в пикселы

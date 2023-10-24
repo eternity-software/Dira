@@ -11,6 +11,7 @@ import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.adapters.messages.views.viewholders.BubbleViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.EmojiMessageViewHolder;
+import com.diraapp.ui.adapters.messages.views.viewholders.groups.AttachmentGroupViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.MediaViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.RoomUpdatesViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.TextMessageViewHolder;
@@ -42,8 +43,12 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
             case SELF_VOICE_MESSAGE:
                 return new VoiceViewHolder(parent, messageAdapterContract,
                         viewHolderManagerContract, isSelfMessage);
-            case ROOM_ATTACHMENTS_MESSAGE:
-            case SELF_ATTACHMENTS_MESSAGE:
+            case ROOM_GROUP_ATTACHMENTS_MESSAGE:
+            case SELF_GROUP_ATTACHMENTS_MESSAGE:
+                return new AttachmentGroupViewHolder(parent, messageAdapterContract,
+                        viewHolderManagerContract, isSelfMessage);
+            case ROOM_SINGLE_ATTACHMENT_MESSAGE:
+            case SELF_SINGLE_ATTACHMENT_MESSAGE:
                 return new MediaViewHolder(parent, messageAdapterContract,
                         viewHolderManagerContract, isSelfMessage);
             case ROOM_EMOJI_MESSAGE:
@@ -66,13 +71,17 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
 
         if (isSelfMessage) {
             if (message.getAttachments().size() > 0) {
+                if (message.getAttachments().size() != 1) {
+                    return MessageHolderType.SELF_GROUP_ATTACHMENTS_MESSAGE;
+                }
                 Attachment attachment = message.getAttachments().get(0);
                 if (attachment.getAttachmentType() == AttachmentType.VOICE) {
                     return MessageHolderType.SELF_VOICE_MESSAGE;
                 } else if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
                     return MessageHolderType.SELF_BUBBLE_MESSAGE;
                 }
-                return MessageHolderType.SELF_ATTACHMENTS_MESSAGE;
+                return MessageHolderType.SELF_SINGLE_ATTACHMENT_MESSAGE;
+
             } else if (message.getText().length() > 0) {
                 if (StringFormatter.isEmoji(message.getText()) &&
                         StringFormatter.getEmojiCount(message.getText()) < 4) {
@@ -84,12 +93,15 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
 
         if (message.getAttachments().size() > 0) {
             Attachment attachment = message.getAttachments().get(0);
+            if (message.getAttachments().size() != 1) {
+                return MessageHolderType.ROOM_GROUP_ATTACHMENTS_MESSAGE;
+            }
             if (attachment.getAttachmentType() == AttachmentType.VOICE) {
                 return MessageHolderType.ROOM_VOICE_MESSAGE;
             } else if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
                 return MessageHolderType.ROOM_BUBBLE_MESSAGE;
             }
-            return MessageHolderType.ROOM_ATTACHMENTS_MESSAGE;
+            return MessageHolderType.ROOM_SINGLE_ATTACHMENT_MESSAGE;
         } else if (message.getText().length() > 0) {
             if (StringFormatter.isEmoji(message.getText()) &&
                     StringFormatter.getEmojiCount(message.getText()) < 4) {

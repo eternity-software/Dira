@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.diraapp.R;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
@@ -30,7 +32,7 @@ public class ImagePreview extends RelativeLayout {
     private ImageView imageView;
     private TextView sizeTextView;
     private boolean isInitialized = false;
-    private View downloadOverlay;
+    private View overlay;
     private View progressBar;
     private ImageView downloadButton;
 
@@ -47,6 +49,15 @@ public class ImagePreview extends RelativeLayout {
         initComponent();
     }
 
+    public ImagePreview(Context context) {
+        super(context);
+        initComponent();
+    }
+
+    public Attachment getAttachment() {
+        return attachment;
+    }
+
     public void initComponent() {
 
         if (!isInitialized) {
@@ -56,11 +67,17 @@ public class ImagePreview extends RelativeLayout {
             rootView = inflater.inflate(R.layout.preview_image, this);
             imageView = findViewById(R.id.preview_image);
             sizeTextView = findViewById(R.id.size_text);
-            downloadOverlay = findViewById(R.id.download_overlay);
+            overlay = findViewById(R.id.download_overlay);
             progressBar = findViewById(R.id.progress_bar);
             downloadButton = findViewById(R.id.button_download);
             isInitialized = true;
         }
+    }
+
+    @Override
+    public void setOnClickListener(@Nullable OnClickListener l) {
+        super.setOnClickListener(l);
+        downloadButton.setOnClickListener(l);
     }
 
     public Bitmap getLoadedBitmap() {
@@ -94,11 +111,15 @@ public class ImagePreview extends RelativeLayout {
 
     }
 
+
+
     public void setAttachment(Attachment attachment, Room room, File file, Runnable onReady) {
+        if(attachment == null) return;
+
         this.room = room;
         isMainImageLoaded = false;
         this.attachment = attachment;
-        downloadOverlay.setVisibility(GONE);
+        overlay.setVisibility(GONE);
         imageView.setImageBitmap(null);
         DiraActivity.runGlobalBackground(() -> {
             Bitmap previewBitmap = attachment.getBitmapPreview();
@@ -113,12 +134,14 @@ public class ImagePreview extends RelativeLayout {
                 if (this.attachment != attachment | isMainImageLoaded) return;
                 loadedBitmap = finalPreviewBitmap;
                 imageView.setImageBitmap(finalPreviewBitmap);
+                requestLayout();
 
                 DiraActivity.runOnMainThread(() -> {
                     try {
 
                         try {
-                            onReady.run();
+                            if(onReady != null)
+                              onReady.run();
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -131,17 +154,28 @@ public class ImagePreview extends RelativeLayout {
                                     DiraActivity.runGlobalBackground(() -> {
 
                                         setImageBitmap(ThumbnailUtils.createVideoThumbnail(file.getPath(), MediaStore.Video.Thumbnails.MINI_KIND));
+
+                                    });
+                                    overlay.setVisibility(VISIBLE);
+                                    sizeTextView.setVisibility(GONE);
+                                    downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_play));
+                                }
+                                else
+                                {
+                                    DiraActivity.runGlobalBackground(() -> {
+
+                                        setImage(AttachmentsStorage.getFileFromAttachment(attachment, getContext(), room.getSecretName()));
                                     });
                                 }
                             } else {
 
                                 // attachment downloading in progress
-                                setAttachmentInfo(attachment, true);
+                                showLoadingButton(attachment, true);
                             }
                         } else {
 
                             // attachment not loaded
-                            setAttachmentInfo(attachment, false);
+                            showLoadingButton(attachment, AttachmentsStorage.isAttachmentSaving(attachment));
 
                         }
                     } catch (Exception e) {
@@ -154,11 +188,14 @@ public class ImagePreview extends RelativeLayout {
 
     public void hideDownloadOverlay()
     {
-        downloadOverlay.setVisibility(GONE);
+        if(!isInitialized) return;
+        overlay.setVisibility(GONE);
     }
 
-    private void setAttachmentInfo(Attachment attachment, boolean isLoading) {
-        downloadOverlay.setVisibility(VISIBLE);
+    private void showLoadingButton(Attachment attachment, boolean isLoading) {
+        overlay.setVisibility(VISIBLE);
+        downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_download));
+        sizeTextView.setVisibility(VISIBLE);
         sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()));
         if (isLoading) {
             progressBar.setVisibility(VISIBLE);
@@ -166,13 +203,14 @@ public class ImagePreview extends RelativeLayout {
             downloadButton.setOnClickListener(v -> {
             });
         } else {
+
             progressBar.setVisibility(GONE);
             downloadButton.setOnClickListener(v -> {
                 SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(getContext(), false,
                         attachment, room.getSecretName());
                 AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, room.getServerAddress());
 
-                setAttachmentInfo(attachment, true);
+                showLoadingButton(attachment, true);
             });
             downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_download));
         }

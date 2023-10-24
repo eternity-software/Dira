@@ -21,7 +21,7 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.ui.adapters.messagetooltipread.MessageTooltipAdapter;
 import com.diraapp.ui.adapters.messagetooltipread.UserReadMessage;
-import com.diraapp.utils.Numbers;
+import com.diraapp.utils.android.DeviceUtils;
 import com.skydoves.balloon.Balloon;
 import com.skydoves.balloon.BalloonAnimation;
 import com.skydoves.balloon.OnBalloonOutsideTouchListener;
@@ -138,7 +138,7 @@ public class BalloonMessageMenu {
 
             if (size > 4) {
                 int height = 4 * 48;
-                height = Numbers.dpToPx(height, context);
+                height = DeviceUtils.dpToPx(height, context);
 
                 recyclerLayout.getLayoutParams().height = height;
                 recyclerLayout.requestLayout();

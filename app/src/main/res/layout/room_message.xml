@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingLeft="8dp"
-        android:paddingRight="40dp">
+        android:paddingRight="32dp">
 
 
         <androidx.cardview.widget.CardView

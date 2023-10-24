@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 
 import com.diraapp.R;
 import com.diraapp.res.Theme;
-import com.diraapp.utils.Numbers;
+import com.diraapp.utils.android.DeviceUtils;
 import com.masoudss.lib.WaveformSeekBar;
 
 public class VoiceMessageView extends LinearLayout {
@@ -44,7 +44,7 @@ public class VoiceMessageView extends LinearLayout {
             WaveformSeekBar bar = findViewById(R.id.waveform_seek_bar);
 
 
-            int marginHorizontal = Numbers.dpToPx(8, getContext());
+            int marginHorizontal = DeviceUtils.dpToPx(8, getContext());
             LayoutParams params = new LayoutParams(
                     LayoutParams.WRAP_CONTENT,
                     LayoutParams.WRAP_CONTENT
@@ -53,8 +53,8 @@ public class VoiceMessageView extends LinearLayout {
 
             setLayoutParams(params);
 
-            setPadding(0, Numbers.dpToPx(2, getContext()), 0,
-                    Numbers.dpToPx(4, getContext()));
+            setPadding(0, DeviceUtils.dpToPx(2, getContext()), 0,
+                    DeviceUtils.dpToPx(4, getContext()));
 
             setId(VOICE_CONTAINER_ID);
 

@@ -13,7 +13,6 @@
 
         android:adjustViewBounds="true"
         android:elevation="0dp"
-        android:scaleType="centerCrop"
 
         />
 

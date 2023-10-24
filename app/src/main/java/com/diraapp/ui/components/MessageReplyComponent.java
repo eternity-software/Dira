@@ -25,7 +25,7 @@ import com.diraapp.ui.adapters.messages.views.viewholders.factories.MessageHolde
 import com.diraapp.ui.components.dynamic.DynamicTextView;
 import com.diraapp.ui.components.dynamic.ThemeImageView;
 import com.diraapp.utils.CacheUtils;
-import com.diraapp.utils.Numbers;
+import com.diraapp.utils.android.DeviceUtils;
 import com.diraapp.utils.StringFormatter;
 import com.squareup.picasso.Picasso;
 
@@ -152,20 +152,20 @@ public class MessageReplyComponent extends FrameLayout {
                 ViewGroup.LayoutParams.WRAP_CONTENT);
 
         replyContainer = findViewById(R.id.message_reply_container);
-        if (messageType == MessageHolderType.ROOM_ATTACHMENTS_MESSAGE |
-                messageType == MessageHolderType.SELF_ATTACHMENTS_MESSAGE) {
-            int margin = Numbers.dpToPx(8, this.getContext());
+        if (messageType == MessageHolderType.ROOM_SINGLE_ATTACHMENT_MESSAGE |
+                messageType == MessageHolderType.SELF_SINGLE_ATTACHMENT_MESSAGE) {
+            int margin = DeviceUtils.dpToPx(8, this.getContext());
             params.setMargins(margin / 2, (int) (1.5 * margin), 0, margin);
             replyContainer.setLayoutParams(params);
         } else if (messageType == MessageHolderType.ROOM_BUBBLE_MESSAGE ||
                 messageType == MessageHolderType.SELF_BUBBLE_MESSAGE ||
                 messageType == MessageHolderType.ROOM_EMOJI_MESSAGE ||
                 messageType == MessageHolderType.SELF_EMOJI_MESSAGE) {
-            int padding = Numbers.dpToPx(6, this.getContext());
+            int padding = DeviceUtils.dpToPx(6, this.getContext());
             replyContainer = this.findViewById(R.id.message_reply_container);
             replyContainer.setPadding(padding, padding, padding, padding);
 
-            int margin = Numbers.dpToPx(4, this.getContext());
+            int margin = DeviceUtils.dpToPx(4, this.getContext());
             params.setMargins(margin, margin, margin, margin);
 
             if (isSelfMessage) params.gravity = Gravity.RIGHT;

@@ -7,8 +7,8 @@ import android.view.animation.DecelerateInterpolator;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.diraapp.utils.DiraVibrator;
-import com.diraapp.utils.Numbers;
+import com.diraapp.utils.android.DiraVibrator;
+import com.diraapp.utils.android.DeviceUtils;
 
 public class ViewSwiper {
 
@@ -61,7 +61,7 @@ public class ViewSwiper {
         float k = 2.0f;
 
         float deltaY = (downY - event.getRawY());
-        float deltaX = (downX - event.getRawX()) - Numbers.dpToPx(DEFAULT_DEATH_ZONE_DP, rv.getContext());
+        float deltaX = (downX - event.getRawX()) - DeviceUtils.dpToPx(DEFAULT_DEATH_ZONE_DP, rv.getContext());
 
         if (deltaX < 0) deltaX = 0;
 

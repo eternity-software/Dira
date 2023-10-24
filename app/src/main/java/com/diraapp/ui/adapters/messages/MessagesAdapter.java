@@ -21,7 +21,7 @@ import com.diraapp.ui.adapters.messages.views.viewholders.AttachmentViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.DelayedMessageBind;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.BaseViewHolderFactory;
 import com.diraapp.utils.CacheUtils;
-import com.diraapp.utils.Numbers;
+import com.diraapp.utils.android.DeviceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +72,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
         ViewGroup.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT);
 
-        params.height = Numbers.dpToPx(38, messageAdapterContract.getContext());
+        params.height = DeviceUtils.dpToPx(68, messageAdapterContract.getContext());
 
         container.setLayoutParams(params);
 

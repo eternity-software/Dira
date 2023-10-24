@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.diraapp.R;
-import com.diraapp.utils.Numbers;
+import com.diraapp.utils.android.DeviceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +83,7 @@ public class BorderScaleView extends RelativeLayout {
     private void init() {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         rootView = inflater.inflate(R.layout.crop_view, this);
-        borderPx = Numbers.dpToPx(borderDp, getContext());
+        borderPx = DeviceUtils.dpToPx(borderDp, getContext());
         setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

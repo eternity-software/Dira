@@ -17,7 +17,6 @@ import com.diraapp.ui.components.MultiAttachmentMessageView;
 import com.diraapp.ui.components.VoiceMessageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.dynamic.DynamicTextView;
-import com.felipecsl.asymmetricgridview.library.widget.AsymmetricGridView;
 import com.masoudss.lib.WaveformSeekBar;
 
 public class LegacyViewHolder extends RecyclerView.ViewHolder {
@@ -70,7 +69,6 @@ public class LegacyViewHolder extends RecyclerView.ViewHolder {
     BubbleMessageView bubbleContainer;
     //
     // hz
-    AsymmetricGridView multiAttachmentsView;
     private boolean isInitialised = false;
     //
     private boolean isSelfMessage;
@@ -131,8 +129,6 @@ public class LegacyViewHolder extends RecyclerView.ViewHolder {
         sizeContainer = itemView.findViewById(R.id.attachment_too_large);
 
 
-        multiAttachmentsView = itemView.findViewById(MultiAttachmentMessageView.
-                MULTI_ATTACHMENT_MESSAGE_VIEW_ID);
 
 
         // only this should stay
