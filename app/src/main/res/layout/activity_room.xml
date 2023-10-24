@@ -243,7 +243,7 @@
                 android:layout_weight="0"
                 android:visibility="visible"
                 app:cardBackgroundColor="@android:color/transparent"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="10dp"
                 app:cardElevation="0dp">
 
                 <ImageView
