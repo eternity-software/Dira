@@ -8,7 +8,7 @@
 
     android:background="@color/dark"
 
-    tools:context=".ui.activities.ImageSendActivity">
+    tools:context=".ui.activities.MediaSendActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/imageContainer"

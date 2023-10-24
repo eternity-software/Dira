@@ -226,9 +226,9 @@ public class ChatAppearanceActivity extends DiraActivity {
                 bottomSheet.setRunnable(new MediaGridItemListener() {
                     @Override
                     public void onItemClick(int pos, View view) {
-                        ImageSendActivity.open(ChatAppearanceActivity.this,
+                        MediaSendActivity.open(ChatAppearanceActivity.this,
                                 bottomSheet.getMedia().get(pos).getFilePath(), "",
-                                (FilePreview) view, ImageSendActivity.IMAGE_PURPOSE_SELECT);
+                                (FilePreview) view, MediaSendActivity.IMAGE_PURPOSE_SELECT);
                     }
 
                     @Override
@@ -249,9 +249,9 @@ public class ChatAppearanceActivity extends DiraActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode != RESULT_OK && resultCode != ImageSendActivity.CODE) return;
+        if (resultCode != RESULT_OK && resultCode != MediaSendActivity.CODE) return;
 
-        if (resultCode == ImageSendActivity.CODE) {
+        if (resultCode == MediaSendActivity.CODE) {
             if (bottomSheet != null) {
 
                 /**

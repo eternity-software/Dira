@@ -80,7 +80,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.activities.ImageSendActivity"
+            android:name=".ui.activities.MediaSendActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/AppSlideTheme"

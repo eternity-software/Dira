@@ -56,7 +56,7 @@ import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.images.FilesUploader;
 import com.diraapp.storage.images.ImageCompressor;
 import com.diraapp.ui.activities.DiraActivity;
-import com.diraapp.ui.activities.ImageSendActivity;
+import com.diraapp.ui.activities.MediaSendActivity;
 import com.diraapp.ui.activities.PreparedActivity;
 import com.diraapp.ui.activities.PreviewActivity;
 import com.diraapp.ui.activities.RoomInfoActivity;
@@ -103,9 +103,9 @@ public class RoomActivity extends DiraActivity
     private final MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
         @Override
         public void onItemClick(int pos, final View view) {
-            ImageSendActivity.open(RoomActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(),
+            MediaSendActivity.open(RoomActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(),
                     binding.messageTextInput.getText().toString(),
-                    (FilePreview) view, ImageSendActivity.IMAGE_PURPOSE_MESSAGE);
+                    (FilePreview) view, MediaSendActivity.IMAGE_PURPOSE_MESSAGE);
         }
 
         @Override
@@ -295,7 +295,7 @@ public class RoomActivity extends DiraActivity
         try {
 
             super.onActivityResult(requestCode, resultCode, data);
-            if (resultCode != RESULT_OK && resultCode != ImageSendActivity.CODE) {
+            if (resultCode != RESULT_OK && resultCode != MediaSendActivity.CODE) {
                 return;
             }
             if (requestCode == 2) {
@@ -305,7 +305,7 @@ public class RoomActivity extends DiraActivity
 
                 }
             }
-            if (resultCode == ImageSendActivity.CODE) {
+            if (resultCode == MediaSendActivity.CODE) {
                 if (filePickerBottomSheet != null) {
 
                     /**

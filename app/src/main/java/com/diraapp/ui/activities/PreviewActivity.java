@@ -102,12 +102,7 @@ public class PreviewActivity extends DiraActivity {
         touchImageView.setImageBitmap(bitmapPool);
         bitmapPool = null;
 
-        Transition transition =
-                TransitionInflater.from(this)
-                        .inflateTransition(R.transition.image_shared_transition);
-        // getWindow().setSharedElementsUseOverlay(false);
-
-        getWindow().setSharedElementEnterTransition(transition);
+     
 
         getWindow().getSharedElementEnterTransition()
                 .addListener(new Transition.TransitionListener() {

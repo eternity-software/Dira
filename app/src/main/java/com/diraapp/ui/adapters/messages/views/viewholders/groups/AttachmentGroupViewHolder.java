@@ -212,7 +212,7 @@ public class AttachmentGroupViewHolder extends AttachmentViewHolder {
                         public void onClick(View v) {
                             getMessageAdapterContract().preparePreviewActivity(file.getPath(),
                                     attachment.getAttachmentType() == AttachmentType.VIDEO,
-                                    imagePreview.getLoadedBitmap(), imagePreview).start();
+                                    imagePreview.getLoadedBitmap(), imagePreview.getImageView()).start();
                         }
                     });
                 }

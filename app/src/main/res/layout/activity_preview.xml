@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipChildren="false"
-            android:transitionName="image_shared_transition"
+
             app:cardBackgroundColor="@android:color/transparent"
             app:cardCornerRadius="0dp"
             app:cardElevation="0dp"
@@ -40,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-
+                android:transitionName="@string/transition_image_shared"
                 android:scaleType="fitCenter"
                 android:src="@drawable/full_placeholder" />
         </androidx.cardview.widget.CardView>

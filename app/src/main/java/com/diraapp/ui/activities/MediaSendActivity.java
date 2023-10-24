@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class ImageSendActivity extends DiraActivity {
+public class MediaSendActivity extends DiraActivity {
 
     public static final int CODE = 11;
     public static final int IMAGE_PURPOSE_SELECT = 1;
@@ -53,11 +53,11 @@ public class ImageSendActivity extends DiraActivity {
     private boolean isVideo;
 
     public static void setImageBuffer(Bitmap imageBuffer) {
-        ImageSendActivity.imageBuffer = imageBuffer;
+        MediaSendActivity.imageBuffer = imageBuffer;
     }
 
     public static void open(final Activity from, String imageUri, String text, final FilePreview fileParingImageView, int purpose) {
-        Intent intent = new Intent(from, ImageSendActivity.class);
+        Intent intent = new Intent(from, MediaSendActivity.class);
         intent.putExtra("uri", imageUri);
         intent.putExtra("text", text);
         intent.putExtra("purpose", purpose);
@@ -178,7 +178,7 @@ public class ImageSendActivity extends DiraActivity {
                         videoPlayer.play(imageUri);
                         videoPlayer.setVolume(1);
                         if (type.startsWith("image")) {
-                            final Bitmap fixedBitmap = ImageRotationFix.handleSamplingAndRotationBitmapNoCropping(ImageSendActivity.this, Uri.fromFile(new File(imageUri)));
+                            final Bitmap fixedBitmap = ImageRotationFix.handleSamplingAndRotationBitmapNoCropping(MediaSendActivity.this, Uri.fromFile(new File(imageUri)));
                             imageView.setImageBitmap(fixedBitmap);
                         } else {
 

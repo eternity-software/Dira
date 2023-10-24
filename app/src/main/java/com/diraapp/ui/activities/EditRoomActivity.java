@@ -105,7 +105,7 @@ public class EditRoomActivity extends DiraActivity implements ServerSelectorBott
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK && resultCode != ImageSendActivity.CODE) {
+        if (resultCode != RESULT_OK && resultCode != MediaSendActivity.CODE) {
             return;
         }
         if (requestCode == 2) {
@@ -115,7 +115,7 @@ public class EditRoomActivity extends DiraActivity implements ServerSelectorBott
 
             }
         }
-        if (resultCode == ImageSendActivity.CODE) {
+        if (resultCode == MediaSendActivity.CODE) {
             if (filePickerBottomSheet != null) {
 
                 /**
@@ -170,8 +170,8 @@ public class EditRoomActivity extends DiraActivity implements ServerSelectorBott
         filePickerBottomSheet.setRunnable(new MediaGridItemListener() {
             @Override
             public void onItemClick(int pos, final View view) {
-                ImageSendActivity.open(EditRoomActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(), "",
-                        (FilePreview) view, ImageSendActivity.IMAGE_PURPOSE_SELECT);
+                MediaSendActivity.open(EditRoomActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(), "",
+                        (FilePreview) view, MediaSendActivity.IMAGE_PURPOSE_SELECT);
 
             }
 
