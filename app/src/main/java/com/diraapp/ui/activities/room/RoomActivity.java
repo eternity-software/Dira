@@ -69,6 +69,7 @@ import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.RoomViewHolderFactory;
 import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
+import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.diraapp.ui.components.FilePreview;
 import com.diraapp.ui.components.RecordComponentsController;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
@@ -91,7 +92,7 @@ import okhttp3.Callback;
 
 public class RoomActivity extends DiraActivity
         implements RoomActivityContract.View, ProcessorListener, UserStatusListener,
-        RecordComponentsController.RecordListener, MessageAdapterContract {
+        RecordComponentsController.RecordListener, MessageAdapterContract, FilePickerBottomSheet.MultiFilesListener {
 
     private static final int DO_NOT_NEED_TO_SCROLL = -1;
 
@@ -102,7 +103,8 @@ public class RoomActivity extends DiraActivity
     private final MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
         @Override
         public void onItemClick(int pos, final View view) {
-            ImageSendActivity.open(RoomActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(), "",
+            ImageSendActivity.open(RoomActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(),
+                    binding.messageTextInput.getText().toString(),
                     (FilePreview) view, ImageSendActivity.IMAGE_PURPOSE_MESSAGE);
         }
 
@@ -195,14 +197,17 @@ public class RoomActivity extends DiraActivity
         binding.sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText editText = findViewById(R.id.message_text_input);
-                if (presenter.sendTextMessage(editText.getText().toString())) {
-                    editText.setText("");
+
+                EditText messageInput = binding.messageTextInput;
+                if (presenter.sendTextMessage(messageInput.getText().toString())) {
+                    messageInput.setText("");
                 }
             }
         });
         filePickerBottomSheet = new FilePickerBottomSheet();
         filePickerBottomSheet.setMultiSelection(true);
+        filePickerBottomSheet.setMultiFilesListener(this);
+
         filePickerBottomSheet.setRunnable(mediaGridItemListener);
 
         binding.attachButton.setOnClickListener(new View.OnClickListener() {
@@ -218,7 +223,7 @@ public class RoomActivity extends DiraActivity
 
 
                 presenter.sendStatus(UserStatusType.PICKING_FILE);
-
+                filePickerBottomSheet.setMessageText(binding.messageTextInput.getText().toString());
                 filePickerBottomSheet.show(getSupportFragmentManager(), "blocked");
                 onPause();
             }
@@ -973,5 +978,11 @@ public class RoomActivity extends DiraActivity
     @Override
     public void onLastLoadedMessageDisplayed(Message message, int index) {
         presenter.loadNewerMessage(message, index);
+    }
+
+    @Override
+    public void onSelectedFilesSent(List<SelectorFileInfo> selectorFileInfoList, String messageText) {
+        MultiAttachmentLoader multiAttachmentLoader = new MultiAttachmentLoader(messageText, presenter);
+        multiAttachmentLoader.send(selectorFileInfoList);
     }
 }

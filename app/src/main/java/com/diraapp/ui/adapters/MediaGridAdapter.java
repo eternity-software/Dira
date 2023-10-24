@@ -87,6 +87,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         this.itemClickListener = itemClickListener;
         this.context = context;
 
+
+        for(int i = 0; i < 50; i++)
+            mediaElements.add(new SelectorFileInfo("", "", ""));
+
         // Must be executed on new Thread
         new Thread(() -> {
             Looper.prepare();
@@ -134,6 +138,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
             SelectorFileInfo selectorFileInfo = selectedViews.get(filePreview);
             filePreview.updateUi(selectorFileInfo.isSelected(), selectedFiles.indexOf(selectorFileInfo));
         }
+    }
+
+    public List<SelectorFileInfo> getSelectedFiles() {
+        return selectedFiles;
     }
 
     @Override
