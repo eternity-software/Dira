@@ -77,8 +77,8 @@ import com.diraapp.ui.components.viewswiper.ViewSwiper;
 import com.diraapp.ui.components.viewswiper.ViewSwiperListener;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
-import com.diraapp.utils.android.DeviceUtils;
 import com.diraapp.utils.SliderActivity;
+import com.diraapp.utils.android.DeviceUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -100,6 +100,7 @@ public class RoomActivity extends DiraActivity
     private String roomSecret;
     private MessagesAdapter messagesAdapter;
     private FilePickerBottomSheet filePickerBottomSheet;
+    private ActivityRoomBinding binding;
     private final MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
         @Override
         public void onItemClick(int pos, final View view) {
@@ -113,7 +114,6 @@ public class RoomActivity extends DiraActivity
 
         }
     };
-    private ActivityRoomBinding binding;
     private RecordComponentsController recordComponentsController;
     private RoomActivityContract.Presenter presenter;
     private int lastVisiblePosition = 0;
@@ -162,8 +162,7 @@ public class RoomActivity extends DiraActivity
         UpdateProcessor.getInstance().addProcessorListener(this);
 
         recordComponentsController = new RecordComponentsController(binding.recordButton,
-                binding.recordRipple, this,
-                binding.camera, binding.bubbleRecordingLayout, binding.bubbleFrame);
+                binding.recordRipple, this, binding.bubbleRecordingLayout, binding.bubbleFrame);
 
 
         recordComponentsController.setRecordListener(this);
@@ -325,8 +324,7 @@ public class RoomActivity extends DiraActivity
                 try {
                     ArrayList<Attachment> attachments = new ArrayList<>();
                     presenter.sendStatus(UserStatusType.SENDING_FILE);
-                    if(fileUris.size() == 1)
-                    {
+                    if (fileUris.size() == 1) {
                         RoomActivityPresenter.AttachmentReadyListener attachmentReadyListener = attachment -> {
                             attachments.add(attachment);
                             presenter.sendMessage(attachments, messageText);
@@ -337,12 +335,9 @@ public class RoomActivity extends DiraActivity
                         } else {
                             presenter.uploadAttachment(AttachmentType.IMAGE, attachmentReadyListener, fileUri);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         System.out.println("WOw! Several attachments!");
                     }
-
 
 
                 } catch (Exception e) {

@@ -24,14 +24,6 @@ public class SelectorFileInfo {
         //this.duration = getFormattedVideoDuration(context);
     }
 
-    public boolean isSelected() {
-        return isSelected;
-    }
-
-    public void setSelected(boolean selected) {
-        isSelected = selected;
-    }
-
     public static String getFormattedVideoDuration(Context context, String filePath) {
 
         MediaPlayer mp = MediaPlayer.create(context, Uri.parse(filePath));
@@ -54,6 +46,14 @@ public class SelectorFileInfo {
             minutesString = String.valueOf(num);
         }
         return minutesString;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public String getMimeType() {

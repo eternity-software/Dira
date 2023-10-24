@@ -7,8 +7,8 @@ import android.view.animation.DecelerateInterpolator;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.diraapp.utils.android.DiraVibrator;
 import com.diraapp.utils.android.DeviceUtils;
+import com.diraapp.utils.android.DiraVibrator;
 
 public class ViewSwiper {
 

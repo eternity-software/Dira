@@ -50,8 +50,7 @@ public class MessageAttachmentLoader {
 
         long attachmentsSize = 0;
         for (Attachment attachment : message.getAttachments()) {
-            if(attachment != null)
-            {
+            if (attachment != null) {
                 attachmentsSize += attachment.getSize();
             }
         }
@@ -114,11 +113,10 @@ public class MessageAttachmentLoader {
                 public void run() {
 
                     boolean isMessageAttachment = false;
-                    for(Attachment messageAttachment : message.getAttachments())
-                    {
-                        if(messageAttachment != null)
-                             if(attachment.getFileUrl().equals(messageAttachment.getFileUrl()))
-                                 isMessageAttachment = true;
+                    for (Attachment messageAttachment : message.getAttachments()) {
+                        if (messageAttachment != null)
+                            if (attachment.getFileUrl().equals(messageAttachment.getFileUrl()))
+                                isMessageAttachment = true;
                     }
                     if (isMessageAttachment) {
 

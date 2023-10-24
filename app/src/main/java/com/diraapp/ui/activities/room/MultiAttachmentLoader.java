@@ -10,7 +10,7 @@ import java.util.List;
 public class MultiAttachmentLoader {
 
     private String messageText;
-    private List<Attachment> attachments= new ArrayList<>();
+    private List<Attachment> attachments = new ArrayList<>();
 
     private RoomActivityContract.Presenter presenter;
 
@@ -23,18 +23,15 @@ public class MultiAttachmentLoader {
         this.presenter = roomActivityPresenter;
     }
 
-    public void send(List<SelectorFileInfo> selectorFileInfoList)
-    {
+    public void send(List<SelectorFileInfo> selectorFileInfoList) {
         readySize = selectorFileInfoList.size();
 
-        for(int i = 0; i < readySize; i++)
-        {
+        for (int i = 0; i < readySize; i++) {
             attachments.add(null);
         }
 
         int i = 0;
-        for(SelectorFileInfo selectorFileInfo : selectorFileInfoList)
-        {
+        for (SelectorFileInfo selectorFileInfo : selectorFileInfoList) {
             AttachmentType attachmentType = AttachmentType.VIDEO;
             if (!selectorFileInfo.isVideo()) {
                 attachmentType = AttachmentType.IMAGE;
@@ -45,8 +42,7 @@ public class MultiAttachmentLoader {
                         public void onReady(Attachment attachment) {
                             attachments.set(currentI, attachment);
                             uploadedCount++;
-                            if(uploadedCount == readySize)
-                            {
+                            if (uploadedCount == readySize) {
                                 presenter.sendMessage((ArrayList<Attachment>) attachments, messageText);
                             }
                         }
@@ -55,7 +51,6 @@ public class MultiAttachmentLoader {
             i++;
         }
     }
-
 
 
 }

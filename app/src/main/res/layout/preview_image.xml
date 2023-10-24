@@ -10,9 +10,9 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:shapeAppearanceOverlay="@style/RoundedCornersTheme"
         android:adjustViewBounds="true"
         android:elevation="0dp"
+        app:shapeAppearanceOverlay="@style/RoundedCornersTheme"
 
         />
 

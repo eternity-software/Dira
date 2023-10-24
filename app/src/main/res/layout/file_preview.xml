@@ -12,11 +12,11 @@
         android:layout_gravity="center"
         android:layout_marginStart="2dp"
         android:layout_marginTop="2dp"
-        android:adjustViewBounds="true"
-
         android:layout_marginEnd="2dp"
+
         android:layout_marginBottom="2dp"
         android:layout_weight="1"
+        android:adjustViewBounds="true"
         android:background="@color/dark"
         android:scaleType="centerCrop"
         app:shapeAppearanceOverlay="@style/RoundedCornersTheme"
@@ -49,23 +49,24 @@
     <FrameLayout
         android:id="@+id/select_button_container"
         android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentEnd="true"
-        android:paddingEnd="8dp"
         android:paddingTop="8dp"
 
-        android:layout_height="40dp">
+        android:paddingEnd="8dp">
+
         <TextView
             android:id="@+id/select_button"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="right"
 
-            android:text="10"
-            android:gravity="center"
-            android:textColor="@color/white"
+            android:background="@drawable/circle_unselected"
             android:fontFamily="@font/montserratalternates_semibold"
+            android:gravity="center"
+            android:text="10"
 
-            android:background="@drawable/circle_unselected" />
+            android:textColor="@color/white" />
     </FrameLayout>
 
 </RelativeLayout>

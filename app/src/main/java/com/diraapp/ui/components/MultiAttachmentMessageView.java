@@ -5,9 +5,7 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
 
-
-
-public class MultiAttachmentMessageView  {
+public class MultiAttachmentMessageView {
 
     public static final int MULTI_ATTACHMENT_MESSAGE_VIEW_ID = 732987529;
 

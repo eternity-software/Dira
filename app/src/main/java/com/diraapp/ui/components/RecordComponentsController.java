@@ -14,9 +14,11 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -29,10 +31,12 @@ import com.diraapp.media.SoundRecorder;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
+import com.diraapp.utils.android.DiraVibrator;
 import com.otaliastudios.cameraview.CameraListener;
 import com.otaliastudios.cameraview.CameraOptions;
 import com.otaliastudios.cameraview.CameraView;
 import com.otaliastudios.cameraview.VideoResult;
+import com.otaliastudios.cameraview.controls.Facing;
 import com.otaliastudios.cameraview.controls.Mode;
 
 import java.io.File;
@@ -43,6 +47,7 @@ import java.io.File;
  */
 public class RecordComponentsController {
 
+    private static final String TAG = "MediaMessageRecorder";
     private final ImageView recordButton;
     private final ImageView recordRipple;
     private final DiraActivity context;
@@ -60,13 +65,22 @@ public class RecordComponentsController {
     public RecordComponentsController(ImageView recordButton,
                                       ImageView recordRipple,
                                       DiraActivity context,
-                                      CameraView camera,
                                       View recordBubbleLayout,
                                       CardView bubbleContainer) {
         this.recordButton = recordButton;
         this.recordRipple = recordRipple;
         this.context = context;
-        this.camera = camera;
+        this.camera = new CameraView(context);
+
+        this.camera.setFacing(Facing.FRONT);
+        this.camera.setKeepScreenOn(true);
+
+        ViewGroup.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT);
+
+        camera.setLayoutParams(params);
+
+        bubbleContainer.addView(camera);
         this.recordBubbleLayout = recordBubbleLayout;
         this.bubbleContainer = bubbleContainer;
 
@@ -83,6 +97,7 @@ public class RecordComponentsController {
                     recordListener.onMediaMessageRecorded(result.getFile().getPath(), AttachmentType.BUBBLE);
                     camera.close();
                     camera.setLifecycleOwner(null);
+                    camera.setEnabled(false);
                 }
             }
 
@@ -125,9 +140,14 @@ public class RecordComponentsController {
                             boolean isVoiceRecord = cacheUtils.getBoolean(CacheUtils.IS_VOICE_RECORD_DEFAULT);
                             if (!isVoiceRecord) {
                                 recordBubble();
+                                DiraVibrator.vibrateOneTime(context);
                             }
-                            recordListener.onMediaMessageRecordingStart(AttachmentType.VOICE);
-                            initVoiceIndicator();
+                            else
+                            {
+                                recordListener.onMediaMessageRecordingStart(AttachmentType.VOICE);
+                                initVoiceIndicator();
+                            }
+
 
                         }
                     }, 200);
@@ -146,6 +166,7 @@ public class RecordComponentsController {
                         boolean isVoiceRecord = cacheUtils.getBoolean(CacheUtils.IS_VOICE_RECORD_DEFAULT);
                         if (!isVoiceRecord) {
                             camera.stopVideo();
+
                             camera.close();
                             camera.setEnabled(false);
 
@@ -184,22 +205,37 @@ public class RecordComponentsController {
         }
 
         recordBubbleLayout.setVisibility(View.VISIBLE);
-        context.performScaleAnimation(0.5f, 1, bubbleContainer);
-        camera.close();
-        camera.setLifecycleOwner(context);
-        camera.open();
-
-
-        camera.addCameraListener(new CameraListener() {
+        context.performScaleAnimation(0.5f, 1, bubbleContainer).setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onCameraOpened(@NonNull CameraOptions options) {
-                super.onCameraOpened(options);
-                Logger.logDebug(this.getClass().getSimpleName(),
-                        "Taking captured video...");
-                camera.takeVideoSnapshot(new File(directory, "bubbleMessage.mp4"));
-                camera.removeCameraListener(this);
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                camera.setLifecycleOwner(context);
+
+
+                camera.addCameraListener(new CameraListener() {
+                    @Override
+                    public void onCameraOpened(@NonNull CameraOptions options) {
+                        super.onCameraOpened(options);
+                        Logger.logDebug(this.getClass().getSimpleName(),
+                                "Taking captured video...");
+                        camera.takeVideoSnapshot(new File(directory, "bubbleMessage.mp4"));
+                        camera.removeCameraListener(this);
+                    }
+                });
+                camera.open();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
             }
         });
+
+
 
         // binding.camera.open();
     }

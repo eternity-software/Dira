@@ -8,6 +8,7 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DownloadHandler;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.CryptoUtils;
+import com.diraapp.utils.Logger;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +26,7 @@ public class AttachmentsStorage {
 
     public static void saveAttachmentAsync(SaveAttachmentTask saveAttachmentTask, String address) {
         if (isAttachmentSaving(saveAttachmentTask.getAttachment())) return;
-        if(saveAttachmentTask.getAttachment() == null) return;
+        if (saveAttachmentTask.getAttachment() == null) return;
         if (attachmentDownloader == null) {
             attachmentDownloader = new Thread(new Runnable() {
                 @Override
@@ -108,7 +109,7 @@ public class AttachmentsStorage {
     }
 
     public static boolean isAttachmentSaving(Attachment attachmentToCompare) {
-        if(attachmentToCompare == null) return false;
+        if (attachmentToCompare == null) return false;
         for (SaveAttachmentTask saveAttachmentTask : saveAttachmentTaskList) {
             if (saveAttachmentTask.getAttachment().getFileUrl().equals(attachmentToCompare.getFileUrl())) {
                 return true;
@@ -126,7 +127,13 @@ public class AttachmentsStorage {
         CacheUtils cacheUtils = new CacheUtils(context);
 
         if (!sizeLimited | attachment.getSize() < cacheUtils.getLong(CacheUtils.AUTO_LOAD_SIZE)) {
-            AppStorage.downloadFile(UpdateProcessor.getInstance(context).getFileServer(address) + "/download/" + attachment.getFileUrl(), localFile, downloadHandler);
+            String fileServerUrl = UpdateProcessor.getInstance(context).getFileServer(address);
+            if(fileServerUrl == null)
+            {
+                Logger.logDebug("AttachmentsStorage", "Unknown file server for " + address);
+                return null;
+            }
+            AppStorage.downloadFile( fileServerUrl+ "/download/" + attachment.getFileUrl(), localFile, downloadHandler);
 
 
             if (!encryptionKey.equals("")) {
@@ -143,7 +150,7 @@ public class AttachmentsStorage {
 
 
     public static File getFileFromAttachment(@NotNull Attachment attachment, Context context, String roomSecret) {
-        if(attachment == null) return null;
+        if (attachment == null) return null;
         File localFile = new File(context.getExternalCacheDir(), roomSecret + "_" + attachment.getFileUrl());
 
         if (!localFile.exists()) return null;

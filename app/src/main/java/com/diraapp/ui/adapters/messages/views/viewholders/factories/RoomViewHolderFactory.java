@@ -11,11 +11,11 @@ import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.adapters.messages.views.viewholders.BubbleViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.EmojiMessageViewHolder;
-import com.diraapp.ui.adapters.messages.views.viewholders.groups.AttachmentGroupViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.MediaViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.RoomUpdatesViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.TextMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.VoiceViewHolder;
+import com.diraapp.ui.adapters.messages.views.viewholders.groups.AttachmentGroupViewHolder;
 import com.diraapp.utils.StringFormatter;
 
 /**

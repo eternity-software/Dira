@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diraapp.R;
 import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.ui.components.BubbleMessageView;
-import com.diraapp.ui.components.MultiAttachmentMessageView;
 import com.diraapp.ui.components.VoiceMessageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.dynamic.DynamicTextView;
@@ -127,8 +126,6 @@ public class LegacyViewHolder extends RecyclerView.ViewHolder {
         sizeText = itemView.findViewById(R.id.size_view);
         buttonDownload = itemView.findViewById(R.id.download_button);
         sizeContainer = itemView.findViewById(R.id.attachment_too_large);
-
-
 
 
         // only this should stay

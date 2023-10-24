@@ -25,8 +25,8 @@ import com.diraapp.ui.adapters.messages.views.viewholders.factories.MessageHolde
 import com.diraapp.ui.components.dynamic.DynamicTextView;
 import com.diraapp.ui.components.dynamic.ThemeImageView;
 import com.diraapp.utils.CacheUtils;
-import com.diraapp.utils.android.DeviceUtils;
 import com.diraapp.utils.StringFormatter;
+import com.diraapp.utils.android.DeviceUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;

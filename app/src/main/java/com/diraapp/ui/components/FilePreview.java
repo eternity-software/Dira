@@ -47,16 +47,12 @@ public class FilePreview extends RelativeLayout {
 
     }
 
-    public void updateUi(boolean isSelected, int position)
-    {
+    public void updateUi(boolean isSelected, int position) {
         position++;
-        if(isSelected)
-        {
+        if (isSelected) {
             selectionTextButton.getBackground().setColorFilter(Theme.getColor(getContext(), R.color.accent_dark), PorterDuff.Mode.SRC_ATOP);
             selectionTextButton.setText(String.valueOf(position));
-        }
-        else
-        {
+        } else {
             selectionTextButton.setText("");
             selectionTextButton.setBackground(getContext().getDrawable(R.drawable.circle_unselected));
         }
@@ -66,12 +62,12 @@ public class FilePreview extends RelativeLayout {
         return selectionTextButton;
     }
 
-    public View getSelectionTextContainer() {
-        return selectionTextContainer;
-    }
-
     public void setSelectionTextButton(TextView selectionTextButton) {
         this.selectionTextButton = selectionTextButton;
+    }
+
+    public View getSelectionTextContainer() {
+        return selectionTextContainer;
     }
 
     public void appearContorllers() {

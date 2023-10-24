@@ -2,14 +2,11 @@ package com.diraapp.ui.adapters.messages.views.viewholders.groups;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.Attachment;
@@ -23,7 +20,6 @@ import com.diraapp.ui.adapters.messages.views.viewholders.AttachmentViewHolder;
 import com.diraapp.ui.components.HeightLimitedCardView;
 import com.diraapp.ui.components.ImagePreview;
 import com.diraapp.utils.android.DeviceUtils;
-
 
 import java.io.File;
 import java.util.ArrayList;
