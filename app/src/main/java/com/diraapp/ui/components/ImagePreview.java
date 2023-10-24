@@ -121,11 +121,15 @@ public class ImagePreview extends RelativeLayout {
         isMainImageLoaded = false;
         this.attachment = attachment;
         overlay.setVisibility(GONE);
-        imageView.setImageBitmap(Bitmap.createBitmap(attachment.getWidth(),
-                attachment.getHeight(),
-                Bitmap.Config.ARGB_8888));
+        imageView.setImageBitmap(null);
         DiraActivity.runGlobalBackground(() -> {
-            Bitmap previewBitmap = attachment.getBitmapPreview();
+
+            Bitmap previewBitmap = Bitmap.createBitmap(attachment.getWidth(),
+                    attachment.getHeight(),
+                    Bitmap.Config.ARGB_8888);
+            Bitmap finalTempPreviewBitmap = previewBitmap;
+            DiraActivity.runOnMainThread(() -> imageView.setImageBitmap(finalTempPreviewBitmap));
+            previewBitmap = attachment.getBitmapPreview();
             if (previewBitmap == null) {
                 previewBitmap = Bitmap.createBitmap(attachment.getWidth(),
                         attachment.getHeight(),
