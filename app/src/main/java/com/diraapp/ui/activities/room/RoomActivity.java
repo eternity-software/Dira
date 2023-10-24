@@ -799,7 +799,6 @@ public class RoomActivity extends DiraActivity
         runOnUiThread(() -> {
 
             Logger.logDebug("notifying added", "adding item " + binding.recyclerView.getChildCount());
-            binding.recyclerView.stopScroll();
             if (start == IS_ROOM_OPENING) {
                 binding.recyclerView.getRecycledViewPool().clear();
                 messagesAdapter.notifyDataSetChanged();
@@ -834,7 +833,6 @@ public class RoomActivity extends DiraActivity
         runOnUiThread(() -> {
             Logger.logDebug("notifying adapter", "Deleted items");
             messagesAdapter.notifyItemRangeRemoved(start, count - 1);
-            binding.recyclerView.stopScroll();
             Logger.logDebug("notifying adapter",
                     "Deleted items from start - " + start + " to " + (count - 1) +
                             " size is " + messagesAdapter.getItemCount() + " ||| " +
