@@ -143,8 +143,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
 
-
                     android:fontFamily="@font/montserratsemibold"
+
+                    android:maxLines="1"
                     android:text=".."
                     android:textColor="@color/light_gray"
                     android:textSize="14sp" />
@@ -256,10 +257,11 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginVertical="4dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:orientation="vertical">
 
                 <com.diraapp.ui.components.dynamic.DynamicTextView
