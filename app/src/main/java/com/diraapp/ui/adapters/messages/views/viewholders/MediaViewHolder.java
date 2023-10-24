@@ -95,7 +95,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
                 public void onClick(View v) {
                     getMessageAdapterContract().preparePreviewActivity(file.getPath(),
                             attachment.getAttachmentType() == AttachmentType.VIDEO,
-                            previewImage.getLoadedBitmap(), imageContainer).start();
+                            previewImage.getLoadedBitmap(), previewImage.getImageView()).start();
                 }
             });
         }

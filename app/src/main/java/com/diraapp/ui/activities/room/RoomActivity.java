@@ -79,6 +79,7 @@ import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.SliderActivity;
 import com.diraapp.utils.android.DeviceUtils;
+import com.r0adkll.slidr.model.SlidrInterface;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -132,7 +133,7 @@ public class RoomActivity extends DiraActivity
         setContentView(binding.getRoot());
 
         SliderActivity sliderActivity = new SliderActivity();
-        sliderActivity.attachSlider(this);
+        SlidrInterface slidrInterface = sliderActivity.attachSlider(this);
 
         roomSecret = getIntent().getExtras().getString(RoomSelectorActivity.PENDING_ROOM_SECRET);
         String roomName = getIntent().getExtras().getString(RoomSelectorActivity.PENDING_ROOM_NAME);
@@ -162,7 +163,9 @@ public class RoomActivity extends DiraActivity
         UpdateProcessor.getInstance().addProcessorListener(this);
 
         recordComponentsController = new RecordComponentsController(binding.recordButton,
-                binding.recordRipple, this, binding.camera, binding.bubbleRecordingLayout, binding.bubbleFrame);
+                binding.recordRipple,  binding.recordingText,  binding.recordingTip,
+                this, binding.recordingStatusBar,
+                binding.camera, slidrInterface, binding.bubbleRecordingLayout, binding.bubbleFrame);
 
 
         recordComponentsController.setRecordListener(this);

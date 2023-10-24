@@ -61,6 +61,9 @@
     <string name="users_status_bubble">%s are recording bubble</string>
     <string name="user_status_file">%s are sending bubble</string>
     <string name="users_status_file">%s are sending bubble</string>
+    <string name="recording_prefix">Recording</string>
+    <string name="recording_tip_stop">Release to cancel recording</string>
+    <string name="recording_tip_send">Release to send message</string>
 
     <!-- Room info -->
 
