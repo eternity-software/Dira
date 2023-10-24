@@ -2,8 +2,10 @@ package com.diraapp.ui.components;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.Attachment;
+import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Room;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentsStorage;
@@ -75,11 +78,20 @@ public class ImagePreview extends RelativeLayout {
             new Handler(Looper.getMainLooper()).post(() -> {
                 if (attachment == currentAttachment) {
                     loadedBitmap = bitmap;
-                    imageView.setImageBitmap(bitmap);
+                    setImageBitmap(bitmap);
                     isMainImageLoaded = true;
                 }
             });
         });
+    }
+
+    private void setImageBitmap(Bitmap bitmap)
+    {
+        DiraActivity.runOnMainThread(() -> {
+            imageView.setImageBitmap(bitmap);
+            loadedBitmap = bitmap;
+        });
+
     }
 
     public void setAttachment(Attachment attachment, Room room, File file, Runnable onReady) {
@@ -107,13 +119,20 @@ public class ImagePreview extends RelativeLayout {
 
                         try {
                             onReady.run();
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         if (file != null) {
 
                             if (!AttachmentsStorage.isAttachmentSaving(attachment)) {
+                                if(attachment.getAttachmentType() == AttachmentType.VIDEO)
+                                {
+                                    DiraActivity.runGlobalBackground(() -> {
 
+                                        setImageBitmap(ThumbnailUtils.createVideoThumbnail(file.getPath(), MediaStore.Video.Thumbnails.MINI_KIND));
+                                    });
+                                }
                             } else {
 
                                 // attachment downloading in progress
