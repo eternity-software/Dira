@@ -27,7 +27,7 @@ import java.io.File;
 public class MediaViewHolder extends AttachmentViewHolder {
 
     private DiraVideoPlayer videoPlayer;
-    private ImagePreview imageView;
+    private ImagePreview previewImage;
     private CardView imageContainer;
     private TextView messageText;
 
@@ -45,32 +45,33 @@ public class MediaViewHolder extends AttachmentViewHolder {
     @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
         if (file == null) return;
+        previewImage.hideDownloadOverlay();
 
         if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
-            imageView.setVisibility(View.VISIBLE);
-            imageView.setImage(file);
+            previewImage.setVisibility(View.VISIBLE);
+            previewImage.setImage(file);
 
-            imageView.setOnClickListener(new View.OnClickListener() {
+            previewImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     getMessageAdapterContract().preparePreviewActivity(file.getPath(),
                             attachment.getAttachmentType() == AttachmentType.VIDEO,
-                            imageView.getLoadedBitmap(), imageContainer).start();
+                            previewImage.getLoadedBitmap(), imageContainer).start();
                 }
             });
 
         } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
 
-            imageView.setVisibility(View.VISIBLE);
+            previewImage.setVisibility(View.VISIBLE);
 
             videoPlayer.setVisibility(View.VISIBLE);
             videoPlayer.attachDebugIndicator(postInflatedViewsContainer);
             DiraVideoPlayer finalVideoPlayer = videoPlayer;
-            imageView.post(new Runnable() {
+            previewImage.post(new Runnable() {
                 @Override
                 public void run() {
                     FrameLayout.LayoutParams params = new FrameLayout.LayoutParams
-                            (imageView.getMeasuredWidth(), imageView.getMeasuredHeight());
+                            (previewImage.getMeasuredWidth(), previewImage.getMeasuredHeight());
                     finalVideoPlayer.setLayoutParams(params);
 
 
@@ -91,7 +92,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
                 public void onClick(View v) {
                     getMessageAdapterContract().preparePreviewActivity(file.getPath(),
                             attachment.getAttachmentType() == AttachmentType.VIDEO,
-                            imageView.getLoadedBitmap(), imageContainer).start();
+                            previewImage.getLoadedBitmap(), imageContainer).start();
                 }
             });
         }
@@ -108,11 +109,11 @@ public class MediaViewHolder extends AttachmentViewHolder {
         View view = new RoomMediaMessage(itemView.getContext());
         messageContainer.setVisibility(View.VISIBLE);
         postInflatedViewsContainer.addView(view);
-        imageView = itemView.findViewById(R.id.image_view);
+        previewImage = itemView.findViewById(R.id.image_view);
         videoPlayer = itemView.findViewById(R.id.video_player);
         imageContainer = itemView.findViewById(R.id.image_container);
         messageText = itemView.findViewById(R.id.message_text);
-        imageView.setVisibility(View.VISIBLE);
+        previewImage.setVisibility(View.VISIBLE);
         getMessageAdapterContract().attachVideoPlayer(videoPlayer);
     }
 
@@ -122,7 +123,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
 
         videoPlayer.reset();
         videoPlayer.setVisibility(View.GONE);
-        imageView.setVisibility(View.VISIBLE);
+        previewImage.setVisibility(View.VISIBLE);
 
 
         String text = message.getText();
@@ -137,7 +138,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
         currentAttachment = attachment;
         currentMediaFile = AttachmentsStorage.getFileFromAttachment(attachment,
                 itemView.getContext(), message.getRoomSecret());
-        imageView.setAttachment(attachment, getMessageAdapterContract().getRoom(), currentMediaFile, () -> {
+        previewImage.setAttachment(attachment, getMessageAdapterContract().getRoom(), currentMediaFile, () -> {
             if (currentAttachment != attachment) return;
             if (!AttachmentsStorage.isAttachmentSaving(attachment))
                 onAttachmentLoaded(attachment, currentMediaFile, message);

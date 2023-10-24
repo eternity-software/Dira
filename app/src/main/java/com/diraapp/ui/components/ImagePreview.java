@@ -152,6 +152,11 @@ public class ImagePreview extends RelativeLayout {
         });
     }
 
+    public void hideDownloadOverlay()
+    {
+        downloadOverlay.setVisibility(GONE);
+    }
+
     private void setAttachmentInfo(Attachment attachment, boolean isLoading) {
         downloadOverlay.setVisibility(VISIBLE);
         sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()));

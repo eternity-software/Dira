@@ -107,6 +107,49 @@ public class PreviewActivity extends DiraActivity {
 
         getWindow().setSharedElementEnterTransition(transition);
 
+        getWindow().getSharedElementEnterTransition()
+                .addListener(new Transition.TransitionListener() {
+                    @Override
+                    public void onTransitionStart(Transition transition) {
+
+                        CardView card = findViewById(R.id.card_view);
+
+                        ObjectAnimator animator;
+                        if (isShown) {
+
+                            animator = ObjectAnimator.ofFloat(card, "radius", Numbers.dpToPx(14, getApplicationContext()));
+
+                        } else {
+                            isShown = true;
+                            animator = ObjectAnimator.ofFloat(card, "radius", Numbers.dpToPx(0, getApplicationContext()));
+
+                        }
+
+                        animator.setDuration(200);
+                        animator.start();
+                    }
+
+                    @Override
+                    public void onTransitionEnd(Transition transition) {
+
+                    }
+
+                    @Override
+                    public void onTransitionCancel(Transition transition) {
+
+                    }
+
+                    @Override
+                    public void onTransitionPause(Transition transition) {
+
+                    }
+
+                    @Override
+                    public void onTransitionResume(Transition transition) {
+
+                    }
+                });
+
         final String transitionName = getString(R.string.transition_image_shared);
         final Rect clipRect = getIntent().getParcelableExtra(EXTRA_CLIP_RECT);
         setEnterSharedElementCallback(new SharedElementCallback() {
@@ -185,49 +228,6 @@ public class PreviewActivity extends DiraActivity {
             }
         });
 
-
-        getWindow().getSharedElementEnterTransition()
-                .addListener(new Transition.TransitionListener() {
-                    @Override
-                    public void onTransitionStart(Transition transition) {
-
-                        CardView card = findViewById(R.id.card_view);
-
-                        ObjectAnimator animator;
-                        if (isShown) {
-
-                            animator = ObjectAnimator.ofFloat(card, "radius", Numbers.dpToPx(14, getApplicationContext()));
-
-                        } else {
-                            isShown = true;
-                            animator = ObjectAnimator.ofFloat(card, "radius", Numbers.dpToPx(0, getApplicationContext()));
-
-                        }
-
-                        animator.setDuration(200);
-                        animator.start();
-                    }
-
-                    @Override
-                    public void onTransitionEnd(Transition transition) {
-
-                    }
-
-                    @Override
-                    public void onTransitionCancel(Transition transition) {
-
-                    }
-
-                    @Override
-                    public void onTransitionPause(Transition transition) {
-
-                    }
-
-                    @Override
-                    public void onTransitionResume(Transition transition) {
-
-                    }
-                });
 
 
         TextView sizeView = findViewById(R.id.size_view);
