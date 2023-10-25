@@ -137,50 +137,49 @@ public class ImagePreview extends RelativeLayout {
                 loadedBitmap = finalPreviewBitmap;
                 imageView.setImageBitmap(finalPreviewBitmap);
 
-                DiraActivity.runOnMainThread(() -> {
+
+                try {
+
                     try {
+                        if (onReady != null)
+                            onReady.run();
 
-                        try {
-                            if (onReady != null)
-                                onReady.run();
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        if (file != null) {
-
-                            if (!AttachmentsStorage.isAttachmentSaving(attachment)) {
-                                if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
-                                    DiraActivity.runGlobalBackground(() -> {
-
-                                        setImageBitmap(ThumbnailUtils.createVideoThumbnail(file.getPath(), MediaStore.Video.Thumbnails.MINI_KIND));
-
-                                    });
-                                    overlay.setVisibility(VISIBLE);
-                                    progressBar.setVisibility(GONE);
-                                    sizeTextView.setVisibility(GONE);
-                                    downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_play));
-                                } else {
-                                    DiraActivity.runGlobalBackground(() -> {
-
-                                        setImage(AttachmentsStorage.getFileFromAttachment(attachment, getContext(), room.getSecretName()));
-                                    });
-                                }
-                            } else {
-
-                                // attachment downloading in progress
-                                showLoadingButton(attachment, true);
-                            }
-                        } else {
-
-                            // attachment not loaded
-                            showLoadingButton(attachment, AttachmentsStorage.isAttachmentSaving(attachment));
-
-                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                });
+                    if (file != null) {
+
+                        if (!AttachmentsStorage.isAttachmentSaving(attachment)) {
+                            if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
+                                DiraActivity.runGlobalBackground(() -> {
+
+                                    setImageBitmap(ThumbnailUtils.createVideoThumbnail(file.getPath(), MediaStore.Video.Thumbnails.MINI_KIND));
+
+                                });
+                                overlay.setVisibility(VISIBLE);
+                                progressBar.setVisibility(GONE);
+                                sizeTextView.setVisibility(GONE);
+                                downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_play));
+                            } else {
+                                DiraActivity.runGlobalBackground(() -> {
+
+                                    setImage(AttachmentsStorage.getFileFromAttachment(attachment, getContext(), room.getSecretName()));
+                                });
+                            }
+                        } else {
+
+                            // attachment downloading in progress
+                            showLoadingButton(attachment, true);
+                        }
+                    } else {
+
+                        // attachment not loaded
+                        showLoadingButton(attachment, AttachmentsStorage.isAttachmentSaving(attachment));
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             });
         });
     }

@@ -49,9 +49,9 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center_vertical"
-                        android:visibility="gone"
                         android:background="@drawable/gray_rounded"
                         android:paddingHorizontal="8dp"
+                        android:visibility="gone"
                         app:srcCompat="@drawable/ic_camera"
                         app:themeBackgroundTint="gray"
                         app:themeImageColor="light_gray" />
@@ -66,6 +66,7 @@
                         app:srcCompat="@drawable/ic_image"
                         app:themeBackgroundTint="gray"
                         app:themeImageColor="light_gray" />
+
                     <com.diraapp.ui.components.dynamic.ThemeImageView
                         android:id="@+id/documents_picker"
                         android:layout_width="50dp"

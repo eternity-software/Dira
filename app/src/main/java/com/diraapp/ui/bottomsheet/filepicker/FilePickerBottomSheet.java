@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
@@ -32,6 +31,7 @@ import java.util.List;
 
 
 public class FilePickerBottomSheet extends BottomSheetDialogFragment {
+    private static RecyclerView.RecycledViewPool recycledViewPool;
     FrameLayout bottomSheet;
     private View view;
     private ArrayList<String> images;
@@ -42,8 +42,6 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
      * Must be initialized onAttach as context
      */
     private MediaGridItemListener onItemClickListener;
-
-    private static RecyclerView.RecycledViewPool recycledViewPool;
     private Runnable onDismiss;
     private boolean onlyImages = false;
     private boolean isMultiSelection = false;
@@ -74,14 +72,12 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        if(recycledViewPool == null)
-        {
+        if (recycledViewPool == null) {
             recycledViewPool = new RecyclerView.RecycledViewPool();
         }
         getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         View v2 = inflater.inflate(R.layout.bottom_sheet_filespicker, container, true);
         view = v2;
-
 
 
         RecyclerView recyclerView = view.findViewById(R.id.gridView);

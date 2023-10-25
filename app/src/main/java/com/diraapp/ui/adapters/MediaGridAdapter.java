@@ -3,7 +3,6 @@ package com.diraapp.ui.adapters;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Looper;
 import android.provider.MediaStore;
 import android.transition.Transition;
 import android.transition.TransitionListenerAdapter;
@@ -18,7 +17,6 @@ import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
-import com.diraapp.db.entities.Attachment;
 import com.diraapp.device.PerformanceClass;
 import com.diraapp.device.PerformanceTester;
 import com.diraapp.res.Theme;
@@ -49,7 +47,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
     private List<SelectorFileInfo> selectedFiles = new ArrayList<>();
     private HashMap<FilePreview, SelectorFileInfo> selectedViews = new HashMap<>();
-
 
 
     /**

@@ -1,5 +1,7 @@
 package com.diraapp.ui.adapters.messages;
 
+import android.graphics.PorterDuff;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -13,6 +15,7 @@ import com.diraapp.R;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.media.DiraMediaPlayer;
+import com.diraapp.res.Theme;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
@@ -62,6 +65,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
         this.messageAdapterContract = messageAdapterContract;
         amplituda = new Amplituda(messageAdapterContract.getContext());
 
+
         messageAttachmentLoader = new MessageAttachmentLoader(room, messageAdapterContract.getContext());
     }
 
@@ -71,11 +75,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
 
         FrameLayout container = new FrameLayout(messageAdapterContract.getContext());
         ViewGroup.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT);
+                DeviceUtils.dpToPx(68, messageAdapterContract.getContext()));
 
-        params.height = DeviceUtils.dpToPx(68, messageAdapterContract.getContext());
+
+
+
 
         container.setLayoutParams(params);
+
 
         BaseMessageViewHolder viewHolder = factory.createViewHolder(viewType,
                 container, messageAdapterContract, this);
@@ -91,11 +98,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
                 DiraActivity.runOnMainThread(() -> {
                     container.getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
                     container.addView(view);
-
-
-
                     viewHolder.onViewInflated(view);
-                    container.requestLayout();
                 });
 
 
