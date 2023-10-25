@@ -225,14 +225,11 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
             @Override
             public void run() {
                 try {
-                    Logger.logDebug(getClass().getSimpleName(), "Playing " + currentPlayingTask.getSourcePath());
-                    log("Playing ");
+
                     if (source != currentPlayingTask) return;
-                    Logger.logDebug(getClass().getSimpleName(), "1 " + currentPlayingTask.getSourcePath());
                     if (mediaPlayer.isReleased()) {
                         return;
                     }
-                    Logger.logDebug(getClass().getSimpleName(), "2 " + currentPlayingTask.getSourcePath());
                     mediaPlayer.reset();
                     setupMediaPlayer(false);
 

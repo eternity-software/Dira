@@ -246,7 +246,6 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     public void updateMessageReading(Message message) {
         if (!isSelfMessage) return;
         if (message.getMessageReadingList() != null && messageBackground.getBackground() != null) {
-            Logger.logDebug("Message binding..", String.valueOf(message.getMessageReadingList().size()));
             if (message.getMessageReadingList().size() == 0) {
                 messageBackground.getBackground().setColorFilter(
                         Theme.getColor(messageAdapterContract.getContext(),
