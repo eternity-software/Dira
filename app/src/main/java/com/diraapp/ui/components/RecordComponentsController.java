@@ -3,16 +3,13 @@ package com.diraapp.ui.components;
 import static com.diraapp.storage.AppStorage.DIRA_FILES_PATH;
 
 import android.Manifest;
-import android.animation.Animator;
 import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
-import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -39,7 +36,6 @@ import com.diraapp.res.Theme;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
-import com.diraapp.utils.SliderActivity;
 import com.diraapp.utils.android.DeviceUtils;
 import com.otaliastudios.cameraview.CameraListener;
 import com.otaliastudios.cameraview.CameraOptions;
@@ -49,8 +45,6 @@ import com.otaliastudios.cameraview.controls.Mode;
 import com.r0adkll.slidr.model.SlidrInterface;
 
 import java.io.File;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 /**
  * Controller for recording bubbles and voice messages
@@ -61,12 +55,12 @@ public class RecordComponentsController {
     private final ImageView recordButton;
     private final ImageView recordRipple;
     private final DiraActivity context;
-    private SoundRecorder soundRecorder;
     private final CameraView camera;
     private final View recordBubbleLayout;
     private final View recordingStatusBar;
     private final CardView bubbleContainer;
     private final TextView recordingStatusText;
+    private SoundRecorder soundRecorder;
     private long lastTimeRecordButtonDown = 0;
     private long lastTimeRecordButtonUp = 0;
     private boolean isRecordButtonVisible = true;
@@ -287,9 +281,8 @@ public class RecordComponentsController {
 
 
                 System.out.println("posis " + recordButton.getX() + " " + recordButton.getY() + " motion " + event.getX() + " " + event.getY());
-                if(Math.abs(event.getX()) < maxOffset && Math.abs(event.getY()) < maxOffset)
-                {
-                    if(!isSaving) {
+                if (Math.abs(event.getX()) < maxOffset && Math.abs(event.getY()) < maxOffset) {
+                    if (!isSaving) {
                         isSaving = true;
                         recordingTipText.setText(context.getString(R.string.recording_tip_send));
                         int colorFrom = Theme.getColor(context, R.color.red);
@@ -309,10 +302,8 @@ public class RecordComponentsController {
 
                         colorAnimation.start();
                     }
-                }
-                else
-                {
-                    if(isSaving) {
+                } else {
+                    if (isSaving) {
                         isSaving = false;
                         int colorFrom = Theme.getColor(context, R.color.accent);
                         recordingTipText.setText(context.getString(R.string.recording_tip_stop));
@@ -402,11 +393,10 @@ public class RecordComponentsController {
         Thread timer = new Thread(() -> {
             long lastTimeCheck = 0;
             // Note: do not use sleep here
-            while (isRecording)
-            {
+            while (isRecording) {
                 try {
 
-                    if(System.currentTimeMillis() - lastTimeCheck > 1000) {
+                    if (System.currentTimeMillis() - lastTimeCheck > 1000) {
                         int time = secondsRecording * 1000;
                         int minutes = time / (60 * 1000);
                         int seconds = (time / 1000) % 60;
@@ -418,22 +408,17 @@ public class RecordComponentsController {
                         secondsRecording++;
                         String finalSecondsString = secondsString;
                         context.runOnUiThread(() -> {
-                            if(isPreparingCamera)
-                            {
+                            if (isPreparingCamera) {
                                 recordingStatusText.setText(context.getString(R.string.recording_preparing));
                                 secondsRecording = 0;
-                            }
-                            else
-                            {
+                            } else {
 
                                 recordingStatusText.setText(context.getString(R.string.recording_prefix) + " " + minutes + ":" + finalSecondsString);
                             }
                         });
                         lastTimeCheck = System.currentTimeMillis();
                     }
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -498,9 +483,7 @@ public class RecordComponentsController {
 
                                 }
                             });
-                        }
-                        catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             soundRecorder = new SoundRecorder(context);
                             e.printStackTrace();
                         }

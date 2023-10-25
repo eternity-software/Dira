@@ -16,7 +16,6 @@ import com.diraapp.res.Theme;
 import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
-import com.diraapp.ui.adapters.messages.views.viewholders.AttachmentViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.TextMessageViewHolder;
 import com.diraapp.ui.components.HeightLimitedCardView;
 import com.diraapp.ui.components.ImagePreview;
@@ -26,21 +25,27 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * AttachmentGroupViewHolder displays a gallery of images or videos and
+ * sorts them by layers (mosaic layout)
+ */
 public class AttachmentGroupViewHolder extends TextMessageViewHolder {
 
 
-    LinearLayout mother;
+    private LinearLayout layersContainer;
 
-    LinearLayout firstLayer;
-    LinearLayout secondLayer;
-    LinearLayout thirdLayer;
+    private LinearLayout firstLayer, secondLayer, thirdLayer;
 
-    boolean isVerticalLayout = false;
+    /**
+     * Indicates how the layers are oriented
+     */
+    private boolean isVerticalLayout = false;
 
     private List<ImagePreview> imagePreviewList = new ArrayList<>();
     private List<ImagePreview> previewImagePool = new ArrayList<>();
 
     private int lastPickedPoolIndex = 0;
+
 
     public AttachmentGroupViewHolder(@NonNull ViewGroup itemView,
                                      MessageAdapterContract messageAdapterContract,
@@ -50,6 +55,10 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
 
     }
 
+    /**
+     * Prepare containers to bind
+     * @return
+     */
     @Override
     protected void postInflate() {
         super.postInflate();
@@ -61,15 +70,15 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
         cardView.setCardBackgroundColor(Theme.getColor(itemView.getContext(), R.color.gray));
         cardView.setRadius(DeviceUtils.dpToPx(14f, rootView.getContext()));
 
-        mother = generateLinearLayout();
+        layersContainer = generateLinearLayout();
         firstLayer = generateLinearLayout();
         secondLayer = generateLinearLayout();
         thirdLayer = generateLinearLayout();
 
-        mother.addView(firstLayer);
-        mother.addView(secondLayer);
-        mother.addView(thirdLayer);
-        cardView.addView(mother);
+        layersContainer.addView(firstLayer);
+        layersContainer.addView(secondLayer);
+        layersContainer.addView(thirdLayer);
+        cardView.addView(layersContainer);
 
         for (int i = 0; i < 12; i++) {
             generateImagePreview();
@@ -79,7 +88,7 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
     }
 
     @Override
-    public void bindMessage(Message message, Message previousMessage) {
+    public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
 
         imagePreviewList.clear();
@@ -117,14 +126,14 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
             if (attachmentIndex == 0) {
                 if (attachment.getWidth() / (float) attachment.getHeight() > 1.5f) {
                     isVerticalLayout = true;
-                    mother.setOrientation(LinearLayout.VERTICAL);
+                    layersContainer.setOrientation(LinearLayout.VERTICAL);
                     firstLayer.setOrientation(LinearLayout.HORIZONTAL);
                     secondLayer.setOrientation(LinearLayout.HORIZONTAL);
                     thirdLayer.setOrientation(LinearLayout.HORIZONTAL);
 
                 } else {
                     isVerticalLayout = false;
-                    mother.setOrientation(LinearLayout.HORIZONTAL);
+                    layersContainer.setOrientation(LinearLayout.HORIZONTAL);
                     firstLayer.setOrientation(LinearLayout.VERTICAL);
                     secondLayer.setOrientation(LinearLayout.VERTICAL);
                     thirdLayer.setOrientation(LinearLayout.VERTICAL);
@@ -141,6 +150,10 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
 
     }
 
+    /**
+     * Get ImagePreview from pool
+     * @return
+     */
     private ImagePreview getImagePreview() {
         ImagePreview imagePreview = previewImagePool.get(lastPickedPoolIndex);
         if (lastPickedPoolIndex + 1 > previewImagePool.size() - 1) {
@@ -152,6 +165,10 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
         return imagePreview;
     }
 
+    /**
+     * Generate item for AttachmentGroup pool
+     * @return
+     */
     private ImagePreview generateImagePreview() {
         ImagePreview imagePreview = new ImagePreview(itemView.getContext());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
@@ -171,6 +188,10 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
         return imagePreview;
     }
 
+    /**
+     * Generate container for AttachmentGroup layer
+     * @return
+     */
     private LinearLayout generateLinearLayout() {
         LinearLayout mom = new LinearLayout(itemView.getContext());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
@@ -206,11 +227,11 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
 
     @Override
     public void onLoadFailed(Attachment attachment) {
-        if(!isInitialized) return;
+        if (!isInitialized) return;
         for (ImagePreview imagePreview : new ArrayList<>(imagePreviewList)) {
             if (imagePreview.getAttachment() != null && attachment != null) {
                 if (imagePreview.getAttachment().getFileUrl().equals(attachment.getFileUrl())) {
-                   imagePreview.displayTrash();
+                    imagePreview.displayTrash();
                 }
             }
         }

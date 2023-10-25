@@ -33,7 +33,7 @@ public class EmojiMessageViewHolder extends BaseMessageViewHolder {
     }
 
     @Override
-    public void bindMessage(Message message, Message previousMessage) {
+    public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
         emojiText.setText(message.getText());
     }

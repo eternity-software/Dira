@@ -38,7 +38,7 @@ public abstract class AttachmentViewHolder extends BaseMessageViewHolder {
     }
 
     @Override
-    public void bindMessage(Message message, Message previousMessage) {
+    public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
         getViewHolderManagerContract().getMessageAttachmentLoader()
                 .loadMessageAttachment(message, (AttachmentViewHolder) this);

@@ -258,7 +258,7 @@ public class AppStorage {
 
     public static Bitmap getBitmapFromBase64(@Nullable String base64Str) throws IllegalArgumentException {
         try {
-            if(base64Str == null) return null;
+            if (base64Str == null) return null;
             byte[] decodedBytes = Base64.decode(
                     base64Str.substring(base64Str.indexOf(",") + 1),
                     Base64.DEFAULT

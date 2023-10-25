@@ -32,11 +32,10 @@ public class TextMessageViewHolder extends AttachmentViewHolder {
     }
 
     @Override
-    public void bindMessage(Message message, Message previousMessage) {
-       super.bindMessage(message, previousMessage);
+    public void bindMessage(@NonNull Message message, Message previousMessage) {
+        super.bindMessage(message, previousMessage);
 
-        if(message.getText().length() == 0)
-        {
+        if (message.getText().length() == 0) {
             messageText.setVisibility(View.GONE);
             return;
         }

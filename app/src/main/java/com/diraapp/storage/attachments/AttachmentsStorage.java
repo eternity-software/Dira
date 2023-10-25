@@ -128,12 +128,11 @@ public class AttachmentsStorage {
 
         if (!sizeLimited | attachment.getSize() < cacheUtils.getLong(CacheUtils.AUTO_LOAD_SIZE)) {
             String fileServerUrl = UpdateProcessor.getInstance(context).getFileServer(address);
-            if(fileServerUrl == null)
-            {
+            if (fileServerUrl == null) {
                 Logger.logDebug("AttachmentsStorage", "Unknown file server for " + address);
                 return null;
             }
-            AppStorage.downloadFile( fileServerUrl+ "/download/" + attachment.getFileUrl(), localFile, downloadHandler);
+            AppStorage.downloadFile(fileServerUrl + "/download/" + attachment.getFileUrl(), localFile, downloadHandler);
 
 
             if (!encryptionKey.equals("")) {

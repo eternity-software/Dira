@@ -118,7 +118,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
     }
 
     @Override
-    public void bindMessage(Message message, Message previousMessage) {
+    public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
 
         videoPlayer.reset();

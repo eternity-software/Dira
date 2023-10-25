@@ -16,7 +16,6 @@ import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
-import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayerState;
 
 import java.io.File;
 import java.io.IOException;
@@ -96,7 +95,7 @@ public class BubbleViewHolder extends AttachmentViewHolder {
     }
 
     @Override
-    public void bindMessage(Message message, Message previousMessage) {
+    public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
         bubblePlayer.reset();
         Attachment bubbleAttachment = message.getAttachments().get(0);

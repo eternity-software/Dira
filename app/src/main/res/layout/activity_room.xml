@@ -307,8 +307,6 @@
         </LinearLayout>
 
 
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -376,7 +374,6 @@
     </LinearLayout>
 
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bubble_recording_layout"
         android:layout_width="match_parent"
@@ -426,7 +423,6 @@
                 app:cameraVideoSizeMinWidth="100"
                 app:cameraVideoSizeSmallest="false" />
         </androidx.cardview.widget.CardView>
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -482,27 +478,29 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/message_input"
-        android:visibility="gone"
         android:elevation="1dp"
         android:paddingLeft="18dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recycler_view"
         app:themeBackgroundColor="gray">
+
         <ImageView
             android:id="@+id/recording_indicator"
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_gravity="center_vertical"
             android:background="@drawable/circle"
-            android:backgroundTint="@color/red"/>
+            android:backgroundTint="@color/red" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="14dp"
-            android:layout_gravity="center_vertical">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/recording_text"
@@ -520,16 +518,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/bubble_frame" />
+
             <TextView
                 android:id="@+id/recording_tip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:fontFamily="@font/montserratmedium"
-
-
-                android:maxLines="1"
                 android:alpha="0.6"
+
+
+                android:fontFamily="@font/montserratmedium"
+                android:maxLines="1"
                 android:text="@string/recording_tip_send"
                 android:textColor="@color/white"
                 android:textSize="12sp"

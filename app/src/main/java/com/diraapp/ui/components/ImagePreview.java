@@ -23,7 +23,6 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.ui.activities.DiraActivity;
-import com.google.android.material.imageview.ShapeableImageView;
 
 import java.io.File;
 
@@ -186,13 +185,13 @@ public class ImagePreview extends RelativeLayout {
         });
     }
 
-    public void displayTrash()
-    {
+    public void displayTrash() {
         overlay.setVisibility(VISIBLE);
         progressBar.setVisibility(GONE);
         sizeTextView.setVisibility(GONE);
         downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_trash));
     }
+
     public void hideDownloadOverlay() {
         if (!isInitialized) return;
         overlay.setVisibility(GONE);

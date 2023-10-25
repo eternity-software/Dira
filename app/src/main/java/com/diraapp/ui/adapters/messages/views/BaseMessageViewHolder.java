@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
@@ -24,7 +25,6 @@ import com.diraapp.ui.adapters.messages.views.viewholders.DelayedMessageBind;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.MessageHolderType;
 import com.diraapp.ui.components.MessageReplyComponent;
 import com.diraapp.utils.CacheUtils;
-import com.diraapp.utils.Logger;
 import com.diraapp.utils.TimeConverter;
 import com.diraapp.utils.android.DeviceUtils;
 import com.squareup.picasso.Picasso;
@@ -138,7 +138,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
      * @param message
      * @param previousMessage
      */
-    public void bindMessage(Message message, Message previousMessage) {
+    public void bindMessage(@NonNull Message message, @Nullable Message previousMessage) {
         fillDateAndTime(message, previousMessage);
         checkReadStatus(message);
         itemView.setClickable(true);
@@ -157,7 +157,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         return getItemViewType() != MessageHolderType.ROOM_UPDATES.ordinal();
     }
 
-    public void bindUserPicture(Message message, Message previousMessage) {
+    public void bindUserPicture(@NonNull Message message, @Nullable Message previousMessage) {
         if (!isSelfMessage) {
 
             boolean showProfilePicture = isProfilePictureRequired(message, previousMessage);
@@ -193,7 +193,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         }
     }
 
-    private boolean isProfilePictureRequired(Message message, Message previousMessage) {
+    private boolean isProfilePictureRequired(@NonNull Message message, @Nullable Message previousMessage) {
         if (previousMessage != null)
             if (previousMessage.hasAuthor() && message.hasAuthor()) {
                 return !previousMessage.getAuthorId().equals(message.getAuthorId()) ||

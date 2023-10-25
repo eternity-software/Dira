@@ -104,7 +104,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
      *
      * @param view
      */
-    public void attachDebugIndicator(View view) {
+    public void attachDebugIndicator(@NonNull View view) {
         debugIndicator = view;
     }
 
@@ -113,7 +113,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
      *
      * @param diraActivity
      */
-    public void attachDiraActivity(DiraActivity diraActivity) {
+    public void attachDiraActivity(@NonNull DiraActivity diraActivity) {
 
         if (attachedActivity) return;
         attachedActivity = true;
@@ -135,7 +135,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
      *
      * @param recyclerView
      */
-    public void attachRecyclerView(RecyclerView recyclerView) {
+    public void attachRecyclerView(@NonNull RecyclerView recyclerView) {
 
         if (attachedRecycler) return;
         attachedRecycler = true;
@@ -206,7 +206,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
      * @param source
      */
     @Deprecated
-    public void play(String source) {
+    public void play(@NonNull String source) {
         play(new PlayingTask(source));
     }
 
@@ -215,7 +215,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
      *
      * @param source PlayingTask instance for single media file
      */
-    public void play(PlayingTask source) {
+    public void play(@Nullable PlayingTask source) {
         if (source == null) return;
         currentPlayingTask = source;
 
@@ -275,7 +275,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
      *
      * @param listener
      */
-    public void addSelfDestroyListener(DiraVideoPlayerListener listener) {
+    public void addSelfDestroyListener(@NonNull DiraVideoPlayerListener listener) {
         diraVideoPlayerListenerList.add(new DiraVideoPlayerListener() {
             @Override
             public boolean onStateChanged(DiraVideoPlayerState diraVideoPlayerState) {
@@ -289,8 +289,6 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
                     e.printStackTrace();
                     return true;
                 }
-
-
                 return false;
             }
         });
@@ -301,7 +299,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
      *
      * @param listener
      */
-    public void addListener(DiraVideoPlayerListener listener) {
+    public void addListener(@NonNull DiraVideoPlayerListener listener) {
         diraVideoPlayerListenerList.add(listener);
     }
 
@@ -310,7 +308,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
      *
      * @param listener
      */
-    public void removeListener(DiraVideoPlayerListener listener) {
+    public void removeListener(@NonNull DiraVideoPlayerListener listener) {
         diraVideoPlayerListenerList.remove(listener);
     }
 
@@ -361,11 +359,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
                 // Auto-recreation after each reset
                 setupMediaPlayer(true);
             }
-
-
         });
-
-
     }
 
     /**
@@ -431,7 +425,6 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
     }
 
     public boolean isOnScreen() {
-
         if (!isShown()) {
             return false;
         }
@@ -491,7 +484,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
      *
      * @param diraVideoPlayerState
      */
-    public void notifyStateChanged(DiraVideoPlayerState diraVideoPlayerState) {
+    public void notifyStateChanged(@NonNull DiraVideoPlayerState diraVideoPlayerState) {
         Logger.logDebug(getClass().getSimpleName(), "New state " + diraVideoPlayerState.name());
         log("New state " + diraVideoPlayerState.name());
         state = diraVideoPlayerState;

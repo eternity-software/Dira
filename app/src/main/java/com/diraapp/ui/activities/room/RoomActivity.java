@@ -163,7 +163,7 @@ public class RoomActivity extends DiraActivity
         UpdateProcessor.getInstance().addProcessorListener(this);
 
         recordComponentsController = new RecordComponentsController(binding.recordButton,
-                binding.recordRipple,  binding.recordingText,  binding.recordingTip, binding.recordingIndicator,
+                binding.recordRipple, binding.recordingText, binding.recordingTip, binding.recordingIndicator,
                 this, binding.recordingStatusBar,
                 binding.camera, slidrInterface, binding.bubbleRecordingLayout, binding.bubbleFrame);
 
@@ -820,7 +820,7 @@ public class RoomActivity extends DiraActivity
         Logger.logDebug("notifying changed", "item changing");
         runOnUiThread(() -> messagesAdapter.notifyItemChanged(index));
 
-        Logger.logDebug("notifying changed", "item has been changed successfully"+ " ||| " +
+        Logger.logDebug("notifying changed", "item has been changed successfully" + " ||| " +
                 presenter.getItemsCount() + " adapter - " + messagesAdapter.getItemCount());
     }
 

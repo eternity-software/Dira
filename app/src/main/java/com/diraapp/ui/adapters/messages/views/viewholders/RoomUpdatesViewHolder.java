@@ -64,7 +64,7 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
     }
 
     @Override
-    public void bindMessage(Message message, Message previousMessage) {
+    public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
         itemView.setClickable(false);
 

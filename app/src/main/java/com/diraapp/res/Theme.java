@@ -72,7 +72,7 @@ public class Theme {
 
         if (name == null) return Color.MAGENTA;
         if (name.startsWith("@")) name = name.split("/")[1];
-        if(name.equals("null")) return 0;
+        if (name.equals("null")) return 0;
         String colorHex = stringsRepository.getValue(name);
 
 
