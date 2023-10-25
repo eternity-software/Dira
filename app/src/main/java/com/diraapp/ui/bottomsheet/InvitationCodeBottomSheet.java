@@ -55,7 +55,7 @@ public class InvitationCodeBottomSheet extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.bottom_sheet_invitation, container, true);
         view = v;
-
+        getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         TextView codeView = v.findViewById(R.id.invitation_code_text);
         TextView codeTip = v.findViewById(R.id.invitation_code_tip);
         ImageView copyCodeButton = v.findViewById(R.id.copy_invitation_code);

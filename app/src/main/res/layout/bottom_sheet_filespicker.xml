@@ -49,6 +49,7 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center_vertical"
+                        android:visibility="gone"
                         android:background="@drawable/gray_rounded"
                         android:paddingHorizontal="8dp"
                         app:srcCompat="@drawable/ic_camera"
@@ -56,14 +57,24 @@
                         app:themeImageColor="light_gray" />
 
                     <com.diraapp.ui.components.dynamic.ThemeImageView
-                        android:id="@+id/convCreateButton"
+
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/gray_rounded"
+                        android:paddingHorizontal="8dp"
+                        app:srcCompat="@drawable/ic_image"
+                        app:themeBackgroundTint="gray"
+                        app:themeImageColor="light_gray" />
+                    <com.diraapp.ui.components.dynamic.ThemeImageView
+                        android:id="@+id/documents_picker"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="16dp"
                         android:background="@drawable/gray_rounded"
                         android:paddingHorizontal="8dp"
-                        app:srcCompat="@drawable/ic_image"
+                        app:srcCompat="@drawable/ic_file"
                         app:themeBackgroundTint="gray"
                         app:themeImageColor="light_gray" />
                 </LinearLayout>
@@ -88,11 +99,7 @@
                     android:nestedScrollingEnabled="true"
                     android:paddingBottom="40dp"
                     android:stretchMode="columnWidth"
-                    app:fastScrollEnabled="true"
-                    app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
-                    app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
-                    app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"
-                    app:fastScrollVerticalTrackDrawable="@drawable/line_drawable"
+
 
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:spanCount="3" />

@@ -72,7 +72,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
         ViewGroup.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT);
 
-        params.height = DeviceUtils.dpToPx(68, messageAdapterContract.getContext());
+        //params.height = DeviceUtils.dpToPx(68, messageAdapterContract.getContext());
 
         container.setLayoutParams(params);
 
@@ -90,10 +90,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
 
                 container.getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
                 container.addView(view);
-                container.requestLayout();
+
+
                 viewHolder.onViewInflated(view);
             }
         };
+
 
         //LayoutInflater.from(messageAdapterContract.getContext()).inflate(R.layout.self_message, parent, false);
         if (viewHolder.isSelfMessage()) {

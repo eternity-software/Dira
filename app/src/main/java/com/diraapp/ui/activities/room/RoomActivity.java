@@ -26,6 +26,7 @@ import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 import androidx.core.app.ActivityCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
 import com.abedelazizshe.lightcompressorlibrary.VideoCompressor;
@@ -98,6 +99,8 @@ public class RoomActivity extends DiraActivity
     private static final int DO_NOT_NEED_TO_SCROLL = -1;
 
     private static final int IS_ROOM_OPENING = -1;
+
+    private static RecyclerView.RecycledViewPool messagesViewsPool = new RecyclerView.RecycledViewPool();
     private String roomSecret;
     private MessagesAdapter messagesAdapter;
     private FilePickerBottomSheet filePickerBottomSheet;
@@ -141,7 +144,8 @@ public class RoomActivity extends DiraActivity
         presenter = new RoomActivityPresenter(roomSecret, getCacheUtils().getString(CacheUtils.ID));
         presenter.attachView(this);
 
-        binding.recyclerView.setItemViewCacheSize(500);
+        binding.recyclerView.setRecycledViewPool(messagesViewsPool);
+
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setNestedScrollingEnabled(false);
 

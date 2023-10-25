@@ -34,6 +34,8 @@ public class MediaViewHolder extends AttachmentViewHolder {
     private Attachment currentAttachment;
     private File currentMediaFile;
 
+    private boolean isAttachmentLoaded = false;
+
     public MediaViewHolder(@NonNull ViewGroup itemView,
                            MessageAdapterContract messageAdapterContract,
                            ViewHolderManagerContract viewHolderManagerContract,
@@ -45,13 +47,14 @@ public class MediaViewHolder extends AttachmentViewHolder {
     @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
         if (file == null) return;
+        if(isAttachmentLoaded) return;
         if (attachment != currentAttachment) return;
         previewImage.hideDownloadOverlay();
 
         if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
             previewImage.setVisibility(View.VISIBLE);
             previewImage.setImage(file);
-
+            isAttachmentLoaded = true;
             previewImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -63,7 +66,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
         } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
 
             previewImage.setVisibility(View.VISIBLE);
-
+            isAttachmentLoaded = true;
             videoPlayer.setVisibility(View.VISIBLE);
             videoPlayer.attachDebugIndicator(postInflatedViewsContainer);
             DiraVideoPlayer finalVideoPlayer = videoPlayer;
@@ -101,6 +104,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
     @Override
     public void onLoadFailed(Attachment attachment) {
         previewImage.displayTrash();
+        isAttachmentLoaded = false;
     }
 
     @Override
@@ -120,7 +124,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
     @Override
     public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
-
+        isAttachmentLoaded = false;
         videoPlayer.reset();
         videoPlayer.setVisibility(View.GONE);
         previewImage.setVisibility(View.VISIBLE);

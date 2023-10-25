@@ -58,7 +58,7 @@
                 android:layout_marginTop="20dp"
                 android:backgroundTint="@color/dark"
                 app:cardBackgroundColor="@android:color/transparent"
-                app:cardCornerRadius="32dp"
+                app:cardCornerRadius="14dp"
                 app:cardElevation="0dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -85,7 +85,7 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/example_messages"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="220dp"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

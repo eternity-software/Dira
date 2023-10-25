@@ -18,6 +18,7 @@ import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.db.entities.Attachment;
 import com.diraapp.device.PerformanceClass;
 import com.diraapp.device.PerformanceTester;
 import com.diraapp.res.Theme;
@@ -48,6 +49,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
     private List<SelectorFileInfo> selectedFiles = new ArrayList<>();
     private HashMap<FilePreview, SelectorFileInfo> selectedViews = new HashMap<>();
+
+
 
     /**
      * Constructor for custom files arrays
@@ -83,23 +86,18 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         this.context = context;
 
 
-        for (int i = 0; i < 50; i++)
-            mediaElements.add(new SelectorFileInfo("", "", ""));
+        CursorLoader cursorLoader = getCursorLoader(onlyImages);
 
         // Must be executed on new Thread
-        new Thread(() -> {
-            Looper.prepare();
-            CursorLoader cursorLoader = getCursorLoader(onlyImages);
-            mediaElements = loadGallery(cursorLoader.loadInBackground());
-            DiraActivity.runOnMainThread(() ->
-                    notifyDataSetChanged());
-        }).start();
+        mediaElements = loadGallery(cursorLoader.loadInBackground());
+        DiraActivity.runOnMainThread(() ->
+                notifyDataSetChanged());
 
 
         //   Collections.reverse(images);
         waterfallBalancer = new WaterfallBalancer(context, getHardwareDependBalancerCount(), recyclerView);
 
-        registerTransitionListener();
+
     }
 
     public void setMultiSelect(boolean multiSelect) {
@@ -125,9 +123,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.file_picker_image, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        viewHolder.fileParingImageView.getFileParingImageView().setImageDrawable(null);
-        return viewHolder;
+
+        return new ViewHolder(view);
     }
 
     public void updateExistingSelectedViews() {

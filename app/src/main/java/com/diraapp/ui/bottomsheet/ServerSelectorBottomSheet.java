@@ -28,7 +28,7 @@ public class ServerSelectorBottomSheet extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.bottom_sheet_server_selector, container, true);
-
+        getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         RecyclerView recyclerView = v.findViewById(R.id.recycler_view);
 
         RoomServerAdapter roomServerAdapter = new RoomServerAdapter(getActivity());

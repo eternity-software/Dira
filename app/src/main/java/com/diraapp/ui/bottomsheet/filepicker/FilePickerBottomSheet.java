@@ -42,6 +42,8 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
      * Must be initialized onAttach as context
      */
     private MediaGridItemListener onItemClickListener;
+
+    private static RecyclerView.RecycledViewPool recycledViewPool;
     private Runnable onDismiss;
     private boolean onlyImages = false;
     private boolean isMultiSelection = false;
@@ -72,10 +74,52 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.bottom_sheet_filespicker, container, true);
-        view = v;
+        if(recycledViewPool == null)
+        {
+            recycledViewPool = new RecyclerView.RecycledViewPool();
+        }
+        getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        View v2 = inflater.inflate(R.layout.bottom_sheet_filespicker, container, true);
+        view = v2;
 
-        v.findViewById(R.id.openCamera).setOnClickListener(new View.OnClickListener() {
+
+
+        RecyclerView recyclerView = view.findViewById(R.id.gridView);
+
+        recyclerView.setRecycledViewPool(recycledViewPool);
+
+        EditText messageInput = view.findViewById(R.id.message_box);
+        if (messageText != null)
+            messageInput.setText(messageText);
+        inputContainer = view.findViewById(R.id.linearLayout3);
+
+        view.findViewById(R.id.sendButton).setOnClickListener(v -> {
+            multiFilesListener.onSelectedFilesSent(mediaGridAdapter.getSelectedFiles(), messageInput.getText().toString());
+            dismiss();
+        });
+
+        final TextView debugText = view.findViewById(R.id.debugText);
+        mediaGridAdapter = new MediaGridAdapter((DiraActivity) getActivity(), onItemClickListener, recyclerView, onlyImages);
+        mediaGridAdapter.setMultiSelect(isMultiSelection);
+        mediaGridAdapter.setBalancerCallback(new WaterfallBalancer.BalancerCallback() {
+            @Override
+            public void onActiveWaterfallsCountChange(final int count) {
+                try {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            debugText.setText("Active waterfalls: " + count);
+                        }
+                    });
+                } catch (Exception ignored) {
+
+                }
+
+            }
+        });
+
+        recyclerView.setAdapter(mediaGridAdapter);
+        v2.findViewById(R.id.openCamera).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                /* Intent intent = new Intent(getActivity(), CameraActivity.class);
@@ -85,7 +129,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
             }
         });
 
-        return v;
+        return v2;
     }
 
 
@@ -151,8 +195,6 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     public void onStart() {
         super.onStart();
 
-        getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-
         BottomSheetDialog dialog = (BottomSheetDialog) getDialog();
 
 
@@ -185,42 +227,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
             }
         });
-        setAllowReturnTransitionOverlap(false);
-        setAllowEnterTransitionOverlap(false);
-        RecyclerView gallery = bottomSheet.findViewById(R.id.gridView);
-        gallery.setLayoutManager(new GridLayoutManager(getActivity(), 3));
 
-        EditText messageInput = bottomSheet.findViewById(R.id.message_box);
-        if (messageText != null)
-            messageInput.setText(messageText);
-        inputContainer = bottomSheet.findViewById(R.id.linearLayout3);
-
-        bottomSheet.findViewById(R.id.sendButton).setOnClickListener(v -> {
-            multiFilesListener.onSelectedFilesSent(mediaGridAdapter.getSelectedFiles(), messageInput.getText().toString());
-            dismiss();
-        });
-
-        final TextView debugText = view.findViewById(R.id.debugText);
-        mediaGridAdapter = new MediaGridAdapter((DiraActivity) getActivity(), onItemClickListener, gallery, onlyImages);
-        mediaGridAdapter.setMultiSelect(isMultiSelection);
-        mediaGridAdapter.setBalancerCallback(new WaterfallBalancer.BalancerCallback() {
-            @Override
-            public void onActiveWaterfallsCountChange(final int count) {
-                try {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            debugText.setText("Active waterfalls: " + count);
-                        }
-                    });
-                } catch (Exception ignored) {
-
-                }
-
-            }
-        });
-
-        gallery.setAdapter(mediaGridAdapter);
     }
 
     @Override

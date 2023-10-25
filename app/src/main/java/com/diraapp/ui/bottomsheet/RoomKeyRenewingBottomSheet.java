@@ -62,7 +62,7 @@ public class RoomKeyRenewingBottomSheet extends BottomSheetDialogFragment implem
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.v = inflater.inflate(R.layout.bottom_sheet_renewing, container, true);
-
+        getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         readyCount = 0;
         v.findViewById(R.id.button_start_renewing).setOnClickListener((view) -> {
 

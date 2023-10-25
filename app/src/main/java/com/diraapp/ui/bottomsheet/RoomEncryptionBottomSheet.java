@@ -37,7 +37,7 @@ public class RoomEncryptionBottomSheet extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.bottom_sheet_encryption, container, true);
 
-
+        getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         TextView keyView = v.findViewById(R.id.encryption_key_text);
 
         String key = room.getEncryptionKey();

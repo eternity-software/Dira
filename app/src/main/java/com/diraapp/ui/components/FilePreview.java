@@ -26,13 +26,13 @@ public class FilePreview extends RelativeLayout {
 
     public FilePreview(Context context, AttributeSet attrs) {
         super(context, attrs);
-
+        initComponent();
     }
 
     public void initComponent() {
 
         if (!isInitialized) {
-
+            isInitialized = true;
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             rootView = inflater.inflate(R.layout.file_preview, this);
@@ -41,7 +41,7 @@ public class FilePreview extends RelativeLayout {
             durationView = findViewById(R.id.durationView);
             selectionTextButton = findViewById(R.id.select_button);
             selectionTextContainer = findViewById(R.id.select_button_container);
-            isInitialized = true;
+
         }
 
 

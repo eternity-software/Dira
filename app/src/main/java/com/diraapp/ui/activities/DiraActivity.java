@@ -45,7 +45,7 @@ import java.util.concurrent.Executors;
  */
 public class DiraActivity extends AppCompatActivity {
 
-    private static final ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(4);
+    private static final ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(8);
     private final List<DiraActivityListener> activityListenerList = new ArrayList<>();
     private CacheUtils cacheUtils;
 
