@@ -42,6 +42,8 @@ public class TextMessageViewHolder extends AttachmentViewHolder {
 
         messageText.setVisibility(View.VISIBLE);
         messageText.setText(message.getText());
+        messageText.requestLayout();
+        messageContainer.requestLayout();
     }
 
     @Override

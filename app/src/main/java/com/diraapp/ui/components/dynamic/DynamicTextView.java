@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
+import android.text.Layout;
 import android.util.AttributeSet;
 
 import androidx.annotation.StyleableRes;
@@ -33,7 +34,29 @@ public class DynamicTextView extends androidx.appcompat.widget.AppCompatTextView
         initialize(context, attrs);
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
+        Layout layout = getLayout();
+        if (layout != null) {
+            int width = (int) Math.ceil(getMaxLineWidth(layout))
+                    + getCompoundPaddingLeft() + getCompoundPaddingRight();
+            int height = getMeasuredHeight();
+            setMeasuredDimension(width, height);
+        }
+    }
+
+    private float getMaxLineWidth(Layout layout) {
+        float max_width = 0.0f;
+        int lines = layout.getLineCount();
+        for (int i = 0; i < lines; i++) {
+            if (layout.getLineWidth(i) > max_width) {
+                max_width = layout.getLineWidth(i);
+            }
+        }
+        return max_width;
+    }
     public DynamicTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initialize(context, attrs);

@@ -99,6 +99,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
                     container.getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
                     container.addView(view);
                     viewHolder.onViewInflated(view);
+
                 });
 
 

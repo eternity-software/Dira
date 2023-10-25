@@ -205,6 +205,7 @@ public class RoomActivity extends DiraActivity
             public void onClick(View v) {
 
                 EditText messageInput = binding.messageTextInput;
+
                 if (presenter.sendTextMessage(messageInput.getText().toString())) {
                     messageInput.setText("");
                 }

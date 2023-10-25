@@ -31,6 +31,7 @@ import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
+import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
 import com.diraapp.ui.components.viewswiper.ViewSwiperListener;
 import com.diraapp.utils.EncryptionUtil;
@@ -421,6 +422,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
             try {
                 sendMessage(message);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
