@@ -12,6 +12,8 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.util.Base64;
 
+import androidx.annotation.Nullable;
+
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
@@ -254,8 +256,9 @@ public class AppStorage {
 
     }
 
-    public static Bitmap getBitmapFromBase64(String base64Str) throws IllegalArgumentException {
+    public static Bitmap getBitmapFromBase64(@Nullable String base64Str) throws IllegalArgumentException {
         try {
+            if(base64Str == null) return null;
             byte[] decodedBytes = Base64.decode(
                     base64Str.substring(base64Str.indexOf(",") + 1),
                     Base64.DEFAULT

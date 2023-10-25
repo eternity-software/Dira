@@ -99,8 +99,8 @@ public class MediaViewHolder extends AttachmentViewHolder {
     }
 
     @Override
-    public void onLoadFailed() {
-
+    public void onLoadFailed(Attachment attachment) {
+        previewImage.displayTrash();
     }
 
     @Override

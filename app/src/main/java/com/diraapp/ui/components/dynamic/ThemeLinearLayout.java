@@ -50,12 +50,13 @@ public class ThemeLinearLayout extends LinearLayout {
         if (getBackground() != null) {
 
             try {
+
                 getBackground().setColorFilter(Theme.getColor(String.valueOf(backgroundTint)), PorterDuff.Mode.SRC_ATOP);
                 // getBackground().setT(Theme.getColor(String.valueOf(color)));
             } catch (NoSuchValueException e) {
                 getBackground().setColorFilter(Theme.getColor(getContext(), Theme.getResId(String.valueOf(backgroundTint), R.color.class)), PorterDuff.Mode.SRC_ATOP);
             }
-            requestLayout();
+
         }
     }
 

@@ -30,7 +30,7 @@ import java.io.File;
 public class ImagePreview extends RelativeLayout {
 
     private View rootView;
-    private ShapeableImageView imageView;
+    private ImageView imageView;
     private TextView sizeTextView;
     private boolean isInitialized = false;
     private View overlay;
@@ -186,6 +186,13 @@ public class ImagePreview extends RelativeLayout {
         });
     }
 
+    public void displayTrash()
+    {
+        overlay.setVisibility(VISIBLE);
+        progressBar.setVisibility(GONE);
+        sizeTextView.setVisibility(GONE);
+        downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_trash));
+    }
     public void hideDownloadOverlay() {
         if (!isInitialized) return;
         overlay.setVisibility(GONE);

@@ -80,6 +80,7 @@ public class RecordComponentsController {
     private SlidrInterface slidrInterface;
 
     private boolean isRecording = false;
+    private boolean isPreparingCamera = true;
 
     private TextView recordingTipText;
 
@@ -167,6 +168,7 @@ public class RecordComponentsController {
                             CacheUtils cacheUtils = context.getCacheUtils();
                             boolean isVoiceRecord = cacheUtils.getBoolean(CacheUtils.IS_VOICE_RECORD_DEFAULT);
                             if (!isVoiceRecord) {
+                                isPreparingCamera = true;
                                 recordBubble();
                             }
 
@@ -367,6 +369,7 @@ public class RecordComponentsController {
                 Logger.logDebug(this.getClass().getSimpleName(),
                         "Taking captured video...");
                 camera.takeVideoSnapshot(new File(directory, "bubbleMessage.mp4"));
+                isPreparingCamera = false;
                 camera.removeCameraListener(this);
             }
         });
@@ -415,7 +418,16 @@ public class RecordComponentsController {
                         secondsRecording++;
                         String finalSecondsString = secondsString;
                         context.runOnUiThread(() -> {
-                            recordingStatusText.setText(context.getString(R.string.recording_prefix) + " " + minutes + ":" + finalSecondsString);
+                            if(isPreparingCamera)
+                            {
+                                recordingStatusText.setText(context.getString(R.string.recording_preparing));
+                                secondsRecording = 0;
+                            }
+                            else
+                            {
+
+                                recordingStatusText.setText(context.getString(R.string.recording_prefix) + " " + minutes + ":" + finalSecondsString);
+                            }
                         });
                         lastTimeCheck = System.currentTimeMillis();
                     }

@@ -8,6 +8,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.diraapp.storage.AppStorage;
+import com.diraapp.utils.Logger;
 
 @Entity
 public class Attachment {
@@ -45,7 +46,7 @@ public class Attachment {
         try {
             return Bitmap.createScaledBitmap(AppStorage.getBitmapFromBase64(imagePreview), width, height, true);
         } catch (Exception e) {
-            System.out.println(imagePreview);
+            Logger.logDebug(getClass().getSimpleName(), "Not found preview for " + attachmentType.name());
             e.printStackTrace();
             return null;
         }
@@ -123,5 +124,21 @@ public class Attachment {
 
     public void setWidth(int width) {
         this.width = width;
+    }
+
+    @Override
+    public String toString() {
+        return "Attachment{" +
+                "id=" + id +
+                ", fileUrl='" + fileUrl + '\'' +
+                ", fileCreatedTime=" + fileCreatedTime +
+                ", fileName='" + fileName + '\'' +
+                ", size=" + size +
+                ", attachmentType=" + attachmentType +
+                ", height=" + height +
+                ", width=" + width +
+                ", imagePreview='" + imagePreview + '\'' +
+                ", voiceMessageStopPoint=" + voiceMessageStopPoint +
+                '}';
     }
 }

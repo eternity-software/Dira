@@ -70,8 +70,9 @@ public class Theme {
 
     public static int getColor(String name) throws NoSuchValueException {
 
-        if (name.startsWith("@")) name = name.split("/")[1];
         if (name == null) return Color.MAGENTA;
+        if (name.startsWith("@")) name = name.split("/")[1];
+        if(name.equals("null")) return 0;
         String colorHex = stringsRepository.getValue(name);
 
 

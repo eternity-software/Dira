@@ -46,5 +46,5 @@ public abstract class AttachmentViewHolder extends BaseMessageViewHolder {
 
     public abstract void onAttachmentLoaded(Attachment attachment, File file, Message message);
 
-    public abstract void onLoadFailed();
+    public abstract void onLoadFailed(Attachment attachment);
 }

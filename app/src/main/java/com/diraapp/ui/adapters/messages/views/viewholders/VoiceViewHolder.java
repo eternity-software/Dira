@@ -143,7 +143,7 @@ public class VoiceViewHolder extends AttachmentViewHolder {
     }
 
     @Override
-    public void onLoadFailed() {
+    public void onLoadFailed(Attachment attachment) {
 
     }
 

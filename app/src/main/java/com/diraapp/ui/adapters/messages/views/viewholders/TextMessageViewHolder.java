@@ -51,7 +51,7 @@ public class TextMessageViewHolder extends AttachmentViewHolder {
     }
 
     @Override
-    public void onLoadFailed() {
+    public void onLoadFailed(Attachment attachment) {
 
     }
 }

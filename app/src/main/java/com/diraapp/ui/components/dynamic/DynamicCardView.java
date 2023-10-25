@@ -53,7 +53,6 @@ public class DynamicCardView extends CardView {
             } catch (NoSuchValueException e) {
                 getBackground().setColorFilter(Theme.getColor(getContext(), Theme.getResId(String.valueOf(backgroundTint), R.color.class)), PorterDuff.Mode.SRC_ATOP);
             }
-            requestLayout();
         }
     }
 

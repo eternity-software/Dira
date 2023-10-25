@@ -205,7 +205,14 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
     }
 
     @Override
-    public void onLoadFailed() {
-
+    public void onLoadFailed(Attachment attachment) {
+        if(!isInitialized) return;
+        for (ImagePreview imagePreview : new ArrayList<>(imagePreviewList)) {
+            if (imagePreview.getAttachment() != null && attachment != null) {
+                if (imagePreview.getAttachment().getFileUrl().equals(attachment.getFileUrl())) {
+                   imagePreview.displayTrash();
+                }
+            }
+        }
     }
 }

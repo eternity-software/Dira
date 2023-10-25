@@ -80,7 +80,7 @@ public class BubbleViewHolder extends AttachmentViewHolder {
     }
 
     @Override
-    public void onLoadFailed() {
+    public void onLoadFailed(Attachment attachment) {
 
     }
 
@@ -126,7 +126,6 @@ public class BubbleViewHolder extends AttachmentViewHolder {
     public void onViewAttached() {
         super.onViewAttached();
         if (!isInitialized) return;
-        if (bubblePlayer.getState() == DiraVideoPlayerState.PAUSED)
-            bubblePlayer.play();
+        bubblePlayer.play();
     }
 }

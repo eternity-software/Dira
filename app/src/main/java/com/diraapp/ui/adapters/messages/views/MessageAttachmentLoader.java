@@ -139,18 +139,25 @@ public class MessageAttachmentLoader {
 
         @Override
         public void onAttachmentDownloadFailed(Attachment attachment) {
-            if (attachment.getFileUrl().equals(message.getAttachments().get(0).getFileUrl())) {
+            boolean isMessageAttachment = false;
+            for (Attachment messageAttachment : message.getAttachments()) {
+                if (messageAttachment != null)
+                    if (attachment.getFileUrl().equals(messageAttachment.getFileUrl()))
+                        isMessageAttachment = true;
+            }
+            if (isMessageAttachment) {
                 Logger.logDebug(this.getClass().getSimpleName(),
                         "Attachment failed to download! Url:" + attachment.getFileUrl());
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
                         if (holder != null) {
-                            holder.onLoadFailed();
+                            holder.onLoadFailed(attachment);
                         }
                     }
                 });
             }
+
         }
 
         public void removeViewHolder() {
