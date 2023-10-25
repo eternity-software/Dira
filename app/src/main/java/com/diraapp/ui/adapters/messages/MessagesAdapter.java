@@ -13,6 +13,7 @@ import com.diraapp.R;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.media.DiraMediaPlayer;
+import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.MessageAttachmentLoader;
@@ -72,7 +73,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
         ViewGroup.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT);
 
-        //params.height = DeviceUtils.dpToPx(68, messageAdapterContract.getContext());
+        params.height = DeviceUtils.dpToPx(68, messageAdapterContract.getContext());
 
         container.setLayoutParams(params);
 
@@ -87,21 +88,26 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
                         FrameLayout.LayoutParams.WRAP_CONTENT);
 
                 container.setLayoutParams(params);*/
+                DiraActivity.runOnMainThread(() -> {
+                    container.getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
+                    container.addView(view);
 
-                container.getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
-                container.addView(view);
 
 
-                viewHolder.onViewInflated(view);
+                    viewHolder.onViewInflated(view);
+                    container.requestLayout();
+                });
+
+
             }
         };
 
 
         //LayoutInflater.from(messageAdapterContract.getContext()).inflate(R.layout.self_message, parent, false);
         if (viewHolder.isSelfMessage()) {
-            layoutInflater.inflate(R.layout.self_message, container, listener);
+            new AsyncLayoutInflater(messageAdapterContract.getContext()).inflate(R.layout.self_message, container, listener);
         } else {
-            layoutInflater.inflate(R.layout.room_message, container, listener);
+            new AsyncLayoutInflater(messageAdapterContract.getContext()).inflate(R.layout.room_message, container, listener);
         }
 
         return viewHolder;

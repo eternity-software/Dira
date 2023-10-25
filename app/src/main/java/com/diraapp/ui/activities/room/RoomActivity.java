@@ -145,7 +145,7 @@ public class RoomActivity extends DiraActivity
         presenter.attachView(this);
 
         binding.recyclerView.setRecycledViewPool(messagesViewsPool);
-
+        ((LinearLayoutManager) binding.recyclerView.getLayoutManager()).setInitialPrefetchItemCount(100);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setNestedScrollingEnabled(false);
 
