@@ -2,10 +2,14 @@ package com.diraapp.ui.activities.room;
 
 import android.Manifest;
 import android.animation.Animator;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -67,6 +71,7 @@ import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.MessagesAdapter;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
+import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.RoomViewHolderFactory;
 import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
@@ -633,6 +638,12 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
+    public void scrollToAndStop(int index) {
+        binding.recyclerView.scrollToPosition(index);
+        binding.recyclerView.stopScroll();
+    }
+
+    @Override
     public Bitmap getBitmap(String path) {
         return AppStorage.getBitmapFromPath(path, this);
     }
@@ -786,39 +797,52 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
+    public void notifyRecyclerMessageRead(Message message, int pos) {
+        runOnUiThread(() -> {
+            BaseMessageViewHolder holder = (BaseMessageViewHolder) binding.recyclerView.
+                    findViewHolderForAdapterPosition(pos);
+
+            if (holder == null) return;
+            if (message.getMessageReadingList().size() > 1) return;
+
+            holder.updateMessageReading(message, true);
+        });
+    }
+
+    @Override
+    public void notifyAdapterItemsChanged(int from, int to) {
+        runOnUiThread(() -> {
+            messagesAdapter.notifyItemRangeChanged(from, to - from);
+        });
+    }
+
+    @Override
     public void notifyOnRoomOpenMessagesLoaded(int scrollPosition) {
-        notifyMessagesChanged(IS_ROOM_OPENING, 0, scrollPosition);
+        notifyMessagesInserted(IS_ROOM_OPENING, 0, scrollPosition);
     }
 
     @Override
-    public void notifyMessageChangedWithoutScroll(int start, int last) {
-        notifyMessagesChanged(start, last, DO_NOT_NEED_TO_SCROLL);
+    public void notifyMessageInsertedWithoutScroll(int start, int last) {
+        notifyMessagesInserted(start, last, DO_NOT_NEED_TO_SCROLL);
     }
 
     @Override
-    public void notifyMessagesChanged(int start, int last, int scrollPosition) {
+    public void notifyMessagesInserted(int start, int last, int scrollPosition) {
+        Logger.logDebug("notifying added", "adding item ");
+        if (start == IS_ROOM_OPENING) {
+            // Need to clear pool for correcting touch scenario for not recycled views
+            // TODO: investigation required, we must have one pool for all messages in future
+            binding.recyclerView.getRecycledViewPool().clear();
+            messagesAdapter.notifyDataSetChanged();
+        } else {
+            messagesAdapter.notifyItemRangeInserted(start, last - start);
+        }
 
-
-            Logger.logDebug("notifying added", "adding item " + binding.recyclerView.getChildCount());
-            if (start == IS_ROOM_OPENING) {
-                // Need to clear pool for correcting touch scenario for not recycled views
-                // TODO: investigation required, we must have one pool for all messages in future
-                binding.recyclerView.getRecycledViewPool().clear();
-                messagesAdapter.notifyDataSetChanged();
-            } else {
-                messagesAdapter.notifyItemRangeInserted(start, last - 1);
-            }
-
-            if (scrollPosition != DO_NOT_NEED_TO_SCROLL) {
-                if (start == IS_ROOM_OPENING) {
-                    ((LinearLayoutManager) binding.recyclerView.getLayoutManager())
-                            .scrollToPositionWithOffset(scrollPosition, 20);
-                    return;
-                }
-                binding.recyclerView.scrollToPosition(scrollPosition);
-            }
-            Logger.logDebug("notifying added", "item has been added successfully ||| " +
-                    presenter.getItemsCount() + " adapter - " + messagesAdapter.getItemCount());
+        if (scrollPosition != DO_NOT_NEED_TO_SCROLL) {
+            binding.recyclerView.scrollToPosition(scrollPosition);
+        }
+        Logger.logDebug("notifying added", "item has been added successfully ||| " +
+                presenter.getItemsCount() + " adapter - " + messagesAdapter.getItemCount());
 
     }
 
@@ -832,16 +856,25 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
-    public void notifyAdapterItemsDeleted(int start, int count) {
+    public void notifyAdapterItemsDeleted(int start, int last) {
+        Logger.logDebug("notifying adapter", "Deleted items " + presenter.getItemsCount());
+        binding.recyclerView.getRecycledViewPool().clear();
+        messagesAdapter.notifyItemRangeRemoved(start, last - start);
+        Logger.logDebug("notifying adapter",
+                "Deleted items from start - " + start + " to " + last +
+                        " size is " + messagesAdapter.getItemCount() + " ||| " +
+                        presenter.getItemsCount() + " adapter - " + messagesAdapter.getItemCount());
+    }
 
-            Logger.logDebug("notifying adapter", "Deleted items");
-            messagesAdapter.notifyItemRangeRemoved(start, count - 1);
-            Logger.logDebug("notifying adapter",
-                    "Deleted items from start - " + start + " to " + (count - 1) +
-                            " size is " + messagesAdapter.getItemCount() + " ||| " +
-                            presenter.getItemsCount() + " adapter - " + messagesAdapter.getItemCount());
+    @Override
+    public void blinkViewHolder(int position) {
+        BaseMessageViewHolder holder = (BaseMessageViewHolder) binding.recyclerView.
+                findViewHolderForAdapterPosition(position);
 
+        Logger.logDebug("blink", String.valueOf(holder == null));
+        if (holder == null) return;
 
+        holder.blink();
     }
 
     @Override

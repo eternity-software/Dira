@@ -1,6 +1,11 @@
 package com.diraapp.ui.adapters.messages.views;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +30,7 @@ import com.diraapp.ui.adapters.messages.views.viewholders.DelayedMessageBind;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.MessageHolderType;
 import com.diraapp.ui.components.MessageReplyComponent;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.Logger;
 import com.diraapp.utils.TimeConverter;
 import com.diraapp.utils.android.DeviceUtils;
 import com.squareup.picasso.Picasso;
@@ -59,6 +65,8 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
      * Delays bind if view has not been initialized
      */
     private DelayedMessageBind delayedMessageBind;
+
+    private ValueAnimator messageBackgroundAnimator;
 
     public BaseMessageViewHolder(@NonNull ViewGroup itemView, MessageAdapterContract messageAdapterContract,
                                  ViewHolderManagerContract viewHolderManagerContract, boolean isSelfMessage) {
@@ -189,7 +197,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
                 }
             }
         } else {
-            updateMessageReading(message);
+            updateMessageReading(message, false);
         }
     }
 
@@ -243,7 +251,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
 
     }
 
-    public void updateMessageReading(Message message) {
+    public void updateMessageReading(Message message, boolean isAnimated) {
         if (!isSelfMessage) return;
         if (message.getMessageReadingList() != null && messageBackground.getBackground() != null) {
             if (message.getMessageReadingList().size() == 0) {
@@ -251,9 +259,69 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
                         Theme.getColor(messageAdapterContract.getContext(),
                                 R.color.unread_message_background), PorterDuff.Mode.SRC_IN);
             } else {
-                messageBackground.getBackground().setColorFilter(
-                        Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
+                if (!isAnimated) {
+                    messageBackground.getBackground().setColorFilter(
+                            Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
+                    return;
+                }
+
+                if (messageBackgroundAnimator != null) {
+                    if (messageBackgroundAnimator.isRunning()) {
+                        messageBackgroundAnimator.end();
+                    }
+                }
+                int colorFrom = Theme.getColor(itemView.getContext(),
+                        R.color.unread_message_background);
+                int colorTo = Color.TRANSPARENT;
+
+                ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+                colorAnimation.setDuration(600); // milliseconds
+                colorAnimation.addUpdateListener((animator) -> {
+                    messageBackground.getBackground().setColorFilter((Integer)
+                            animator.getAnimatedValue(), PorterDuff.Mode.SRC_IN);
+                });
+
+                messageBackgroundAnimator = colorAnimation;
+                colorAnimation.start();
             }
+        }
+    }
+
+    public void blink() {
+        ColorFilter colorOnStart = messageBackground.getBackground().getColorFilter();
+
+        int colorFrom = Theme.getColor(itemView.getContext(),
+                R.color.unread_message_background);
+
+        int colorTo = Color.TRANSPARENT;
+
+        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+        colorAnimation.setDuration(400); // milliseconds
+        colorAnimation.setRepeatMode(ValueAnimator.REVERSE);
+        colorAnimation.setRepeatCount(2);
+        colorAnimation.addUpdateListener((animator) -> {
+            messageBackground.getBackground().setColorFilter((Integer)
+                    animator.getAnimatedValue(), PorterDuff.Mode.SRC_IN);
+        });
+
+        colorAnimation.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                messageBackground.getBackground().setColorFilter(colorOnStart);
+            }
+        });
+
+        if (messageBackgroundAnimator != null) {
+            if (!messageBackgroundAnimator.isRunning()) {
+                messageBackgroundAnimator = colorAnimation;
+                Logger.logDebug("blink", "blink anim");
+                colorAnimation.start();
+            }
+        } else {
+            messageBackgroundAnimator = colorAnimation;
+            Logger.logDebug("blink", "blink anim");
+            colorAnimation.start();
         }
     }
 

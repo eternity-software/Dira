@@ -135,8 +135,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 }
 
                 int pos = room.getUnreadMessagesIds().indexOf(thisMessage.getId());
-//                if (pos == -1) return;
-//                room.getUnreadMessagesIds().subList(0, pos + 1).clear();
 
                 ArrayList<String> toDelete = new ArrayList<>();
                 if (pos != -1) {
@@ -159,7 +157,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
             thisMessage.getMessageReadingList().add(thisReading);
 
-            view.notifyAdapterItemChanged(index);
+            view.notifyRecyclerMessageRead(thisMessage, index);
         }
     }
 
@@ -216,12 +214,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 List<Message> oldMessages = messageDao.getBeforeMessagesInRoom(roomSecret, message.getTime());
                 if (oldMessages.size() == 0) return;
                 int notifyingIndex = messageList.size() - 1;
-//                List<Message> newMessages = messageList;
-//                newMessages.addAll(oldMessages);
-//
-//                messageList = newMessages;
-
-
 
                 loadReplies(oldMessages, messageDao);
 
@@ -229,7 +221,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
                 DiraActivity.runOnMainThread(() -> {
                     messageList.addAll(oldMessages);
-                    view.notifyMessageChangedWithoutScroll(
+                    view.notifyMessageInsertedWithoutScroll(
                             index + 1, index + oldMessages.size());
 
                     view.notifyAdapterItemChanged(notifyingIndex);
@@ -266,20 +258,16 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     return;
                 }
 
-//                newMessages.addAll(messageList);
-//                messageList = newMessages;
-
-
                 loadReplies(newMessages, messageDao);
                 isNewestMessagesLoaded = messageList.get(0).getId().equals(room.getLastMessageId());
 
                 boolean isMessagesRemoved = messageList.size() > MAX_ADAPTER_MESSAGES_COUNT;
                 int size = messageList.size();
                 DiraActivity.runOnMainThread(() -> {
-                    for (Message m : newMessages) {
-                        messageList.add(0, m);
-                    }
-                            view.notifyMessagesChanged(0, newMessages.size(), newMessages.size());
+                            for (Message m : newMessages) {
+                                messageList.add(0, m);
+                            }
+                            view.notifyMessagesInserted(0, newMessages.size(), newMessages.size());
 
                             if (isMessagesRemoved) {
                                 messageList.subList(size - MessageDao.LOADING_COUNT + 1, size).clear();
@@ -371,6 +359,11 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     @Override
     public void loadMessagesNearByTime(long time) {
+        loadMessagesNearByTime(time, false);
+    }
+
+    @Override
+    public void loadMessagesNearByTime(long time, boolean needBlink) {
         view.runBackground(() -> {
             MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
             List<Message> olderMessages = messageDao.getBeforePartOnRoomLoading(roomSecret, time);
@@ -391,9 +384,11 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             messageList = messages;
             loadReplies(messages, messageDao);
             int finalScrollTo = scrollTo;
-            DiraActivity.runOnMainThread(() -> {
+            view.runOnUiThread(() -> {
                 view.setMessages(messageList);
                 view.notifyOnRoomOpenMessagesLoaded(finalScrollTo);
+
+                if (needBlink) view.blinkViewHolder(finalScrollTo);
             });
 
             isNewestMessagesLoaded = messages.get(0).getId().equals(room.getLastMessageId());
@@ -607,12 +602,15 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 return;
             }
 
-            view.smoothScrollTo(position);
+            int finalPosition = position;
+            view.runOnUiThread(() -> {
+                view.smoothScrollTo(finalPosition);
+            });
         });
     }
 
     @Override
-    public void onClicked(Message message) {
+    public void onReplyClicked(Message message) {
         if (message == null) return;
         int messageIndex = -1;
 
@@ -625,11 +623,12 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         }
 
         if (messageIndex != -1) {
-            view.smoothScrollTo(messageIndex);
+            view.scrollToAndStop(messageIndex);
+            view.blinkViewHolder(messageIndex);
             return;
         }
 
-        loadMessagesNearByTime(message.getTime());
+        loadMessagesNearByTime(message.getTime(), true);
     }
 
     @Override

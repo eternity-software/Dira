@@ -138,7 +138,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
             holder.bindMessage(message, previousMessage);
         }
 
-
         notifyItemScrolled(message, position);
 
     }

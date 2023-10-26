@@ -29,15 +29,21 @@ public interface RoomActivityContract {
 
         void notifyRecyclerMessage(Message message, boolean needUpdateList);
 
-        void notifyMessagesChanged(int start, int last, int scrollPosition);
+        void notifyRecyclerMessageRead(Message message, int pos);
 
-        void notifyMessageChangedWithoutScroll(int start, int last);
+        void notifyMessagesInserted(int start, int last, int scrollPosition);
+
+        void notifyMessageInsertedWithoutScroll(int start, int last);
 
         void notifyOnRoomOpenMessagesLoaded(int scrollPosition);
+
+        void notifyAdapterItemsChanged(int from, int to);
 
         void notifyAdapterItemChanged(int index);
 
         void notifyAdapterItemsDeleted(int start, int last);
+
+        void blinkViewHolder(int position);
 
         boolean isMessageVisible(int position);
 
@@ -75,6 +81,8 @@ public interface RoomActivityContract {
 
         void smoothScrollTo(int index);
 
+        void scrollToAndStop(int index);
+
         Bitmap getBitmap(String path);
 
         void setOnScrollListener();
@@ -110,6 +118,8 @@ public interface RoomActivityContract {
         void loadRoomBottomMessages();
 
         void loadMessagesNearByTime(long time);
+
+        void loadMessagesNearByTime(long time, boolean needBlink);
 
         boolean sendTextMessage(String text);
 

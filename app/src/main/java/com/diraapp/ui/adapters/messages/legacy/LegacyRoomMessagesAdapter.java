@@ -1294,7 +1294,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
         legacyViewHolder.replyContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (replyClickedListener != null) replyClickedListener.onClicked(message);
+                if (replyClickedListener != null) replyClickedListener.onReplyClicked(message);
             }
         });
     }
