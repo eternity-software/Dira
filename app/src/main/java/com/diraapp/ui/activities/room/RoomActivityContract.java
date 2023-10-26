@@ -87,6 +87,8 @@ public interface RoomActivityContract {
 
         void setOnScrollListener();
 
+        void updateScrollArrow();
+
         void updateScrollArrowIndicator();
     }
 

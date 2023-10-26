@@ -2,14 +2,10 @@ package com.diraapp.ui.activities.room;
 
 import android.Manifest;
 import android.animation.Animator;
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -110,6 +106,7 @@ public class RoomActivity extends DiraActivity
     private MessagesAdapter messagesAdapter;
     private FilePickerBottomSheet filePickerBottomSheet;
     private ActivityRoomBinding binding;
+    private boolean isArrowShowed = false;
     private final MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
         @Override
         public void onItemClick(int pos, final View view) {
@@ -651,10 +648,10 @@ public class RoomActivity extends DiraActivity
     @Override
     public void setOnScrollListener() {
 
+        updateScrollArrow();
         updateScrollArrowIndicator();
 
         LinearLayout arrow = binding.scrollArrow;
-        performScaleAnimation(1, 0, arrow);
 
         arrow.setOnClickListener((View view) -> {
             presenter.onScrollArrowPressed();
@@ -664,10 +661,8 @@ public class RoomActivity extends DiraActivity
         // Note: it is supporting only API >= M
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             binding.recyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-
-                boolean isArrowShowed = false;
-                int arrowAppearance = 20;
-                int arrowDisappearance = -20;
+                final int ARROW_APPEARANCE = 20;
+                final int ARROW_DISAPPEARANCE = -20;
 
                 @Override
                 public void onScrollChange(View view, int scrollX, int scrollY, int oldX, int oldY) {
@@ -684,11 +679,11 @@ public class RoomActivity extends DiraActivity
                         return;
                     }
 
-                    if (dy > arrowAppearance) {
+                    if (dy > ARROW_APPEARANCE) {
                         if (isArrowShowed) return;
                         performScaleAnimation(0, 1, arrow);
                         isArrowShowed = true;
-                    } else if (dy < arrowDisappearance) {
+                    } else if (dy < ARROW_DISAPPEARANCE) {
                         if (!isArrowShowed) return;
                         // arrow disappears
 
@@ -701,14 +696,31 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
+    public void updateScrollArrow() {
+        LinearLayout arrow = binding.scrollArrow;
+
+        LinearLayoutManager layoutManager = (LinearLayoutManager)
+                binding.recyclerView.getLayoutManager();
+        if (layoutManager == null) return;
+        int position = layoutManager.findFirstVisibleItemPosition();
+
+        if (position < 2 & presenter.isNewestMessagesLoaded() && !isArrowShowed) {
+            isArrowShowed = false;
+            performScaleAnimation(1, 0, arrow);
+            return;
+        }
+
+        if (isArrowShowed) return;
+        isArrowShowed = true;
+        performScaleAnimation(0, 1, arrow);
+    }
+
+    @Override
     public void updateScrollArrowIndicator() {
         if (getRoom().getUnreadMessagesIds().size() == 0 && isScrollIndicatorShown) {
             performScaleAnimation(1, 0, binding.scrollArrowUnreadIndicator);
             isScrollIndicatorShown = false;
-            return;
-        }
-
-        if (getRoom().getUnreadMessagesIds().size() != 0 && !isScrollIndicatorShown) {
+        } else if (getRoom().getUnreadMessagesIds().size() != 0 && !isScrollIndicatorShown) {
             performScaleAnimation(0, 1, binding.scrollArrowUnreadIndicator);
             isScrollIndicatorShown = true;
         }

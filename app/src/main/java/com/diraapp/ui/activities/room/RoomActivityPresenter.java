@@ -103,6 +103,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 if (message.getAuthorId().equals(selfId)) return;
 
                 room.getUnreadMessagesIds().add(message.getId());
+                view.updateScrollArrow();
                 view.updateScrollArrowIndicator();
 
             }
