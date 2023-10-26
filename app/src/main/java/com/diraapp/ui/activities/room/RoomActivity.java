@@ -708,7 +708,7 @@ public class RoomActivity extends DiraActivity
             return;
         }
 
-        if (!isScrollIndicatorShown) {
+        if (getRoom().getUnreadMessagesIds().size() != 0 && !isScrollIndicatorShown) {
             performScaleAnimation(0, 1, binding.scrollArrowUnreadIndicator);
             isScrollIndicatorShown = true;
         }

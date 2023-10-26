@@ -129,11 +129,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             if (thisMessage == null) return;
             if (((MessageReadUpdate) update).getUserId().equals(selfId)) {
 
-                if (lastReadMessage == null) lastReadMessage = thisMessage;
-                else if (thisMessage.getTime() > lastReadMessage.getTime()) {
-                    lastReadMessage = thisMessage;
-                }
-
                 int pos = room.getUnreadMessagesIds().indexOf(thisMessage.getId());
 
                 ArrayList<String> toDelete = new ArrayList<>();
@@ -142,6 +137,11 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                         toDelete.add(room.getUnreadMessagesIds().get(i));
                     }
                     room.removeFromUnreadMessages(toDelete);
+
+                    if (lastReadMessage == null) lastReadMessage = thisMessage;
+                    else if (thisMessage.getTime() > lastReadMessage.getTime()) {
+                        lastReadMessage = thisMessage;
+                    }
                 }
 
                 view.updateScrollArrowIndicator();
@@ -561,9 +561,10 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             if (messageList.size() == 0) return;
 
             MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
+            int unreadMessagesSize = room.getUnreadMessagesIds().size();
             if (lastReadMessage == null) {
                 String lastReadMessageId;
-                if (room.getUnreadMessagesIds().size() > 0) {
+                if (unreadMessagesSize > 0) {
                     lastReadMessageId = room.getUnreadMessagesIds().get(0);
                 } else {
                     lastReadMessageId = room.getLastMessageId();
@@ -596,7 +597,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             }
 
             // if lastReadMessage is loaded
-            if (room.getUnreadMessagesIds().size() > 0 && view.isMessageVisible(position)) {
+            if (unreadMessagesSize > 0 && view.isMessageVisible(position)) {
                 if (isNewestMessagesLoaded) view.smoothScrollTo(0);
                 else loadRoomBottomMessages();
                 return;

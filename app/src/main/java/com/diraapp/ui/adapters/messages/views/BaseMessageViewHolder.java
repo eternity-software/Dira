@@ -252,6 +252,8 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     }
 
     public void updateMessageReading(Message message, boolean isAnimated) {
+        if (!isInitialized) return;
+        if (!message.hasAuthor()) return;
         if (!isSelfMessage) return;
         if (message.getMessageReadingList() != null && messageBackground.getBackground() != null) {
             if (message.getMessageReadingList().size() == 0) {
