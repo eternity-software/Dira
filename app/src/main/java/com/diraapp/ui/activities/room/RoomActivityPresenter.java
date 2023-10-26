@@ -221,22 +221,26 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 //
 //                messageList = newMessages;
 
-                messageList.addAll(oldMessages);
+
 
                 loadReplies(oldMessages, messageDao);
 
                 boolean isMessagesRemoved = messageList.size() > MAX_ADAPTER_MESSAGES_COUNT;
 
-                view.notifyMessageChangedWithoutScroll(
-                        index + 1, index + oldMessages.size());
+                DiraActivity.runOnMainThread(() -> {
+                    messageList.addAll(oldMessages);
+                    view.notifyMessageChangedWithoutScroll(
+                            index + 1, index + oldMessages.size());
 
-                view.notifyAdapterItemChanged(notifyingIndex);
+                    view.notifyAdapterItemChanged(notifyingIndex);
 
-                if (isMessagesRemoved) {
-                    messageList.subList(0, MessageDao.LOADING_COUNT).clear();
-                    view.notifyAdapterItemsDeleted(0, MessageDao.LOADING_COUNT);
-                    isNewestMessagesLoaded = false;
-                }
+                    if (isMessagesRemoved) {
+                        messageList.subList(0, MessageDao.LOADING_COUNT).clear();
+                        view.notifyAdapterItemsDeleted(0, MessageDao.LOADING_COUNT);
+                        isNewestMessagesLoaded = false;
+                    }
+                });
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -265,22 +269,26 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 //                newMessages.addAll(messageList);
 //                messageList = newMessages;
 
-                for (Message m : newMessages) {
-                    messageList.add(0, m);
-                }
+
                 loadReplies(newMessages, messageDao);
                 isNewestMessagesLoaded = messageList.get(0).getId().equals(room.getLastMessageId());
 
                 boolean isMessagesRemoved = messageList.size() > MAX_ADAPTER_MESSAGES_COUNT;
                 int size = messageList.size();
+                DiraActivity.runOnMainThread(() -> {
+                    for (Message m : newMessages) {
+                        messageList.add(0, m);
+                    }
+                            view.notifyMessagesChanged(0, newMessages.size(), newMessages.size());
 
-                view.notifyMessagesChanged(0, newMessages.size(), newMessages.size());
+                            if (isMessagesRemoved) {
+                                messageList.subList(size - MessageDao.LOADING_COUNT + 1, size).clear();
+                                view.notifyAdapterItemsDeleted(size - MessageDao.LOADING_COUNT,
+                                        MessageDao.LOADING_COUNT);
+                            }
+                        }
+                );
 
-                if (isMessagesRemoved) {
-                    messageList.subList(size - MessageDao.LOADING_COUNT + 1, size).clear();
-                    view.notifyAdapterItemsDeleted(size - MessageDao.LOADING_COUNT,
-                            MessageDao.LOADING_COUNT);
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -310,10 +318,11 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         view.runBackground(() -> {
             MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
 
-            int scrollTo = 0;
+            int scrollTo;
 
             int size = room.getUnreadMessagesIds().size();
             if (size == 0) {
+                scrollTo = 0;
                 loadRoomBottomMessages();
             } else {
                 Message message = messageDao.getMessageById(room.getUnreadMessagesIds().get(0));
@@ -334,7 +343,10 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
                 loadReplies(messageList, messageDao);
                 view.setMessages(messageList);
-                view.notifyOnRoomOpenMessagesLoaded(scrollTo);
+                DiraActivity.runOnMainThread(() -> {
+                    view.notifyOnRoomOpenMessagesLoaded(scrollTo);
+                });
+
             }
 
             initMembers();
@@ -344,11 +356,16 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     @Override
     public void loadRoomBottomMessages() {
+
         MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
         messageList = messageDao.getLatestMessagesInRoom(roomSecret);
         loadReplies(messageList, messageDao);
-        view.setMessages(messageList);
-        view.notifyOnRoomOpenMessagesLoaded(0);
+
+        view.runOnUiThread(() -> {
+            view.setMessages(messageList);
+            view.notifyOnRoomOpenMessagesLoaded(0);
+        });
+
         isNewestMessagesLoaded = true;
     }
 
@@ -373,8 +390,12 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
             messageList = messages;
             loadReplies(messages, messageDao);
-            view.setMessages(messageList);
-            view.notifyOnRoomOpenMessagesLoaded(scrollTo);
+            int finalScrollTo = scrollTo;
+            DiraActivity.runOnMainThread(() -> {
+                view.setMessages(messageList);
+                view.notifyOnRoomOpenMessagesLoaded(finalScrollTo);
+            });
+
             isNewestMessagesLoaded = messages.get(0).getId().equals(room.getLastMessageId());
         });
     }

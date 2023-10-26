@@ -89,8 +89,10 @@ public class ImagePreview extends RelativeLayout {
     }
 
     public void setImage(File imageFile) {
+
         Attachment currentAttachment = attachment;
         DiraActivity.runGlobalBackground(() -> {
+            if(imageFile == null) return;
             Bitmap bitmap = AppStorage.getBitmapFromPath(imageFile.getPath(), getContext());
             new Handler(Looper.getMainLooper()).post(() -> {
                 if (attachment == currentAttachment) {

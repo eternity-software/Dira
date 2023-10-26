@@ -797,11 +797,10 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void notifyMessagesChanged(int start, int last, int scrollPosition) {
-        runOnUiThread(() -> {
+
 
             Logger.logDebug("notifying added", "adding item " + binding.recyclerView.getChildCount());
             if (start == IS_ROOM_OPENING) {
-                binding.recyclerView.getRecycledViewPool().clear();
                 messagesAdapter.notifyDataSetChanged();
             } else {
                 messagesAdapter.notifyItemRangeInserted(start, last - 1);
@@ -817,13 +816,13 @@ public class RoomActivity extends DiraActivity
             }
             Logger.logDebug("notifying added", "item has been added successfully ||| " +
                     presenter.getItemsCount() + " adapter - " + messagesAdapter.getItemCount());
-        });
+
     }
 
     @Override
     public void notifyAdapterItemChanged(int index) {
         Logger.logDebug("notifying changed", "item changing");
-        runOnUiThread(() -> messagesAdapter.notifyItemChanged(index));
+        messagesAdapter.notifyItemChanged(index);
 
         Logger.logDebug("notifying changed", "item has been changed successfully" + " ||| " +
                 presenter.getItemsCount() + " adapter - " + messagesAdapter.getItemCount());
@@ -831,14 +830,14 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void notifyAdapterItemsDeleted(int start, int count) {
-        runOnUiThread(() -> {
+
             Logger.logDebug("notifying adapter", "Deleted items");
             messagesAdapter.notifyItemRangeRemoved(start, count - 1);
             Logger.logDebug("notifying adapter",
                     "Deleted items from start - " + start + " to " + (count - 1) +
                             " size is " + messagesAdapter.getItemCount() + " ||| " +
                             presenter.getItemsCount() + " adapter - " + messagesAdapter.getItemCount());
-        });
+
 
     }
 

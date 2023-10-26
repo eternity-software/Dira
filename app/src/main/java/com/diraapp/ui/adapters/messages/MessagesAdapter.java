@@ -75,7 +75,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
 
         FrameLayout container = new FrameLayout(messageAdapterContract.getContext());
         ViewGroup.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                DeviceUtils.dpToPx(68, messageAdapterContract.getContext()));
+                DeviceUtils.dpToPx(28, messageAdapterContract.getContext()));
 
 
 
