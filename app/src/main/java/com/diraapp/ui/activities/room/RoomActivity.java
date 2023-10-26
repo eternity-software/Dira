@@ -801,6 +801,9 @@ public class RoomActivity extends DiraActivity
 
             Logger.logDebug("notifying added", "adding item " + binding.recyclerView.getChildCount());
             if (start == IS_ROOM_OPENING) {
+                // Need to clear pool for correcting touch scenario for not recycled views
+                // TODO: investigation required, we must have one pool for all messages in future
+                binding.recyclerView.getRecycledViewPool().clear();
                 messagesAdapter.notifyDataSetChanged();
             } else {
                 messagesAdapter.notifyItemRangeInserted(start, last - 1);
