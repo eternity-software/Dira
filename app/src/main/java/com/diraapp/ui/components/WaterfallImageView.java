@@ -5,9 +5,14 @@ import android.widget.ImageView;
 
 import com.diraapp.storage.DiraMediaInfo;
 
-public interface WaterfallImageView  {
+public interface WaterfallImageView {
 
-     DiraMediaInfo getFileInfo();
-     ImageView getImageView();
-     default void onImageBind(Bitmap bitmap){};
+    DiraMediaInfo getFileInfo();
+
+    ImageView getImageView();
+
+    default void onImageBind(Bitmap bitmap) {
+    }
+
+    ;
 }

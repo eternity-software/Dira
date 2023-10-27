@@ -47,8 +47,8 @@ import java.util.concurrent.Executors;
 public class DiraActivity extends AppCompatActivity {
 
     private static final ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(8);
-    private WaterfallBalancer waterfallBalancer;
     private final List<DiraActivityListener> activityListenerList = new ArrayList<>();
+    private WaterfallBalancer waterfallBalancer;
     private CacheUtils cacheUtils;
 
 

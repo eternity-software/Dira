@@ -71,7 +71,6 @@ import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.RoomViewHolderFactory;
 import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
-import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.ui.components.RecordComponentsController;
@@ -105,7 +104,9 @@ public class RoomActivity extends DiraActivity
     private MessagesAdapter messagesAdapter;
     private FilePickerBottomSheet filePickerBottomSheet;
     private ActivityRoomBinding binding;
+
     private boolean isArrowShowed = true;
+
     private final MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
         @Override
         public void onItemClick(int pos, final View view) {

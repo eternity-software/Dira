@@ -292,8 +292,8 @@ public class RecordComponentsController {
                         ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
                         colorAnimation.setDuration(100); // milliseconds
                         colorAnimation.addUpdateListener((animator) -> {
-                                recordRipple.getBackground().setColorFilter((Integer) animator.getAnimatedValue(), PorterDuff.Mode.SRC_ATOP);
-                                recordButton.getBackground().setColorFilter((Integer) animator.getAnimatedValue(), PorterDuff.Mode.SRC_ATOP);
+                            recordRipple.getBackground().setColorFilter((Integer) animator.getAnimatedValue(), PorterDuff.Mode.SRC_ATOP);
+                            recordButton.getBackground().setColorFilter((Integer) animator.getAnimatedValue(), PorterDuff.Mode.SRC_ATOP);
                         });
 
                         colorAnimation.start();

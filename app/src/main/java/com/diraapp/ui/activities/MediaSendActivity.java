@@ -27,14 +27,11 @@ import androidx.core.app.SharedElementCallback;
 
 import com.diraapp.R;
 import com.diraapp.storage.AppStorage;
-import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.transition.Transitions;
 import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.ui.components.TouchImageView;
 import com.diraapp.ui.components.VideoPlayer;
-import com.diraapp.utils.ImageRotationFix;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -184,11 +181,10 @@ public class MediaSendActivity extends DiraActivity {
                         if (type.startsWith("image")) {
                             DiraActivity.runGlobalBackground(() -> {
                                 Bitmap fullsizeBitmap = AppStorage.getBitmapFromPath(finalImageUri, getApplicationContext());
-                                if(fullsizeBitmap != null)
-                                {
+                                if (fullsizeBitmap != null) {
                                     runOnMainThread(() -> {
-                                            imageView.setImageBitmap(fullsizeBitmap);
-                                        });
+                                        imageView.setImageBitmap(fullsizeBitmap);
+                                    });
                                 }
                             });
                         } else {

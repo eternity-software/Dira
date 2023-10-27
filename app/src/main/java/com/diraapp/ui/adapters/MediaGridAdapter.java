@@ -19,10 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 import com.diraapp.res.Theme;
+import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.storage.images.WaterfallBalancer;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.anim.BounceInterpolator;
-import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.utils.android.DiraVibrator;
@@ -102,7 +102,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     public void setMultiSelect(boolean multiSelect) {
         this.multiSelect = multiSelect;
     }
-
 
 
     public void setBalancerCallback(WaterfallBalancer.BalancerCallback balancerCallback) {

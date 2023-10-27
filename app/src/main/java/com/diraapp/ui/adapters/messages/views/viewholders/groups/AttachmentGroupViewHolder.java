@@ -57,6 +57,7 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
 
     /**
      * Prepare containers to bind
+     *
      * @return
      */
     @Override
@@ -152,6 +153,7 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
 
     /**
      * Get ImagePreview from pool
+     *
      * @return
      */
     private ImagePreview getImagePreview() {
@@ -167,6 +169,7 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
 
     /**
      * Generate item for AttachmentGroup pool
+     *
      * @return
      */
     private ImagePreview generateImagePreview() {
@@ -190,6 +193,7 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
 
     /**
      * Generate container for AttachmentGroup layer
+     *
      * @return
      */
     private LinearLayout generateLinearLayout() {

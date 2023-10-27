@@ -137,7 +137,8 @@ public class MessageReplyComponent extends FrameLayout {
         replyContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (config.getReplyListener() != null) config.getReplyListener().onReplyClicked(message);
+                if (config.getReplyListener() != null)
+                    config.getReplyListener().onReplyClicked(message);
             }
         });
     }

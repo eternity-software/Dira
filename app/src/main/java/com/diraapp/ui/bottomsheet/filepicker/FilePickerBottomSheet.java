@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.BuildConfig;
 import com.diraapp.R;
-import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.storage.images.WaterfallBalancer;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.GridItemsSpacingDecorator;
@@ -102,7 +101,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         final TextView debugText = view.findViewById(R.id.debugText);
         mediaGridAdapter = new MediaGridAdapter((DiraActivity) getActivity(), onItemClickListener, recyclerView, onlyImages);
         mediaGridAdapter.setMultiSelect(isMultiSelection);
-        if(BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG)
             debugText.setVisibility(View.VISIBLE);
         mediaGridAdapter.setBalancerCallback(new WaterfallBalancer.BalancerCallback() {
             @Override

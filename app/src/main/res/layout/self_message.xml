@@ -96,16 +96,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="6dp"
-                android:layout_marginBottom="7dp"
                 android:layout_marginEnd="8dp"
+                android:layout_marginBottom="7dp"
                 android:autoLink="all"
 
                 android:fontFamily="@font/montserratsemibold"
+                android:padding="0dp"
                 android:text=""
                 android:textColor="@color/self_message_color"
                 android:textColorLink="@color/self_message_color_link"
                 android:textIsSelectable="true"
-                android:padding="0dp"
                 android:textSize="15sp"
                 android:visibility="gone"
 

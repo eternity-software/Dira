@@ -1,4 +1,5 @@
 package com.diraapp.ui.components.dynamic
+
 import android.graphics.Canvas
 import android.text.Layout
 import android.text.Layout.Alignment.ALIGN_CENTER

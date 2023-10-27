@@ -32,7 +32,7 @@ public class MultiAttachmentLoader {
 
         int i = 0;
         for (Object obj : diraMediaInfoList) {
-            if(obj instanceof DiraMediaInfo) {
+            if (obj instanceof DiraMediaInfo) {
                 DiraMediaInfo diraMediaInfo = (DiraMediaInfo) obj;
                 AttachmentType attachmentType = AttachmentType.VIDEO;
                 if (!diraMediaInfo.isVideo()) {

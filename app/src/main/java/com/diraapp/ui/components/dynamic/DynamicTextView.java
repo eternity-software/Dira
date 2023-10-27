@@ -34,6 +34,11 @@ public class DynamicTextView extends androidx.appcompat.widget.AppCompatTextView
         initialize(context, attrs);
     }
 
+    public DynamicTextView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        initialize(context, attrs);
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -56,10 +61,6 @@ public class DynamicTextView extends androidx.appcompat.widget.AppCompatTextView
             }
         }
         return max_width;
-    }
-    public DynamicTextView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        initialize(context, attrs);
     }
 
     @Override

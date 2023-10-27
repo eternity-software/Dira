@@ -36,7 +36,7 @@ public class AttachmentsStorage {
                 public void run() {
                     while (true) {
                         try {
-                            if(saveAttachmentTaskList.size() == 0) break;
+                            if (saveAttachmentTaskList.size() == 0) break;
                             for (SaveAttachmentTask saveAttachmentTask : new ArrayList<>(saveAttachmentTaskList)) {
                                 try {
                                     for (AttachmentsStorageListener attachmentsStorageListener : attachmentsStorageListeners) {

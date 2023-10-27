@@ -2,7 +2,6 @@ package com.diraapp.ui.adapters;
 
 import android.view.View;
 
-import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 
 import java.util.List;

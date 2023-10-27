@@ -21,6 +21,7 @@ import java.util.HashMap;
 
 public interface MessageAdapterContract {
     WaterfallBalancer getWaterfallBalancer();
+
     Room getRoom();
 
     HashMap<String, Member> getMembers();

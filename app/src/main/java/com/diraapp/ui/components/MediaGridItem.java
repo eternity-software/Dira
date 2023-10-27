@@ -91,11 +91,6 @@ public class MediaGridItem extends RelativeLayout implements WaterfallImageView 
         return diraMediaInfo;
     }
 
-    @Override
-    public ImageView getImageView() {
-        return getFileParingImageView();
-    }
-
     public void setFileInfo(SelectorFileInfo diraMediaInfo) {
         this.diraMediaInfo = diraMediaInfo;
         initComponent();
@@ -106,5 +101,10 @@ public class MediaGridItem extends RelativeLayout implements WaterfallImageView 
         } else {
             videoInfoView.setVisibility(INVISIBLE);
         }
+    }
+
+    @Override
+    public ImageView getImageView() {
+        return getFileParingImageView();
     }
 }

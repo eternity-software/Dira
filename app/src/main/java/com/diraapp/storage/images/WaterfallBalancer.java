@@ -30,9 +30,8 @@ public class WaterfallBalancer {
     private BalancerCallback balancerCallback;
 
 
-    public WaterfallBalancer(DiraActivity diraActivity)
-    {
-         this(diraActivity, getHardwareDependBalancerCount(diraActivity));
+    public WaterfallBalancer(DiraActivity diraActivity) {
+        this(diraActivity, getHardwareDependBalancerCount(diraActivity));
     }
 
     public WaterfallBalancer(DiraActivity activity, int balancerCount) {
@@ -85,7 +84,26 @@ public class WaterfallBalancer {
         }
     }
 
+    public static void setDebugColor(int color, WaterfallImageView waterfallImageView) {
+        if (!DEBUG_MODE) return;
+        if (waterfallImageView instanceof View) {
+            DiraActivity.runOnMainThread(() -> {
+                ((View) waterfallImageView).setBackgroundColor(color);
+            });
+        }
+    }
 
+    private static int getHardwareDependBalancerCount(Context context) {
+        int balancerCount = 2;
+
+        PerformanceClass performanceClass = PerformanceTester.measureDevicePerformanceClass(context);
+        if (performanceClass == PerformanceClass.MEDIUM) {
+            balancerCount = 8;
+        } else if (performanceClass == PerformanceClass.HIGH) {
+            balancerCount = 14;
+        }
+        return balancerCount;
+    }
 
     public void setBalancerCallback(BalancerCallback balancerCallback) {
         this.balancerCallback = balancerCallback;
@@ -105,7 +123,7 @@ public class WaterfallBalancer {
             setDebugColor(Color.DKGRAY, fileParingImageView);
         } else {
 
-                setDebugColor(Color.YELLOW, fileParingImageView);
+            setDebugColor(Color.YELLOW, fileParingImageView);
             if (lastWaterfallId > waterfallImageLoaderList.size() - 1) {
                 lastWaterfallId = 0;
             }
@@ -118,32 +136,8 @@ public class WaterfallBalancer {
 
     }
 
-
-    public static void setDebugColor(int color, WaterfallImageView waterfallImageView)
-    {
-        if(!DEBUG_MODE) return;
-        if(waterfallImageView instanceof View)
-        {
-            DiraActivity.runOnMainThread(() -> {
-                ((View) waterfallImageView).setBackgroundColor(color);
-            });
-        }
-    }
-    public void remove(MediaGridItem mediaGridItem)
-    {
-       // cancelledList.add(filePreview);
-    }
-
-    private static int getHardwareDependBalancerCount(Context context) {
-        int balancerCount = 2;
-
-        PerformanceClass performanceClass = PerformanceTester.measureDevicePerformanceClass(context);
-        if (performanceClass == PerformanceClass.MEDIUM) {
-            balancerCount = 8;
-        } else if (performanceClass == PerformanceClass.HIGH) {
-            balancerCount = 14;
-        }
-        return balancerCount;
+    public void remove(MediaGridItem mediaGridItem) {
+        // cancelledList.add(filePreview);
     }
 
     public interface BalancerCallback {

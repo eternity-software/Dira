@@ -5,6 +5,7 @@ import com.diraapp.storage.DiraMediaInfo;
 public class SelectorFileInfo extends DiraMediaInfo {
 
     private boolean isSelected;
+
     public SelectorFileInfo(String name, String filePath, String mimeType) {
         super(name, filePath, mimeType);
     }

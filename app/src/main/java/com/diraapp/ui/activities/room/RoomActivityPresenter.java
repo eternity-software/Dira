@@ -624,8 +624,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     view.runOnUiThread(() -> {
                         view.scrollTo(0);
                     });
-                }
-                else loadRoomBottomMessages();
+                } else loadRoomBottomMessages();
                 return;
             }
 

@@ -4,7 +4,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,7 +47,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
     @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
         if (file == null) return;
-        if(isAttachmentLoaded) return;
+        if (isAttachmentLoaded) return;
         if (attachment != currentAttachment) return;
         previewImage.hideDownloadOverlay();
 
@@ -146,11 +145,11 @@ public class MediaViewHolder extends AttachmentViewHolder {
         currentMediaFile = AttachmentsStorage.getFileFromAttachment(attachment,
                 itemView.getContext(), message.getRoomSecret());
 
-        if(currentMediaFile != null)
-            if(!currentMediaFile.exists())
+        if (currentMediaFile != null)
+            if (!currentMediaFile.exists())
                 onLoadFailed(attachment);
 
-        if(currentMediaFile == null)
+        if (currentMediaFile == null)
             onLoadFailed(attachment);
 
         previewImage.setAttachment(attachment, getMessageAdapterContract().getRoom(),

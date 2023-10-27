@@ -1,7 +1,5 @@
 package com.diraapp.ui.adapters.messages;
 
-import android.graphics.PorterDuff;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -15,7 +13,6 @@ import com.diraapp.R;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.media.DiraMediaPlayer;
-import com.diraapp.res.Theme;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
@@ -76,9 +73,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
         FrameLayout container = new FrameLayout(messageAdapterContract.getContext());
         ViewGroup.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                 DeviceUtils.dpToPx(28, messageAdapterContract.getContext()));
-
-
-
 
 
         container.setLayoutParams(params);

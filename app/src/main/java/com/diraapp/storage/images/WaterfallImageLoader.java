@@ -9,10 +9,10 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 
 import com.diraapp.storage.AppStorage;
-import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.storage.DiraMediaInfo;
-import com.diraapp.ui.components.MediaGridItem;
+import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.components.ImagePreview;
+import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.ui.components.WaterfallImageView;
 import com.diraapp.utils.Logger;
 
@@ -58,17 +58,14 @@ public class WaterfallImageLoader {
                                 final boolean[] isCancelled = {false};
 
                                 try {
-                                    if(imageView != null) {
+                                    if (imageView != null) {
                                         WaterfallLogger.log("Loading " + imageView.getFileInfo());
                                         DiraMediaInfo oldFileInfo = imageView.getFileInfo();
                                         final Bitmap bitmap;
                                         if (imageView.getFileInfo().isImage()) {
-                                            if(imageView instanceof ImagePreview)
-                                            {
+                                            if (imageView instanceof ImagePreview) {
                                                 bitmap = AppStorage.getBitmapFromPath(imageView.getFileInfo().getFilePath(), activity);
-                                            }
-                                            else
-                                            {
+                                            } else {
                                                 bitmap = decodeFile(new File(imageView.getFileInfo().getFilePath()));
                                             }
                                         } else {
@@ -119,7 +116,6 @@ public class WaterfallImageLoader {
 
                                                                 activity.performScaleAnimation(0, 1, (View) imageView);
                                                             }
-
 
 
                                                             imageView.getImageView().startAnimation(fadeIn);
@@ -191,9 +187,8 @@ public class WaterfallImageLoader {
     }
 
 
-
     public void add(WaterfallImageView imageView) {
-        if(!(imageView instanceof View)) throw new RuntimeException("Must extend View");
+        if (!(imageView instanceof View)) throw new RuntimeException("Must extend View");
         imagesQueue.add(imageView);
         if (isRunning) {
             isDataUpdated = true;

@@ -98,7 +98,7 @@ public class BubbleViewHolder extends AttachmentViewHolder {
     @Override
     public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
-        if(message.getAttachments().size() == 0) return;
+        if (message.getAttachments().size() == 0) return;
         bubblePlayer.reset();
 
         Attachment bubbleAttachment = message.getAttachments().get(0);

@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import okhttp3.Callback;
-
 public interface RoomActivityContract {
 
     interface View {

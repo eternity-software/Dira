@@ -18,8 +18,6 @@ public class DiraMediaInfo {
     private final String mimeType;
 
 
-
-
     public DiraMediaInfo(String name, String filePath, String mimeType) {
         this.name = name;
         this.filePath = filePath;
