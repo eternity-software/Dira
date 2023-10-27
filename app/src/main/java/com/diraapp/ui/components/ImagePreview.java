@@ -108,9 +108,9 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
     public void setImage(File imageFile) {
         Attachment currentAttachment = attachment;
         if (waterfallBalancer != null) {
-            String type = "image";
+            String type = DiraMediaInfo.MIME_TYPE_IMAGE;
 
-            if (attachment.getAttachmentType() == AttachmentType.VIDEO) type = "video";
+            if (attachment.getAttachmentType() == AttachmentType.VIDEO) type = DiraMediaInfo.MIME_TYPE_VIDEO;
             fileInfo = new DiraMediaInfo("",
                     AttachmentsStorage.getFileFromAttachment(attachment, getContext(),
                             room.getSecretName()).getPath(),
