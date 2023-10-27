@@ -36,6 +36,7 @@ import com.diraapp.ui.adapters.MediaGridAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.bottomsheet.InvitationCodeBottomSheet;
 import com.diraapp.ui.bottomsheet.RoomEncryptionBottomSheet;
+import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.diraapp.ui.components.DiraPopup;
 import com.diraapp.ui.components.FadingImageView;
@@ -239,10 +240,10 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
             mediaGridAdapter = new MediaGridAdapter(RoomInfoActivity.this, attachments, new MediaGridItemListener() {
                 @Override
                 public void onItemClick(int pos, View view) {
-                    SelectorFileInfo selectorFileInfo = attachments.get(pos);
+                    DiraMediaInfo diraMediaInfo = attachments.get(pos);
                     Intent intent = new Intent(getApplicationContext(), PreviewActivity.class);
-                    intent.putExtra(PreviewActivity.URI, selectorFileInfo.getFilePath());
-                    intent.putExtra(PreviewActivity.IS_VIDEO, selectorFileInfo.isVideo());
+                    intent.putExtra(PreviewActivity.URI, diraMediaInfo.getFilePath());
+                    intent.putExtra(PreviewActivity.IS_VIDEO, diraMediaInfo.isVideo());
                     startActivity(intent);
                 }
 

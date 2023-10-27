@@ -1,18 +1,15 @@
 package com.diraapp.storage.images;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.diraapp.BuildConfig;
 import com.diraapp.device.PerformanceClass;
 import com.diraapp.device.PerformanceTester;
 import com.diraapp.ui.activities.DiraActivity;
-import com.diraapp.ui.components.FilePreview;
+import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.ui.components.WaterfallImageView;
 
 import java.util.ArrayList;
@@ -132,7 +129,7 @@ public class WaterfallBalancer {
             });
         }
     }
-    public void remove(FilePreview filePreview)
+    public void remove(MediaGridItem mediaGridItem)
     {
        // cancelledList.add(filePreview);
     }

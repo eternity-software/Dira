@@ -71,8 +71,9 @@ import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.RoomViewHolderFactory;
 import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
+import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
-import com.diraapp.ui.components.FilePreview;
+import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.ui.components.RecordComponentsController;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.viewswiper.ViewSwiper;
@@ -89,8 +90,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import okhttp3.Callback;
 
 
 public class RoomActivity extends DiraActivity
@@ -112,7 +111,7 @@ public class RoomActivity extends DiraActivity
         public void onItemClick(int pos, final View view) {
             MediaSendActivity.open(RoomActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(),
                     binding.messageTextInput.getText().toString(),
-                    (FilePreview) view, MediaSendActivity.IMAGE_PURPOSE_MESSAGE);
+                    (MediaGridItem) view, MediaSendActivity.IMAGE_PURPOSE_MESSAGE);
         }
 
         @Override
@@ -1047,8 +1046,8 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
-    public void onSelectedFilesSent(List<SelectorFileInfo> selectorFileInfoList, String messageText) {
+    public void onSelectedFilesSent(List<SelectorFileInfo> diraMediaInfoList, String messageText) {
         MultiAttachmentLoader multiAttachmentLoader = new MultiAttachmentLoader(messageText, presenter);
-        multiAttachmentLoader.send(selectorFileInfoList);
+        multiAttachmentLoader.send(diraMediaInfoList);
     }
 }

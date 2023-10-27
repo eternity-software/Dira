@@ -20,7 +20,7 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
-import com.diraapp.ui.components.FilePreview;
+import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.SliderActivity;
 
@@ -191,7 +191,7 @@ public class PersonalityActivity extends DiraActivity {
             @Override
             public void onItemClick(int pos, final View view) {
                 MediaSendActivity.open(PersonalityActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(), "",
-                        (FilePreview) view, MediaSendActivity.IMAGE_PURPOSE_SELECT);
+                        (MediaGridItem) view, MediaSendActivity.IMAGE_PURPOSE_SELECT);
 
 
             }

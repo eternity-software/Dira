@@ -27,13 +27,16 @@ public class AttachmentsStorage {
     public static void saveAttachmentAsync(SaveAttachmentTask saveAttachmentTask, String address) {
         if (isAttachmentSaving(saveAttachmentTask.getAttachment())) return;
         if (saveAttachmentTask.getAttachment() == null) return;
+
+        saveAttachmentTaskList.add(saveAttachmentTask);
+
         if (attachmentDownloader == null) {
             attachmentDownloader = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     while (true) {
                         try {
-
+                            if(saveAttachmentTaskList.size() == 0) break;
                             for (SaveAttachmentTask saveAttachmentTask : new ArrayList<>(saveAttachmentTaskList)) {
                                 try {
                                     for (AttachmentsStorageListener attachmentsStorageListener : attachmentsStorageListeners) {
@@ -94,7 +97,7 @@ public class AttachmentsStorage {
             });
             attachmentDownloader.start();
         }
-        saveAttachmentTaskList.add(saveAttachmentTask);
+
     }
 
 
@@ -110,7 +113,7 @@ public class AttachmentsStorage {
 
     public static boolean isAttachmentSaving(Attachment attachmentToCompare) {
         if (attachmentToCompare == null) return false;
-        for (SaveAttachmentTask saveAttachmentTask : saveAttachmentTaskList) {
+        for (SaveAttachmentTask saveAttachmentTask : new ArrayList<>(saveAttachmentTaskList)) {
             if (saveAttachmentTask.getAttachment().getFileUrl().equals(attachmentToCompare.getFileUrl())) {
                 return true;
             }

@@ -26,8 +26,10 @@ import androidx.annotation.Nullable;
 import androidx.core.app.SharedElementCallback;
 
 import com.diraapp.R;
+import com.diraapp.storage.AppStorage;
+import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.transition.Transitions;
-import com.diraapp.ui.components.FilePreview;
+import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.ui.components.TouchImageView;
 import com.diraapp.ui.components.VideoPlayer;
 import com.diraapp.utils.ImageRotationFix;
@@ -56,7 +58,7 @@ public class MediaSendActivity extends DiraActivity {
         MediaSendActivity.imageBuffer = imageBuffer;
     }
 
-    public static void open(final Activity from, String imageUri, String text, final FilePreview fileParingImageView, int purpose) {
+    public static void open(final Activity from, String imageUri, String text, final MediaGridItem fileParingImageView, int purpose) {
         Intent intent = new Intent(from, MediaSendActivity.class);
         intent.putExtra("uri", imageUri);
         intent.putExtra("text", text);
@@ -114,6 +116,8 @@ public class MediaSendActivity extends DiraActivity {
 
         if (imageBuffer != null) {
             imageView.setImageBitmap(imageBuffer);
+
+
         }
 
         imageView.setActionsListener(new TouchImageView.ImageActionsListener() {
@@ -178,8 +182,15 @@ public class MediaSendActivity extends DiraActivity {
                         videoPlayer.play(imageUri);
                         videoPlayer.setVolume(1);
                         if (type.startsWith("image")) {
-                            final Bitmap fixedBitmap = ImageRotationFix.handleSamplingAndRotationBitmapNoCropping(MediaSendActivity.this, Uri.fromFile(new File(imageUri)));
-                            imageView.setImageBitmap(fixedBitmap);
+                            DiraActivity.runGlobalBackground(() -> {
+                                Bitmap fullsizeBitmap = AppStorage.getBitmapFromPath(finalImageUri, getApplicationContext());
+                                if(fullsizeBitmap != null)
+                                {
+                                    runOnMainThread(() -> {
+                                            imageView.setImageBitmap(fullsizeBitmap);
+                                        });
+                                }
+                            });
                         } else {
 
                             videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
@@ -242,9 +253,9 @@ public class MediaSendActivity extends DiraActivity {
                     if (Objects.equals(getResources().getString(R.string.transition_image_prepare), sharedElementNames.get(i))) {
                         View view = sharedElements.get(i);
 
-                        if (view instanceof FilePreview) {
-                            FilePreview filePreview = (FilePreview) view;
-                            filePreview.appearContorllers();
+                        if (view instanceof MediaGridItem) {
+                            MediaGridItem mediaGridItem = (MediaGridItem) view;
+                            mediaGridItem.appearContorllers();
                         }
                     }
                 }
@@ -257,9 +268,9 @@ public class MediaSendActivity extends DiraActivity {
 
                     View view = sharedElements.get(i);
 
-                    if (view instanceof FilePreview) {
-                        FilePreview filePreview = (FilePreview) view;
-                        filePreview.appearContorllers();
+                    if (view instanceof MediaGridItem) {
+                        MediaGridItem mediaGridItem = (MediaGridItem) view;
+                        mediaGridItem.appearContorllers();
                     }
 
 

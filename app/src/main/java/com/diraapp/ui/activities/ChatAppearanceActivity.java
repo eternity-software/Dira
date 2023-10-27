@@ -33,7 +33,7 @@ import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.appearance.ChatBackground;
 import com.diraapp.ui.appearance.ColorTheme;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
-import com.diraapp.ui.components.FilePreview;
+import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.utils.CacheUtils;
 
@@ -234,7 +234,7 @@ public class ChatAppearanceActivity extends DiraActivity {
                     public void onItemClick(int pos, View view) {
                         MediaSendActivity.open(ChatAppearanceActivity.this,
                                 bottomSheet.getMedia().get(pos).getFilePath(), "",
-                                (FilePreview) view, MediaSendActivity.IMAGE_PURPOSE_SELECT);
+                                (MediaGridItem) view, MediaSendActivity.IMAGE_PURPOSE_SELECT);
                     }
 
                     @Override

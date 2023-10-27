@@ -21,7 +21,7 @@ import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.bottomsheet.ServerSelectorBottomSheet;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.DiraPopup;
-import com.diraapp.ui.components.FilePreview;
+import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.utils.ImageRotationFix;
 import com.diraapp.utils.SliderActivity;
 
@@ -171,7 +171,7 @@ public class EditRoomActivity extends DiraActivity implements ServerSelectorBott
             @Override
             public void onItemClick(int pos, final View view) {
                 MediaSendActivity.open(EditRoomActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(), "",
-                        (FilePreview) view, MediaSendActivity.IMAGE_PURPOSE_SELECT);
+                        (MediaGridItem) view, MediaSendActivity.IMAGE_PURPOSE_SELECT);
 
             }
 

@@ -53,6 +53,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
         previewImage.hideDownloadOverlay();
 
         if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
+
             previewImage.setVisibility(View.VISIBLE);
             previewImage.setImage(file);
             isAttachmentLoaded = true;
@@ -131,7 +132,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
         videoPlayer.setVisibility(View.GONE);
         previewImage.setVisibility(View.VISIBLE);
 
-
+        previewImage.hideDownloadOverlay();
         String text = message.getText();
         if ((text != null) && (!StringFormatter.EMPTY_STRING.equals(text))) {
             messageText.setText(text);
@@ -145,6 +146,12 @@ public class MediaViewHolder extends AttachmentViewHolder {
         currentMediaFile = AttachmentsStorage.getFileFromAttachment(attachment,
                 itemView.getContext(), message.getRoomSecret());
 
+        if(currentMediaFile != null)
+            if(!currentMediaFile.exists())
+                onLoadFailed(attachment);
+
+        if(currentMediaFile == null)
+            onLoadFailed(attachment);
 
         previewImage.setAttachment(attachment, getMessageAdapterContract().getRoom(),
                 currentMediaFile, () -> {

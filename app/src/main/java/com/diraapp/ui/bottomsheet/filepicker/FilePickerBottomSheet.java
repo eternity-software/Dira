@@ -16,9 +16,12 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.diraapp.BuildConfig;
 import com.diraapp.R;
+import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.storage.images.WaterfallBalancer;
 import com.diraapp.ui.activities.DiraActivity;
+import com.diraapp.ui.adapters.GridItemsSpacingDecorator;
 import com.diraapp.ui.adapters.MediaGridAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.utils.android.DeviceUtils;
@@ -83,7 +86,9 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         RecyclerView recyclerView = view.findViewById(R.id.gridView);
 
         recyclerView.setRecycledViewPool(recycledViewPool);
-
+        recyclerView.addItemDecoration(new GridItemsSpacingDecorator(
+                DeviceUtils.dpToPx(2, getContext()),
+                3));
         EditText messageInput = view.findViewById(R.id.message_box);
         if (messageText != null)
             messageInput.setText(messageText);
@@ -97,6 +102,8 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         final TextView debugText = view.findViewById(R.id.debugText);
         mediaGridAdapter = new MediaGridAdapter((DiraActivity) getActivity(), onItemClickListener, recyclerView, onlyImages);
         mediaGridAdapter.setMultiSelect(isMultiSelection);
+        if(BuildConfig.DEBUG)
+            debugText.setVisibility(View.VISIBLE);
         mediaGridAdapter.setBalancerCallback(new WaterfallBalancer.BalancerCallback() {
             @Override
             public void onActiveWaterfallsCountChange(final int count) {
@@ -150,9 +157,9 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
             }
 
             @Override
-            public void onItemSelected(SelectorFileInfo selectorFileInfo,
-                                       List<SelectorFileInfo> selectorFileInfoList) {
-                if (selectorFileInfoList.size() == 0) {
+            public void onItemSelected(SelectorFileInfo diraMediaInfo,
+                                       List<SelectorFileInfo> diraMediaInfoList) {
+                if (diraMediaInfoList.size() == 0) {
                     inputContainer.setVisibility(View.GONE);
                 } else {
 
@@ -242,6 +249,6 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     }
 
     public interface MultiFilesListener {
-        void onSelectedFilesSent(List<SelectorFileInfo> selectorFileInfoList, String messageText);
+        void onSelectedFilesSent(List<SelectorFileInfo> diraMediaInfoList, String messageText);
     }
 }

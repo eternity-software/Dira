@@ -207,6 +207,7 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
         for (ImagePreview imagePreview : new ArrayList<>(imagePreviewList)) {
             if (imagePreview.getAttachment() != null && attachment != null) {
                 if (imagePreview.getAttachment().getFileUrl().equals(attachment.getFileUrl())) {
+                    if (imagePreview.getAttachment() == attachment) return;
                     imagePreview.hideDownloadOverlay();
                     imagePreview.setAttachment(attachment, getMessageAdapterContract().getRoom(),
                             AttachmentsStorage.getFileFromAttachment(attachment, itemView.getContext(),

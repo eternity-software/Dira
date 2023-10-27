@@ -4,9 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:background="@android:color/transparent"
-
-    >
+    android:background="@android:color/transparent">
 
 
     <androidx.cardview.widget.CardView
@@ -26,22 +24,18 @@
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:animateLayoutChanges="true"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="-20dp"
             android:orientation="vertical"
             android:visibility="visible">
 
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:isScrollContainer="false"
-                android:scrollbars="none">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:gravity="center"
                     android:paddingBottom="10dp">
 
                     <com.diraapp.ui.components.dynamic.ThemeImageView
@@ -56,23 +50,50 @@
                         app:themeBackgroundTint="gray"
                         app:themeImageColor="light_gray" />
 
-                    <com.diraapp.ui.components.dynamic.ThemeImageView
-
-                        android:layout_width="50dp"
+                    <com.diraapp.ui.components.dynamic.ThemeLinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="50dp"
-                        android:layout_gravity="center_vertical"
+                        android:gravity="center"
+                        android:paddingHorizontal="12dp"
                         android:background="@drawable/gray_rounded"
-                        android:paddingHorizontal="8dp"
-                        app:srcCompat="@drawable/ic_image"
-                        app:themeBackgroundTint="gray"
-                        app:themeImageColor="light_gray" />
+                        app:themeBackgroundColor="gray"
+                        android:orientation="horizontal">
+                        <com.diraapp.ui.components.dynamic.ThemeImageView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center_vertical"
+                            android:adjustViewBounds="true"
+                            android:paddingVertical="12dp"
+                            app:srcCompat="@drawable/ic_image"
+                            android:layout_marginRight="8dp"
+                            app:themeBackgroundTint="gray"
+                            app:themeImageColor="light_gray" />
+
+                        <TextView
+                            android:id="@+id/media_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:fontFamily="@font/montserratsemibold"
+                            android:text="@string/media_gallery"
+                            android:drawablePadding="6dp"
+                            android:drawableEnd="@drawable/ic_dropdown"
+                            android:background="?selectableItemBackground"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+
+                    </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
+
 
                     <com.diraapp.ui.components.dynamic.ThemeImageView
                         android:id="@+id/documents_picker"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="16dp"
+                        android:layout_marginLeft="8dp"
+                        android:paddingVertical="12dp"
                         android:background="@drawable/gray_rounded"
                         android:paddingHorizontal="8dp"
                         app:srcCompat="@drawable/ic_file"
@@ -81,15 +102,13 @@
                 </LinearLayout>
 
 
-            </HorizontalScrollView>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
                 android:layout_marginBottom="-20dp"
-                app:cardBackgroundColor="@color/dark"
-                app:cardCornerRadius="10dp"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -97,6 +116,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+
                     android:nestedScrollingEnabled="true"
                     android:paddingBottom="40dp"
                     android:stretchMode="columnWidth"
@@ -113,6 +133,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="false"
+            android:visibility="gone"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="0dp"
             android:text="debug_info"

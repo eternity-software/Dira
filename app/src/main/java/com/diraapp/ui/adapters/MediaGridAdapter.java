@@ -1,5 +1,6 @@
 package com.diraapp.ui.adapters;
 
+import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -17,21 +18,18 @@ import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
-import com.diraapp.device.PerformanceClass;
-import com.diraapp.device.PerformanceTester;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.images.WaterfallBalancer;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.anim.BounceInterpolator;
+import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
-import com.diraapp.ui.components.FilePreview;
+import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.utils.android.DiraVibrator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 
 public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.ViewHolder> {
@@ -48,10 +46,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     private boolean multiSelect = false;
 
     private List<SelectorFileInfo> selectedFiles = new ArrayList<>();
-    private HashMap<FilePreview, SelectorFileInfo> selectedViews = new HashMap<>();
+    private HashMap<MediaGridItem, SelectorFileInfo> selectedViews = new HashMap<>();
 
-
-
+    private boolean isSelected = false;
 
     /**
      * Constructor for custom files arrays
@@ -120,9 +117,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     }
 
     public void updateExistingSelectedViews() {
-        for (FilePreview filePreview : selectedViews.keySet()) {
-            SelectorFileInfo selectorFileInfo = selectedViews.get(filePreview);
-            filePreview.updateUi(selectorFileInfo.isSelected(), selectedFiles.indexOf(selectorFileInfo));
+        for (MediaGridItem mediaGridItem : selectedViews.keySet()) {
+            SelectorFileInfo diraMediaInfo = selectedViews.get(mediaGridItem);
+            mediaGridItem.updateUi(diraMediaInfo.isSelected(), selectedFiles.indexOf(diraMediaInfo));
         }
     }
 
@@ -132,9 +129,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        FilePreview picturesView = holder.fileParingImageView;
-        SelectorFileInfo selectorFileInfo = mediaElements.get(position);
-        picturesView.setFileInfo(selectorFileInfo);
+        MediaGridItem picturesView = holder.fileParingImageView;
+        SelectorFileInfo diraMediaInfo = mediaElements.get(position);
+        picturesView.setFileInfo(diraMediaInfo);
 
 
         waterfallBalancer.remove(picturesView);
@@ -145,19 +142,19 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
             if (multiSelect) {
                 selectedViews.remove(picturesView);
-                if (selectorFileInfo.isSelected()) {
-                    selectedViews.put(picturesView, selectorFileInfo);
+                if (diraMediaInfo.isSelected()) {
+                    selectedViews.put(picturesView, diraMediaInfo);
                 }
-                picturesView.updateUi(selectorFileInfo.isSelected(), selectedFiles.indexOf(selectorFileInfo));
+                picturesView.updateUi(diraMediaInfo.isSelected(), selectedFiles.indexOf(diraMediaInfo));
                 picturesView.getSelectionTextButton().setVisibility(View.VISIBLE);
                 picturesView.getSelectionTextContainer().setOnClickListener(v -> {
 
-                    if (!selectorFileInfo.isSelected()) {
+                    if (!diraMediaInfo.isSelected()) {
                         if (selectedFiles.size() < 10) {
-                            selectorFileInfo.setSelected(true);
-                            selectedFiles.add(selectorFileInfo);
+                            diraMediaInfo.setSelected(true);
+                            selectedFiles.add(diraMediaInfo);
 
-                            selectedViews.put(picturesView, selectorFileInfo);
+                            selectedViews.put(picturesView, diraMediaInfo);
                             final Animation animation = AnimationUtils.loadAnimation(context, R.anim.bounce);
 
                             // Use bounce interpolator with amplitude 0.1 and frequency 15
@@ -165,20 +162,20 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
                             animation.setInterpolator(interpolator);
                             picturesView.startAnimation(animation);
                             updateExistingSelectedViews();
-                            itemClickListener.onItemSelected(selectorFileInfo, selectedFiles);
+                            itemClickListener.onItemSelected(diraMediaInfo, selectedFiles);
                         } else {
                             DiraVibrator.vibrateOneTime(context);
                         }
 
                     } else {
-                        selectorFileInfo.setSelected(false);
+                        diraMediaInfo.setSelected(false);
                         selectedViews.remove(picturesView);
-                        selectedFiles.remove(selectorFileInfo);
+                        selectedFiles.remove(diraMediaInfo);
                         updateExistingSelectedViews();
-                        itemClickListener.onItemSelected(selectorFileInfo, selectedFiles);
+                        itemClickListener.onItemSelected(diraMediaInfo, selectedFiles);
                     }
 
-                    picturesView.updateUi(selectorFileInfo.isSelected(), selectedFiles.indexOf(selectorFileInfo));
+                    picturesView.updateUi(diraMediaInfo.isSelected(), selectedFiles.indexOf(diraMediaInfo));
                 });
             } else {
                 picturesView.getSelectionTextButton().setVisibility(View.GONE);
@@ -206,7 +203,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     }
 
     // Convenience method for getting data at click position
-    public SelectorFileInfo getItem(int id) {
+    public DiraMediaInfo getItem(int id) {
         return mediaElements.get(id);
     }
 
@@ -218,8 +215,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         transitionReenter = new Runnable() {
             @Override
             public void run() {
-                if (((FilePreview) view).getFileInfo().isVideo()) {
-                    ((FilePreview) view).appearContorllers();
+                if (((MediaGridItem) view).getFileInfo().isVideo()) {
+                    ((MediaGridItem) view).appearContorllers();
                 }
             }
         };
@@ -244,6 +241,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         }
     }
 
+    @SuppressLint("Range")
     private ArrayList<SelectorFileInfo> loadGallery(Cursor cursor) {
 //            Uri uri;
 //            Cursor cursor;
@@ -333,11 +331,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public FilePreview fileParingImageView;
+        public MediaGridItem fileParingImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            FilePreview picturesView = (FilePreview) itemView;
+            MediaGridItem picturesView = (MediaGridItem) itemView;
 
 
             //  picturesView.setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400));

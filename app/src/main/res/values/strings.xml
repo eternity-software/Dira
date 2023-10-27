@@ -66,6 +66,9 @@
     <string name="recording_tip_stop">Release to cancel recording</string>
     <string name="recording_tip_send">Release to send message</string>
 
+    <!-- File picker -->
+    <string name="media_gallery">Gallery</string>
+
     <!-- Room info -->
 
     <!-- Members -->

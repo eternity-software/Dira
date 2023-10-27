@@ -2,6 +2,7 @@ package com.diraapp.ui.adapters;
 
 import android.view.View;
 
+import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 
 import java.util.List;
@@ -11,6 +12,6 @@ public interface MediaGridItemListener {
 
     void onLastItemLoaded(int pos, View view);
 
-    default void onItemSelected(SelectorFileInfo selectorFileInfo, List<SelectorFileInfo> selectorFileInfoList) {
+    default void onItemSelected(SelectorFileInfo diraMediaInfo, List<SelectorFileInfo> diraMediaInfoList) {
     }
 }

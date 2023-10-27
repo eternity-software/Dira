@@ -25,6 +25,7 @@ public class BubbleViewHolder extends AttachmentViewHolder {
     private DiraVideoPlayer bubblePlayer;
     private BubbleMessageView bubbleContainer;
 
+    private File currentMediaFile;
 
     public BubbleViewHolder(@NonNull ViewGroup itemView,
                             MessageAdapterContract messageAdapterContract,
@@ -101,11 +102,12 @@ public class BubbleViewHolder extends AttachmentViewHolder {
         bubblePlayer.reset();
 
         Attachment bubbleAttachment = message.getAttachments().get(0);
+        currentMediaFile = AttachmentsStorage.getFileFromAttachment(bubbleAttachment,
+                itemView.getContext(), message.getRoomSecret());
 
         if (!AttachmentsStorage.isAttachmentSaving(bubbleAttachment))
             onAttachmentLoaded(bubbleAttachment,
-                    AttachmentsStorage.getFileFromAttachment(bubbleAttachment,
-                            itemView.getContext(), message.getRoomSecret()), message);
+                    currentMediaFile, message);
 
     }
 
@@ -126,7 +128,7 @@ public class BubbleViewHolder extends AttachmentViewHolder {
     @Override
     public void onViewAttached() {
         super.onViewAttached();
-        if (!isInitialized) return;
-        bubblePlayer.play();
+        if (!isInitialized | currentMediaFile == null) return;
+        bubblePlayer.play(currentMediaFile.getPath());
     }
 }

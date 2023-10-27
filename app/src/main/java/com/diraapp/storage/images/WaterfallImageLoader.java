@@ -1,23 +1,19 @@
 package com.diraapp.storage.images;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 
-import com.diraapp.db.entities.Attachment;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.DiraActivity;
-import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
-import com.diraapp.ui.components.FilePreview;
+import com.diraapp.storage.DiraMediaInfo;
+import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.ui.components.ImagePreview;
 import com.diraapp.ui.components.WaterfallImageView;
-import com.diraapp.utils.ImageRotationFix;
 import com.diraapp.utils.Logger;
 
 import java.io.File;
@@ -52,7 +48,7 @@ public class WaterfallImageLoader {
             Thread worker = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    while (isRunning) {
+                    while (!activity.isDestroyed()) {
                         try {
 
                             WaterfallLogger.log("Starting worker...");
@@ -64,7 +60,7 @@ public class WaterfallImageLoader {
                                 try {
                                     if(imageView != null) {
                                         WaterfallLogger.log("Loading " + imageView.getFileInfo());
-                                        SelectorFileInfo oldFileInfo = imageView.getFileInfo();
+                                        DiraMediaInfo oldFileInfo = imageView.getFileInfo();
                                         final Bitmap bitmap;
                                         if (imageView.getFileInfo().isImage()) {
                                             if(imageView instanceof ImagePreview)
@@ -86,11 +82,11 @@ public class WaterfallImageLoader {
 
                                             final String subtitle;
                                             if (imageView.getFileInfo().isVideo()) {
-                                                subtitle = SelectorFileInfo.getFormattedVideoDuration(activity, imageView.getFileInfo().getFilePath());
+                                                subtitle = DiraMediaInfo.getFormattedVideoDuration(activity, imageView.getFileInfo().getFilePath());
                                             } else {
                                                 subtitle = "";
                                             }
-                                            imageView.onImageBind(bitmap);
+
                                             activity.runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -106,10 +102,10 @@ public class WaterfallImageLoader {
 
 
                                                         if (imageView.getFileInfo().getFilePath().equals(oldUri)) {
-                                                            if (imageView instanceof FilePreview) {
-                                                                FilePreview filePreview = (FilePreview) imageView;
+                                                            if (imageView instanceof MediaGridItem) {
+                                                                MediaGridItem mediaGridItem = (MediaGridItem) imageView;
 
-                                                                filePreview.setSubtitle(subtitle);
+                                                                mediaGridItem.setSubtitle(subtitle);
                                                             }
                                                             imageView.getImageView().setImageBitmap(bitmap);
 
@@ -119,7 +115,7 @@ public class WaterfallImageLoader {
                                                             fadeIn.setDuration(200);
 
 
-                                                            if (imageView instanceof FilePreview) {
+                                                            if (imageView instanceof MediaGridItem) {
 
                                                                 activity.performScaleAnimation(0, 1, (View) imageView);
                                                             }
@@ -128,6 +124,7 @@ public class WaterfallImageLoader {
 
                                                             imageView.getImageView().startAnimation(fadeIn);
                                                             if (waterfallCallback != null) {
+                                                                imageView.onImageBind(bitmap);
                                                                 waterfallCallback.onImageProcessedSuccess(imageView);
                                                             }
                                                         } else {

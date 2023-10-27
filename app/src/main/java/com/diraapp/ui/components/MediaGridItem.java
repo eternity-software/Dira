@@ -14,10 +14,10 @@ import com.diraapp.res.Theme;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 
 
-public class FilePreview extends RelativeLayout implements WaterfallImageView {
+public class MediaGridItem extends RelativeLayout implements WaterfallImageView {
 
     private View rootView;
-    private SelectorFileInfo selectorFileInfo;
+    private SelectorFileInfo diraMediaInfo;
     private FileParingImageView fileParingImageView;
     private RelativeLayout videoInfoView;
     private TextView durationView;
@@ -25,7 +25,7 @@ public class FilePreview extends RelativeLayout implements WaterfallImageView {
     private View selectionTextContainer;
     private boolean isInitialized = false;
 
-    public FilePreview(Context context, AttributeSet attrs) {
+    public MediaGridItem(Context context, AttributeSet attrs) {
         super(context, attrs);
         initComponent();
     }
@@ -36,7 +36,7 @@ public class FilePreview extends RelativeLayout implements WaterfallImageView {
             isInitialized = true;
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            rootView = inflater.inflate(R.layout.file_preview, this);
+            rootView = inflater.inflate(R.layout.media_grid_item, this);
             fileParingImageView = findViewById(R.id.fileImageView);
             videoInfoView = findViewById(R.id.videoInfo);
             durationView = findViewById(R.id.durationView);
@@ -88,7 +88,7 @@ public class FilePreview extends RelativeLayout implements WaterfallImageView {
     }
 
     public SelectorFileInfo getFileInfo() {
-        return selectorFileInfo;
+        return diraMediaInfo;
     }
 
     @Override
@@ -96,11 +96,11 @@ public class FilePreview extends RelativeLayout implements WaterfallImageView {
         return getFileParingImageView();
     }
 
-    public void setFileInfo(SelectorFileInfo selectorFileInfo) {
-        this.selectorFileInfo = selectorFileInfo;
+    public void setFileInfo(SelectorFileInfo diraMediaInfo) {
+        this.diraMediaInfo = diraMediaInfo;
         initComponent();
-        fileParingImageView.setFileInfo(selectorFileInfo);
-        if (selectorFileInfo.isVideo()) {
+        fileParingImageView.setFileInfo(diraMediaInfo);
+        if (diraMediaInfo.isVideo()) {
             videoInfoView.setVisibility(VISIBLE);
             setSubtitle("");
         } else {
