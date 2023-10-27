@@ -27,7 +27,6 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.AlreadyInitializedException;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.res.Theme;
-import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.viewholders.DelayedMessageBind;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.MessageHolderType;
@@ -309,8 +308,6 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
             messageBackground.getBackground().setColorFilter((Integer)
                     animator.getAnimatedValue(), PorterDuff.Mode.SRC_IN);
         });
-
-
 
         colorAnimation.addListener(new AnimatorListenerAdapter() {
             @Override

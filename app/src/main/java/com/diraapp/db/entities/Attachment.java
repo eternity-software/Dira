@@ -46,8 +46,8 @@ public class Attachment {
         try {
             Bitmap bitmap = AppStorage.getBitmapFromBase64(imagePreview);
 
-            return Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(),
-                    bitmap.getHeight(), true);
+            return Bitmap.createScaledBitmap(bitmap, width,
+                   height, true);
         } catch (Exception e) {
             Logger.logDebug(getClass().getSimpleName(), "Not found preview for " + attachmentType.name());
             e.printStackTrace();

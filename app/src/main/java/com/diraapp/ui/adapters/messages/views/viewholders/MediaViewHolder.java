@@ -4,6 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -143,6 +144,8 @@ public class MediaViewHolder extends AttachmentViewHolder {
         currentAttachment = attachment;
         currentMediaFile = AttachmentsStorage.getFileFromAttachment(attachment,
                 itemView.getContext(), message.getRoomSecret());
+
+
         previewImage.setAttachment(attachment, getMessageAdapterContract().getRoom(),
                 currentMediaFile, () -> {
                     if (currentAttachment != attachment) return;

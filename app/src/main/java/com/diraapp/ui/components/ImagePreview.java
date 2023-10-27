@@ -7,12 +7,14 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.diraapp.BuildConfig;
 import com.diraapp.R;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
@@ -49,6 +51,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
     private SelectorFileInfo fileInfo;
 
     private Runnable onReady;
+
 
 
     public ImagePreview(Context context, AttributeSet attrs) {
@@ -144,12 +147,14 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
     public void setAttachment(Attachment attachment, Room room, File file, Runnable onReady) {
         if (attachment == null) return;
 
+
         this.onReady = onReady;
         this.room = room;
         isMainImageLoaded = false;
         this.attachment = attachment;
         overlay.setVisibility(GONE);
         imageView.setImageBitmap(null);
+
         DiraActivity.runGlobalBackground(() -> {
             if (this.attachment != attachment | isMainImageLoaded) return;
 
@@ -157,8 +162,10 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
                     attachment.getHeight(),
                     Bitmap.Config.ARGB_8888);
 
+
             DiraActivity.runOnMainThread(() -> {
                 imageView.setImageBitmap(dummyBitmap);
+
                 if (file != null) {
 
                     if (!AttachmentsStorage.isAttachmentSaving(attachment)) {
@@ -184,6 +191,14 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
                 }
             });
             if (waterfallBalancer != null && file != null) {
+
+                    Bitmap previewBitmap = attachment.getBitmapPreview();
+                    if (previewBitmap != null) {
+                        DiraActivity.runOnMainThread(() -> {
+                            imageView.setImageBitmap(previewBitmap);
+                        });
+                    }
+
                 String type = "image";
 
                 if (attachment.getAttachmentType() == AttachmentType.VIDEO) type = "video";
@@ -235,19 +250,23 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
     @Override
     public void onImageBind(Bitmap bitmap) {
 
-        Bitmap previewBitmap = attachment.getBitmapPreview();
+
 
         loadedBitmap = bitmap;
 
         new Handler(Looper.getMainLooper()).post(() -> {
-
-            if (previewBitmap != null) {
-                imageView.setImageBitmap(previewBitmap);
-            }
-
-
             try {
 
+                if(BuildConfig.DEBUG)
+                {
+                    overlay.setVisibility(VISIBLE);
+                    sizeTextView.setText("DEBUG INFO: " + bitmap.getWidth() + "x" + bitmap.getHeight() + ", aid: " + attachment.getId() + "\n" +
+                            "VIEW SIZE: " + getMeasuredWidth() + "x" + getMeasuredHeight() + "\n" +
+                            "REAL SIZE: " + AppStorage.getStringSize(new File(fileInfo.getFilePath()).length()) + ", " +
+                            "ATT. SIZE: " +  AppStorage.getStringSize(attachment.getSize()));
+                    downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_info));
+                    progressBar.setVisibility(GONE);
+                }
                 try {
                     if (onReady != null)
                         onReady.run();
