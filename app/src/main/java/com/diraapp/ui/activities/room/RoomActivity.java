@@ -90,8 +90,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import okhttp3.Callback;
-
 
 public class RoomActivity extends DiraActivity
         implements RoomActivityContract.View, ProcessorListener, UserStatusListener,
@@ -465,6 +463,7 @@ public class RoomActivity extends DiraActivity
 
                     ArrayList<UserStatus> bubbleStatuses = new ArrayList<>(size);
                     ArrayList<UserStatus> pickingFileStatuses = new ArrayList<>(size);
+                    ArrayList<UserStatus> sendingFileStatuses = new ArrayList<>(size);
                     ArrayList<UserStatus> voiceStatuses = new ArrayList<>(size);
                     ArrayList<UserStatus> writingStatuses = new ArrayList<>(size);
 
@@ -479,6 +478,8 @@ public class RoomActivity extends DiraActivity
                             writingStatuses.add(status);
                         } else if (status.getUserStatus() == UserStatusType.PICKING_FILE) {
                             pickingFileStatuses.add(status);
+                        } else if (status.getUserStatus() == UserStatusType.SENDING_FILE) {
+                            sendingFileStatuses.add(status);
                         } else if (status.getUserStatus() == UserStatusType.RECORDING_VOICE) {
                             voiceStatuses.add(status);
                         } else if (status.getUserStatus() == UserStatusType.RECORDING_BUBBLE) {
@@ -502,12 +503,19 @@ public class RoomActivity extends DiraActivity
                         } else {
                             text = getString(R.string.users_status_voice);
                         }
+                    } else if (sendingFileStatuses.size() > 0) {
+                        statuses = sendingFileStatuses;
+                        if (statuses.size() == 1) {
+                            text = getString(R.string.user_status_sending_file);
+                        } else {
+                            text = getString(R.string.users_status_sending_file);
+                        }
                     } else if (pickingFileStatuses.size() > 0) {
                         statuses = pickingFileStatuses;
                         if (statuses.size() == 1) {
-                            text = getString(R.string.user_status_file);
+                            text = getString(R.string.user_status_picking_file);
                         } else {
-                            text = getString(R.string.users_status_file);
+                            text = getString(R.string.users_status_picking_file);
                         }
                     } else if (writingStatuses.size() > 0) {
                         statuses = writingStatuses;

@@ -291,8 +291,10 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     @Override
     public void sendStatus(UserStatusType userStatusType) {
         if (currentUserStatus != null) {
-            if (System.currentTimeMillis() - currentUserStatus.getTime() < UserStatus.REQUEST_DELAY)
-                return;
+            if (userStatusType == currentUserStatus.getUserStatus()) {
+                if (System.currentTimeMillis() - currentUserStatus.getTime() < UserStatus.REQUEST_DELAY)
+                    return;
+            }
         }
 
         currentUserStatus = new UserStatus(userStatusType, selfId, roomSecret);
