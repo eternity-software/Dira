@@ -75,7 +75,7 @@
     <color name="accent_text">@color/accent</color>
 
     <color name="self_message_waves">#FFA979</color>
-    <color name="message_waves">#727272</color>
+    <color name="message_waves">@color/white</color>
 
     <color name="self_message_waves_background">#A35326</color>
     <color name="message_waves_background">#727272</color>
