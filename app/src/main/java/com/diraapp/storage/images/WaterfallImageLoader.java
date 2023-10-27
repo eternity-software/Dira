@@ -10,10 +10,12 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 
+import com.diraapp.db.entities.Attachment;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.diraapp.ui.components.FilePreview;
+import com.diraapp.ui.components.ImagePreview;
 import com.diraapp.ui.components.WaterfallImageView;
 import com.diraapp.utils.ImageRotationFix;
 import com.diraapp.utils.Logger;
@@ -65,7 +67,14 @@ public class WaterfallImageLoader {
                                         SelectorFileInfo oldFileInfo = imageView.getFileInfo();
                                         final Bitmap bitmap;
                                         if (imageView.getFileInfo().isImage()) {
-                                            bitmap = decodeFile(new File(imageView.getFileInfo().getFilePath()));
+                                            if(imageView instanceof ImagePreview)
+                                            {
+                                                bitmap = AppStorage.getBitmapFromPath(imageView.getFileInfo().getFilePath(), activity);
+                                            }
+                                            else
+                                            {
+                                                bitmap = decodeFile(new File(imageView.getFileInfo().getFilePath()));
+                                            }
                                         } else {
                                             bitmap = imageView.getFileInfo().getVideoThumbnail();
                                         }
@@ -211,7 +220,7 @@ public class WaterfallImageLoader {
 
         int MAX_SIZE = 500;
 
-        int IMAGE_MAX_SIZE = Math.max(MAX_SIZE, MAX_SIZE);
+        int IMAGE_MAX_SIZE = MAX_SIZE;
         if (o.outHeight > MAX_SIZE || o.outWidth > MAX_SIZE) {
             scale = (int) Math.pow(2, (int) Math.ceil(Math.log(IMAGE_MAX_SIZE /
                     (double) Math.max(o.outHeight, o.outWidth)) / Math.log(0.5)));
