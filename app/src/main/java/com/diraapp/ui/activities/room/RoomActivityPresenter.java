@@ -100,9 +100,13 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             view.notifyRecyclerMessage(newMessageUpdate.getMessage(), needUpdateList);
 
             if (message.hasAuthor()) {
-                if (message.getAuthorId().equals(selfId)) return;
+                if (message.getAuthorId().equals(selfId)) {
+                    room.getUnreadMessagesIds().clear();
+                    lastReadMessage = message;
+                } else {
+                    room.getUnreadMessagesIds().add(message.getId());
+                }
 
-                room.getUnreadMessagesIds().add(message.getId());
                 view.updateScrollArrow();
                 view.updateScrollArrowIndicator();
 
@@ -599,14 +603,20 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
             // if lastReadMessage is loaded
             if (unreadMessagesSize > 0 && view.isMessageVisible(position)) {
-                if (isNewestMessagesLoaded) view.smoothScrollTo(0);
+                Logger.logDebug("Scroll arrow", "Has been scrolled to bottom");
+                if (isNewestMessagesLoaded) {
+                    view.runOnUiThread(() -> {
+                        view.scrollToAndStop(0);
+                    });
+                }
                 else loadRoomBottomMessages();
                 return;
             }
 
             int finalPosition = position;
             view.runOnUiThread(() -> {
-                view.smoothScrollTo(finalPosition);
+                Logger.logDebug("Scroll arrow", "Has been scrolled to position");
+                view.scrollToAndStop(finalPosition);
             });
         });
     }

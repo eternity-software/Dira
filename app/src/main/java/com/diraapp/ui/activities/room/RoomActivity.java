@@ -704,9 +704,11 @@ public class RoomActivity extends DiraActivity
         if (layoutManager == null) return;
         int position = layoutManager.findFirstVisibleItemPosition();
 
-        if (position < 2 & presenter.isNewestMessagesLoaded() && !isArrowShowed) {
-            isArrowShowed = false;
-            performScaleAnimation(1, 0, arrow);
+        if (position < 2) {
+            if (presenter.isNewestMessagesLoaded() && !isArrowShowed) {
+                isArrowShowed = false;
+                performScaleAnimation(1, 0, arrow);
+            }
             return;
         }
 
@@ -895,8 +897,8 @@ public class RoomActivity extends DiraActivity
                 recyclerView.getLayoutManager();
         if (manager == null) return false;
 
-        int first = manager.findFirstVisibleItemPosition() - 1;
-        int last = manager.findLastVisibleItemPosition() + 1;
+        int first = manager.findFirstVisibleItemPosition();
+        int last = manager.findLastVisibleItemPosition();
 
         return position >= first && position <= last;
     }

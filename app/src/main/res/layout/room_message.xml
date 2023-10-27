@@ -30,6 +30,9 @@
         app:themeColorBackground="dark_message_attributes_background" />
 
     <LinearLayout
+        android:id="@+id/message_background"
+        android:background="@drawable/unread_message_background_drawable"
+        android:backgroundTint="@android:color/transparent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

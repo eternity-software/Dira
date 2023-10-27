@@ -185,13 +185,18 @@ public class RoomUpdatesProcessor {
                     room.setLastMessageId(newMessage.getId());
                     room.setLastUpdatedTime(newMessage.getTime());
                     room.setUpdatedRead(false);
-                    if (!newMessage.isRead()) {
-                        if (newMessage.hasAuthor()) {
-                            if (!newMessage.getAuthorId().equals(cacheUtils.getString(CacheUtils.ID))) {
-                                room.addNewUnreadMessageId(newMessage.getId());
-                            }
+
+                    if (newMessage.hasAuthor()) {
+                        boolean isSelfMessage = newMessage.getAuthorId().
+                                equals(cacheUtils.getString(CacheUtils.ID));
+
+                        if (!isSelfMessage) {
+                            room.addNewUnreadMessageId(newMessage.getId());
+                        } else {
+                            room.getUnreadMessagesIds().clear();
                         }
                     }
+
                     if (!newMessage.hasAuthor())
                         newMessage.setAuthorId("Dira");
                     messageDao.insertAll(newMessage);
