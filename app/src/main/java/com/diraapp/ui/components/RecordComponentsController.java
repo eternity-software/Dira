@@ -75,6 +75,7 @@ public class RecordComponentsController {
 
     private boolean isRecording = false;
     private boolean isPreparingCamera = true;
+    private boolean isVoiceRecord = false;
 
     private TextView recordingTipText;
 
@@ -160,7 +161,7 @@ public class RecordComponentsController {
                             isRecording = true;
                             slidrInterface.lock();
                             CacheUtils cacheUtils = context.getCacheUtils();
-                            boolean isVoiceRecord = cacheUtils.getBoolean(CacheUtils.IS_VOICE_RECORD_DEFAULT);
+                            isVoiceRecord = cacheUtils.getBoolean(CacheUtils.IS_VOICE_RECORD_DEFAULT);
                             if (!isVoiceRecord) {
                                 isPreparingCamera = true;
                                 recordBubble();
@@ -183,7 +184,7 @@ public class RecordComponentsController {
                             recordingTipText.setText(context.getString(R.string.recording_tip_send));
 
                         }
-                    }, 30);
+                    }, 100);
                 } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
                     lastTimeRecordButtonUp = System.currentTimeMillis();
 
@@ -267,6 +268,7 @@ public class RecordComponentsController {
                         animation.setDuration(100);
                         recordingStatusBar.startAnimation(animation);
                         slidrInterface.unlock();
+                        isSaving = false;
                         int colorFrom = Theme.getColor(context, R.color.accent);
                         recordButton.getAnimation().cancel();
                         recordButton.getBackground().setColorFilter(colorFrom, PorterDuff.Mode.SRC_ATOP);
@@ -402,7 +404,7 @@ public class RecordComponentsController {
                         secondsRecording++;
                         String finalSecondsString = secondsString;
                         context.runOnUiThread(() -> {
-                            if (isPreparingCamera) {
+                            if (isPreparingCamera && !isVoiceRecord) {
                                 recordingStatusText.setText(context.getString(R.string.recording_preparing));
                                 secondsRecording = 0;
                             } else {
