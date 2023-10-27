@@ -59,8 +59,10 @@
     <string name="users_status_voice">%s are recording voice</string>
     <string name="user_status_bubble">%s is recording bubble</string>
     <string name="users_status_bubble">%s are recording bubble</string>
-    <string name="user_status_file">%s are sending bubble</string>
-    <string name="users_status_file">%s are sending bubble</string>
+    <string name="user_status_picking_file">%s is picking attachment</string>
+    <string name="users_status_picking_file">%s are picking attachment</string>
+    <string name="user_status_sending_file">%s are sending attachment</string>
+    <string name="users_status_sending_file">%s is sending attachment</string>
     <string name="recording_prefix">Recording</string>
     <string name="recording_preparing">Preparing camera</string>
     <string name="recording_tip_stop">Release to cancel recording</string>

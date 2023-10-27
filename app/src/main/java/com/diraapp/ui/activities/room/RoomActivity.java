@@ -105,7 +105,7 @@ public class RoomActivity extends DiraActivity
     private MessagesAdapter messagesAdapter;
     private FilePickerBottomSheet filePickerBottomSheet;
     private ActivityRoomBinding binding;
-    private boolean isArrowShowed = false;
+    private boolean isArrowShowed = true;
     private final MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
         @Override
         public void onItemClick(int pos, final View view) {
@@ -464,6 +464,7 @@ public class RoomActivity extends DiraActivity
 
                     ArrayList<UserStatus> bubbleStatuses = new ArrayList<>(size);
                     ArrayList<UserStatus> pickingFileStatuses = new ArrayList<>(size);
+                    ArrayList<UserStatus> sendingFileStatuses = new ArrayList<>(size);
                     ArrayList<UserStatus> voiceStatuses = new ArrayList<>(size);
                     ArrayList<UserStatus> writingStatuses = new ArrayList<>(size);
 
@@ -478,6 +479,8 @@ public class RoomActivity extends DiraActivity
                             writingStatuses.add(status);
                         } else if (status.getUserStatus() == UserStatusType.PICKING_FILE) {
                             pickingFileStatuses.add(status);
+                        } else if (status.getUserStatus() == UserStatusType.SENDING_FILE) {
+                            sendingFileStatuses.add(status);
                         } else if (status.getUserStatus() == UserStatusType.RECORDING_VOICE) {
                             voiceStatuses.add(status);
                         } else if (status.getUserStatus() == UserStatusType.RECORDING_BUBBLE) {
@@ -501,12 +504,19 @@ public class RoomActivity extends DiraActivity
                         } else {
                             text = getString(R.string.users_status_voice);
                         }
+                    } else if (sendingFileStatuses.size() > 0) {
+                        statuses = sendingFileStatuses;
+                        if (statuses.size() == 1) {
+                            text = getString(R.string.user_status_sending_file);
+                        } else {
+                            text = getString(R.string.users_status_sending_file);
+                        }
                     } else if (pickingFileStatuses.size() > 0) {
                         statuses = pickingFileStatuses;
                         if (statuses.size() == 1) {
-                            text = getString(R.string.user_status_file);
+                            text = getString(R.string.user_status_picking_file);
                         } else {
-                            text = getString(R.string.users_status_file);
+                            text = getString(R.string.users_status_picking_file);
                         }
                     } else if (writingStatuses.size() > 0) {
                         statuses = writingStatuses;
@@ -651,11 +661,17 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void setOnScrollListener() {
-
-        updateScrollArrow();
-        updateScrollArrowIndicator();
-
         LinearLayout arrow = binding.scrollArrow;
+
+        if (getRoom().getUnreadMessagesIds().size() > 1) {
+            isArrowShowed = true;
+            arrow.setVisibility(View.VISIBLE);
+        } else {
+            isArrowShowed = false;
+            arrow.setVisibility(View.INVISIBLE);
+        }
+
+        updateScrollArrowIndicator();
 
         arrow.setOnClickListener((View view) -> {
             presenter.onScrollArrowPressed();
@@ -709,10 +725,12 @@ public class RoomActivity extends DiraActivity
         if (layoutManager == null) return;
         int position = layoutManager.findFirstVisibleItemPosition();
 
+        Logger.logDebug("Scroll arrow", " pos - " + position);
+
         if (position < 2) {
-            if (presenter.isNewestMessagesLoaded() && !isArrowShowed) {
+            if (presenter.isNewestMessagesLoaded() && isArrowShowed) {
                 isArrowShowed = false;
-                arrow.setVisibility(View.VISIBLE);
+
                 performScaleAnimation(1, 0, arrow);
             }
             return;
@@ -783,7 +801,6 @@ public class RoomActivity extends DiraActivity
             binding.recyclerView.setAdapter(messagesAdapter);
 
             setOnScrollListener();
-
             presenter.loadMessagesAtRoomStart();
         });
     }
