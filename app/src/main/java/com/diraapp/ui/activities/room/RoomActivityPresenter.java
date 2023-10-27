@@ -586,27 +586,41 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
                 if (position == START_VAL) {
                     lastReadMessage = messageDao.getMessageById(lastReadMessageId);
+                    if (lastReadMessageId == null) {
+                        Logger.logDebug("Scroll arrow",
+                                "Can't find last read message in database");
+                        return;
+                    }
                     position = NOT_FOUND;
                 }
             }
 
             if (position == START_VAL) {
-                position = messageList.indexOf(lastReadMessage);
+                for (int i = 0; i < messageList.size(); i++) {
+                    Message m = messageList.get(i);
+                    if (m.getId().equals(lastReadMessage.getId())) {
+                        position = i;
+                        break;
+                    }
+                }
+
+                if (position == START_VAL) position = NOT_FOUND;
             }
 
             if (position == NOT_FOUND) {
+                Logger.logDebug("Scroll arrow", "Not found!");
                 if (lastReadMessage == null) return;
                 if (!lastReadMessage.getRoomSecret().equals(roomSecret)) return;
                 loadMessagesNearByTime(lastReadMessage.getTime());
                 return;
             }
 
-            // if lastReadMessage is loaded
+            Logger.logDebug("Scroll arrow", "position: " + position);
             if (unreadMessagesSize > 0 && view.isMessageVisible(position)) {
                 Logger.logDebug("Scroll arrow", "Has been scrolled to bottom");
                 if (isNewestMessagesLoaded) {
                     view.runOnUiThread(() -> {
-                        view.scrollToAndStop(0);
+                        view.scrollTo(0);
                     });
                 }
                 else loadRoomBottomMessages();
@@ -616,7 +630,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             int finalPosition = position;
             view.runOnUiThread(() -> {
                 Logger.logDebug("Scroll arrow", "Has been scrolled to position");
-                view.scrollToAndStop(finalPosition);
+                view.scrollTo(finalPosition);
             });
         });
     }
