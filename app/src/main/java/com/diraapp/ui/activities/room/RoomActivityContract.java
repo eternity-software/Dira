@@ -81,6 +81,8 @@ public interface RoomActivityContract {
 
         void smoothScrollTo(int index);
 
+        void scrollTo(int index);
+
         void scrollToAndStop(int index);
 
         Bitmap getBitmap(String path);

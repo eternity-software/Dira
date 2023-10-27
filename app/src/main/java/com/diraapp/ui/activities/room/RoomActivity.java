@@ -635,6 +635,11 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
+    public void scrollTo(int index) {
+        binding.recyclerView.scrollToPosition(index);
+    }
+
+    @Override
     public void scrollToAndStop(int index) {
         binding.recyclerView.scrollToPosition(index);
         binding.recyclerView.stopScroll();
@@ -684,6 +689,7 @@ public class RoomActivity extends DiraActivity
                         performScaleAnimation(0, 1, arrow);
                         isArrowShowed = true;
                     } else if (dy < ARROW_DISAPPEARANCE) {
+                        if (isScrollIndicatorShown) return;
                         if (!isArrowShowed) return;
                         // arrow disappears
 
@@ -707,6 +713,7 @@ public class RoomActivity extends DiraActivity
         if (position < 2) {
             if (presenter.isNewestMessagesLoaded() && !isArrowShowed) {
                 isArrowShowed = false;
+                arrow.setVisibility(View.VISIBLE);
                 performScaleAnimation(1, 0, arrow);
             }
             return;
@@ -897,8 +904,8 @@ public class RoomActivity extends DiraActivity
                 recyclerView.getLayoutManager();
         if (manager == null) return false;
 
-        int first = manager.findFirstVisibleItemPosition();
-        int last = manager.findLastVisibleItemPosition();
+        int first = manager.findFirstVisibleItemPosition() - 2;
+        int last = manager.findLastVisibleItemPosition() + 2;
 
         return position >= first && position <= last;
     }

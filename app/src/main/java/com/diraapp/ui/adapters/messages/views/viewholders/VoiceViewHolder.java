@@ -150,7 +150,7 @@ public class VoiceViewHolder extends AttachmentViewHolder {
     @Override
     protected void postInflate() {
         super.postInflate();
-        View view = new VoiceMessageView(itemView.getContext());
+        View view = new VoiceMessageView(itemView.getContext(), isSelfMessage);
         messageContainer.setVisibility(View.VISIBLE);
         postInflatedViewsContainer.addView(view);
 
