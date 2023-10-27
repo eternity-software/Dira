@@ -9,6 +9,8 @@ import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,6 +27,7 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.AlreadyInitializedException;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.res.Theme;
+import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.viewholders.DelayedMessageBind;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.MessageHolderType;
@@ -298,13 +301,16 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         int colorTo = Color.TRANSPARENT;
 
         ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-        colorAnimation.setDuration(400); // milliseconds
+        colorAnimation.setDuration(200); // milliseconds
         colorAnimation.setRepeatMode(ValueAnimator.REVERSE);
         colorAnimation.setRepeatCount(2);
+        colorAnimation.setInterpolator(new AccelerateInterpolator(2f));
         colorAnimation.addUpdateListener((animator) -> {
             messageBackground.getBackground().setColorFilter((Integer)
                     animator.getAnimatedValue(), PorterDuff.Mode.SRC_IN);
         });
+
+
 
         colorAnimation.addListener(new AnimatorListenerAdapter() {
             @Override

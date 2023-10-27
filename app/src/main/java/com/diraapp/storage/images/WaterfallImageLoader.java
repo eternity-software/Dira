@@ -10,6 +10,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 
+import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.diraapp.ui.components.FilePreview;
 import com.diraapp.utils.ImageRotationFix;
@@ -25,12 +26,12 @@ import java.util.List;
 public class WaterfallImageLoader {
 
     private final List<FilePreview> imagesQueue = new ArrayList<>();
-    private final Activity activity;
+    private final DiraActivity activity;
     private boolean isRunning;
     private boolean isDataUpdated;
     private WaterfallCallback waterfallCallback;
 
-    public WaterfallImageLoader(Activity activity) {
+    public WaterfallImageLoader(DiraActivity activity) {
         this.activity = activity;
         isRunning = false;
         isDataUpdated = false;
@@ -56,7 +57,7 @@ public class WaterfallImageLoader {
                             for (final FilePreview imageView : localList) {
                                 final boolean[] isCancelled = {false};
                                 WaterfallLogger.log("Loading " + imageView.getFileInfo());
-
+                                SelectorFileInfo oldFileInfo = imageView.getFileInfo();
                                 try {
                                     final Bitmap bitmap;
                                     if (imageView.getFileInfo().isImage()) {
@@ -80,11 +81,16 @@ public class WaterfallImageLoader {
                                         } else {
                                             subtitle = "";
                                         }
+
                                         activity.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
 
-
+                                                if(oldFileInfo != imageView.getFileInfo())
+                                                {
+                                                    add(imageView);
+                                                    return;
+                                                }
                                                 //  Glide.with(activity).load(imageView.getImagePath()).into(imageView);
                                                 // Old trivial way
 
@@ -100,7 +106,9 @@ public class WaterfallImageLoader {
                                                         }
                                                         Animation fadeIn = new AlphaAnimation(0, 1);
                                                         fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-                                                        fadeIn.setDuration(400);
+                                                        fadeIn.setDuration(200);
+
+                                                        activity.performScaleAnimation(0, 1, imageView);
 
                                                         imageView.getFileParingImageView().startAnimation(fadeIn);
                                                     } else {

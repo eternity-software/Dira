@@ -30,6 +30,8 @@ import com.diraapp.utils.android.DiraVibrator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 
 public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.ViewHolder> {
@@ -49,6 +51,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     private HashMap<FilePreview, SelectorFileInfo> selectedViews = new HashMap<>();
 
 
+
+
     /**
      * Constructor for custom files arrays
      *
@@ -63,6 +67,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
         this.mediaElements = mediaElements;
         //   Collections.reverse(images);
+
 
         waterfallBalancer = new WaterfallBalancer(context, getHardwareDependBalancerCount(), recyclerView);
 
@@ -102,7 +107,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     }
 
     private int getHardwareDependBalancerCount() {
-        int balancerCount = 4;
+        int balancerCount = 2;
 
         PerformanceClass performanceClass = PerformanceTester.measureDevicePerformanceClass(context);
         if (performanceClass == PerformanceClass.MEDIUM) {
@@ -141,6 +146,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         SelectorFileInfo selectorFileInfo = mediaElements.get(position);
         picturesView.setFileInfo(selectorFileInfo);
 
+
+        waterfallBalancer.remove(picturesView);
         try {
 
             picturesView.getFileParingImageView().setBackgroundColor(Theme.getColor(context, R.color.dark));

@@ -6,6 +6,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.diraapp.BuildConfig;
+import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.components.FilePreview;
 
 import java.util.ArrayList;
@@ -15,7 +17,7 @@ import java.util.List;
 public class WaterfallBalancer {
 
 
-    public static final boolean DEBUG_MODE = false;
+    public static final boolean DEBUG_MODE = BuildConfig.DEBUG;
 
     List<WaterfallImageLoader> waterfallImageLoaderList = new ArrayList<>();
     ArrayList<FilePreview> imagesInTask = new ArrayList<>();
@@ -26,7 +28,7 @@ public class WaterfallBalancer {
     private BalancerCallback balancerCallback;
 
 
-    public WaterfallBalancer(Activity activity, int balancerCount, final RecyclerView recyclerView) {
+    public WaterfallBalancer(DiraActivity activity, int balancerCount, final RecyclerView recyclerView) {
         lastWaterfallId = 0;
         for (int i = 0; i < balancerCount; i++) {
             WaterfallImageLoader waterfallImageLoader = new WaterfallImageLoader(activity);
@@ -111,6 +113,11 @@ public class WaterfallBalancer {
         }
 
 
+    }
+
+    public void remove(FilePreview filePreview)
+    {
+       // cancelledList.add(filePreview);
     }
 
     public interface BalancerCallback {
