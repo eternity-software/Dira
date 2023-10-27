@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.diraapp.R;
+import com.diraapp.storage.images.WaterfallBalancer;
 import com.diraapp.utils.CacheUtils;
 
 import java.util.ArrayList;
@@ -46,8 +47,10 @@ import java.util.concurrent.Executors;
 public class DiraActivity extends AppCompatActivity {
 
     private static final ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(8);
+    private WaterfallBalancer waterfallBalancer;
     private final List<DiraActivityListener> activityListenerList = new ArrayList<>();
     private CacheUtils cacheUtils;
+
 
     public static void runGlobalBackground(Runnable runnable) {
         threadPoolExecutor.execute(runnable);
@@ -70,6 +73,7 @@ public class DiraActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.activity_enter_anim, R.anim.activity_enter_anim);
+        waterfallBalancer = new WaterfallBalancer(this);
         for (DiraActivityListener listener : activityListenerList) listener.onCreate();
     }
 
@@ -80,6 +84,10 @@ public class DiraActivity extends AppCompatActivity {
     public CacheUtils getCacheUtils() {
         if (cacheUtils == null) cacheUtils = new CacheUtils(getApplicationContext());
         return cacheUtils;
+    }
+
+    public WaterfallBalancer getWaterfallBalancer() {
+        return waterfallBalancer;
     }
 
     public ScaleAnimation performScaleAnimation(float fromScale, float toScale, View view) {

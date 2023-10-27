@@ -20,6 +20,7 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.LanguageParsingException;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.AppStorage;
+import com.diraapp.storage.images.WaterfallBalancer;
 import com.diraapp.ui.adapters.ChatBackgroundAdapter;
 import com.diraapp.ui.adapters.ColorThemeAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
@@ -162,6 +163,11 @@ public class ChatAppearanceActivity extends DiraActivity {
         messages.add(senderMessage);
 
         MessageAdapterContract contract = new MessageAdapterContract() {
+            @Override
+            public WaterfallBalancer getWaterfallBalancer() {
+                return null;
+            }
+
             @Override
             public Room getRoom() {
                 return room;

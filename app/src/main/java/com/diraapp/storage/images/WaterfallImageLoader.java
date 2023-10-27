@@ -10,9 +10,11 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 
+import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.diraapp.ui.components.FilePreview;
+import com.diraapp.ui.components.WaterfallImageView;
 import com.diraapp.utils.ImageRotationFix;
 import com.diraapp.utils.Logger;
 
@@ -25,7 +27,7 @@ import java.util.List;
 
 public class WaterfallImageLoader {
 
-    private final List<FilePreview> imagesQueue = new ArrayList<>();
+    private final List<WaterfallImageView> imagesQueue = new ArrayList<>();
     private final DiraActivity activity;
     private boolean isRunning;
     private boolean isDataUpdated;
@@ -52,87 +54,94 @@ public class WaterfallImageLoader {
                         try {
 
                             WaterfallLogger.log("Starting worker...");
-                            List<FilePreview> localList = (new ArrayList<>());
+                            List<WaterfallImageView> localList = (new ArrayList<>());
                             localList.addAll(imagesQueue);
-                            for (final FilePreview imageView : localList) {
+                            for (final WaterfallImageView imageView : localList) {
                                 final boolean[] isCancelled = {false};
-                                WaterfallLogger.log("Loading " + imageView.getFileInfo());
-                                SelectorFileInfo oldFileInfo = imageView.getFileInfo();
+
                                 try {
-                                    final Bitmap bitmap;
-                                    if (imageView.getFileInfo().isImage()) {
-                                        bitmap = decodeFile(new File(imageView.getFileInfo().getFilePath()));
-                                    } else {
-                                        bitmap = imageView.getFileInfo().getVideoThumbnail();
-                                    }
-
-
-                                    if (bitmap != null) {
-                                        final Bitmap fixedBitmap;
-                                        final String oldUri = imageView.getFileInfo().getFilePath();
+                                    if(imageView != null) {
+                                        WaterfallLogger.log("Loading " + imageView.getFileInfo());
+                                        SelectorFileInfo oldFileInfo = imageView.getFileInfo();
+                                        final Bitmap bitmap;
                                         if (imageView.getFileInfo().isImage()) {
-                                            fixedBitmap = ImageRotationFix.handleSamplingAndRotationBitmap(activity, Uri.fromFile(new File(imageView.getFileInfo().getFilePath())));
+                                            bitmap = decodeFile(new File(imageView.getFileInfo().getFilePath()));
                                         } else {
-                                            fixedBitmap = bitmap;
-                                        }
-                                        final String subtitle;
-                                        if (imageView.getFileInfo().isVideo()) {
-                                            subtitle = SelectorFileInfo.getFormattedVideoDuration(activity, imageView.getFileInfo().getFilePath());
-                                        } else {
-                                            subtitle = "";
+                                            bitmap = imageView.getFileInfo().getVideoThumbnail();
                                         }
 
-                                        activity.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
 
-                                                if(oldFileInfo != imageView.getFileInfo())
-                                                {
-                                                    add(imageView);
-                                                    return;
-                                                }
-                                                //  Glide.with(activity).load(imageView.getImagePath()).into(imageView);
-                                                // Old trivial way
+                                        if (bitmap != null) {
 
-                                                try {
+                                            final String oldUri = imageView.getFileInfo().getFilePath();
 
-
-                                                    if (imageView.getFileInfo().getFilePath().equals(oldUri)) {
-                                                        imageView.getFileParingImageView().setImageBitmap(fixedBitmap);
-                                                        imageView.setSubtitle(subtitle);
-
-                                                        if (waterfallCallback != null) {
-                                                            waterfallCallback.onImageProcessedSuccess(imageView);
-                                                        }
-                                                        Animation fadeIn = new AlphaAnimation(0, 1);
-                                                        fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
-                                                        fadeIn.setDuration(200);
-
-                                                        activity.performScaleAnimation(0, 1, imageView);
-
-                                                        imageView.getFileParingImageView().startAnimation(fadeIn);
-                                                    } else {
-
-
-                                                        if (WaterfallBalancer.DEBUG_MODE) {
-                                                            imageView.setBackgroundColor(Color.MAGENTA);
-                                                            //  imageView.getFileParingImageView().setImageBitmap(null);
-                                                        }
-                                                        waterfallCallback.onImageReplaced(imageView);
-                                                    }
-                                                } catch (Exception e) {
-                                                    if (waterfallCallback != null) {
-                                                        waterfallCallback.onImageProcessedError(imageView);
-                                                    }
-                                                    e.printStackTrace();
-                                                }
-
-
+                                            final String subtitle;
+                                            if (imageView.getFileInfo().isVideo()) {
+                                                subtitle = SelectorFileInfo.getFormattedVideoDuration(activity, imageView.getFileInfo().getFilePath());
+                                            } else {
+                                                subtitle = "";
                                             }
-                                        });
-                                    } else {
-                                        if (waterfallCallback != null) {
-                                            waterfallCallback.onImageProcessedError(imageView);
+                                            imageView.onImageBind(bitmap);
+                                            activity.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+
+                                                    if (oldFileInfo != imageView.getFileInfo()) {
+                                                        add(imageView);
+                                                        return;
+                                                    }
+                                                    //  Glide.with(activity).load(imageView.getImagePath()).into(imageView);
+                                                    // Old trivial way
+
+                                                    try {
+
+
+                                                        if (imageView.getFileInfo().getFilePath().equals(oldUri)) {
+                                                            if (imageView instanceof FilePreview) {
+                                                                FilePreview filePreview = (FilePreview) imageView;
+
+                                                                filePreview.setSubtitle(subtitle);
+                                                            }
+                                                            imageView.getImageView().setImageBitmap(bitmap);
+
+
+                                                            Animation fadeIn = new AlphaAnimation(0, 1);
+                                                            fadeIn.setInterpolator(new DecelerateInterpolator()); //add this
+                                                            fadeIn.setDuration(200);
+
+
+                                                            if (imageView instanceof FilePreview) {
+
+                                                                activity.performScaleAnimation(0, 1, (View) imageView);
+                                                            }
+
+
+
+                                                            imageView.getImageView().startAnimation(fadeIn);
+                                                            if (waterfallCallback != null) {
+                                                                waterfallCallback.onImageProcessedSuccess(imageView);
+                                                            }
+                                                        } else {
+
+
+                                                            WaterfallBalancer.setDebugColor(Color.MAGENTA, imageView);
+                                                            waterfallCallback.onImageReplaced(imageView);
+                                                        }
+                                                    } catch (Exception e) {
+                                                        if (waterfallCallback != null) {
+                                                            waterfallCallback.onImageProcessedError(imageView);
+                                                        }
+                                                        e.printStackTrace();
+                                                    }
+
+
+                                                }
+                                            });
+                                        } else {
+                                            System.out.println("bitmap null " + imageView.getFileInfo().isImage());
+                                            if (waterfallCallback != null) {
+                                                waterfallCallback.onImageProcessedError(imageView);
+                                            }
                                         }
                                     }
                                 } catch (final Exception e) {
@@ -142,11 +151,7 @@ public class WaterfallImageLoader {
                                             if (waterfallCallback != null) {
                                                 waterfallCallback.onImageProcessedError(imageView);
                                             }
-
-                                            if (WaterfallBalancer.DEBUG_MODE) {
-                                                imageView.setBackgroundColor(Color.RED);
-
-                                            }
+                                            WaterfallBalancer.setDebugColor(Color.RED, imageView);
 
                                         }
                                     });
@@ -179,7 +184,10 @@ public class WaterfallImageLoader {
         }
     }
 
-    public void add(FilePreview imageView) {
+
+
+    public void add(WaterfallImageView imageView) {
+        if(!(imageView instanceof View)) throw new RuntimeException("Must extend View");
         imagesQueue.add(imageView);
         if (isRunning) {
             isDataUpdated = true;
@@ -227,11 +235,11 @@ public class WaterfallImageLoader {
     }
 
     public interface WaterfallCallback {
-        void onImageProcessedSuccess(FilePreview filePreview);
+        void onImageProcessedSuccess(WaterfallImageView filePreview);
 
-        void onImageProcessedError(FilePreview filePreview);
+        void onImageProcessedError(WaterfallImageView filePreview);
 
-        void onImageReplaced(FilePreview filePreview);
+        void onImageReplaced(WaterfallImageView filePreview);
 
         void onFinishedAllTasks();
 

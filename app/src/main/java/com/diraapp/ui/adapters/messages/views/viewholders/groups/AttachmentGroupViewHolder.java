@@ -170,7 +170,7 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
      * @return
      */
     private ImagePreview generateImagePreview() {
-        ImagePreview imagePreview = new ImagePreview(itemView.getContext());
+        ImagePreview imagePreview = new ImagePreview(itemView.getContext(), getMessageAdapterContract().getWaterfallBalancer());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
         params.weight = 1;

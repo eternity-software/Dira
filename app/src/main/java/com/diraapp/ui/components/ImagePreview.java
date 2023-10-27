@@ -2,10 +2,8 @@ package com.diraapp.ui.components;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +20,13 @@ import com.diraapp.db.entities.Room;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
+import com.diraapp.storage.images.WaterfallBalancer;
 import com.diraapp.ui.activities.DiraActivity;
+import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 
 import java.io.File;
 
-public class ImagePreview extends RelativeLayout {
+public class ImagePreview extends RelativeLayout implements WaterfallImageView {
 
     private View rootView;
     private ImageView imageView;
@@ -44,6 +44,13 @@ public class ImagePreview extends RelativeLayout {
 
     private Bitmap loadedBitmap;
 
+    private WaterfallBalancer waterfallBalancer;
+
+    private SelectorFileInfo fileInfo;
+
+    private Runnable onReady;
+
+
     public ImagePreview(Context context, AttributeSet attrs) {
         super(context, attrs);
         initComponent();
@@ -51,7 +58,16 @@ public class ImagePreview extends RelativeLayout {
 
     public ImagePreview(Context context) {
         super(context);
+    }
+
+    public ImagePreview(Context context, WaterfallBalancer waterfallBalancer) {
+        super(context);
+        this.waterfallBalancer = waterfallBalancer;
         initComponent();
+    }
+
+    public void setWaterfallBalancer(WaterfallBalancer waterfallBalancer) {
+        this.waterfallBalancer = waterfallBalancer;
     }
 
     public Attachment getAttachment() {
@@ -89,19 +105,31 @@ public class ImagePreview extends RelativeLayout {
     }
 
     public void setImage(File imageFile) {
-
         Attachment currentAttachment = attachment;
-        DiraActivity.runGlobalBackground(() -> {
-            if(imageFile == null) return;
-            Bitmap bitmap = AppStorage.getBitmapFromPath(imageFile.getPath(), getContext());
-            new Handler(Looper.getMainLooper()).post(() -> {
-                if (attachment == currentAttachment) {
-                    loadedBitmap = bitmap;
-                    setImageBitmap(bitmap);
-                    isMainImageLoaded = true;
-                }
+        if (waterfallBalancer != null) {
+            String type = "image";
+
+            if (attachment.getAttachmentType() == AttachmentType.VIDEO) type = "video";
+            fileInfo = new SelectorFileInfo("",
+                    AttachmentsStorage.getFileFromAttachment(attachment, getContext(),
+                            room.getSecretName()).getPath(),
+                    type);
+            waterfallBalancer.add(this);
+        } else {
+            DiraActivity.runGlobalBackground(() -> {
+                if (imageFile == null) return;
+                Bitmap bitmap = AppStorage.getBitmapFromPath(imageFile.getPath(), getContext());
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    if (attachment == currentAttachment) {
+                        loadedBitmap = bitmap;
+                        setImageBitmap(bitmap);
+                        isMainImageLoaded = true;
+                    }
+                });
             });
-        });
+        }
+
+
     }
 
     private void setImageBitmap(Bitmap bitmap) {
@@ -116,6 +144,7 @@ public class ImagePreview extends RelativeLayout {
     public void setAttachment(Attachment attachment, Room room, File file, Runnable onReady) {
         if (attachment == null) return;
 
+        this.onReady = onReady;
         this.room = room;
         isMainImageLoaded = false;
         this.attachment = attachment;
@@ -128,61 +157,42 @@ public class ImagePreview extends RelativeLayout {
                     attachment.getHeight(),
                     Bitmap.Config.ARGB_8888);
 
-            DiraActivity.runOnMainThread(() -> imageView.setImageBitmap(dummyBitmap));
+            DiraActivity.runOnMainThread(() -> {
+                imageView.setImageBitmap(dummyBitmap);
+                if (file != null) {
 
-            Bitmap previewBitmap = attachment.getBitmapPreview();
-            if (previewBitmap == null) {
-                previewBitmap = dummyBitmap;
-            }
-            Bitmap finalPreviewBitmap = previewBitmap;
-            new Handler(Looper.getMainLooper()).post(() -> {
-                loadedBitmap = finalPreviewBitmap;
-                imageView.setImageBitmap(finalPreviewBitmap);
+                    if (!AttachmentsStorage.isAttachmentSaving(attachment)) {
+                        if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
+
+                            overlay.setVisibility(VISIBLE);
+                            progressBar.setVisibility(GONE);
+                            sizeTextView.setVisibility(GONE);
+                            downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_play));
 
 
-                try {
-
-                    try {
-                        if (onReady != null)
-                            onReady.run();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    if (file != null) {
-
-                        if (!AttachmentsStorage.isAttachmentSaving(attachment)) {
-                            if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
-                                DiraActivity.runGlobalBackground(() -> {
-
-                                    setImageBitmap(ThumbnailUtils.createVideoThumbnail(file.getPath(), MediaStore.Video.Thumbnails.MINI_KIND));
-
-                                });
-                                overlay.setVisibility(VISIBLE);
-                                progressBar.setVisibility(GONE);
-                                sizeTextView.setVisibility(GONE);
-                                downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_play));
-                            } else {
-                                DiraActivity.runGlobalBackground(() -> {
-
-                                    setImage(AttachmentsStorage.getFileFromAttachment(attachment, getContext(), room.getSecretName()));
-                                });
-                            }
-                        } else {
-
-                            // attachment downloading in progress
-                            showLoadingButton(attachment, true);
                         }
                     } else {
 
-                        // attachment not loaded
-                        showLoadingButton(attachment, AttachmentsStorage.isAttachmentSaving(attachment));
-
+                        // attachment downloading in progress
+                        showLoadingButton(attachment, true);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
+
+                    // attachment not loaded
+                    showLoadingButton(attachment, AttachmentsStorage.isAttachmentSaving(attachment));
+
                 }
             });
+            if (waterfallBalancer != null && file != null) {
+                String type = "image";
+
+                if (attachment.getAttachmentType() == AttachmentType.VIDEO) type = "video";
+                fileInfo = new SelectorFileInfo("", file.getPath(),
+                        type);
+                waterfallBalancer.add(this);
+            }
+
+
         });
     }
 
@@ -222,5 +232,38 @@ public class ImagePreview extends RelativeLayout {
         }
     }
 
+    @Override
+    public void onImageBind(Bitmap bitmap) {
 
+        Bitmap previewBitmap = attachment.getBitmapPreview();
+
+        loadedBitmap = bitmap;
+
+        new Handler(Looper.getMainLooper()).post(() -> {
+
+            if (previewBitmap != null) {
+                imageView.setImageBitmap(previewBitmap);
+            }
+
+
+            try {
+
+                try {
+                    if (onReady != null)
+                        onReady.run();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @Override
+    public SelectorFileInfo getFileInfo() {
+        return fileInfo;
+    }
 }

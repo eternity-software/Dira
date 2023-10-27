@@ -5,6 +5,7 @@ import android.graphics.PorterDuff;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -13,7 +14,7 @@ import com.diraapp.res.Theme;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 
 
-public class FilePreview extends RelativeLayout {
+public class FilePreview extends RelativeLayout implements WaterfallImageView {
 
     private View rootView;
     private SelectorFileInfo selectorFileInfo;
@@ -88,6 +89,11 @@ public class FilePreview extends RelativeLayout {
 
     public SelectorFileInfo getFileInfo() {
         return selectorFileInfo;
+    }
+
+    @Override
+    public ImageView getImageView() {
+        return getFileParingImageView();
     }
 
     public void setFileInfo(SelectorFileInfo selectorFileInfo) {
