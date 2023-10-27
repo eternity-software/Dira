@@ -50,7 +50,7 @@ public interface RoomActivityContract {
         void setMessages(List<Message> messages);
 
         void uploadFile(String sourceFileUri,
-                        Callback callback,
+                        RoomActivityPresenter.AttachmentHandler callback,
                         boolean deleteAfterUpload,
                         String serverAddress,
                         String encryptionKey);

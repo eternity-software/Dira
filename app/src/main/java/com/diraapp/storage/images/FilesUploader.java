@@ -29,13 +29,15 @@ public class FilesUploader {
 
 
     public static boolean uploadFile(String sourceFileUri,
-                                     Callback callback,
+                                     RoomActivityPresenter.AttachmentHandler callback,
                                      DiraActivity context,
                                      boolean deleteAfterUpload,
                                      String serverAddress,
                                      String encryptionKey) throws IOException {
 
         try {
+
+            callback.setFileUri(sourceFileUri);
 
             if (FileClassifier.isImageFile(sourceFileUri)) {
                 Bitmap bitmap = AppStorage.getBitmapFromPath(sourceFileUri, context);

@@ -908,7 +908,7 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
-    public void uploadFile(String sourceFileUri, Callback callback, boolean deleteAfterUpload, String serverAddress, String encryptionKey) {
+    public void uploadFile(String sourceFileUri, RoomActivityPresenter.AttachmentHandler callback, boolean deleteAfterUpload, String serverAddress, String encryptionKey) {
         try {
             if (FileClassifier.isImageFile(sourceFileUri)) {
                 ImageCompressor.compress(RoomActivity.this, new File(sourceFileUri), new com.diraapp.storage.images.Callback() {
