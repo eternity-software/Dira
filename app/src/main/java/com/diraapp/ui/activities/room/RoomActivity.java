@@ -106,7 +106,7 @@ public class RoomActivity extends DiraActivity
     private MessagesAdapter messagesAdapter;
     private FilePickerBottomSheet filePickerBottomSheet;
     private ActivityRoomBinding binding;
-    private boolean isArrowShowed = false;
+    private boolean isArrowShowed = true;
     private final MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
         @Override
         public void onItemClick(int pos, final View view) {
@@ -652,11 +652,17 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void setOnScrollListener() {
-
-        updateScrollArrow();
-        updateScrollArrowIndicator();
-
         LinearLayout arrow = binding.scrollArrow;
+
+        if (getRoom().getUnreadMessagesIds().size() > 1) {
+            isArrowShowed = true;
+            arrow.setVisibility(View.VISIBLE);
+        } else {
+            isArrowShowed = false;
+            arrow.setVisibility(View.INVISIBLE);
+        }
+
+        updateScrollArrowIndicator();
 
         arrow.setOnClickListener((View view) -> {
             presenter.onScrollArrowPressed();
@@ -710,10 +716,12 @@ public class RoomActivity extends DiraActivity
         if (layoutManager == null) return;
         int position = layoutManager.findFirstVisibleItemPosition();
 
+        Logger.logDebug("Scroll arrow", " pos - " + position);
+
         if (position < 2) {
-            if (presenter.isNewestMessagesLoaded() && !isArrowShowed) {
+            if (presenter.isNewestMessagesLoaded() && isArrowShowed) {
                 isArrowShowed = false;
-                arrow.setVisibility(View.VISIBLE);
+
                 performScaleAnimation(1, 0, arrow);
             }
             return;
@@ -784,7 +792,6 @@ public class RoomActivity extends DiraActivity
             binding.recyclerView.setAdapter(messagesAdapter);
 
             setOnScrollListener();
-
             presenter.loadMessagesAtRoomStart();
         });
     }

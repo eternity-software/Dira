@@ -336,11 +336,11 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
                 loadReplies(messageList, messageDao);
                 view.setMessages(messageList);
-                DiraActivity.runOnMainThread(() -> {
-                    view.notifyOnRoomOpenMessagesLoaded(scrollTo);
-                });
-
             }
+
+            view.runOnUiThread(() -> {
+                view.notifyOnRoomOpenMessagesLoaded(scrollTo);
+            });
 
             initMembers();
         });
