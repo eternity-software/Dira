@@ -22,7 +22,7 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.storage.attachments.AttachmentsStorage;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
-import com.diraapp.storage.images.WaterfallBalancer;
+import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.ui.activities.DiraActivity;
 
 import java.io.File;
