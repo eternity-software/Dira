@@ -1,4 +1,4 @@
-package com.diraapp.storage.images;
+package com.diraapp.ui.waterfalls;
 
 import android.content.Context;
 import android.graphics.Color;

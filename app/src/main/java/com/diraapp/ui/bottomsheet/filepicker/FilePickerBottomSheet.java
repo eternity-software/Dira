@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.BuildConfig;
 import com.diraapp.R;
-import com.diraapp.storage.images.WaterfallBalancer;
+import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.GridItemsSpacingDecorator;
 import com.diraapp.ui.adapters.MediaGridAdapter;

@@ -17,7 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.diraapp.R;
-import com.diraapp.storage.images.WaterfallBalancer;
+import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.utils.CacheUtils;
 
 import java.util.ArrayList;

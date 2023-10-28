@@ -1,4 +1,4 @@
-package com.diraapp.storage.images;
+package com.diraapp.ui.waterfalls;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -51,7 +51,7 @@ public class WaterfallImageLoader {
                     while (isRunning && !activity.isDestroyed()) {
                         try {
 
-                            WaterfallLogger.log("Starting worker...");
+                            //WaterfallLogger.log("Starting worker...");
                             List<WaterfallImageView> localList = (new ArrayList<>());
                             localList.addAll(imagesQueue);
                             for (final WaterfallImageView imageView : localList) {
@@ -59,7 +59,7 @@ public class WaterfallImageLoader {
 
                                 try {
                                     if (imageView != null) {
-                                        WaterfallLogger.log("Loading " + imageView.getFileInfo());
+                                        //WaterfallLogger.log("Loading " + imageView.getFileInfo());
                                         DiraMediaInfo oldFileInfo = imageView.getFileInfo();
                                         final Bitmap bitmap;
                                         if (imageView.getFileInfo().isImage()) {
@@ -140,7 +140,7 @@ public class WaterfallImageLoader {
                                                 }
                                             });
                                         } else {
-                                            System.out.println("bitmap null " + imageView.getFileInfo().isImage());
+                                            //WaterfallLogger.log("bitmap null " + imageView.getFileInfo().isImage());
                                             if (waterfallCallback != null) {
                                                 waterfallCallback.onImageProcessedError(imageView);
                                             }
@@ -167,19 +167,19 @@ public class WaterfallImageLoader {
                             }
 
                             if (!isDataUpdated) {
-                                WaterfallLogger.log("Data update isn't detected");
+                                //WaterfallLogger.log("Data update isn't detected");
                                 isRunning = false;
                                 waterfallCallback.onFinishedAllTasks();
                             } else {
                                 isDataUpdated = false;
-                                WaterfallLogger.log("Updated data detected!");
+                                //WaterfallLogger.log("Updated data detected!");
                             }
 
                         } catch (ConcurrentModificationException ignored) {
                             ignored.printStackTrace();
                         }
                     }
-                    WaterfallLogger.log("Waterfall's worker done!");
+                    //WaterfallLogger.log("Waterfall's worker done!");
                 }
             });
             worker.start();
