@@ -105,21 +105,20 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
         return imageView;
     }
 
-    public void setImage(File imageFile) {
+    public void loadAttachmentFile(File mediaFile) {
+        if(mediaFile == null) return;
         Attachment currentAttachment = attachment;
         if (waterfallBalancer != null) {
             String type = DiraMediaInfo.MIME_TYPE_IMAGE;
 
             if (attachment.getAttachmentType() == AttachmentType.VIDEO) type = DiraMediaInfo.MIME_TYPE_VIDEO;
             fileInfo = new DiraMediaInfo("",
-                    AttachmentsStorage.getFileFromAttachment(attachment, getContext(),
-                            room.getSecretName()).getPath(),
+                    mediaFile.getPath(),
                     type);
             waterfallBalancer.add(this);
         } else {
             DiraActivity.runGlobalBackground(() -> {
-                if (imageFile == null) return;
-                Bitmap bitmap = AppStorage.getBitmapFromPath(imageFile.getPath(), getContext());
+                Bitmap bitmap = AppStorage.getBitmapFromPath(mediaFile.getPath(), getContext());
                 new Handler(Looper.getMainLooper()).post(() -> {
                     if (attachment == currentAttachment) {
                         loadedBitmap = bitmap;
@@ -142,11 +141,11 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
     }
 
 
-    public void setAttachment(Attachment attachment, Room room, File file, Runnable onReady) {
+    public void prepareForAttachment(Attachment attachment, Room room, Runnable onImageReady) {
         if (attachment == null) return;
         if (this.attachment == attachment) return;
 
-        this.onReady = onReady;
+        this.onReady = onImageReady;
         this.room = room;
         isMainImageLoaded = false;
         this.attachment = attachment;
@@ -160,6 +159,12 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
                     attachment.getHeight(),
                     Bitmap.Config.ARGB_8888);
 
+
+            DiraActivity.runOnMainThread(() -> {
+                if (this.attachment != attachment | isMainImageLoaded) return;
+                imageView.setImageBitmap(dummyBitmap);
+
+            });
             Bitmap previewBitmap = attachment.getBitmapPreview();
             if (previewBitmap != null) {
                 DiraActivity.runOnMainThread(() -> {
@@ -167,25 +172,6 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
                         imageView.setImageBitmap(previewBitmap);
                 });
             }
-            DiraActivity.runOnMainThread(() -> {
-                if (this.attachment != attachment | isMainImageLoaded) return;
-                imageView.setImageBitmap(dummyBitmap);
-
-
-                if (waterfallBalancer != null && file != null) {
-
-
-                    String type = DiraMediaInfo.MIME_TYPE_IMAGE;
-
-                    if (attachment.getAttachmentType() == AttachmentType.VIDEO)
-                        type = DiraMediaInfo.MIME_TYPE_VIDEO;
-                    fileInfo = new DiraMediaInfo("", file.getPath(),
-                            type);
-                    waterfallBalancer.add(this);
-                }
-
-            });
-
 
         });
     }
@@ -202,7 +188,6 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
                     downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_play));
                 }
             } else {
-
                 // attachment downloading in progress
                 showLoadingButton(attachment, true);
             }
@@ -215,7 +200,6 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
     }
 
     public void displayTrash() {
-        System.out.println("aaaaa!! trashed " + attachment.getSize());
         overlay.setVisibility(VISIBLE);
         progressBar.setVisibility(GONE);
         sizeTextView.setVisibility(GONE);
@@ -249,7 +233,10 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
             });
             downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_download));
         }
-        System.out.println("aaaaa!! loading "  + attachment.getSize());
+    }
+
+    public boolean isMainImageLoaded() {
+        return isMainImageLoaded;
     }
 
     @Override

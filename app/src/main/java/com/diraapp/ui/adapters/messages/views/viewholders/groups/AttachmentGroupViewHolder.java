@@ -107,9 +107,9 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
         int attachmentIndex = 0;
         for (Attachment attachment : message.getAttachments()) {
             ImagePreview imagePreview = getImagePreview();
-            imagePreview.setAttachment(attachment, getMessageAdapterContract().getRoom(),
-                    AttachmentsStorage.getFileFromAttachment(attachment, itemView.getContext(),
-                            getMessageAdapterContract().getRoom().getSecretName()), null);
+            imagePreview.prepareForAttachment(attachment,
+                    getMessageAdapterContract().getRoom(),
+                    null);
 
             if (attachmentIndex == 0 |
                     (attachmentCount > 3 && attachmentIndex < 3 && !isVerticalLayout)) {
@@ -143,6 +143,10 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
             attachmentIndex++;
             File currentMediaFile = AttachmentsStorage.getFileFromAttachment(attachment,
                     itemView.getContext(), message.getRoomSecret());
+
+            imagePreview.prepareForAttachment(attachment,
+                    getMessageAdapterContract().getRoom(), null);
+
             if (!AttachmentsStorage.isAttachmentSaving(attachment))
                 onAttachmentLoaded(attachment, currentMediaFile, message);
 
@@ -212,9 +216,9 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
             if (imagePreview.getAttachment() != null && attachment != null) {
                 if (imagePreview.getAttachment().getFileUrl().equals(attachment.getFileUrl())) {
                     imagePreview.hideOverlay();
-                    imagePreview.setAttachment(attachment, getMessageAdapterContract().getRoom(),
-                            AttachmentsStorage.getFileFromAttachment(attachment, itemView.getContext(),
-                                    getMessageAdapterContract().getRoom().getSecretName()), null);
+                    imagePreview.showOverlay(file, attachment);
+                    imagePreview.loadAttachmentFile(file);
+
                     imagePreview.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

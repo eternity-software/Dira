@@ -49,6 +49,9 @@ public class MediaViewHolder extends AttachmentViewHolder {
         if (isAttachmentLoaded) return;
         if (attachment != currentAttachment) return;
         previewImage.hideOverlay();
+        currentAttachment = attachment;
+
+
         previewImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,10 +60,12 @@ public class MediaViewHolder extends AttachmentViewHolder {
                         previewImage.getLoadedBitmap(), previewImage.getImageView()).start();
             }
         });
-        if (previewImage.getAttachment() != currentAttachment)
-        {
-            previewImage.setImage(file);
-        }
+
+
+
+        if(!previewImage.isMainImageLoaded())
+            previewImage.loadAttachmentFile(file);
+
 
         if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
 
@@ -146,14 +151,17 @@ public class MediaViewHolder extends AttachmentViewHolder {
         currentAttachment = attachment;
         currentMediaFile = AttachmentsStorage.getFileFromAttachment(attachment,
                 itemView.getContext(), message.getRoomSecret());
-        previewImage.showOverlay(currentMediaFile, attachment);
 
-        previewImage.setAttachment(attachment, getMessageAdapterContract().getRoom(),
-                currentMediaFile, () -> {
+        previewImage.showOverlay(currentMediaFile, attachment);
+        previewImage.prepareForAttachment(attachment, getMessageAdapterContract().getRoom(), () -> {
                     if (currentAttachment != attachment) return;
+
+                    // Load an existing attachment
                     if (!AttachmentsStorage.isAttachmentSaving(attachment))
                         onAttachmentLoaded(attachment, currentMediaFile, message);
                 });
+
+        previewImage.loadAttachmentFile(currentMediaFile);
 
 
     }
