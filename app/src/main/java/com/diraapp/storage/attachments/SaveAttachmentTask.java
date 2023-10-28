@@ -3,6 +3,7 @@ package com.diraapp.storage.attachments;
 import android.content.Context;
 
 import com.diraapp.db.entities.Attachment;
+import com.diraapp.storage.AttachmentDownloadHandler;
 
 public class SaveAttachmentTask {
     private Context context;
@@ -11,12 +12,22 @@ public class SaveAttachmentTask {
     private Attachment attachment;
     private String roomSecret;
 
+    private AttachmentDownloadHandler attachmentDownloadHandler;
+
     public SaveAttachmentTask(Context context, boolean isSizeLimited, Attachment attachment, String roomSecret) {
         this.context = context;
         this.isSizeLimited = isSizeLimited;
 
         this.attachment = attachment;
         this.roomSecret = roomSecret;
+    }
+
+    public AttachmentDownloadHandler getAttachmentDownloadHandler() {
+        return attachmentDownloadHandler;
+    }
+
+    public void setAttachmentDownloadHandler(AttachmentDownloadHandler attachmentDownloadHandler) {
+        this.attachmentDownloadHandler = attachmentDownloadHandler;
     }
 
     public String getRoomSecret() {

@@ -53,7 +53,7 @@ import com.diraapp.notifications.Notifier;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
-import com.diraapp.storage.attachments.AttachmentsStorage;
+import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.storage.images.FilesUploader;
 import com.diraapp.storage.images.ImageCompressor;
 import com.diraapp.ui.activities.DiraActivity;
@@ -590,7 +590,7 @@ public class RoomActivity extends DiraActivity
                                 (this, R.color.self_message_color));
                     }
 
-                    File file = AttachmentsStorage.getFileFromAttachment(attachment,
+                    File file = AttachmentDownloader.getFileFromAttachment(attachment,
                             this, roomSecret);
 
                     if (file != null) {

@@ -94,13 +94,13 @@ public class WaterfallBalancer {
     }
 
     private static int getHardwareDependBalancerCount(Context context) {
-        int balancerCount = 2;
+        int balancerCount = 1;
 
         PerformanceClass performanceClass = PerformanceTester.measureDevicePerformanceClass(context);
         if (performanceClass == PerformanceClass.MEDIUM) {
-            balancerCount = 8;
+            balancerCount = 6;
         } else if (performanceClass == PerformanceClass.HIGH) {
-            balancerCount = 14;
+            balancerCount = 12;
         }
         return balancerCount;
     }

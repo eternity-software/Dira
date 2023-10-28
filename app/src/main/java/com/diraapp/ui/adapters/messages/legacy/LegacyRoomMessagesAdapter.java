@@ -47,8 +47,8 @@ import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.AppStorage;
-import com.diraapp.storage.DownloadHandler;
-import com.diraapp.storage.attachments.AttachmentsStorage;
+import com.diraapp.storage.AttachmentDownloadHandler;
+import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.ui.activities.DiraActivity;
@@ -244,7 +244,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
         Message message = messages.get(position);
 
         if (holder.attachmentsStorageListener != null) {
-            AttachmentsStorage.removeAttachmentsStorageListener(holder.attachmentsStorageListener);
+            AttachmentDownloader.removeAttachmentsStorageListener(holder.attachmentsStorageListener);
             listeners.remove(holder.attachmentsStorageListener);
         }
 
@@ -560,7 +560,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
 
     public void release() {
         for (AttachmentsStorageListener attachmentsStorageListener : listeners) {
-            AttachmentsStorage.removeAttachmentsStorageListener(attachmentsStorageListener);
+            AttachmentDownloader.removeAttachmentsStorageListener(attachmentsStorageListener);
         }
         diraMediaPlayer.reset();
         diraMediaPlayer.release();
@@ -799,7 +799,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
                                 if (attachment.getFileUrl().equals(message.getAttachments().get(0).getFileUrl())) {
 
                                     //holder.loading.setVisibility(View.GONE);
-                                    File file = AttachmentsStorage.getFileFromAttachment(attachment, context, message.getRoomSecret());
+                                    File file = AttachmentDownloader.getFileFromAttachment(attachment, context, message.getRoomSecret());
 
                                     if (file != null) {
                                         updateAttachment(holder, attachment, file, message);
@@ -807,7 +807,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
                                         // holder.loading.setVisibility(View.VISIBLE);
 
                                         SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment, message.getRoomSecret());
-                                        AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, serverAddress);
+                                        AttachmentDownloader.saveAttachmentAsync(saveAttachmentTask, serverAddress);
                                     }
 
                                 }
@@ -833,7 +833,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
                     }
                 };
 
-                AttachmentsStorage.addAttachmentsStorageListener(holder.attachmentsStorageListener);
+                AttachmentDownloader.addAttachmentsStorageListener(holder.attachmentsStorageListener);
                 listeners.add(holder.attachmentsStorageListener);
 
                 long attachmentSize = 0;
@@ -887,9 +887,9 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
                     }
 
 
-                    File file = AttachmentsStorage.getFileFromAttachment(attachment, context, message.getRoomSecret());
+                    File file = AttachmentDownloader.getFileFromAttachment(attachment, context, message.getRoomSecret());
 
-                    if (file != null && !AttachmentsStorage.isAttachmentSaving(attachment)) {
+                    if (file != null && !AttachmentDownloader.isAttachmentSaving(attachment)) {
 
                         updateAttachment(holder, attachment, file, message);
                     } else {
@@ -913,7 +913,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
                                                 final int[] finalProgress = {0};
                                                 for (Attachment attachment1 : message.getAttachments()) {
                                                     try {
-                                                        File savedFile = AttachmentsStorage.saveAttachment(context, attachment1, message.getRoomSecret(), false, new DownloadHandler() {
+                                                        File savedFile = AttachmentDownloader.saveAttachment(context, attachment1, message.getRoomSecret(), false, new AttachmentDownloadHandler() {
                                                             @Override
                                                             public void onProgressChanged(int progress) {
 
@@ -969,9 +969,9 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
                                 });
                             }
                         } else {
-                            if (!AttachmentsStorage.isAttachmentSaving(attachment)) {
+                            if (!AttachmentDownloader.isAttachmentSaving(attachment)) {
                                 SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment, message.getRoomSecret());
-                                AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, serverAddress);
+                                AttachmentDownloader.saveAttachmentAsync(saveAttachmentTask, serverAddress);
                             }
                         }
 
@@ -1127,7 +1127,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
             for (Attachment attachment : message.getAttachments()) {
                 attachmentsSize += attachment.getSize();
                 if (attachmentsSize > maxAutoLoadSize) {
-                    if (AttachmentsStorage.getFileFromAttachment(attachment,
+                    if (AttachmentDownloader.getFileFromAttachment(attachment,
                             context, message.getRoomSecret()) == null) {
                         type = VIEW_TYPE_SELF_MESSAGE_ATTACHMENTS_TOO_LARGE;
                         isAttachmentTooLarge = true;
@@ -1249,7 +1249,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
                             (context, textColorId));
                 }
 
-                File file = AttachmentsStorage.getFileFromAttachment(attachment,
+                File file = AttachmentDownloader.getFileFromAttachment(attachment,
                         context, room.getSecretName());
 
                 if (file != null) {

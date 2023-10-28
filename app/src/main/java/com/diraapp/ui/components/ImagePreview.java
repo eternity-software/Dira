@@ -20,7 +20,7 @@ import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Room;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DiraMediaInfo;
-import com.diraapp.storage.attachments.AttachmentsStorage;
+import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.ui.activities.DiraActivity;
@@ -105,21 +105,20 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
         return imageView;
     }
 
-    public void setImage(File imageFile) {
+    public void loadAttachmentFile(File mediaFile) {
+        if(mediaFile == null) return;
         Attachment currentAttachment = attachment;
         if (waterfallBalancer != null) {
             String type = DiraMediaInfo.MIME_TYPE_IMAGE;
 
             if (attachment.getAttachmentType() == AttachmentType.VIDEO) type = DiraMediaInfo.MIME_TYPE_VIDEO;
             fileInfo = new DiraMediaInfo("",
-                    AttachmentsStorage.getFileFromAttachment(attachment, getContext(),
-                            room.getSecretName()).getPath(),
+                    mediaFile.getPath(),
                     type);
             waterfallBalancer.add(this);
         } else {
             DiraActivity.runGlobalBackground(() -> {
-                if (imageFile == null) return;
-                Bitmap bitmap = AppStorage.getBitmapFromPath(imageFile.getPath(), getContext());
+                Bitmap bitmap = AppStorage.getBitmapFromPath(mediaFile.getPath(), getContext());
                 new Handler(Looper.getMainLooper()).post(() -> {
                     if (attachment == currentAttachment) {
                         loadedBitmap = bitmap;
@@ -142,28 +141,16 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
     }
 
 
-    public void setAttachment(Attachment attachment, Room room, File file, Runnable onReady) {
+    public void prepareForAttachment(Attachment attachment, Room room, Runnable onImageReady) {
         if (attachment == null) return;
         if (this.attachment == attachment) return;
 
-        this.onReady = onReady;
+        this.onReady = onImageReady;
         this.room = room;
         isMainImageLoaded = false;
         this.attachment = attachment;
-        overlay.setVisibility(GONE);
         imageView.setImageBitmap(null);
 
-        if (waterfallBalancer != null && file != null) {
-
-
-            String type = DiraMediaInfo.MIME_TYPE_IMAGE;
-
-            if (attachment.getAttachmentType() == AttachmentType.VIDEO)
-                type = DiraMediaInfo.MIME_TYPE_VIDEO;
-            fileInfo = new DiraMediaInfo("", file.getPath(),
-                    type);
-            waterfallBalancer.add(this);
-        }
 
         DiraActivity.runGlobalBackground(() -> {
             if (this.attachment != attachment | isMainImageLoaded) return;
@@ -172,6 +159,12 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
                     attachment.getHeight(),
                     Bitmap.Config.ARGB_8888);
 
+
+            DiraActivity.runOnMainThread(() -> {
+                if (this.attachment != attachment | isMainImageLoaded) return;
+                imageView.setImageBitmap(dummyBitmap);
+
+            });
             Bitmap previewBitmap = attachment.getBitmapPreview();
             if (previewBitmap != null) {
                 DiraActivity.runOnMainThread(() -> {
@@ -179,34 +172,31 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
                         imageView.setImageBitmap(previewBitmap);
                 });
             }
-            DiraActivity.runOnMainThread(() -> {
-                if (this.attachment != attachment | isMainImageLoaded) return;
-                imageView.setImageBitmap(dummyBitmap);
-
-                if (file != null) {
-
-                    if (!AttachmentsStorage.isAttachmentSaving(attachment)) {
-                        if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
-                            overlay.setVisibility(VISIBLE);
-                            progressBar.setVisibility(GONE);
-                            sizeTextView.setVisibility(GONE);
-                            downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_play));
-                        }
-                    } else {
-
-                        // attachment downloading in progress
-                        showLoadingButton(attachment, true);
-                    }
-                } else {
-
-                    // attachment not loaded
-                    showLoadingButton(attachment, AttachmentsStorage.isAttachmentSaving(attachment));
-
-                }
-            });
-
 
         });
+    }
+
+    public void showOverlay(File file, Attachment attachment)
+    {
+        if (file != null) {
+
+            if (!AttachmentDownloader.isAttachmentSaving(attachment)) {
+                if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
+                    overlay.setVisibility(VISIBLE);
+                    progressBar.setVisibility(GONE);
+                    sizeTextView.setVisibility(GONE);
+                    downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_play));
+                }
+            } else {
+                // attachment downloading in progress
+                showLoadingButton(attachment, true);
+            }
+        } else {
+
+            // attachment not loaded
+            showLoadingButton(attachment, AttachmentDownloader.isAttachmentSaving(attachment));
+
+        }
     }
 
     public void displayTrash() {
@@ -216,7 +206,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
         downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_trash));
     }
 
-    public void hideDownloadOverlay() {
+    public void hideOverlay() {
         if (!isInitialized) return;
         overlay.setVisibility(GONE);
     }
@@ -225,24 +215,40 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
         overlay.setVisibility(VISIBLE);
         downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_download));
         sizeTextView.setVisibility(VISIBLE);
-        sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()));
+        sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()) +
+                getContext().getString(R.string.attachment_in_queue));
         if (isLoading) {
             progressBar.setVisibility(VISIBLE);
             downloadButton.setImageBitmap(null);
+            setOnClickListener(v -> {});
+            imageView.setOnClickListener(v -> {});
             downloadButton.setOnClickListener(v -> {
             });
         } else {
-
+            setOnClickListener(v -> {});
+            imageView.setOnClickListener(v -> {});
             progressBar.setVisibility(GONE);
             downloadButton.setOnClickListener(v -> {
                 SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(getContext(), false,
                         attachment, room.getSecretName());
-                AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, room.getServerAddress());
+                AttachmentDownloader.saveAttachmentAsync(saveAttachmentTask, room.getServerAddress());
 
                 showLoadingButton(attachment, true);
             });
             downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_download));
         }
+    }
+
+    public void setDownloadPercent(int percent)
+    {
+        DiraActivity.runOnMainThread(() -> {
+            sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()) + "(" + percent + "%" + ")");
+        });
+
+    }
+
+    public boolean isMainImageLoaded() {
+        return isMainImageLoaded;
     }
 
     @Override

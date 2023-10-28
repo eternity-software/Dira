@@ -7,7 +7,8 @@ import android.os.Looper;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.storage.attachments.AttachmentsStorage;
+import com.diraapp.storage.AttachmentDownloadHandler;
+import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.ui.adapters.messages.views.viewholders.AttachmentViewHolder;
@@ -45,7 +46,7 @@ public class MessageAttachmentLoader {
         MessageAttachmentStorageListener listener = new MessageAttachmentStorageListener(holder, message);
         holder.setAttachmentStorageListener(listener);
 
-        AttachmentsStorage.addAttachmentsStorageListener(listener);
+        AttachmentDownloader.addAttachmentsStorageListener(listener);
         listeners.add(listener);
 
         long attachmentsSize = 0;
@@ -59,18 +60,18 @@ public class MessageAttachmentLoader {
         for (int i = 0; i < attachmentCount; i++) {
             Attachment attachment = message.getAttachments().get(i);
 
-            File file = AttachmentsStorage.getFileFromAttachment(attachment, context, message.getRoomSecret());
+            File file = AttachmentDownloader.getFileFromAttachment(attachment, context, message.getRoomSecret());
 
-            if (file != null && !AttachmentsStorage.isAttachmentSaving(attachment)) {
+            if (file != null && !AttachmentDownloader.isAttachmentSaving(attachment)) {
 
                 holder.onAttachmentLoaded(attachment, file, message);
             } else {
                 if (attachmentsSize > maxAutoLoadSize) {
                     // notify that AttachmentToLarge
                 } else {
-                    if (!AttachmentsStorage.isAttachmentSaving(attachment)) {
+                    if (!AttachmentDownloader.isAttachmentSaving(attachment)) {
                         SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment, message.getRoomSecret());
-                        AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, room.getServerAddress());
+                        AttachmentDownloader.saveAttachmentAsync(saveAttachmentTask, room.getServerAddress());
                     }
                 }
 
@@ -81,12 +82,12 @@ public class MessageAttachmentLoader {
 
     public void removeListener(AttachmentsStorageListener listener) {
         listeners.remove(listener);
-        AttachmentsStorage.removeAttachmentsStorageListener(listener);
+        AttachmentDownloader.removeAttachmentsStorageListener(listener);
     }
 
     public void release() {
         for (AttachmentsStorageListener attachmentsStorageListener : listeners) {
-            AttachmentsStorage.removeAttachmentsStorageListener(attachmentsStorageListener);
+            AttachmentDownloader.removeAttachmentsStorageListener(attachmentsStorageListener);
         }
     }
 
@@ -120,7 +121,7 @@ public class MessageAttachmentLoader {
                     }
                     if (isMessageAttachment) {
 
-                        File file = AttachmentsStorage.getFileFromAttachment(attachment, context, message.getRoomSecret());
+                        File file = AttachmentDownloader.getFileFromAttachment(attachment, context, message.getRoomSecret());
 
                         if (file != null) {
                             if (holder != null) {
@@ -128,7 +129,7 @@ public class MessageAttachmentLoader {
                             }
                         } else {
                             SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment, message.getRoomSecret());
-                            AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, room.getServerAddress());
+                            AttachmentDownloader.saveAttachmentAsync(saveAttachmentTask, room.getServerAddress());
                         }
 
                     }
@@ -161,7 +162,7 @@ public class MessageAttachmentLoader {
         }
 
         public void removeViewHolder() {
-            AttachmentsStorage.removeAttachmentsStorageListener(this);
+            AttachmentDownloader.removeAttachmentsStorageListener(this);
             holder = null;
         }
     }

@@ -69,6 +69,7 @@
     <string name="recording_preparing">Подготовка камеры</string>
     <string name="recording_tip_stop">Отпустите для отмены</string>
     <string name="recording_tip_send">Отпустите для отправки</string>
+    <string name="attachment_in_queue">(В очереди)</string>
     <string name="media_gallery">Галерея</string>
     <string name="members_title">Участники</string>
     <string name="delete_member_title">Забыть участника</string>

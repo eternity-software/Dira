@@ -5,7 +5,7 @@ import android.content.Context;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.storage.AppStorage;
-import com.diraapp.storage.DownloadHandler;
+import com.diraapp.storage.AttachmentDownloadHandler;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.CryptoUtils;
 import com.diraapp.utils.Logger;
@@ -16,12 +16,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class AttachmentsStorage {
+public class AttachmentDownloader {
 
     private static final List<SaveAttachmentTask> saveAttachmentTaskList = new ArrayList<>();
     private static final List<AttachmentsStorageListener> attachmentsStorageListeners = new ArrayList<>();
+    private static final HashMap<Attachment, AttachmentDownloadHandler> downloadHandlerHashMap = new HashMap<>();
     private static Thread attachmentDownloader;
 
     public static void saveAttachmentAsync(SaveAttachmentTask saveAttachmentTask, String address) {
@@ -46,10 +48,19 @@ public class AttachmentsStorage {
                                             e.printStackTrace();
                                         }
                                     }
+
                                     if (saveAttachment(saveAttachmentTask.getContext(),
                                             saveAttachmentTask.getAttachment(),
                                             saveAttachmentTask.getRoomSecret(),
-                                            saveAttachmentTask.isSizeLimited(), address, UpdateProcessor.getInstance().getRoom(saveAttachmentTask.getRoomSecret()).getEncryptionKey()) != null) {
+                                            saveAttachmentTask.isSizeLimited(),
+                                            new AttachmentDownloadHandler() {
+                                                @Override
+                                                public void onProgressChanged(int progress) {
+                                                    AttachmentDownloadHandler handler = downloadHandlerHashMap.get(saveAttachmentTask.getAttachment());
+                                                    if(handler != null) handler.onProgressChanged(progress);
+                                                }
+                                            },
+                                            address, UpdateProcessor.getInstance().getRoom(saveAttachmentTask.getRoomSecret()).getEncryptionKey()) != null) {
                                         for (AttachmentsStorageListener attachmentsStorageListener : attachmentsStorageListeners) {
                                             try {
                                                 attachmentsStorageListener.onAttachmentDownloaded(saveAttachmentTask.getAttachment());
@@ -66,6 +77,8 @@ public class AttachmentsStorage {
                                             }
                                         }
                                     }
+
+                                    downloadHandlerHashMap.remove(saveAttachmentTask.getAttachment());
 
                                     saveAttachmentTaskList.remove(saveAttachmentTask);
 
@@ -93,11 +106,17 @@ public class AttachmentsStorage {
                             e.printStackTrace();
                         }
                     }
+                    attachmentDownloader = null;
                 }
             });
             attachmentDownloader.start();
         }
 
+    }
+
+    public static void setDownloadHandlerForAttachment(AttachmentDownloadHandler handler, Attachment attachment)
+    {
+        downloadHandlerHashMap.put(attachment, handler);
     }
 
 
@@ -125,7 +144,7 @@ public class AttachmentsStorage {
         return saveAttachment(context, attachment, roomSecret, sizeLimited, null, address, encryptionKey);
     }
 
-    public static File saveAttachment(Context context, Attachment attachment, String roomSecret, boolean sizeLimited, DownloadHandler downloadHandler, String address, String encryptionKey) throws IOException {
+    public static File saveAttachment(Context context, Attachment attachment, String roomSecret, boolean sizeLimited, AttachmentDownloadHandler attachmentDownloadHandler, String address, String encryptionKey) throws IOException {
         File localFile = new File(context.getExternalCacheDir(), roomSecret + "_" + attachment.getFileUrl());
         CacheUtils cacheUtils = new CacheUtils(context);
 
@@ -135,7 +154,8 @@ public class AttachmentsStorage {
                 Logger.logDebug("AttachmentsStorage", "Unknown file server for " + address);
                 return null;
             }
-            AppStorage.downloadFile(fileServerUrl + "/download/" + attachment.getFileUrl(), localFile, downloadHandler);
+            AppStorage.downloadAttachment(fileServerUrl + "/download/" + attachment.getFileUrl(),
+                    attachment, localFile, attachmentDownloadHandler);
 
 
             if (!encryptionKey.equals("")) {

@@ -11,7 +11,7 @@ import com.diraapp.R;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.media.DiraMediaPlayer;
-import com.diraapp.storage.attachments.AttachmentsStorage;
+import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.BubbleMessageView;
@@ -102,10 +102,10 @@ public class BubbleViewHolder extends AttachmentViewHolder {
         bubblePlayer.reset();
 
         Attachment bubbleAttachment = message.getAttachments().get(0);
-        currentMediaFile = AttachmentsStorage.getFileFromAttachment(bubbleAttachment,
+        currentMediaFile = AttachmentDownloader.getFileFromAttachment(bubbleAttachment,
                 itemView.getContext(), message.getRoomSecret());
 
-        if (!AttachmentsStorage.isAttachmentSaving(bubbleAttachment))
+        if (!AttachmentDownloader.isAttachmentSaving(bubbleAttachment))
             onAttachmentLoaded(bubbleAttachment,
                     currentMediaFile, message);
 

@@ -13,7 +13,7 @@ import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.res.Theme;
-import com.diraapp.storage.attachments.AttachmentsStorage;
+import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.adapters.messages.views.viewholders.TextMessageViewHolder;
@@ -107,9 +107,9 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
         int attachmentIndex = 0;
         for (Attachment attachment : message.getAttachments()) {
             ImagePreview imagePreview = getImagePreview();
-            imagePreview.setAttachment(attachment, getMessageAdapterContract().getRoom(),
-                    AttachmentsStorage.getFileFromAttachment(attachment, itemView.getContext(),
-                            getMessageAdapterContract().getRoom().getSecretName()), null);
+            imagePreview.prepareForAttachment(attachment,
+                    getMessageAdapterContract().getRoom(),
+                    null);
 
             if (attachmentIndex == 0 |
                     (attachmentCount > 3 && attachmentIndex < 3 && !isVerticalLayout)) {
@@ -141,9 +141,19 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
                 }
             }
             attachmentIndex++;
-            File currentMediaFile = AttachmentsStorage.getFileFromAttachment(attachment,
+            File currentMediaFile = AttachmentDownloader.getFileFromAttachment(attachment,
                     itemView.getContext(), message.getRoomSecret());
-            if (!AttachmentsStorage.isAttachmentSaving(attachment))
+
+            imagePreview.prepareForAttachment(attachment,
+                    getMessageAdapterContract().getRoom(), null);
+
+            if (currentMediaFile == null) {
+                AttachmentDownloader.setDownloadHandlerForAttachment(progress -> {
+                    onLoadPercentChanged(attachment, progress);
+                }, attachment);
+            }
+
+            if (!AttachmentDownloader.isAttachmentSaving(attachment))
                 onAttachmentLoaded(attachment, currentMediaFile, message);
 
         }
@@ -203,7 +213,21 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
         params.weight = 1;
         mom.setLayoutParams(params);
         return mom;
+
+
     }
+
+    public void onLoadPercentChanged(Attachment attachment, int percent) {
+
+        for (ImagePreview imagePreview : new ArrayList<>(imagePreviewList)) {
+            if (imagePreview.getAttachment() != null && attachment != null) {
+                if (imagePreview.getAttachment().getFileUrl().equals(attachment.getFileUrl())) {
+                    imagePreview.setDownloadPercent(percent);
+                }
+            }
+        }
+    }
+
 
     @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
@@ -211,11 +235,10 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
         for (ImagePreview imagePreview : new ArrayList<>(imagePreviewList)) {
             if (imagePreview.getAttachment() != null && attachment != null) {
                 if (imagePreview.getAttachment().getFileUrl().equals(attachment.getFileUrl())) {
-                    if (imagePreview.getAttachment() == attachment) return;
-                    imagePreview.hideDownloadOverlay();
-                    imagePreview.setAttachment(attachment, getMessageAdapterContract().getRoom(),
-                            AttachmentsStorage.getFileFromAttachment(attachment, itemView.getContext(),
-                                    getMessageAdapterContract().getRoom().getSecretName()), null);
+                    imagePreview.hideOverlay();
+                    imagePreview.showOverlay(file, attachment);
+                    imagePreview.loadAttachmentFile(file);
+
                     imagePreview.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
