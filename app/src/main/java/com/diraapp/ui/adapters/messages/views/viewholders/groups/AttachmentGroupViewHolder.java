@@ -13,7 +13,7 @@ import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.res.Theme;
-import com.diraapp.storage.attachments.AttachmentsStorage;
+import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.adapters.messages.views.viewholders.TextMessageViewHolder;
@@ -141,13 +141,19 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
                 }
             }
             attachmentIndex++;
-            File currentMediaFile = AttachmentsStorage.getFileFromAttachment(attachment,
+            File currentMediaFile = AttachmentDownloader.getFileFromAttachment(attachment,
                     itemView.getContext(), message.getRoomSecret());
 
             imagePreview.prepareForAttachment(attachment,
                     getMessageAdapterContract().getRoom(), null);
 
-            if (!AttachmentsStorage.isAttachmentSaving(attachment))
+            if (currentMediaFile == null) {
+                AttachmentDownloader.setDownloadHandlerForAttachment(progress -> {
+                    onLoadPercentChanged(attachment, progress);
+                }, attachment);
+            }
+
+            if (!AttachmentDownloader.isAttachmentSaving(attachment))
                 onAttachmentLoaded(attachment, currentMediaFile, message);
 
         }
@@ -207,7 +213,21 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
         params.weight = 1;
         mom.setLayoutParams(params);
         return mom;
+
+
     }
+
+    public void onLoadPercentChanged(Attachment attachment, int percent) {
+
+        for (ImagePreview imagePreview : new ArrayList<>(imagePreviewList)) {
+            if (imagePreview.getAttachment() != null && attachment != null) {
+                if (imagePreview.getAttachment().getFileUrl().equals(attachment.getFileUrl())) {
+                    imagePreview.setDownloadPercent(percent);
+                }
+            }
+        }
+    }
+
 
     @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {

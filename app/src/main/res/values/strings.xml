@@ -67,6 +67,7 @@
     <string name="recording_preparing">Preparing camera</string>
     <string name="recording_tip_stop">Release to cancel recording</string>
     <string name="recording_tip_send">Release to send message</string>
+    <string name="attachment_in_queue">(In queue)</string>
 
     <!-- File picker -->
     <string name="media_gallery">Gallery</string>

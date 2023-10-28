@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.diraapp.R;
+import com.diraapp.device.PerformanceTester;
 import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.utils.CacheUtils;
 
@@ -73,7 +74,19 @@ public class DiraActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.activity_enter_anim, R.anim.activity_enter_anim);
-        waterfallBalancer = new WaterfallBalancer(this);
+
+        int balancerCount = 1;
+
+        switch (PerformanceTester.measureDevicePerformanceClass(this)) {
+            case MEDIUM:
+                balancerCount = 2;
+                break;
+            case HIGH:
+                balancerCount = 3;
+        }
+
+
+        waterfallBalancer = new WaterfallBalancer(this, balancerCount);
         for (DiraActivityListener listener : activityListenerList) listener.onCreate();
     }
 

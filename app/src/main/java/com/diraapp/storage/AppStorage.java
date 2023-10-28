@@ -15,6 +15,7 @@ import android.util.Base64;
 import androidx.annotation.Nullable;
 
 import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.db.entities.Attachment;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
 import com.google.gson.Gson;
@@ -108,7 +109,7 @@ public class AppStorage {
         }
     }
 
-    public static void downloadFile(String url, File outputFile, DownloadHandler downloadHandler) throws IOException {
+    public static void downloadAttachment(String url, Attachment attachment, File outputFile, AttachmentDownloadHandler attachmentDownloadHandler) throws IOException {
 
         System.out.println(url);
         URL u = new URL(url);
@@ -135,10 +136,10 @@ public class AppStorage {
             // publishing the progress....
             if (fileLength > 0) // only if total length is known
             {
-                if (downloadHandler != null) {
+                if (attachmentDownloadHandler != null) {
                     if (System.currentTimeMillis() - lastTimeProgressNotified > 500) {
                         lastTimeProgressNotified = System.currentTimeMillis();
-                        downloadHandler.onProgressChanged(((int) (total * 100 / fileLength)));
+                        attachmentDownloadHandler.onProgressChanged(((int) (total * 100 / fileLength)));
                     }
 
                 }

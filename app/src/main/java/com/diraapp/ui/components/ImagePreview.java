@@ -20,7 +20,7 @@ import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Room;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DiraMediaInfo;
-import com.diraapp.storage.attachments.AttachmentsStorage;
+import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.ui.activities.DiraActivity;
@@ -180,7 +180,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
     {
         if (file != null) {
 
-            if (!AttachmentsStorage.isAttachmentSaving(attachment)) {
+            if (!AttachmentDownloader.isAttachmentSaving(attachment)) {
                 if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
                     overlay.setVisibility(VISIBLE);
                     progressBar.setVisibility(GONE);
@@ -194,7 +194,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
         } else {
 
             // attachment not loaded
-            showLoadingButton(attachment, AttachmentsStorage.isAttachmentSaving(attachment));
+            showLoadingButton(attachment, AttachmentDownloader.isAttachmentSaving(attachment));
 
         }
     }
@@ -215,24 +215,36 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
         overlay.setVisibility(VISIBLE);
         downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_download));
         sizeTextView.setVisibility(VISIBLE);
-        sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()));
+        sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()) +
+                getContext().getString(R.string.attachment_in_queue));
         if (isLoading) {
             progressBar.setVisibility(VISIBLE);
             downloadButton.setImageBitmap(null);
+            setOnClickListener(v -> {});
+            imageView.setOnClickListener(v -> {});
             downloadButton.setOnClickListener(v -> {
             });
         } else {
-
+            setOnClickListener(v -> {});
+            imageView.setOnClickListener(v -> {});
             progressBar.setVisibility(GONE);
             downloadButton.setOnClickListener(v -> {
                 SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(getContext(), false,
                         attachment, room.getSecretName());
-                AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, room.getServerAddress());
+                AttachmentDownloader.saveAttachmentAsync(saveAttachmentTask, room.getServerAddress());
 
                 showLoadingButton(attachment, true);
             });
             downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_download));
         }
+    }
+
+    public void setDownloadPercent(int percent)
+    {
+        DiraActivity.runOnMainThread(() -> {
+            sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()) + "(" + percent + "%" + ")");
+        });
+
     }
 
     public boolean isMainImageLoaded() {

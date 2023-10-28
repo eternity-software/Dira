@@ -19,7 +19,7 @@ import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.res.Theme;
-import com.diraapp.storage.attachments.AttachmentsStorage;
+import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.MessageHolderType;
 import com.diraapp.ui.components.dynamic.DynamicTextView;
@@ -92,7 +92,7 @@ public class MessageReplyComponent extends FrameLayout {
                             (getContext(), textColorId));
                 }
 
-                File file = AttachmentsStorage.getFileFromAttachment(attachment,
+                File file = AttachmentDownloader.getFileFromAttachment(attachment,
                         getContext(), config.getRoom().getSecretName());
 
                 if (file != null) {

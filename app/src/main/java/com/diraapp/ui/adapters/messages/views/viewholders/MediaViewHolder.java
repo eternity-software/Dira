@@ -13,7 +13,9 @@ import com.diraapp.R;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.storage.attachments.AttachmentsStorage;
+import com.diraapp.storage.AttachmentDownloadHandler;
+import com.diraapp.storage.attachments.AttachmentDownloader;
+import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.ImagePreview;
@@ -60,6 +62,8 @@ public class MediaViewHolder extends AttachmentViewHolder {
                         previewImage.getLoadedBitmap(), previewImage.getImageView()).start();
             }
         });
+
+
 
 
 
@@ -149,7 +153,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
 
         Attachment attachment = message.getAttachments().get(0);
         currentAttachment = attachment;
-        currentMediaFile = AttachmentsStorage.getFileFromAttachment(attachment,
+        currentMediaFile = AttachmentDownloader.getFileFromAttachment(attachment,
                 itemView.getContext(), message.getRoomSecret());
 
         previewImage.showOverlay(currentMediaFile, attachment);
@@ -157,15 +161,28 @@ public class MediaViewHolder extends AttachmentViewHolder {
                     if (currentAttachment != attachment) return;
 
                     // Load an existing attachment
-                    if (!AttachmentsStorage.isAttachmentSaving(attachment))
+                    if (!AttachmentDownloader.isAttachmentSaving(attachment))
                         onAttachmentLoaded(attachment, currentMediaFile, message);
                 });
+
+        if(currentMediaFile == null)
+        {
+            AttachmentDownloader.setDownloadHandlerForAttachment(progress -> {
+                onLoadPercentChanged(attachment, progress);
+            }, attachment);
+        }
 
         previewImage.loadAttachmentFile(currentMediaFile);
 
 
     }
 
+    public void onLoadPercentChanged(Attachment attachment, int percent) {
+        if(attachment == currentAttachment)
+        {
+            previewImage.setDownloadPercent(percent);
+        }
+    }
 
     public void onViewRecycled() {
         super.onViewRecycled();

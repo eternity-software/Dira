@@ -31,7 +31,7 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DiraMediaInfo;
-import com.diraapp.storage.attachments.AttachmentsStorage;
+import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.ui.adapters.MediaGridAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
@@ -220,7 +220,7 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
                         Attachment attachment = message.getAttachments().get(0);
                         if (attachment.getAttachmentType() == AttachmentType.IMAGE ||
                                 attachment.getAttachmentType() == AttachmentType.VIDEO) {
-                            File file = AttachmentsStorage.getFileFromAttachment(attachment, getApplicationContext(), message.getRoomSecret());
+                            File file = AttachmentDownloader.getFileFromAttachment(attachment, getApplicationContext(), message.getRoomSecret());
 
                             String mimeType = "image";
 

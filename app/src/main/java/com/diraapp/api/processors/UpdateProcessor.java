@@ -38,7 +38,7 @@ import com.diraapp.exceptions.SingletonException;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.storage.AppStorage;
-import com.diraapp.storage.attachments.AttachmentsStorage;
+import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.EncryptionUtil;
@@ -208,7 +208,7 @@ public class UpdateProcessor {
                         SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment,
                                 ((NewMessageUpdate) update).getMessage().getRoomSecret());
 
-                        AttachmentsStorage.saveAttachmentAsync(saveAttachmentTask, address);
+                        AttachmentDownloader.saveAttachmentAsync(saveAttachmentTask, address);
                     }
 
                 }
