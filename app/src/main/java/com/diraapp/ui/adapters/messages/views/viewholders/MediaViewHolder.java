@@ -35,7 +35,6 @@ public class MediaViewHolder extends AttachmentViewHolder {
     private File currentMediaFile;
 
     private boolean isAttachmentLoaded = false;
-
     public MediaViewHolder(@NonNull ViewGroup itemView,
                            MessageAdapterContract messageAdapterContract,
                            ViewHolderManagerContract viewHolderManagerContract,
@@ -49,21 +48,21 @@ public class MediaViewHolder extends AttachmentViewHolder {
         if (file == null) return;
         if (isAttachmentLoaded) return;
         if (attachment != currentAttachment) return;
-        previewImage.hideDownloadOverlay();
-
+        previewImage.hideOverlay();
+        previewImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getMessageAdapterContract().preparePreviewActivity(file.getPath(),
+                        attachment.getAttachmentType() == AttachmentType.VIDEO,
+                        previewImage.getLoadedBitmap(), previewImage.getImageView()).start();
+            }
+        });
+        previewImage.setImage(file);
         if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
 
             previewImage.setVisibility(View.VISIBLE);
-            previewImage.setImage(file);
             isAttachmentLoaded = true;
-            previewImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getMessageAdapterContract().preparePreviewActivity(file.getPath(),
-                            attachment.getAttachmentType() == AttachmentType.VIDEO,
-                            previewImage.getLoadedBitmap(), previewImage.getImageView()).start();
-                }
-            });
+
         } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
 
             previewImage.setVisibility(View.VISIBLE);
@@ -105,7 +104,6 @@ public class MediaViewHolder extends AttachmentViewHolder {
     @Override
     public void onLoadFailed(Attachment attachment) {
         previewImage.displayTrash();
-        isAttachmentLoaded = false;
     }
 
     @Override
@@ -126,12 +124,12 @@ public class MediaViewHolder extends AttachmentViewHolder {
     @Override
     public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
+        previewImage.hideOverlay();
         isAttachmentLoaded = false;
         videoPlayer.reset();
         videoPlayer.setVisibility(View.GONE);
         previewImage.setVisibility(View.VISIBLE);
 
-        previewImage.hideDownloadOverlay();
         String text = message.getText();
         if ((text != null) && (!StringFormatter.EMPTY_STRING.equals(text))) {
             messageText.setText(text);
@@ -144,13 +142,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
         currentAttachment = attachment;
         currentMediaFile = AttachmentsStorage.getFileFromAttachment(attachment,
                 itemView.getContext(), message.getRoomSecret());
-
-        if (currentMediaFile != null)
-            if (!currentMediaFile.exists())
-                onLoadFailed(attachment);
-
-        if (currentMediaFile == null)
-            onLoadFailed(attachment);
+        previewImage.showOverlay(currentMediaFile, attachment);
 
         previewImage.setAttachment(attachment, getMessageAdapterContract().getRoom(),
                 currentMediaFile, () -> {

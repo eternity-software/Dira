@@ -88,7 +88,7 @@ public class WaterfallImageLoader {
                                                 @Override
                                                 public void run() {
 
-                                                    if (oldFileInfo != imageView.getFileInfo()) {
+                                                    if (!oldFileInfo.getFilePath().equals(imageView.getFileInfo().getFilePath())) {
                                                         add(imageView);
                                                         return;
                                                     }

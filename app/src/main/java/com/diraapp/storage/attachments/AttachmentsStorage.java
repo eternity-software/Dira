@@ -93,6 +93,7 @@ public class AttachmentsStorage {
                             e.printStackTrace();
                         }
                     }
+                    attachmentDownloader = null;
                 }
             });
             attachmentDownloader.start();
