@@ -48,7 +48,7 @@ public class WaterfallImageLoader {
             Thread worker = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    while (!activity.isDestroyed() && isRunning) {
+                    while (isRunning) {
                         try {
 
                             //WaterfallLogger.log("Starting worker...");
@@ -168,7 +168,7 @@ public class WaterfallImageLoader {
 
                             if (!isDataUpdated) {
                                 //WaterfallLogger.log("Data update isn't detected");
-
+                                isRunning = false;
                                 waterfallCallback.onFinishedAllTasks();
                             } else {
                                 isDataUpdated = false;
@@ -179,7 +179,7 @@ public class WaterfallImageLoader {
                             ignored.printStackTrace();
                         }
                     }
-                    isRunning = false;
+
                     //WaterfallLogger.log("Waterfall's worker done!");
                 }
             });
