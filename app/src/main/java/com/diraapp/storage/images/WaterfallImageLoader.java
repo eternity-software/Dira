@@ -48,7 +48,7 @@ public class WaterfallImageLoader {
             Thread worker = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    while (!activity.isDestroyed()) {
+                    while (isRunning && !activity.isDestroyed()) {
                         try {
 
                             WaterfallLogger.log("Starting worker...");

@@ -172,17 +172,17 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
                     attachment.getHeight(),
                     Bitmap.Config.ARGB_8888);
 
-
+            Bitmap previewBitmap = attachment.getBitmapPreview();
+            if (previewBitmap != null) {
+                DiraActivity.runOnMainThread(() -> {
+                    if (!isMainImageLoaded)
+                        imageView.setImageBitmap(previewBitmap);
+                });
+            }
             DiraActivity.runOnMainThread(() -> {
                 if (this.attachment != attachment | isMainImageLoaded) return;
                 imageView.setImageBitmap(dummyBitmap);
-                Bitmap previewBitmap = attachment.getBitmapPreview();
-                if (previewBitmap != null) {
-                    DiraActivity.runOnMainThread(() -> {
-                        if (!isMainImageLoaded)
-                            imageView.setImageBitmap(previewBitmap);
-                    });
-                }
+
                 if (file != null) {
 
                     if (!AttachmentsStorage.isAttachmentSaving(attachment)) {
