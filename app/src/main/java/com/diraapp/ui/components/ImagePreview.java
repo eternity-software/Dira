@@ -220,13 +220,9 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
         if (isLoading) {
             progressBar.setVisibility(VISIBLE);
             downloadButton.setImageBitmap(null);
-            setOnClickListener(v -> {});
-            imageView.setOnClickListener(v -> {});
             downloadButton.setOnClickListener(v -> {
             });
         } else {
-            setOnClickListener(v -> {});
-            imageView.setOnClickListener(v -> {});
             progressBar.setVisibility(GONE);
             downloadButton.setOnClickListener(v -> {
                 SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(getContext(), false,

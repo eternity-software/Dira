@@ -13,9 +13,7 @@ import com.diraapp.R;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.storage.AttachmentDownloadHandler;
 import com.diraapp.storage.attachments.AttachmentDownloader;
-import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.ImagePreview;
@@ -37,6 +35,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
     private File currentMediaFile;
 
     private boolean isAttachmentLoaded = false;
+
     public MediaViewHolder(@NonNull ViewGroup itemView,
                            MessageAdapterContract messageAdapterContract,
                            ViewHolderManagerContract viewHolderManagerContract,
@@ -53,6 +52,8 @@ public class MediaViewHolder extends AttachmentViewHolder {
         previewImage.hideOverlay();
         currentAttachment = attachment;
 
+        if (!previewImage.isMainImageLoaded())
+            previewImage.loadAttachmentFile(file);
 
         previewImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,14 +63,6 @@ public class MediaViewHolder extends AttachmentViewHolder {
                         previewImage.getLoadedBitmap(), previewImage.getImageView()).start();
             }
         });
-
-
-
-
-
-        if(!previewImage.isMainImageLoaded())
-            previewImage.loadAttachmentFile(file);
-
 
         if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
 
@@ -83,22 +76,19 @@ public class MediaViewHolder extends AttachmentViewHolder {
             videoPlayer.setVisibility(View.VISIBLE);
             videoPlayer.attachDebugIndicator(postInflatedViewsContainer);
             DiraVideoPlayer finalVideoPlayer = videoPlayer;
-            previewImage.post(new Runnable() {
-                @Override
-                public void run() {
-                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams
-                            (previewImage.getLayoutParams().width,
-                                    previewImage.getLayoutParams().height);
-                    finalVideoPlayer.setLayoutParams(params);
+            previewImage.post(() -> {
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams
+                        (previewImage.getLayoutParams().width,
+                                previewImage.getLayoutParams().height);
+                finalVideoPlayer.setLayoutParams(params);
 
 
-                    AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
-                    alphaAnimation.setDuration(500);
+                AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
+                alphaAnimation.setDuration(500);
 
-                    //  finalVideoPlayer.setVisibility(View.GONE);
-                    alphaAnimation.setFillAfter(true);
-                    finalVideoPlayer.startAnimation(alphaAnimation);
-                }
+                //  finalVideoPlayer.setVisibility(View.GONE);
+                alphaAnimation.setFillAfter(true);
+                finalVideoPlayer.startAnimation(alphaAnimation);
             });
 
             videoPlayer.play(file.getPath());
@@ -156,30 +146,26 @@ public class MediaViewHolder extends AttachmentViewHolder {
         currentMediaFile = AttachmentDownloader.getFileFromAttachment(attachment,
                 itemView.getContext(), message.getRoomSecret());
 
-        previewImage.showOverlay(currentMediaFile, attachment);
-        previewImage.prepareForAttachment(attachment, getMessageAdapterContract().getRoom(), () -> {
-                    if (currentAttachment != attachment) return;
-
-                    // Load an existing attachment
-                    if (!AttachmentDownloader.isAttachmentSaving(attachment))
-                        onAttachmentLoaded(attachment, currentMediaFile, message);
-                });
-
-        if(currentMediaFile == null)
-        {
+        if (currentMediaFile == null) {
             AttachmentDownloader.setDownloadHandlerForAttachment(progress -> {
                 onLoadPercentChanged(attachment, progress);
             }, attachment);
         }
 
+        previewImage.showOverlay(currentMediaFile, attachment);
+        previewImage.prepareForAttachment(attachment, getMessageAdapterContract().getRoom(), () -> {
+            if (currentAttachment != attachment) return;
+
+            // Load an existing attachment
+            if (!AttachmentDownloader.isAttachmentSaving(attachment))
+                onAttachmentLoaded(attachment, currentMediaFile, message);
+        });
+
         previewImage.loadAttachmentFile(currentMediaFile);
-
-
     }
 
     public void onLoadPercentChanged(Attachment attachment, int percent) {
-        if(attachment == currentAttachment)
-        {
+        if (attachment == currentAttachment) {
             previewImage.setDownloadPercent(percent);
         }
     }
