@@ -57,7 +57,11 @@ public class MediaViewHolder extends AttachmentViewHolder {
                         previewImage.getLoadedBitmap(), previewImage.getImageView()).start();
             }
         });
-        previewImage.setImage(file);
+        if (previewImage.getAttachment() != currentAttachment)
+        {
+            previewImage.setImage(file);
+        }
+
         if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
 
             previewImage.setVisibility(View.VISIBLE);
