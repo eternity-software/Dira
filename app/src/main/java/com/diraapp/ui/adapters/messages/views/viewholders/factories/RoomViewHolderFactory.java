@@ -11,6 +11,7 @@ import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.adapters.messages.views.viewholders.BubbleViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.EmojiMessageViewHolder;
+import com.diraapp.ui.adapters.messages.views.viewholders.FileAttachmentViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.MediaViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.RoomUpdatesViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.TextMessageViewHolder;
@@ -55,6 +56,10 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
             case SELF_EMOJI_MESSAGE:
                 return new EmojiMessageViewHolder(parent, messageAdapterContract,
                         viewHolderManagerContract, isSelfMessage);
+            case ROOM_FILE_ATTACHMENT:
+            case SELF_FILE_ATTACHMENT:
+                return new FileAttachmentViewHolder(parent, messageAdapterContract,
+                        viewHolderManagerContract, isSelfMessage);
             case ROOM_UPDATES:
                 return new RoomUpdatesViewHolder(parent, messageAdapterContract,
                         viewHolderManagerContract);
@@ -79,6 +84,8 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
                     return MessageHolderType.SELF_VOICE_MESSAGE;
                 } else if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
                     return MessageHolderType.SELF_BUBBLE_MESSAGE;
+                } else if (attachment.getAttachmentType() == AttachmentType.FILE) {
+                    return MessageHolderType.SELF_FILE_ATTACHMENT;
                 }
                 return MessageHolderType.SELF_SINGLE_ATTACHMENT_MESSAGE;
 
@@ -100,6 +107,8 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
                 return MessageHolderType.ROOM_VOICE_MESSAGE;
             } else if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
                 return MessageHolderType.ROOM_BUBBLE_MESSAGE;
+            } else if (attachment.getAttachmentType() == AttachmentType.FILE) {
+                return MessageHolderType.ROOM_FILE_ATTACHMENT;
             }
             return MessageHolderType.ROOM_SINGLE_ATTACHMENT_MESSAGE;
         } else if (message.getText().length() > 0) {

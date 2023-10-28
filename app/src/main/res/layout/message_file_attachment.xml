@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/message_file_attachment_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_weight="1">
+
+    <com.diraapp.ui.components.dynamic.ThemeLinearLayout
+        android:id="@+id/message_file_attachment_icon_background"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:padding="10dp"
+        android:background="@drawable/color_circle"
+        app:themeBackgroundColor="message_file_background">
+
+        <com.diraapp.ui.components.dynamic.ThemeImageView
+            android:id="@+id/message_file_attachment_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:themeImageColor="message_file"
+            android:src="@drawable/ic_file_attachment"/>
+    </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical">
+
+        <com.diraapp.ui.components.dynamic.DynamicTextView
+            android:id="@+id/message_file_attachment_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:autoLink="all"
+
+            android:fontFamily="@font/montserratsemibold"
+            android:padding="0dp"
+            android:text="presentation.pptx"
+            android:textSize="15sp"
+
+            app:themeColor="message_color" />
+
+        <com.diraapp.ui.components.dynamic.DynamicTextView
+            android:id="@+id/message_file_attachment_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:autoLink="all"
+
+            android:fontFamily="@font/montserratsemibold"
+            android:padding="0dp"
+            android:text="presentation.pptx"
+            android:textSize="12sp"
+
+            app:themeColor="message_file_size" />
+
+    </LinearLayout>
+
+</LinearLayout>

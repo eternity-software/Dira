@@ -15,6 +15,8 @@ public enum MessageHolderType {
     ROOM_GROUP_ATTACHMENTS_MESSAGE(false),
     SELF_EMOJI_MESSAGE(true),
     ROOM_EMOJI_MESSAGE(false),
+    SELF_FILE_ATTACHMENT(true),
+    ROOM_FILE_ATTACHMENT(false),
     ROOM_UPDATES(false);
     private final boolean isSelf;
 

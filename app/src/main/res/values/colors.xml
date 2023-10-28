@@ -87,6 +87,14 @@
     <color name="self_message_voice_play_background">#727272</color>
     <color name="message_voice_play_background">#1AE3CB</color>
 
+    <color name="self_message_file_background">@color/medium_light_gray</color>
+    <color name="self_message_file">@color/white</color>
+    <color name="self_message_file_size">@color/medium_light_light_gray</color>
+
+    <color name="message_file_background">@color/accent_medium</color>
+    <color name="message_file">#1C534C</color>
+    <color name="message_file_size">#1C534C</color>
+
     <!-- Paint colors !-->
     <color name="paintBlack">#131313</color>
     <color name="paintWhite">#F3F3F3</color>
