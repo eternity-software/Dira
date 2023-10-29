@@ -99,7 +99,6 @@ public class RoomActivity extends DiraActivity
 
     private static final int IS_ROOM_OPENING = -1;
 
-    private static RecyclerView.RecycledViewPool messagesViewsPool = new RecyclerView.RecycledViewPool();
     private String roomSecret;
     private MessagesAdapter messagesAdapter;
     private FilePickerBottomSheet filePickerBottomSheet;
@@ -146,7 +145,6 @@ public class RoomActivity extends DiraActivity
         presenter = new RoomActivityPresenter(roomSecret, getCacheUtils().getString(CacheUtils.ID));
         presenter.attachView(this);
 
-        binding.recyclerView.setRecycledViewPool(messagesViewsPool);
         ((LinearLayoutManager) binding.recyclerView.getLayoutManager()).setInitialPrefetchItemCount(100);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setNestedScrollingEnabled(false);
@@ -213,23 +211,22 @@ public class RoomActivity extends DiraActivity
                 }
             }
         });
-        filePickerBottomSheet = new FilePickerBottomSheet();
-        filePickerBottomSheet.setMultiSelection(true);
-        filePickerBottomSheet.setMultiFilesListener(this);
 
-        filePickerBottomSheet.setRunnable(mediaGridItemListener);
 
         binding.attachButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                filePickerBottomSheet = new FilePickerBottomSheet();
+                filePickerBottomSheet.setMultiSelection(true);
+                filePickerBottomSheet.setMultiFilesListener(RoomActivity.this);
 
+                filePickerBottomSheet.setRunnable(mediaGridItemListener);
                 filePickerBottomSheet.setOnDismiss(new Runnable() {
                     @Override
                     public void run() {
                         onResume();
                     }
                 });
-
 
                 presenter.sendStatus(UserStatusType.PICKING_FILE);
                 filePickerBottomSheet.setMessageText(binding.messageTextInput.getText().toString());
@@ -400,7 +397,7 @@ public class RoomActivity extends DiraActivity
     @Override
     protected void onResume() {
         super.onResume();
-        filePickerBottomSheet.setRunnable(mediaGridItemListener);
+
         presenter.initRoomInfo();
 
         if (lastVisiblePosition != 0) {
@@ -796,7 +793,7 @@ public class RoomActivity extends DiraActivity
             roomName.setText(room.getName());
             if (messagesAdapter != null) return;
             messagesAdapter = new MessagesAdapter(this, new ArrayList<>(), room,
-                    new AsyncLayoutInflater(this), new RoomViewHolderFactory(),
+                    new AsyncLayoutInflater(RoomActivity.this), new RoomViewHolderFactory(),
                     getCacheUtils());
 
             binding.recyclerView.setAdapter(messagesAdapter);
@@ -1033,7 +1030,7 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public Context getContext() {
-        return this;
+        return RoomActivity.this;
     }
 
     @Override

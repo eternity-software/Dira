@@ -264,4 +264,11 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
             }
         }
     }
+
+    @Override
+    public void onViewRecycled() {
+        super.onViewRecycled();
+        if(!isInitialized) return;
+
+    }
 }

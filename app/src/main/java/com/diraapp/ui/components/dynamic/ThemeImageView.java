@@ -33,10 +33,10 @@ public class ThemeImageView extends androidx.appcompat.widget.AppCompatImageView
 
     @SuppressLint("ResourceType")
     private void initialize(Context context, AttributeSet attrs) {
-
+        TypedArray typedArray = null;
         try {
             int[] sets = {R.attr.themeBackgroundTint, R.attr.themeImageColor};
-            TypedArray typedArray = context.obtainStyledAttributes(attrs, sets);
+            typedArray = context.obtainStyledAttributes(attrs, sets);
             String backgroundTint = String.valueOf(typedArray.getText(0));
             String color = String.valueOf(typedArray.getText(1));
 
@@ -46,18 +46,19 @@ public class ThemeImageView extends androidx.appcompat.widget.AppCompatImageView
                 setColorFilter(Theme.getColor(getContext(), Theme.getResId(color, R.color.class)));
             }
 
-            try {
-                getBackground().setColorFilter(Theme.getColor(backgroundTint), PorterDuff.Mode.SRC_ATOP);
-            } catch (NoSuchValueException e) {
-
-                if (getBackground() != null)
+            if (getBackground() != null) {
+                try {
+                    getBackground().setColorFilter(Theme.getColor(backgroundTint), PorterDuff.Mode.SRC_ATOP);
+                } catch (NoSuchValueException e) {
                     getBackground().setColorFilter(Theme.getColor(getContext(), Theme.getResId(backgroundTint, R.color.class)), PorterDuff.Mode.SRC_ATOP);
+                }
             }
+
             typedArray.recycle();
         } catch (Exception e) {
+            if (typedArray != null) typedArray.recycle();
             e.printStackTrace();
         }
-
-
     }
+
 }

@@ -167,6 +167,8 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     }
 
     public void bindUserPicture(@NonNull Message message, @Nullable Message previousMessage) {
+        if(profilePicture != null)
+             profilePicture.setImageBitmap(null);
         if (!isSelfMessage) {
 
             boolean showProfilePicture = isProfilePictureRequired(message, previousMessage);

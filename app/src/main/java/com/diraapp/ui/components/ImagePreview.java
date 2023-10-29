@@ -43,7 +43,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
 
     private Room room;
 
-    private Bitmap loadedBitmap;
+
 
     private WaterfallBalancer waterfallBalancer;
 
@@ -98,7 +98,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
     }
 
     public Bitmap getLoadedBitmap() {
-        return loadedBitmap;
+        return null;
     }
 
     public ImageView getImageView() {
@@ -121,7 +121,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
                 Bitmap bitmap = AppStorage.getBitmapFromPath(mediaFile.getPath(), getContext());
                 new Handler(Looper.getMainLooper()).post(() -> {
                     if (attachment == currentAttachment) {
-                        loadedBitmap = bitmap;
+
                         setImageBitmap(bitmap);
                         isMainImageLoaded = true;
                     }
@@ -135,7 +135,6 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
     private void setImageBitmap(Bitmap bitmap) {
         DiraActivity.runOnMainThread(() -> {
             imageView.setImageBitmap(bitmap);
-            loadedBitmap = bitmap;
         });
 
     }
@@ -252,7 +251,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
 
 
         isMainImageLoaded = true;
-        loadedBitmap = bitmap;
+
 
         new Handler(Looper.getMainLooper()).post(() -> {
             try {
@@ -277,11 +276,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
 
     private void showDebugInfo() {
         overlay.setVisibility(VISIBLE);
-        sizeTextView.setText("DEBUG INFO: " + loadedBitmap.getWidth() + "x" + loadedBitmap.getHeight() + ", aid: " + attachment.getId() + "\n" +
-                "VIEW SIZE: " + getMeasuredWidth() + "x" + getMeasuredHeight() + "\n" +
-                "REAL SIZE: " + AppStorage.getStringSize(new File(fileInfo.getFilePath()).length()) + ", " +
-                "ATT. SIZE: " + AppStorage.getStringSize(attachment.getSize()));
-        downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_info));
+
         progressBar.setVisibility(GONE);
     }
 

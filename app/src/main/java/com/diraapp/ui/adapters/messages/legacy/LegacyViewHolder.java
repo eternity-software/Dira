@@ -115,7 +115,7 @@ public class LegacyViewHolder extends RecyclerView.ViewHolder {
 
 
         bubbleContainer = itemView.findViewById(BubbleMessageView.BUBBLE_CONTAINER_ID);
-        bubblePlayer = itemView.findViewById(R.id.bubble_player);
+
 
         imageView = itemView.findViewById(R.id.image_view);
         videoPlayer = itemView.findViewById(R.id.video_player);

@@ -32,6 +32,7 @@ public interface MessageAdapterContract {
     Context getContext();
 
     MessageReplyListener getReplyListener();
+    void runOnUiThread(Runnable runnable);
 
     void onFirstMessageScrolled(Message message, int index);
 

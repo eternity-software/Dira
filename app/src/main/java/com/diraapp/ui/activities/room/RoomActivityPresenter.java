@@ -175,6 +175,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     @Override
     public void detachView() {
         UpdateProcessor.getInstance().removeUpdateListener(this);
+        this.view = null;
     }
 
     @Override
@@ -224,7 +225,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
                 boolean isMessagesRemoved = messageList.size() > MAX_ADAPTER_MESSAGES_COUNT;
 
-                DiraActivity.runOnMainThread(() -> {
+                view.runOnUiThread(() -> {
                     messageList.addAll(oldMessages);
                     view.notifyMessageInsertedWithoutScroll(
                             index + 1, index + oldMessages.size());
@@ -268,7 +269,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
                 boolean isMessagesRemoved = messageList.size() > MAX_ADAPTER_MESSAGES_COUNT;
                 int size = messageList.size();
-                DiraActivity.runOnMainThread(() -> {
+                view.runOnUiThread(() -> {
                             for (Message m : newMessages) {
                                 messageList.add(0, m);
                             }

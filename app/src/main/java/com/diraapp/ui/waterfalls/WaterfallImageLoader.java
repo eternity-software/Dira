@@ -61,7 +61,7 @@ public class WaterfallImageLoader {
                                     if (imageView != null) {
                                         //WaterfallLogger.log("Loading " + imageView.getFileInfo());
                                         DiraMediaInfo oldFileInfo = imageView.getFileInfo();
-                                        final Bitmap bitmap;
+                                        Bitmap bitmap;
                                         if (imageView.getFileInfo().isImage()) {
                                             if (imageView instanceof ImagePreview) {
                                                 bitmap = AppStorage.getBitmapFromPath(imageView.getFileInfo().getFilePath(), activity);
@@ -187,6 +187,10 @@ public class WaterfallImageLoader {
         }
     }
 
+    public void reset()
+    {
+        imagesQueue.clear();
+    }
 
     public void add(WaterfallImageView imageView) {
         if (!(imageView instanceof View)) throw new RuntimeException("Must extend View");

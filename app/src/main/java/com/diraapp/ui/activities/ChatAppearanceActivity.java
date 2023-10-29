@@ -194,6 +194,11 @@ public class ChatAppearanceActivity extends DiraActivity {
             }
 
             @Override
+            public void runOnUiThread(Runnable runnable) {
+                runOnUiThread(runnable);
+            }
+
+            @Override
             public void onFirstMessageScrolled(Message message, int index) {
             }
 

@@ -149,9 +149,12 @@ public class DiraActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+
         super.onDestroy();
         for (DiraActivityListener listener : new ArrayList<>(activityListenerList))
             listener.onDestroy();
+
+        activityListenerList.clear();
     }
 
     @Override
