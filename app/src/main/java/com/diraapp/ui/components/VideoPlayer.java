@@ -56,7 +56,7 @@ public class VideoPlayer extends RelativeLayout implements TextureView.SurfaceTe
         if (isInit) return;
 
 
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(getContext());
         rootView = inflater.inflate(R.layout.video_player, this);
         textureView = findViewById(R.id.videoPlayerTextureView);
         loadingView = findViewById(R.id.videoPlayerLoadingView);

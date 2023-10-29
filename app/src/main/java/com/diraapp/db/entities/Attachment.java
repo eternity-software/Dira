@@ -1,5 +1,6 @@
 package com.diraapp.db.entities;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 
 import androidx.room.ColumnInfo;
@@ -46,13 +47,40 @@ public class Attachment {
         try {
             Bitmap bitmap = AppStorage.getBitmapFromBase64(imagePreview);
 
-            return Bitmap.createScaledBitmap(bitmap, width,
-                    height, true);
+            float scale = calculateWidthScale(50);
+            return Bitmap.createScaledBitmap(bitmap, (int) (width * scale),
+                    (int) (height * scale), true);
         } catch (Exception e) {
             Logger.logDebug(getClass().getSimpleName(), "Not found preview for " + attachmentType.name());
             e.printStackTrace();
             return null;
         }
+    }
+
+    public float calculateDisplayDependScaleFactor() {
+        int width = getWidth();
+        if (width > Resources.getSystem().getDisplayMetrics().widthPixels) {
+
+            float scale = (float) Resources.getSystem().getDisplayMetrics().widthPixels * 0.75f / width;
+
+            return scale;
+
+        }
+        return 1;
+    }
+
+
+    public float calculateWidthScale(int maxWidth) {
+        int width = getWidth();
+
+
+        float scale = (float) maxWidth / width;
+
+        if (scale < 1)
+            return scale;
+
+
+        return 1;
     }
 
     public long getId() {

@@ -185,7 +185,7 @@ public class ChatAppearanceActivity extends DiraActivity {
 
             @Override
             public Context getContext() {
-                return ChatAppearanceActivity.this.getBaseContext();
+                return ChatAppearanceActivity.this.getApplicationContext();
             }
 
             @Override

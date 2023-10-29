@@ -175,7 +175,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     @Override
     public void detachView() {
         UpdateProcessor.getInstance().removeUpdateListener(this);
-        this.view = null;
+      //  this.view = null;
     }
 
     @Override

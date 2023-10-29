@@ -265,6 +265,7 @@ public class AppStorage {
                     Base64.DEFAULT
             );
 
+
             return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
         } catch (Exception e) {
             e.printStackTrace();

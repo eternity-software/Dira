@@ -174,6 +174,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
         super.onViewRecycled();
         if (!isInitialized) return;
         videoPlayer.stop();
+        previewImage.setImageBitmap(null);
     }
 
     @Override

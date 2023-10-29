@@ -33,7 +33,7 @@ public class MessageAttachmentToLargeView extends LinearLayout {
 
         this.setId(R.id.attachment_too_large);
 
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.room_message_attachment_too_large, this);
 
 

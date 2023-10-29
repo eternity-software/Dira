@@ -152,7 +152,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         checkReadStatus(message);
         itemView.setClickable(true);
         itemView.setOnClickListener((View v) -> {
-            BalloonMessageMenu balloonMessageMenu = new BalloonMessageMenu(messageAdapterContract.getContext(),
+            BalloonMessageMenu balloonMessageMenu = new BalloonMessageMenu(itemView.getContext(),
                     messageAdapterContract.getMembers(),
                     messageAdapterContract.getCacheUtils().getString(CacheUtils.ID));
             balloonMessageMenu.createBalloon(message, itemView);
@@ -186,7 +186,10 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
                     if (showProfilePicture) {
                         if (member.getImagePath() != null) {
                             // TODO: custom image loader
-                            Picasso.get().load(new File(member.getImagePath())).into(profilePicture);
+                            int imageSize = DeviceUtils.dpToPx(40, itemView.getContext());
+                            Picasso.get().load(new File(member.getImagePath()))
+                                    .resize(imageSize, imageSize)
+                                    .into(profilePicture);
                         } else {
                             profilePicture.setImageResource(R.drawable.placeholder);
                         }
@@ -261,7 +264,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         if (message.getMessageReadingList() != null && messageBackground.getBackground() != null) {
             if (message.getMessageReadingList().size() == 0) {
                 messageBackground.getBackground().setColorFilter(
-                        Theme.getColor(messageAdapterContract.getContext(),
+                        Theme.getColor(itemView.getContext(),
                                 R.color.unread_message_background), PorterDuff.Mode.SRC_IN);
             } else {
                 if (!isAnimated) {

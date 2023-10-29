@@ -34,7 +34,7 @@ public class MediaGridItem extends RelativeLayout implements WaterfallImageView 
 
         if (!isInitialized) {
             isInitialized = true;
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = LayoutInflater.from(getContext());
 
             rootView = inflater.inflate(R.layout.media_grid_item, this);
             fileParingImageView = findViewById(R.id.fileImageView);

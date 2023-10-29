@@ -81,7 +81,7 @@ public class BorderScaleView extends RelativeLayout {
     }
 
     private void init() {
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(getContext());
         rootView = inflater.inflate(R.layout.crop_view, this);
         borderPx = DeviceUtils.dpToPx(borderDp, getContext());
         setOnTouchListener(new OnTouchListener() {

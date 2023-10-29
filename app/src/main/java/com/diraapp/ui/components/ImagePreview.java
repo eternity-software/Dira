@@ -1,7 +1,9 @@
 package com.diraapp.ui.components;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
@@ -24,6 +26,7 @@ import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.ui.activities.DiraActivity;
+import com.diraapp.utils.Logger;
 
 import java.io.File;
 
@@ -43,13 +46,16 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
 
     private Room room;
 
-
+    private Bitmap loadedBitmap;
 
     private WaterfallBalancer waterfallBalancer;
 
     private DiraMediaInfo fileInfo;
 
     private Runnable onReady;
+
+    private static int bitmapCounter = 0;
+
 
 
     public ImagePreview(Context context, AttributeSet attrs) {
@@ -79,7 +85,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
 
         if (!isInitialized) {
 
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = LayoutInflater.from(getContext());
 
             rootView = inflater.inflate(R.layout.preview_image, this);
             imageView = findViewById(R.id.preview_image);
@@ -98,7 +104,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
     }
 
     public Bitmap getLoadedBitmap() {
-        return null;
+        return loadedBitmap;
     }
 
     public ImageView getImageView() {
@@ -132,11 +138,24 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
 
     }
 
-    private void setImageBitmap(Bitmap bitmap) {
+    public void setImageBitmap(Bitmap bitmap) {
+        Logger.logDebug("ImagePreviewView", "Bitmap updated (" + bitmapCounter++  +" )");
         DiraActivity.runOnMainThread(() -> {
+            recycleBitmap();
+            loadedBitmap = bitmap;
             imageView.setImageBitmap(bitmap);
         });
 
+    }
+
+    private void recycleBitmap()
+    {
+        if(loadedBitmap != null)
+        {
+            if(!loadedBitmap.isRecycled()) loadedBitmap.recycle();
+            loadedBitmap = null;
+
+        }
     }
 
 
@@ -148,27 +167,49 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
         this.room = room;
         isMainImageLoaded = false;
         this.attachment = attachment;
-        imageView.setImageBitmap(null);
+        setImageBitmap(null);
 
 
         DiraActivity.runGlobalBackground(() -> {
             if (this.attachment != attachment | isMainImageLoaded) return;
 
-            final Bitmap dummyBitmap = Bitmap.createBitmap(attachment.getWidth(),
-                    attachment.getHeight(),
-                    Bitmap.Config.ARGB_8888);
+            int height = attachment.getHeight();
+            int width = attachment.getWidth();
+            if(width > Resources.getSystem().getDisplayMetrics().widthPixels)
+            {
+
+                float scale = attachment.calculateWidthScale(width);
+
+                width = (int) (width * scale);
+                height = (int) (height * scale);
+
+            }
+
+            final Bitmap dummyBitmap = Bitmap.createBitmap(width,
+                    height,
+                    Bitmap.Config.ALPHA_8);
 
 
             DiraActivity.runOnMainThread(() -> {
-                if (this.attachment != attachment | isMainImageLoaded) return;
-                imageView.setImageBitmap(dummyBitmap);
+                if (this.attachment != attachment | isMainImageLoaded) {
+                    dummyBitmap.recycle();
+
+                    return;
+                }
+                setImageBitmap(dummyBitmap);
 
             });
             Bitmap previewBitmap = attachment.getBitmapPreview();
             if (previewBitmap != null) {
                 DiraActivity.runOnMainThread(() -> {
                     if (!isMainImageLoaded)
-                        imageView.setImageBitmap(previewBitmap);
+                    {
+                        setImageBitmap(previewBitmap);
+                    }
+                    else {
+                        previewBitmap.recycle();
+                    }
+
                 });
             }
 

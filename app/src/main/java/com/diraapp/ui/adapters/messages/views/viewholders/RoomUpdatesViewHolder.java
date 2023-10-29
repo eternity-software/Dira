@@ -73,7 +73,9 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
 
         String imagePath = getMessageAdapterContract().getRoom().getImagePath();
         if (imagePath != null) {
-            Picasso.get().load(new File(imagePath)).into(profilePicture);
+            int imageSize = DeviceUtils.dpToPx(40, itemView.getContext());
+            Picasso.get().load(new File(imagePath))
+                    .resize(imageSize, imageSize).into(profilePicture);
         }
 
         Context context = this.itemView.getContext();

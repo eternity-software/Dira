@@ -148,12 +148,15 @@ public class RoomActivity extends DiraActivity
         ((LinearLayoutManager) binding.recyclerView.getLayoutManager()).setInitialPrefetchItemCount(100);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setNestedScrollingEnabled(false);
+        binding.recyclerView.setItemViewCacheSize(2);
 
         ViewSwiper viewSwiper = new ViewSwiper(binding.recyclerView);
         viewSwiper.setViewSwiperListener((ViewSwiperListener) presenter);
 
 //        binding.recyclerView.getRecycledViewPool().setMaxRecycledViews(1, 4);
 //        binding.recyclerView.getRecycledViewPool().setMaxRecycledViews(21, 4);
+
+
 
         TextView nameView = findViewById(R.id.room_name);
         nameView.setText(roomName);
@@ -369,10 +372,12 @@ public class RoomActivity extends DiraActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        binding.recyclerView.getRecycledViewPool().clear();
         messagesAdapter.release();
         presenter.detachView();
         UpdateProcessor.getInstance().removeProcessorListener(this);
         UserStatusHandler.getInstance().removeListener(this);
+        System.gc();
     }
 
     @Override

@@ -51,6 +51,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
     private List<Message> messages = new ArrayList<>();
     private LegacyRoomMessagesAdapter.MessageAdapterListener messageAdapterListener;
 
+    private boolean isDestroyed = false;
+
 
     public MessagesAdapter(MessageAdapterContract messageAdapterContract, List<Message> messages,
                            Room room, AsyncLayoutInflater asyncLayoutInflater,
@@ -89,14 +91,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
                         FrameLayout.LayoutParams.WRAP_CONTENT);
 
                 container.setLayoutParams(params);*/
-                DiraActivity.runOnMainThread(() -> {
-                    container.getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
-                    container.addView(view);
-                    viewHolder.onViewInflated(view);
-
-                });
 
 
+                ignoredParent.getLayoutParams().height = FrameLayout.LayoutParams.WRAP_CONTENT;
+                ignoredParent.addView(view);
+                viewHolder.onViewInflated(view);
             }
         };
 
@@ -157,6 +156,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<BaseMessageViewHolder>
     }
 
     public void release() {
+        isDestroyed = true;
         messageAttachmentLoader.release();
         diraMediaPlayer.reset();
         diraMediaPlayer.release();

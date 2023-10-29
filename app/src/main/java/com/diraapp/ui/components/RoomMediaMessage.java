@@ -20,7 +20,7 @@ public class RoomMediaMessage extends LinearLayout {
     private void initView() {
         if (isInit) return;
 
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.message_media, this);
 
         isInit = true;

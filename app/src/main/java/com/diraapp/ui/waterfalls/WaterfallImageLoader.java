@@ -1,8 +1,10 @@
 package com.diraapp.ui.waterfalls;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.view.Display;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -10,11 +12,13 @@ import android.view.animation.DecelerateInterpolator;
 
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DiraMediaInfo;
+import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.components.ImagePreview;
 import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.ui.components.WaterfallImageView;
 import com.diraapp.utils.Logger;
+import com.diraapp.utils.android.DeviceUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -65,12 +69,22 @@ public class WaterfallImageLoader {
                                         if (imageView.getFileInfo().isImage()) {
                                             if (imageView instanceof ImagePreview) {
                                                 bitmap = AppStorage.getBitmapFromPath(imageView.getFileInfo().getFilePath(), activity);
+
+
+                                                float scale = (float) Resources.getSystem().getDisplayMetrics().widthPixels * 0.5f /  bitmap.getWidth();
+
+                                                if(scale > 1) scale = 1;
+                                                bitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * scale),
+                                                            (int) (bitmap.getHeight() * scale), true);
+
                                             } else {
                                                 bitmap = decodeFile(new File(imageView.getFileInfo().getFilePath()));
                                             }
                                         } else {
                                             bitmap = imageView.getFileInfo().getVideoThumbnail();
                                         }
+
+
 
 
                                         if (bitmap != null) {
@@ -84,11 +98,12 @@ public class WaterfallImageLoader {
                                                 subtitle = "";
                                             }
 
+                                            Bitmap finalBitmap = bitmap;
                                             activity.runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
-
                                                     if (!oldFileInfo.getFilePath().equals(imageView.getFileInfo().getFilePath())) {
+                                                        finalBitmap.recycle();
                                                         add(imageView);
                                                         return;
                                                     }
@@ -104,7 +119,14 @@ public class WaterfallImageLoader {
 
                                                                 mediaGridItem.setSubtitle(subtitle);
                                                             }
-                                                            imageView.getImageView().setImageBitmap(bitmap);
+                                                            if (imageView instanceof ImagePreview)
+                                                            {
+                                                                ((ImagePreview) imageView).setImageBitmap(finalBitmap);
+                                                            }
+                                                            else
+                                                            {
+                                                                imageView.getImageView().setImageBitmap(finalBitmap);
+                                                            }
 
 
                                                             Animation fadeIn = new AlphaAnimation(0, 1);
@@ -114,13 +136,13 @@ public class WaterfallImageLoader {
 
                                                             if (imageView instanceof MediaGridItem) {
 
-                                                                activity.performScaleAnimation(0, 1, (View) imageView);
+                                                                activity.performScaleAnimation(0.5f, 1, (View) imageView);
                                                             }
 
 
                                                             imageView.getImageView().startAnimation(fadeIn);
                                                             if (waterfallCallback != null) {
-                                                                imageView.onImageBind(bitmap);
+                                                                imageView.onImageBind(finalBitmap);
                                                                 waterfallCallback.onImageProcessedSuccess(imageView);
                                                             }
                                                         } else {
@@ -130,6 +152,7 @@ public class WaterfallImageLoader {
                                                             waterfallCallback.onImageReplaced(imageView);
                                                         }
                                                     } catch (Exception e) {
+                                                        finalBitmap.recycle();
                                                         if (waterfallCallback != null) {
                                                             waterfallCallback.onImageProcessedError(imageView);
                                                         }
@@ -137,8 +160,10 @@ public class WaterfallImageLoader {
                                                     }
 
 
+
                                                 }
                                             });
+
                                         } else {
                                             //WaterfallLogger.log("bitmap null " + imageView.getFileInfo().isImage());
                                             if (waterfallCallback != null) {
@@ -225,7 +250,7 @@ public class WaterfallImageLoader {
 
         //Decode with inSampleSize
         BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = scale;
+        o2.inSampleSize = 2;
         fis = new FileInputStream(f);
         b = BitmapFactory.decodeStream(fis, null, o2);
         fis.close();

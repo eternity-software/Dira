@@ -96,7 +96,8 @@ public class MessageReplyComponent extends FrameLayout {
                         getContext(), config.getRoom().getSecretName());
 
                 if (file != null) {
-                    Picasso.get().load(file).into(replyImage);
+                    int imageSize = DeviceUtils.dpToPx(40, getContext());
+                    Picasso.get().load(file).resize(imageSize, imageSize).into(replyImage);
                     replyImageCard.setVisibility(View.VISIBLE);
                 }
                 showImage = true;
@@ -146,7 +147,7 @@ public class MessageReplyComponent extends FrameLayout {
     private void initView() {
         if (isInit) return;
 
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.message_reply_component, this);
 
         FrameLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,

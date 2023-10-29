@@ -34,7 +34,7 @@ public class BubbleMessageView extends CardView {
         this.setId(BUBBLE_CONTAINER_ID);
 
 
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.message_bubble, this);
 
         isInit = true;

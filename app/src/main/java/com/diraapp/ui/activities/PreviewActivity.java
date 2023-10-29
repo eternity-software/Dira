@@ -46,6 +46,7 @@ public class PreviewActivity extends DiraActivity {
     public static final String EXTRA_CLIP_RECT = "rect";
     public static final String PREVIEW = "preview";
     private static Bitmap bitmapPool;
+    private Bitmap bitmap;
     private VideoPlayer videoPlayer;
     private boolean isShown = false;
     private TouchImageView touchImageView;
@@ -101,6 +102,7 @@ public class PreviewActivity extends DiraActivity {
         bitmapPool = null;
 
 
+
         getWindow().getSharedElementEnterTransition()
                 .addListener(new Transition.TransitionListener() {
                     @Override
@@ -125,7 +127,45 @@ public class PreviewActivity extends DiraActivity {
 
                     @Override
                     public void onTransitionEnd(Transition transition) {
+                        if (isVideo) {
+                            videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
+                                @Override
+                                public void onStarted() {
 
+                                }
+
+                                @Override
+                                public void onPaused() {
+
+                                }
+
+                                @Override
+                                public void onReleased() {
+
+                                }
+
+                                @Override
+                                public void onReady(int width, int height) {
+                                    try {
+                                        videoPlayer.play(uri);
+                                        videoPlayer.setVolume(1);
+                                    } catch (VideoPlayerException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+
+
+                        } else {
+                            videoPlayer.setVisibility(View.GONE);
+                            DiraActivity.runGlobalBackground(() -> {
+                                Bitmap bitmap = AppStorage.getBitmapFromPath(uri);
+                                runOnUiThread(() -> {
+                                    PreviewActivity.this.bitmap = bitmap;
+                                    touchImageView.setImageBitmap(bitmap);
+                                });
+                            });
+                        }
                     }
 
                     @Override
@@ -225,44 +265,7 @@ public class PreviewActivity extends DiraActivity {
 
         TextView sizeView = findViewById(R.id.size_view);
         sizeView.setText(AppStorage.getStringSize(new File(uri).length()));
-        if (isVideo) {
-            videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
-                @Override
-                public void onStarted() {
 
-                }
-
-                @Override
-                public void onPaused() {
-
-                }
-
-                @Override
-                public void onReleased() {
-
-                }
-
-                @Override
-                public void onReady(int width, int height) {
-                    try {
-                        videoPlayer.play(uri);
-                        videoPlayer.setVolume(1);
-                    } catch (VideoPlayerException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-
-        } else {
-            videoPlayer.setVisibility(View.GONE);
-            DiraActivity.runGlobalBackground(() -> {
-                Bitmap bitmap = AppStorage.getBitmapFromPath(uri);
-                runOnUiThread(() -> {
-                    touchImageView.setImageBitmap(bitmap);
-                });
-            });
-        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getSharedElementEnterTransition().setInterpolator(new DecelerateInterpolator(2f));
@@ -325,7 +328,12 @@ public class PreviewActivity extends DiraActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        touchImageView.setImageBitmap(null);
         videoPlayer.release();
+
+        if(bitmap != null)
+            bitmap.recycle();
+        bitmap = null;
     }
 
     @Override

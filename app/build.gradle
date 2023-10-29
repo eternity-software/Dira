@@ -67,7 +67,7 @@ android {
 
 
 dependencies {
-
+    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
 
     implementation 'jp.wasabeef:blurry:4.0.1'
     implementation 'id.zelory:compressor:3.0.1'

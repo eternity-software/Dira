@@ -47,14 +47,15 @@ import java.util.concurrent.Executors;
  */
 public class DiraActivity extends AppCompatActivity {
 
-    private static final ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(8);
+    private static final ExecutorService staticThreadPoolExecutor = Executors.newFixedThreadPool(8);
+    private final ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(3);
     private final List<DiraActivityListener> activityListenerList = new ArrayList<>();
     private WaterfallBalancer waterfallBalancer;
     private CacheUtils cacheUtils;
 
 
     public static void runGlobalBackground(Runnable runnable) {
-        threadPoolExecutor.execute(runnable);
+        staticThreadPoolExecutor.execute(runnable);
     }
 
     public static void runOnMainThread(Runnable runnable) {

@@ -62,7 +62,7 @@ public class DiraMediaInfo {
     }
 
     public Bitmap getVideoThumbnail() {
-        return ThumbnailUtils.createVideoThumbnail(filePath, MediaStore.Video.Thumbnails.MINI_KIND);
+        return ThumbnailUtils.createVideoThumbnail(filePath, MediaStore.Video.Thumbnails.MICRO_KIND);
     }
 
     public String getName() {
