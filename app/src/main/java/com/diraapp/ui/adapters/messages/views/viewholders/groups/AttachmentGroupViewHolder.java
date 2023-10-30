@@ -193,6 +193,7 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
                 RelativeLayout.LayoutParams.MATCH_PARENT);
 
         imagePreview.getImageView().setLayoutParams(imageParams);
+        getMessageAdapterContract().addListener(imagePreview);
 
         imagePreview.getImageView().setScaleType(ImageView.ScaleType.CENTER_CROP);
         int padding = DeviceUtils.dpToPx(1f, rootView.getContext());

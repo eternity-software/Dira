@@ -7,6 +7,7 @@ import android.view.View;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.ui.activities.DiraActivityListener;
 import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.ui.activities.PreparedActivity;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
@@ -42,4 +43,5 @@ public interface MessageAdapterContract {
     PreparedActivity preparePreviewActivity(String filePath, boolean isVideo, Bitmap preview, View transitionSource);
 
     void attachVideoPlayer(DiraVideoPlayer player);
+    void addListener(DiraActivityListener player);
 }

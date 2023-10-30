@@ -24,13 +24,14 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
+import com.diraapp.ui.activities.DiraActivityListener;
 import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.utils.Logger;
 
 import java.io.File;
 
-public class ImagePreview extends RelativeLayout implements WaterfallImageView {
+public class ImagePreview extends RelativeLayout implements WaterfallImageView, DiraActivityListener {
 
     private View rootView;
     private ImageView imageView;
@@ -95,6 +96,11 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView {
             downloadButton = findViewById(R.id.button_download);
             isInitialized = true;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        recycleBitmap();
     }
 
     @Override

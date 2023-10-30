@@ -121,6 +121,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
         messageText = itemView.findViewById(R.id.message_text);
         previewImage.setVisibility(View.VISIBLE);
         previewImage.setWaterfallBalancer(getMessageAdapterContract().getWaterfallBalancer());
+        getMessageAdapterContract().addListener(previewImage);
         getMessageAdapterContract().attachVideoPlayer(videoPlayer);
     }
 
