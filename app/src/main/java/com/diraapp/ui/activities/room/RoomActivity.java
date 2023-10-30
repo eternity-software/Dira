@@ -99,6 +99,7 @@ public class RoomActivity extends DiraActivity
 
     private static final int IS_ROOM_OPENING = -1;
 
+    private static final RecyclerView.RecycledViewPool recycledViewPool = new RecyclerView.RecycledViewPool();
     private String roomSecret;
     private MessagesAdapter messagesAdapter;
     private FilePickerBottomSheet filePickerBottomSheet;
@@ -146,6 +147,7 @@ public class RoomActivity extends DiraActivity
         presenter.attachView(this);
 
         ((LinearLayoutManager) binding.recyclerView.getLayoutManager()).setInitialPrefetchItemCount(100);
+        binding.recyclerView.setRecycledViewPool(recycledViewPool);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setNestedScrollingEnabled(false);
         binding.recyclerView.setItemViewCacheSize(2);
@@ -372,7 +374,7 @@ public class RoomActivity extends DiraActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        binding.recyclerView.getRecycledViewPool().clear();
+       // binding.recyclerView.getRecycledViewPool().clear();
         messagesAdapter.release();
         presenter.detachView();
         UpdateProcessor.getInstance().removeProcessorListener(this);
@@ -872,7 +874,7 @@ public class RoomActivity extends DiraActivity
         if (start == IS_ROOM_OPENING) {
             // Need to clear pool for correcting touch scenario for not recycled views
             // TODO: investigation required, we must have one pool for all messages in future
-            binding.recyclerView.getRecycledViewPool().clear();
+          //  binding.recyclerView.getRecycledViewPool().clear();
             messagesAdapter.notifyDataSetChanged();
         } else {
             messagesAdapter.notifyItemRangeInserted(start, last - start);
