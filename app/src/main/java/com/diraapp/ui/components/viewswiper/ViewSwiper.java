@@ -159,4 +159,8 @@ public class ViewSwiper {
 
     }
 
+    public void removeListener() {
+        viewSwiperListener = null;
+    }
+
 }

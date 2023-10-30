@@ -210,6 +210,11 @@ public class ChatAppearanceActivity extends DiraActivity {
             @Override
             public void attachVideoPlayer(DiraVideoPlayer player) {
             }
+
+            @Override
+            public void addListener(DiraActivityListener player) {
+
+            }
         };
 
         messagesAdapter = new MessagesAdapter(contract, messages, room,

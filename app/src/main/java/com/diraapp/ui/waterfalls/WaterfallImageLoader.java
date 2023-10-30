@@ -68,14 +68,20 @@ public class WaterfallImageLoader {
                                         Bitmap bitmap;
                                         if (imageView.getFileInfo().isImage()) {
                                             if (imageView instanceof ImagePreview) {
-                                                bitmap = AppStorage.getBitmapFromPath(imageView.getFileInfo().getFilePath(), activity);
+                                                Bitmap oldBitmap = AppStorage.getBitmapFromPath(imageView.getFileInfo().getFilePath(), activity);
 
 
-                                                float scale = (float) Resources.getSystem().getDisplayMetrics().widthPixels * 0.5f /  bitmap.getWidth();
+                                                float scale = (float) Resources.getSystem().getDisplayMetrics().widthPixels * 0.5f /  oldBitmap.getWidth();
 
-                                                if(scale > 1) scale = 1;
-                                                bitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * scale),
-                                                            (int) (bitmap.getHeight() * scale), true);
+                                                if (scale >= 1) {
+                                                    bitmap = oldBitmap;
+                                                } else {
+                                                    bitmap = Bitmap.createScaledBitmap(oldBitmap, (int) (oldBitmap.getWidth() * scale),
+                                                            (int) (oldBitmap.getHeight() * scale), true);
+
+                                                    oldBitmap.recycle();
+                                                    oldBitmap = null;
+                                                }
 
                                             } else {
                                                 bitmap = decodeFile(new File(imageView.getFileInfo().getFilePath()));

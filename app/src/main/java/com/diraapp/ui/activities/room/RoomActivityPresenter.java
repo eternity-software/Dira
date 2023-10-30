@@ -174,6 +174,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     @Override
     public void detachView() {
+        view = null;
         UpdateProcessor.getInstance().removeUpdateListener(this);
       //  this.view = null;
     }
@@ -530,7 +531,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void onSwiped(int position) {

@@ -99,7 +99,7 @@ public class RoomActivity extends DiraActivity
 
     private static final int IS_ROOM_OPENING = -1;
 
-    private static final RecyclerView.RecycledViewPool recycledViewPool = new RecyclerView.RecycledViewPool();
+    private final RecyclerView.RecycledViewPool recycledViewPool = new RecyclerView.RecycledViewPool();
     private String roomSecret;
     private MessagesAdapter messagesAdapter;
     private FilePickerBottomSheet filePickerBottomSheet;

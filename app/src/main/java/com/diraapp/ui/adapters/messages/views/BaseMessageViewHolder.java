@@ -69,6 +69,8 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
 
     private ValueAnimator messageBackgroundAnimator;
 
+    private boolean isOnScreen = true;
+
     public BaseMessageViewHolder(@NonNull ViewGroup itemView, MessageAdapterContract messageAdapterContract,
                                  ViewHolderManagerContract viewHolderManagerContract, boolean isSelfMessage) {
         super(itemView);
@@ -148,6 +150,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
      * @param previousMessage
      */
     public void bindMessage(@NonNull Message message, @Nullable Message previousMessage) {
+        isOnScreen = true;
         fillDateAndTime(message, previousMessage);
         checkReadStatus(message);
         itemView.setClickable(true);
@@ -359,12 +362,19 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     }
 
     public void onViewRecycled() {
+        isOnScreen = false;
     }
 
     public void onViewDetached() {
+        if (!isInitialized) return;
+        if (!isOnScreen) return;
+        isOnScreen = false;
     }
 
     public void onViewAttached() {
+        if (!isInitialized) return;
+        if (isOnScreen) return;
+        isOnScreen = true;
     }
 
     public boolean isInitialized() {

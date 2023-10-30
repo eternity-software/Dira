@@ -129,16 +129,17 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
                     type);
             waterfallBalancer.add(this);
         } else {
-            DiraActivity.runGlobalBackground(() -> {
-                Bitmap bitmap = AppStorage.getBitmapFromPath(mediaFile.getPath(), getContext());
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    if (attachment == currentAttachment) {
-
-                        setImageBitmap(bitmap);
-                        isMainImageLoaded = true;
-                    }
-                });
-            });
+            Logger.logDebug("ImagePreview", "No waterfallBalancer");
+//            DiraActivity.runGlobalBackground(() -> {
+//                Bitmap bitmap = AppStorage.getBitmapFromPath(mediaFile.getPath(), getContext());
+//                new Handler(Looper.getMainLooper()).post(() -> {
+//                    if (attachment == currentAttachment) {
+//
+//                        setImageBitmap(bitmap);
+//                        isMainImageLoaded = true;
+//                    }
+//                });
+//            });
         }
 
 
