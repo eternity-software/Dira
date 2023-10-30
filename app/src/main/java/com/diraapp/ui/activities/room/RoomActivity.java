@@ -900,7 +900,7 @@ public class RoomActivity extends DiraActivity
     @Override
     public void notifyAdapterItemsDeleted(int start, int last) {
         Logger.logDebug("notifying adapter", "Deleted items " + presenter.getItemsCount());
-        binding.recyclerView.getRecycledViewPool().clear();
+        // binding.recyclerView.getRecycledViewPool().clear();
         messagesAdapter.notifyItemRangeRemoved(start, last - start);
         Logger.logDebug("notifying adapter",
                 "Deleted items from start - " + start + " to " + last +
