@@ -143,7 +143,9 @@ public class MediaViewHolder extends AttachmentViewHolder {
 
         currentAttachment = attachment;
         previewImage.prepareForAttachment(attachment, getMessageAdapterContract().getRoom(), () -> {
-            if (currentAttachment != attachment) return;
+            if (currentAttachment != attachment){
+                return;
+            }
 
             // Load an existing attachment
             if (!AttachmentDownloader.isAttachmentSaving(attachment))

@@ -332,7 +332,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
 
     public void attach() {
         if (attachment == null | fileInfo == null) return;
-        prepareForAttachment(attachment, room, null);
+        prepareForAttachment(attachment, room, onReady);
 
         loadAttachmentFile(new File(fileInfo.getFilePath()));
     }
