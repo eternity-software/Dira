@@ -13,7 +13,9 @@ import com.diraapp.R;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.storage.AttachmentDownloadHandler;
 import com.diraapp.storage.attachments.AttachmentDownloader;
+import com.diraapp.ui.activities.DiraActivityListener;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.ImagePreview;
@@ -24,7 +26,7 @@ import com.diraapp.utils.StringFormatter;
 
 import java.io.File;
 
-public class MediaViewHolder extends AttachmentViewHolder {
+public class MediaViewHolder extends AttachmentViewHolder implements DiraActivityListener, AttachmentDownloadHandler {
 
     private DiraVideoPlayer videoPlayer;
     private ImagePreview previewImage;
@@ -41,7 +43,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
                            ViewHolderManagerContract viewHolderManagerContract,
                            boolean isSelfMessage) {
         super(itemView, messageAdapterContract, viewHolderManagerContract, isSelfMessage);
-
+        messageAdapterContract.addListener(this);
     }
 
     @Override
@@ -164,10 +166,8 @@ public class MediaViewHolder extends AttachmentViewHolder {
 
 
 
-        if (currentMediaFile == null) {
-            AttachmentDownloader.setDownloadHandlerForAttachment(progress -> {
-                onLoadPercentChanged(attachment, progress);
-            }, attachment);
+        if (currentMediaFile == null | AttachmentDownloader.isAttachmentSaving(attachment)) {
+            AttachmentDownloader.setDownloadHandlerForAttachment(this, attachment);
         }
 
         previewImage.showOverlay(currentMediaFile, attachment);
@@ -195,6 +195,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
         if (!isInitialized) return;
         videoPlayer.pause();
         previewImage.detach();
+
     }
 
     @Override
@@ -207,5 +208,13 @@ public class MediaViewHolder extends AttachmentViewHolder {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        AttachmentDownloader.removeAttachmentDownloadHandler(this, currentAttachment);
+    }
 
+    @Override
+    public void onProgressChanged(int progress) {
+        onLoadPercentChanged(currentAttachment, progress);
+    }
 }

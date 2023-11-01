@@ -13,7 +13,9 @@ import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.res.Theme;
+import com.diraapp.storage.AttachmentDownloadHandler;
 import com.diraapp.storage.attachments.AttachmentDownloader;
+import com.diraapp.ui.activities.DiraActivityListener;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.adapters.messages.views.viewholders.TextMessageViewHolder;
@@ -23,13 +25,14 @@ import com.diraapp.utils.android.DeviceUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * AttachmentGroupViewHolder displays a gallery of images or videos and
  * sorts them by layers (mosaic layout)
  */
-public class AttachmentGroupViewHolder extends TextMessageViewHolder {
+public class AttachmentGroupViewHolder extends TextMessageViewHolder implements DiraActivityListener {
 
 
     private LinearLayout layersContainer;
@@ -44,6 +47,8 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
     private List<ImagePreview> imagePreviewList = new ArrayList<>();
     private List<ImagePreview> previewImagePool = new ArrayList<>();
 
+    private HashMap<Attachment, AttachmentDownloadHandler> handlers = new HashMap<>();
+
     private int lastPickedPoolIndex = 0;
 
 
@@ -52,7 +57,7 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
                                      ViewHolderManagerContract viewHolderManagerContract,
                                      boolean isSelfMessage) {
         super(itemView, messageAdapterContract, viewHolderManagerContract, isSelfMessage);
-
+        messageAdapterContract.addListener(this);
     }
 
     /**
@@ -148,10 +153,12 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
             imagePreview.prepareForAttachment(attachment,
                     getMessageAdapterContract().getRoom(), null);
 
-            if (currentMediaFile == null) {
-                AttachmentDownloader.setDownloadHandlerForAttachment(progress -> {
+            if (currentMediaFile == null  | AttachmentDownloader.isAttachmentSaving(attachment)) {
+                AttachmentDownloadHandler attachmentDownloadHandler = progress -> {
                     onLoadPercentChanged(attachment, progress);
-                }, attachment);
+                };
+                AttachmentDownloader.setDownloadHandlerForAttachment(attachmentDownloadHandler, attachment);
+                handlers.put(attachment, attachmentDownloadHandler);
             }
 
             if (!AttachmentDownloader.isAttachmentSaving(attachment))
@@ -234,8 +241,9 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
     @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
 
+
         for (ImagePreview imagePreview : new ArrayList<>(imagePreviewList)) {
-            if (imagePreview.getAttachment() != null && attachment != null) {
+            if (imagePreview.getAttachment() != null && attachment != null && file != null) {
                 if (imagePreview.getAttachment().getFileUrl().equals(attachment.getFileUrl())) {
                     imagePreview.hideOverlay();
                     imagePreview.showOverlay(file, attachment);
@@ -293,6 +301,14 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
         for(ImagePreview imagePreview : imagePreviewList)
         {
             imagePreview.attach();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        for(Attachment attachment : handlers.keySet())
+        {
+            AttachmentDownloader.removeAttachmentDownloadHandler(handlers.get(attachment), attachment);
         }
     }
 }

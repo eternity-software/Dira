@@ -240,9 +240,6 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
                     height,
                     Bitmap.Config.ALPHA_8);
 
-            System.out.println("Dummy " + dummyBitmap.getHeight());
-
-            System.out.println("Dummy set!");
             DiraActivity.runOnMainThread(() -> {
                 if (isMainImageLoaded | attachment != this.attachment) return;
                 setImageBitmap(dummyBitmap);
@@ -260,8 +257,16 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
         overlay.setVisibility(VISIBLE);
         downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_download));
         sizeTextView.setVisibility(VISIBLE);
-        sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()) +
-                getContext().getString(R.string.attachment_in_queue));
+        if(isLoading)
+        {
+            sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()) +
+                    getContext().getString(R.string.attachment_in_queue));
+        }
+        else
+        {
+            sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()));
+        }
+
         if (isLoading) {
             progressBar.setVisibility(VISIBLE);
             downloadButton.setImageBitmap(null);
