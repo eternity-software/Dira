@@ -270,6 +270,28 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
     public void onViewRecycled() {
         super.onViewRecycled();
         if(!isInitialized) return;
+        for(ImagePreview imagePreview : imagePreviewList)
+        {
+            imagePreview.detach();
+        }
 
+    }
+
+    @Override
+    public void onViewDetached() {
+        super.onViewDetached();
+        for(ImagePreview imagePreview : imagePreviewList)
+        {
+            imagePreview.detach();
+        }
+    }
+
+    @Override
+    public void onViewAttached() {
+        super.onViewAttached();
+        for(ImagePreview imagePreview : imagePreviewList)
+        {
+            imagePreview.attach();
+        }
     }
 }

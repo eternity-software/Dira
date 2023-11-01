@@ -4,7 +4,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.view.Display;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -12,13 +11,11 @@ import android.view.animation.DecelerateInterpolator;
 
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DiraMediaInfo;
-import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.components.ImagePreview;
 import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.ui.components.WaterfallImageView;
 import com.diraapp.utils.Logger;
-import com.diraapp.utils.android.DeviceUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -62,6 +59,7 @@ public class WaterfallImageLoader {
                                 final boolean[] isCancelled = {false};
 
                                 try {
+
                                     if (imageView != null) {
                                         //WaterfallLogger.log("Loading " + imageView.getFileInfo());
                                         DiraMediaInfo oldFileInfo = imageView.getFileInfo();
@@ -71,7 +69,7 @@ public class WaterfallImageLoader {
                                                 Bitmap oldBitmap = AppStorage.getBitmapFromPath(imageView.getFileInfo().getFilePath(), activity);
 
 
-                                                float scale = (float) Resources.getSystem().getDisplayMetrics().widthPixels * 0.5f /  oldBitmap.getWidth();
+                                                float scale = (float) Resources.getSystem().getDisplayMetrics().widthPixels * 0.5f / oldBitmap.getWidth();
 
                                                 if (scale >= 1) {
                                                     bitmap = oldBitmap;
@@ -89,8 +87,6 @@ public class WaterfallImageLoader {
                                         } else {
                                             bitmap = imageView.getFileInfo().getVideoThumbnail();
                                         }
-
-
 
 
                                         if (bitmap != null) {
@@ -125,12 +121,20 @@ public class WaterfallImageLoader {
 
                                                                 mediaGridItem.setSubtitle(subtitle);
                                                             }
-                                                            if (imageView instanceof ImagePreview)
-                                                            {
-                                                                ((ImagePreview) imageView).setImageBitmap(finalBitmap);
-                                                            }
-                                                            else
-                                                            {
+                                                            if (imageView instanceof ImagePreview) {
+                                                                if (((ImagePreview) imageView).isAttached())
+                                                                {
+                                                                    ((ImagePreview) imageView).setImageBitmap(finalBitmap);
+
+                                                                }
+                                                                else
+                                                                {
+                                                                    waterfallCallback.onImageProcessedSuccess(imageView);
+                                                                    bitmap.recycle();
+                                                                    return;
+                                                                }
+
+                                                            } else {
                                                                 imageView.getImageView().setImageBitmap(finalBitmap);
                                                             }
 
@@ -164,7 +168,6 @@ public class WaterfallImageLoader {
                                                         }
                                                         e.printStackTrace();
                                                     }
-
 
 
                                                 }
@@ -218,8 +221,7 @@ public class WaterfallImageLoader {
         }
     }
 
-    public void reset()
-    {
+    public void reset() {
         imagesQueue.clear();
     }
 

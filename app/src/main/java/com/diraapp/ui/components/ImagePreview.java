@@ -54,6 +54,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
     private DiraMediaInfo fileInfo;
 
     private Runnable onReady;
+    private boolean isAttached = true;
 
     private static int bitmapCounter = 0;
 
@@ -174,7 +175,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
         this.room = room;
         isMainImageLoaded = false;
         this.attachment = attachment;
-      //  setImageBitmap(null);
+        //  setImageBitmap(null);
 
         loadDummyBitmap(attachment);
 
@@ -290,10 +291,17 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
         return isMainImageLoaded;
     }
 
+    public boolean isAttached() {
+        return isAttached;
+    }
+
     @Override
     public void onImageBind(Bitmap bitmap) {
 
-
+        if (!isAttached) {
+            setImageBitmap(null);
+            return;
+        }
         isMainImageLoaded = true;
 
 
@@ -326,12 +334,14 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
 
     public void detach() {
         isMainImageLoaded = false;
+        isAttached = false;
         setImageBitmap(null);
         loadDummyBitmap(attachment);
     }
 
     public void attach() {
         if (attachment == null | fileInfo == null) return;
+        isAttached = true;
         prepareForAttachment(attachment, room, onReady);
 
         loadAttachmentFile(new File(fileInfo.getFilePath()));
