@@ -1,9 +1,7 @@
 package com.diraapp.ui.components;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
@@ -24,9 +22,9 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
+import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.DiraActivityListener;
 import com.diraapp.ui.waterfalls.WaterfallBalancer;
-import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.utils.Logger;
 
 import java.io.File;
@@ -56,7 +54,6 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
     private Runnable onReady;
 
     private static int bitmapCounter = 0;
-
 
 
     public ImagePreview(Context context, AttributeSet attrs) {
@@ -118,12 +115,13 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
     }
 
     public void loadAttachmentFile(File mediaFile) {
-        if(mediaFile == null) return;
+        if (mediaFile == null) return;
         Attachment currentAttachment = attachment;
         if (waterfallBalancer != null) {
             String type = DiraMediaInfo.MIME_TYPE_IMAGE;
 
-            if (attachment.getAttachmentType() == AttachmentType.VIDEO) type = DiraMediaInfo.MIME_TYPE_VIDEO;
+            if (attachment.getAttachmentType() == AttachmentType.VIDEO)
+                type = DiraMediaInfo.MIME_TYPE_VIDEO;
             fileInfo = new DiraMediaInfo("",
                     mediaFile.getPath(),
                     type);
@@ -146,7 +144,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
     }
 
     public void setImageBitmap(Bitmap bitmap) {
-        Logger.logDebug("ImagePreviewView", "Bitmap updated (" + bitmapCounter++  +" )");
+        Logger.logDebug("ImagePreviewView", "Bitmap updated (" + bitmapCounter++ + " )");
         DiraActivity.runOnMainThread(() -> {
             recycleBitmap();
             loadedBitmap = bitmap;
@@ -155,11 +153,9 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
 
     }
 
-    private void recycleBitmap()
-    {
-        if(loadedBitmap != null)
-        {
-            if(!loadedBitmap.isRecycled()) loadedBitmap.recycle();
+    private void recycleBitmap() {
+        if (loadedBitmap != null) {
+            if (!loadedBitmap.isRecycled()) loadedBitmap.recycle();
             loadedBitmap = null;
 
         }
@@ -180,17 +176,13 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
         DiraActivity.runGlobalBackground(() -> {
             if (this.attachment != attachment | isMainImageLoaded) return;
 
-            int height = attachment.getHeight();
-            int width = attachment.getWidth();
-            if(width > Resources.getSystem().getDisplayMetrics().widthPixels)
-            {
 
-                float scale = attachment.calculateWidthScale(width);
 
-                width = (int) (width * scale);
-                height = (int) (height * scale);
+            float scale = attachment.calculateWidthScale(50);
 
-            }
+            int width = (int) (attachment.getWidth() * scale);
+            int height = (int) (attachment.getHeight() * scale);
+
 
             final Bitmap dummyBitmap = Bitmap.createBitmap(width,
                     height,
@@ -209,11 +201,9 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
             Bitmap previewBitmap = attachment.getBitmapPreview();
             if (previewBitmap != null) {
                 DiraActivity.runOnMainThread(() -> {
-                    if (!isMainImageLoaded)
-                    {
+                    if (!isMainImageLoaded) {
                         setImageBitmap(previewBitmap);
-                    }
-                    else {
+                    } else {
                         previewBitmap.recycle();
                     }
 
@@ -223,8 +213,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
         });
     }
 
-    public void showOverlay(File file, Attachment attachment)
-    {
+    public void showOverlay(File file, Attachment attachment) {
         if (file != null) {
 
             if (!AttachmentDownloader.isAttachmentSaving(attachment)) {
@@ -282,8 +271,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
         }
     }
 
-    public void setDownloadPercent(int percent)
-    {
+    public void setDownloadPercent(int percent) {
         DiraActivity.runOnMainThread(() -> {
             sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()) + "(" + percent + "%" + ")");
         });

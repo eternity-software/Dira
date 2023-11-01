@@ -759,7 +759,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
                     if (attachment.getAttachmentType() == AttachmentType.VIDEO ||
                             attachment.getAttachmentType() == AttachmentType.BUBBLE) {
-                        bitmap = ThumbnailUtils.createVideoThumbnail(previewUri, MediaStore.Video.Thumbnails.MINI_KIND);
+                        bitmap = ThumbnailUtils.createVideoThumbnail(previewUri, MediaStore.Video.Thumbnails.MICRO_KIND);
                     } else if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
                         bitmap = view.getBitmap(previewUri);
                     }

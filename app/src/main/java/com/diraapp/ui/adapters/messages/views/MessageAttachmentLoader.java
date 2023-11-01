@@ -95,10 +95,10 @@ public class MessageAttachmentLoader {
     public class MessageAttachmentStorageListener implements AttachmentsStorageListener {
 
         private final Message message;
-      //  private AttachmentViewHolder holder;
+        private AttachmentViewHolder holder;
 
         public MessageAttachmentStorageListener(AttachmentViewHolder holder, Message message) {
-          //  this.holder = holder;
+            this.holder = holder;
             this.message = message;
         }
 
@@ -124,9 +124,9 @@ public class MessageAttachmentLoader {
                         File file = AttachmentDownloader.getFileFromAttachment(attachment, context, message.getRoomSecret());
 
                         if (file != null) {
-                           // if (holder != null) {
-                            //    holder.onAttachmentLoaded(attachment, file, message);
-                          //  }
+                            if (holder != null) {
+                                holder.onAttachmentLoaded(attachment, file, message);
+                            }
                         } else {
                             SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment, message.getRoomSecret());
                             AttachmentDownloader.saveAttachmentAsync(saveAttachmentTask, room.getServerAddress());
@@ -152,9 +152,9 @@ public class MessageAttachmentLoader {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                       // if (holder != null) {
-                       //     holder.onLoadFailed(attachment);
-                       // }
+                        if (holder != null) {
+                            holder.onLoadFailed(attachment);
+                        }
                     }
                 });
             }
@@ -163,7 +163,7 @@ public class MessageAttachmentLoader {
 
         public void removeViewHolder() {
             AttachmentDownloader.removeAttachmentsStorageListener(this);
-        //    holder = null;
+            holder = null;
         }
     }
 
