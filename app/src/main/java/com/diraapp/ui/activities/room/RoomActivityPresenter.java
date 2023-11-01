@@ -789,7 +789,5 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 e.printStackTrace();
             }
         }
-
-
     }
 }

@@ -66,12 +66,11 @@ public class MediaViewHolder extends AttachmentViewHolder {
 
         if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
 
-            previewImage.setVisibility(View.VISIBLE);
             isAttachmentLoaded = true;
 
         } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
 
-            previewImage.setVisibility(View.VISIBLE);
+
             isAttachmentLoaded = true;
             videoPlayer.setVisibility(View.VISIBLE);
             videoPlayer.attachDebugIndicator(postInflatedViewsContainer);
@@ -129,10 +128,28 @@ public class MediaViewHolder extends AttachmentViewHolder {
     public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
         previewImage.hideOverlay();
+
         isAttachmentLoaded = false;
         videoPlayer.reset();
         videoPlayer.setVisibility(View.GONE);
         previewImage.setVisibility(View.VISIBLE);
+        previewImage.setOnClickListener(v -> {});
+        videoPlayer.setOnClickListener(v -> {});
+
+        Attachment attachment = message.getSingleAttachment();
+        currentMediaFile = AttachmentDownloader.getFileFromAttachment(attachment,
+                itemView.getContext(), message.getRoomSecret());
+
+
+        currentAttachment = attachment;
+        previewImage.prepareForAttachment(attachment, getMessageAdapterContract().getRoom(), () -> {
+            if (currentAttachment != attachment) return;
+
+            // Load an existing attachment
+            if (!AttachmentDownloader.isAttachmentSaving(attachment))
+                onAttachmentLoaded(attachment, currentMediaFile, message);
+        });
+
 
         String text = message.getText();
         if ((text != null) && (!StringFormatter.EMPTY_STRING.equals(text))) {
@@ -142,10 +159,8 @@ public class MediaViewHolder extends AttachmentViewHolder {
             messageText.setVisibility(View.GONE);
         }
 
-        Attachment attachment = message.getAttachments().get(0);
-        currentAttachment = attachment;
-        currentMediaFile = AttachmentDownloader.getFileFromAttachment(attachment,
-                itemView.getContext(), message.getRoomSecret());
+
+
 
         if (currentMediaFile == null) {
             AttachmentDownloader.setDownloadHandlerForAttachment(progress -> {
@@ -154,13 +169,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
         }
 
         previewImage.showOverlay(currentMediaFile, attachment);
-        previewImage.prepareForAttachment(attachment, getMessageAdapterContract().getRoom(), () -> {
-            if (currentAttachment != attachment) return;
 
-            // Load an existing attachment
-            if (!AttachmentDownloader.isAttachmentSaving(attachment))
-                onAttachmentLoaded(attachment, currentMediaFile, message);
-        });
 
         previewImage.loadAttachmentFile(currentMediaFile);
     }
@@ -175,7 +184,7 @@ public class MediaViewHolder extends AttachmentViewHolder {
         super.onViewRecycled();
         if (!isInitialized) return;
         videoPlayer.stop();
-        previewImage.setImageBitmap(null);
+        previewImage.detach();
     }
 
     @Override
@@ -183,14 +192,17 @@ public class MediaViewHolder extends AttachmentViewHolder {
         super.onViewDetached();
         if (!isInitialized) return;
         videoPlayer.pause();
+        previewImage.detach();
     }
 
     @Override
     public void onViewAttached() {
         super.onViewAttached();
         if (!isInitialized) return;
-        if (videoPlayer.getState() == DiraVideoPlayerState.PAUSED && currentMediaFile != null)
+        previewImage.attach();
+        if (currentMediaFile != null) {
             videoPlayer.play(currentMediaFile.getPath());
+        }
     }
 
 

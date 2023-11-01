@@ -28,6 +28,8 @@ import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.utils.Logger;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ImagePreview extends RelativeLayout implements WaterfallImageView, DiraActivityListener {
 
@@ -54,6 +56,8 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
     private Runnable onReady;
 
     private static int bitmapCounter = 0;
+
+    private ExecutorService dummyThreadPool = Executors.newFixedThreadPool(2);
 
 
     public ImagePreview(Context context, AttributeSet attrs) {
@@ -164,40 +168,20 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
 
     public void prepareForAttachment(Attachment attachment, Room room, Runnable onImageReady) {
         if (attachment == null) return;
-        if (this.attachment == attachment) return;
+        // if (this.attachment == attachment) return;
 
         this.onReady = onImageReady;
         this.room = room;
         isMainImageLoaded = false;
         this.attachment = attachment;
-        setImageBitmap(null);
+      //  setImageBitmap(null);
 
+        loadDummyBitmap(attachment);
 
         DiraActivity.runGlobalBackground(() -> {
             if (this.attachment != attachment | isMainImageLoaded) return;
 
 
-
-            float scale = attachment.calculateWidthScale(50);
-
-            int width = (int) (attachment.getWidth() * scale);
-            int height = (int) (attachment.getHeight() * scale);
-
-
-            final Bitmap dummyBitmap = Bitmap.createBitmap(width,
-                    height,
-                    Bitmap.Config.ALPHA_8);
-
-
-            DiraActivity.runOnMainThread(() -> {
-                if (this.attachment != attachment | isMainImageLoaded) {
-                    dummyBitmap.recycle();
-
-                    return;
-                }
-                setImageBitmap(dummyBitmap);
-
-            });
             Bitmap previewBitmap = attachment.getBitmapPreview();
             if (previewBitmap != null) {
                 DiraActivity.runOnMainThread(() -> {
@@ -206,6 +190,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
                     } else {
                         previewBitmap.recycle();
                     }
+
 
                 });
             }
@@ -240,6 +225,29 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
         progressBar.setVisibility(GONE);
         sizeTextView.setVisibility(GONE);
         downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_trash));
+    }
+
+    public void loadDummyBitmap(Attachment attachment) {
+        dummyThreadPool.execute(() -> {
+            float scale = attachment.calculateWidthScale(108);
+
+            int width = (int) (attachment.getWidth() * scale);
+            int height = (int) (attachment.getHeight() * scale);
+
+            System.out.println(attachment + " " + attachment.getHeight());
+            final Bitmap dummyBitmap = Bitmap.createBitmap(width,
+                    height,
+                    Bitmap.Config.ALPHA_8);
+
+            System.out.println("Dummy " + dummyBitmap.getHeight());
+
+            System.out.println("Dummy set!");
+            DiraActivity.runOnMainThread(() -> {
+                if (isMainImageLoaded | attachment != this.attachment) return;
+                setImageBitmap(dummyBitmap);
+            });
+
+        });
     }
 
     public void hideOverlay() {
@@ -314,6 +322,19 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
         overlay.setVisibility(VISIBLE);
 
         progressBar.setVisibility(GONE);
+    }
+
+    public void detach() {
+        isMainImageLoaded = false;
+        setImageBitmap(null);
+        loadDummyBitmap(attachment);
+    }
+
+    public void attach() {
+        if (attachment == null | fileInfo == null) return;
+        prepareForAttachment(attachment, room, null);
+
+        loadAttachmentFile(new File(fileInfo.getFilePath()));
     }
 
     @Override
