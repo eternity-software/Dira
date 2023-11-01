@@ -103,86 +103,7 @@ public class PreviewActivity extends DiraActivity {
 
 
 
-        getWindow().getSharedElementEnterTransition()
-                .addListener(new Transition.TransitionListener() {
-                    @Override
-                    public void onTransitionStart(Transition transition) {
 
-                        CardView card = findViewById(R.id.card_view);
-
-                        ObjectAnimator animator;
-                        if (isShown) {
-
-                            animator = ObjectAnimator.ofFloat(card, "radius", DeviceUtils.dpToPx(14, getApplicationContext()));
-
-                        } else {
-                            isShown = true;
-                            animator = ObjectAnimator.ofFloat(card, "radius", DeviceUtils.dpToPx(0, getApplicationContext()));
-
-                        }
-
-                        animator.setDuration(200);
-                        animator.start();
-                    }
-
-                    @Override
-                    public void onTransitionEnd(Transition transition) {
-                        if (isVideo) {
-                            videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
-                                @Override
-                                public void onStarted() {
-
-                                }
-
-                                @Override
-                                public void onPaused() {
-
-                                }
-
-                                @Override
-                                public void onReleased() {
-
-                                }
-
-                                @Override
-                                public void onReady(int width, int height) {
-                                    try {
-                                        videoPlayer.play(uri);
-                                        videoPlayer.setVolume(1);
-                                    } catch (VideoPlayerException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-
-
-                        } else {
-                            videoPlayer.setVisibility(View.GONE);
-                            DiraActivity.runGlobalBackground(() -> {
-                                Bitmap bitmap = AppStorage.getBitmapFromPath(uri);
-                                runOnUiThread(() -> {
-                                    PreviewActivity.this.bitmap = bitmap;
-                                    touchImageView.setImageBitmap(bitmap);
-                                });
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onTransitionCancel(Transition transition) {
-
-                    }
-
-                    @Override
-                    public void onTransitionPause(Transition transition) {
-
-                    }
-
-                    @Override
-                    public void onTransitionResume(Transition transition) {
-
-                    }
-                });
 
         final String transitionName = getString(R.string.transition_image_shared);
         final Rect clipRect = getIntent().getParcelableExtra(EXTRA_CLIP_RECT);
@@ -195,6 +116,21 @@ public class PreviewActivity extends DiraActivity {
                         view.setClipBounds(clipRect);
                     }
                 }
+                CardView card = findViewById(R.id.card_view);
+
+                ObjectAnimator animator;
+                if (isShown) {
+
+                    animator = ObjectAnimator.ofFloat(card, "radius", DeviceUtils.dpToPx(14, getApplicationContext()));
+
+                } else {
+                    isShown = true;
+                    animator = ObjectAnimator.ofFloat(card, "radius", DeviceUtils.dpToPx(0, getApplicationContext()));
+
+                }
+
+                animator.setDuration(200);
+                animator.start();
                 super.onSharedElementStart(sharedElementNames, sharedElements, sharedElementSnapshots);
             }
 
@@ -207,6 +143,61 @@ public class PreviewActivity extends DiraActivity {
                     }
                 }
                 super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+
+                if (isVideo) {
+                    videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
+                        @Override
+                        public void onStarted() {
+
+                        }
+
+                        @Override
+                        public void onPaused() {
+
+                        }
+
+                        @Override
+                        public void onReleased() {
+
+                        }
+
+                        @Override
+                        public void onReady(int width, int height) {
+                            try {
+                                videoPlayer.play(uri);
+                                videoPlayer.setVolume(1);
+                            } catch (VideoPlayerException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+
+                } else {
+                    videoPlayer.setVisibility(View.GONE);
+                    DiraActivity.runGlobalBackground(() -> {
+                        Bitmap bitmap = AppStorage.getBitmapFromPath(uri);
+                        try {
+                            // Wait for animation
+                            Thread.sleep(300);
+                        } catch (InterruptedException e) {
+
+                        }
+                        runOnUiThread(() -> {
+                            if(isDestroyed()) return;
+                            try {
+
+                                PreviewActivity.this.bitmap = bitmap;
+                                touchImageView.setImageBitmap(bitmap);
+                            }
+                            catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+
+                        });
+                    });
+                }
             }
         });
 
@@ -266,11 +257,38 @@ public class PreviewActivity extends DiraActivity {
         TextView sizeView = findViewById(R.id.size_view);
         sizeView.setText(AppStorage.getStringSize(new File(uri).length()));
 
+        getWindow().getSharedElementEnterTransition()
+                .addListener(new Transition.TransitionListener() {
+                    @Override
+                    public void onTransitionStart(Transition transition) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().getSharedElementEnterTransition().setInterpolator(new DecelerateInterpolator(2f));
-            getWindow().getSharedElementEnterTransition().setDuration(250);
-        }
+
+                    }
+
+                    @Override
+                    public void onTransitionEnd(Transition transition) {
+                        // Not executed for some reason
+                    }
+
+                    @Override
+                    public void onTransitionCancel(Transition transition) {
+
+                    }
+
+                    @Override
+                    public void onTransitionPause(Transition transition) {
+
+                    }
+
+                    @Override
+                    public void onTransitionResume(Transition transition) {
+
+                    }
+                });
+
+
+        getWindow().getSharedElementEnterTransition().setInterpolator(new DecelerateInterpolator(2f));
+        getWindow().getSharedElementEnterTransition().setDuration(250);
 
     }
 
