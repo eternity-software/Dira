@@ -450,10 +450,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
             mediaPlayer.setVolume(0, 0);
 
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                mediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setFlags(
-                        AudioAttributes.ALLOW_CAPTURE_BY_SYSTEM).build());
-            }
+         
             mediaPlayer.setAudioStreamType(AudioManager.USE_DEFAULT_STREAM_TYPE);
             mediaPlayer.setLooping(true);
 
