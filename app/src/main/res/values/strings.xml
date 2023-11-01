@@ -133,6 +133,9 @@
     <string name="room_servers_popup_wrong_server_title">Wrong server</string>
     <string name="room_servers_popup_wrong_server_text">The server you are trying to add does not meet security requirements or contains a typo in the address.</string>
 
+    <string name="room_servers_popup_mitm_title">Trust check</string>
+    <string name="room_servers_popup_mitm_text">Any user server can be compromised, add only those servers that you are sure of. As soon as the server is added, your IP address will be disclosed</string>
+
     <string name="room_servers_add_tip">We strongly don’t recommend to use huge amount of servers, because each server equals new background connection that may affect your battery performance and traffic.</string>
 
     <!-- Room server selector -->

@@ -91,6 +91,7 @@
     <string name="room_servers_add">Добавить пользовательский сервер</string>
     <string name="room_servers_add_hint">Адрес сервера</string>
     <string name="room_servers_add_button">Добавить</string>
+    <string name="room_servers_popup_mitm_title">Проверка доверия</string>
     <string name="room_servers_add_tip">Мы настоятельно не рекомендуем использовать больше количество серверов, потому что каждый сервер - это новое фоновое подключение, которое может повлиять на срок службы вашей батареи и трафик.</string>
     <string name="room_servers_popup_wrong_server_title">Неверный сервер</string>
     <string name="room_servers_popup_wrong_server_text">Сервер, который вы пытаетесь добавить, не отвечает требованиям безопасности или содержит опечатку в адресе.</string>
@@ -147,4 +148,5 @@
     <string name="message_type_image">Изображение</string>
     <string name="users_status_sending_file">%s отпраялет вложение</string>
     <string name="user_status_sending_file">%s отпраяют вложение</string>
+    <string name="room_servers_popup_mitm_text">Любой пользовательский сервер может быть скомпрометирован, добавляйте только те сервера, в которых уверены. Как только сервер будет добавлен, будет раскрыт ваш IP адрес</string>
 </resources>

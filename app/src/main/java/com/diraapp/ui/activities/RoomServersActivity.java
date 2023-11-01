@@ -36,20 +36,26 @@ public class RoomServersActivity extends DiraActivity {
                         null, null);
                 return;
             }
+            DiraPopup diraPopup = new DiraPopup(this);
+            diraPopup.setCancellable(true);
+            diraPopup.show(getString(R.string.room_servers_popup_mitm_title),
+                    getString(R.string.room_servers_popup_mitm_text), null,
+                    null,() -> {
+                        binding.serverAddress.setText("");
+                        ArrayList<String> servers = AppStorage.getServerList(this);
+                        if (!servers.contains(address)) {
+                            servers.add(address);
+                            AppStorage.saveServerList(servers, this);
+                            RoomServerAdapter roomServerAdapter = new RoomServerAdapter(this);
+                            binding.recyclerView.setAdapter(roomServerAdapter);
 
-            binding.serverAddress.setText("");
-            ArrayList<String> servers = AppStorage.getServerList(this);
-            if (!servers.contains(address)) {
-                servers.add(address);
-                AppStorage.saveServerList(servers, this);
-                RoomServerAdapter roomServerAdapter = new RoomServerAdapter(this);
-                binding.recyclerView.setAdapter(roomServerAdapter);
+                            Thread thread = new Thread(() -> {
+                                UpdateProcessor.getInstance().reconnectSockets();
+                            });
+                            thread.start();
+                        }
 
-                Thread thread = new Thread(() -> {
-                    UpdateProcessor.getInstance().reconnectSockets();
-                });
-                thread.start();
-            }
+                    });
 
 
         });
