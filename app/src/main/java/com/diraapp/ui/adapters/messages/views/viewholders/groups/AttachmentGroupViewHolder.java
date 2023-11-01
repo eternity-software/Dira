@@ -107,6 +107,7 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
         int attachmentIndex = 0;
         for (Attachment attachment : message.getAttachments()) {
             ImagePreview imagePreview = getImagePreview();
+
             imagePreview.prepareForAttachment(attachment,
                     getMessageAdapterContract().getRoom(),
                     null);
@@ -143,7 +144,7 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder {
             attachmentIndex++;
             File currentMediaFile = AttachmentDownloader.getFileFromAttachment(attachment,
                     itemView.getContext(), message.getRoomSecret());
-
+            imagePreview.showOverlay(currentMediaFile, attachment);
             imagePreview.prepareForAttachment(attachment,
                     getMessageAdapterContract().getRoom(), null);
 
