@@ -24,13 +24,19 @@
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+
             android:layout_marginBottom="-20dp"
             android:animateLayoutChanges="true"
             android:orientation="vertical"
             android:visibility="visible">
 
-
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="6dp"
+                android:background="@drawable/gray_rounded"
+                android:layout_gravity="center"
+                android:layout_marginVertical="12dp"
+                android:alpha="0.6"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -71,17 +77,15 @@
                         app:themeBackgroundTint="gray"
                         app:themeImageColor="light_gray" />
 
-                    <TextView
-                        android:id="@+id/media_text"
-                        android:layout_width="wrap_content"
+                    <Spinner
+                        android:id="@+id/album_picker"
+                        android:layout_width="100dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="?selectableItemBackground"
                         android:drawableEnd="@drawable/ic_dropdown"
-                        android:drawablePadding="6dp"
                         android:fontFamily="@font/montserratsemibold"
-                        android:gravity="center"
                         android:text="@string/media_gallery"
+                        android:background="@android:color/transparent"
+                        android:popupBackground="@drawable/medium_round_square"
                         android:textColor="@color/white"
                         android:textSize="16sp" />
 

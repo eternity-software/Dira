@@ -6,8 +6,18 @@ public class SelectorFileInfo extends DiraMediaInfo {
 
     private boolean isSelected;
 
+    private String bucketName;
+
     public SelectorFileInfo(String name, String filePath, String mimeType) {
         super(name, filePath, mimeType);
+    }
+
+    public String getBucketName() {
+        return bucketName;
+    }
+
+    public void setBucketName(String bucketName) {
+        this.bucketName = bucketName;
     }
 
     public boolean isSelected() {

@@ -6,8 +6,15 @@
     android:layout_height="wrap_content"
     android:background="@drawable/top_rounded_back"
     android:orientation="vertical"
-    android:padding="22dp">
-
+    android:paddingHorizontal="22dp"
+    android:paddingBottom="22dp">
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="6dp"
+        android:background="@drawable/gray_rounded"
+        android:layout_gravity="center"
+        android:layout_marginVertical="12dp"
+        android:alpha="0.6"/>
     <TextView
 
         android:layout_width="wrap_content"

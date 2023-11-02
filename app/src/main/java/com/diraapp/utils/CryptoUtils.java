@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -53,6 +54,11 @@ public class CryptoUtils {
             inputStream.close();
             outputStream.close();
 
+        }
+        catch (BadPaddingException badPaddingException)
+        {
+            inputFile.delete();
+            outputFile.delete();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

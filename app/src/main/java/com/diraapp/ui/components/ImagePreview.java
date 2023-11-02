@@ -169,13 +169,13 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
 
     public void prepareForAttachment(Attachment attachment, Room room, Runnable onImageReady) {
         if (attachment == null) return;
-        // if (this.attachment == attachment) return;
+        if (this.attachment == attachment) return;
 
         this.onReady = onImageReady;
         this.room = room;
         isMainImageLoaded = false;
         this.attachment = attachment;
-        //  setImageBitmap(null);
+        setImageBitmap(null);
 
         loadDummyBitmap(attachment);
 

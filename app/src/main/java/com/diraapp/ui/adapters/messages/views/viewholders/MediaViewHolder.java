@@ -136,6 +136,7 @@ public class MediaViewHolder extends AttachmentViewHolder implements DiraActivit
         videoPlayer.setVisibility(View.GONE);
         previewImage.setVisibility(View.VISIBLE);
         videoPlayer.setOnClickListener(v -> {});
+        previewImage.setOnClickListener(v -> {});
 
         Attachment attachment = message.getSingleAttachment();
         currentMediaFile = AttachmentDownloader.getFileFromAttachment(attachment,

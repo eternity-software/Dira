@@ -99,7 +99,15 @@ public class PreviewActivity extends DiraActivity {
         touchImageView = findViewById(R.id.image_view);
 
         touchImageView.setImageBitmap(bitmapPool);
+
+        boolean usesSharedTransition;
+        if(bitmap != null)
+            usesSharedTransition = true;
+        else {
+            usesSharedTransition = false;
+        }
         bitmapPool = null;
+
 
 
 
@@ -144,60 +152,7 @@ public class PreviewActivity extends DiraActivity {
                 }
                 super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
 
-                if (isVideo) {
-                    videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
-                        @Override
-                        public void onStarted() {
 
-                        }
-
-                        @Override
-                        public void onPaused() {
-
-                        }
-
-                        @Override
-                        public void onReleased() {
-
-                        }
-
-                        @Override
-                        public void onReady(int width, int height) {
-                            try {
-                                videoPlayer.play(uri);
-                                videoPlayer.setVolume(1);
-                            } catch (VideoPlayerException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-
-
-                } else {
-                    videoPlayer.setVisibility(View.GONE);
-                    DiraActivity.runGlobalBackground(() -> {
-                        Bitmap bitmap = AppStorage.getBitmapFromPath(uri);
-                        try {
-                            // Wait for animation
-                            Thread.sleep(300);
-                        } catch (InterruptedException e) {
-
-                        }
-                        runOnUiThread(() -> {
-                            if(isDestroyed()) return;
-                            try {
-
-                                PreviewActivity.this.bitmap = bitmap;
-                                touchImageView.setImageBitmap(bitmap);
-                            }
-                            catch (Exception e)
-                            {
-                                e.printStackTrace();
-                            }
-
-                        });
-                    });
-                }
             }
         });
 
@@ -285,7 +240,61 @@ public class PreviewActivity extends DiraActivity {
 
                     }
                 });
+        if (isVideo) {
+            videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
+                @Override
+                public void onStarted() {
 
+                }
+
+                @Override
+                public void onPaused() {
+
+                }
+
+                @Override
+                public void onReleased() {
+
+                }
+
+                @Override
+                public void onReady(int width, int height) {
+                    try {
+                        videoPlayer.play(uri);
+                        videoPlayer.setVolume(1);
+                    } catch (VideoPlayerException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+
+        } else {
+            videoPlayer.setVisibility(View.GONE);
+            DiraActivity.runGlobalBackground(() -> {
+                Bitmap bitmap = AppStorage.getBitmapFromPath(uri);
+                try {
+                    if(usesSharedTransition)
+                         // Wait for animation
+                         Thread.sleep(300);
+                } catch (InterruptedException e) {
+
+                }
+                runOnUiThread(() -> {
+                    if(isDestroyed()) return;
+                    try {
+
+                        PreviewActivity.this.bitmap = bitmap;
+                        touchImageView.setImageBitmap(bitmap);
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                });
+            });
+        }
 
         getWindow().getSharedElementEnterTransition().setInterpolator(new DecelerateInterpolator(2f));
         getWindow().getSharedElementEnterTransition().setDuration(250);

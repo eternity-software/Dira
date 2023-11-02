@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import androidx.annotation.Nullable;
 import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.ViewHolder> {
+public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.ViewHolder>  {
 
 
     private final int threadCount = 0;
@@ -48,7 +49,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     private List<SelectorFileInfo> selectedFiles = new ArrayList<>();
     private HashMap<MediaGridItem, SelectorFileInfo> selectedViews = new HashMap<>();
 
+    private List<String> buckets = new ArrayList<>();
+
     private boolean isSelected = false;
+    private boolean isOnlyImages = true;
+    private GalleryListener galleryListener;
 
     /**
      * Constructor for custom files arrays
@@ -71,6 +76,40 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
     }
 
+    public void setGalleryListener(GalleryListener galleryListener) {
+        this.galleryListener = galleryListener;
+    }
+
+    /**
+     * Constructor to get whole device memory
+     *
+     * @param context
+     * @param itemClickListener
+     * @param recyclerView
+     */
+    public MediaGridAdapter(final DiraActivity context, MediaGridItemListener itemClickListener, RecyclerView recyclerView,
+                            boolean onlyImages, GalleryListener galleryListener) {
+        this.mInflater = LayoutInflater.from(context);
+        this.itemClickListener = itemClickListener;
+        this.context = context;
+        this.galleryListener = galleryListener;
+
+        isOnlyImages = onlyImages;
+
+        CursorLoader cursorLoader = getCursorLoader(onlyImages);
+
+        // Must be executed on new Thread
+        mediaElements = loadGallery(cursorLoader.loadInBackground(), null);
+        DiraActivity.runOnMainThread(() ->
+                notifyDataSetChanged());
+
+
+        //   Collections.reverse(images);
+        waterfallBalancer = new WaterfallBalancer(context);
+
+
+    }
+
     /**
      * Constructor to get whole device memory
      *
@@ -80,23 +119,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
      */
     public MediaGridAdapter(final DiraActivity context, MediaGridItemListener itemClickListener, RecyclerView recyclerView,
                             boolean onlyImages) {
-        this.mInflater = LayoutInflater.from(context);
-        this.itemClickListener = itemClickListener;
-        this.context = context;
-
-
-        CursorLoader cursorLoader = getCursorLoader(onlyImages);
-
-        // Must be executed on new Thread
-        mediaElements = loadGallery(cursorLoader.loadInBackground());
-        DiraActivity.runOnMainThread(() ->
-                notifyDataSetChanged());
-
-
-        //   Collections.reverse(images);
-        waterfallBalancer = new WaterfallBalancer(context);
-
-
+        this(context, itemClickListener, recyclerView, onlyImages, null);
     }
 
     public void setMultiSelect(boolean multiSelect) {
@@ -241,7 +264,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     }
 
     @SuppressLint("Range")
-    private ArrayList<SelectorFileInfo> loadGallery(Cursor cursor) {
+    private ArrayList<SelectorFileInfo> loadGallery(Cursor cursor,  @Nullable  String specificBucket) {
 //            Uri uri;
 //            Cursor cursor;
 //            int column_index_data, column_index_folder_name;
@@ -280,15 +303,49 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
             String absolutePathOfImage = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
             String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE));
             String title = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.TITLE));
+            String bucketName = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.BUCKET_DISPLAY_NAME));
 
-            if (mimeType.startsWith("image") || mimeType.startsWith("video")) {
-                listOfAllMedia.add(new SelectorFileInfo(title, absolutePathOfImage, mimeType));
+            if(!buckets.contains(bucketName))
+                buckets.add(bucketName);
+
+            boolean isBucketAllowed = true;
+            if(specificBucket != null)
+            {
+                isBucketAllowed = bucketName.equals(specificBucket);
+            }
+
+            if ((mimeType.startsWith("image") || mimeType.startsWith("video")) && isBucketAllowed) {
+                SelectorFileInfo selectorFileInfo = new SelectorFileInfo(title, absolutePathOfImage, mimeType);
+                selectorFileInfo.setBucketName(bucketName);
+                listOfAllMedia.add(selectorFileInfo);
             }
         }
         cursor.close();
 
 
+        if(galleryListener != null)
+        {
+            galleryListener.onGalleryReady(listOfAllMedia, getBuckets());
+            galleryListener = null;
+        }
+
+        if(specificBucket != null && listOfAllMedia.size() == 0)
+        {
+            return loadGallery(cursor, null);
+        }
+
+
         return listOfAllMedia;
+    }
+
+    public List<String> getBuckets() {
+        return new ArrayList<>(buckets);
+    }
+
+    public void loadForBucket(String bucket)
+    {
+        mediaElements = loadGallery(getCursorLoader(isOnlyImages).loadInBackground(), bucket);
+        notifyDataSetChanged();
     }
 
     private CursorLoader getCursorLoader(boolean isOnlyImages) {
@@ -298,7 +355,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
                 MediaStore.Files.FileColumns.DATE_ADDED,
                 MediaStore.Files.FileColumns.MEDIA_TYPE,
                 MediaStore.Files.FileColumns.MIME_TYPE,
-                MediaStore.Files.FileColumns.TITLE
+                MediaStore.Files.FileColumns.TITLE,
+                MediaStore.Files.FileColumns.BUCKET_DISPLAY_NAME
         };
 
 // Return only video and image metadata.
@@ -349,5 +407,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         public void onClick(View view) {
             onItemClick(view, getAdapterPosition());
         }
+    }
+
+
+    public interface GalleryListener
+    {
+        void onGalleryReady(List<SelectorFileInfo> files, List<String> buckets);
     }
 }

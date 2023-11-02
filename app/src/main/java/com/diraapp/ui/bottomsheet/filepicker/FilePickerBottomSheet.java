@@ -3,11 +3,15 @@ package com.diraapp.ui.bottomsheet.filepicker;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -93,13 +97,56 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
             messageInput.setText(messageText);
         inputContainer = view.findViewById(R.id.linearLayout3);
 
+
+
         view.findViewById(R.id.sendButton).setOnClickListener(v -> {
             multiFilesListener.onSelectedFilesSent(mediaGridAdapter.getSelectedFiles(), messageInput.getText().toString());
             dismiss();
         });
 
         final TextView debugText = view.findViewById(R.id.debugText);
-        mediaGridAdapter = new MediaGridAdapter((DiraActivity) getActivity(), onItemClickListener, recyclerView, onlyImages);
+        mediaGridAdapter = new MediaGridAdapter((DiraActivity) getActivity(), onItemClickListener, recyclerView, onlyImages,
+                (files, buckets) -> {
+
+                    Spinner staticSpinner = (Spinner) view.findViewById(R.id.album_picker);
+                    buckets.add(0, getString(R.string.media_gallery));
+
+                    // Create an ArrayAdapter using the string array and a default spinner
+                    String[] stringArray = new String[buckets.size()];
+                    stringArray = buckets.toArray(stringArray);
+                    ArrayAdapter<String> staticAdapter = new ArrayAdapter<String>(getContext(),
+                           R.layout.spinner_row, R.id.spinner_text, stringArray);
+
+
+                    // Apply the adapter to the spinner
+                    staticSpinner.setAdapter(staticAdapter);
+                    staticSpinner.setSelection(0, false);
+
+                    staticSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view,
+                                                   int position, long id) {
+                            Log.v("item", (String) parent.getItemAtPosition(position));
+                            if(position == 0)
+                            {
+                                mediaGridAdapter.loadForBucket(null);
+                            }
+                            else
+                            {
+                                mediaGridAdapter.loadForBucket((String) parent.getItemAtPosition(position));
+                                BottomSheetBehavior.from(bottomSheet)
+                                        .setState(BottomSheetBehavior.STATE_EXPANDED);
+                            }
+
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+                            // TODO Auto-generated method stub
+                        }
+                    });
+
+                });
         mediaGridAdapter.setMultiSelect(isMultiSelection);
         if (BuildConfig.DEBUG)
             debugText.setVisibility(View.VISIBLE);
@@ -119,6 +166,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
             }
         });
+
 
         recyclerView.setAdapter(mediaGridAdapter);
         v2.findViewById(R.id.openCamera).setOnClickListener(new View.OnClickListener() {
