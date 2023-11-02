@@ -13,6 +13,4 @@ public interface WaterfallImageView {
 
     default void onImageBind(Bitmap bitmap) {
     }
-
-    ;
 }

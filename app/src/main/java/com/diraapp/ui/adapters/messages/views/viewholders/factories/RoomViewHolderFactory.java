@@ -1,7 +1,12 @@
 package com.diraapp.ui.adapters.messages.views.viewholders.factories;
 
+import android.os.Build;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+
+import com.diraapp.BuildConfig;
+import com.diraapp.DiraApplication;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
@@ -17,12 +22,29 @@ import com.diraapp.ui.adapters.messages.views.viewholders.RoomUpdatesViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.TextMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.VoiceViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.groups.AttachmentGroupViewHolder;
+import com.diraapp.utils.Logger;
 import com.diraapp.utils.StringFormatter;
+
+import org.w3c.dom.Entity;
+
+import java.util.HashMap;
 
 /**
  * A factory that creating a ViewHolder from its type
  */
 public class RoomViewHolderFactory implements BaseViewHolderFactory {
+
+    private HashMap<MessageHolderType, Integer> countMap = new HashMap<>();
+
+    public RoomViewHolderFactory() {
+        if (!BuildConfig.DEBUG) {
+            return;
+        }
+        countMap.put(MessageHolderType.ROOM_SINGLE_ATTACHMENT_MESSAGE, 0);
+        countMap.put(MessageHolderType.SELF_SINGLE_ATTACHMENT_MESSAGE, 0);
+        countMap.put(MessageHolderType.ROOM_GROUP_ATTACHMENTS_MESSAGE, 0);
+        countMap.put(MessageHolderType.SELF_GROUP_ATTACHMENTS_MESSAGE, 0);
+    }
 
     @Override
     public BaseMessageViewHolder createViewHolder(int intType, ViewGroup parent,
@@ -30,6 +52,8 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
                                                   ViewHolderManagerContract viewHolderManagerContract)
             throws UnknownViewTypeException {
         MessageHolderType type = MessageHolderType.values()[intType];
+        notifyCounter(type);
+
         boolean isSelfMessage = type.isSelf();
         switch (type) {
             case ROOM_TEXT_MESSAGE:
@@ -120,5 +144,25 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
         }
         message.setText("Unknown message type");
         return MessageHolderType.ROOM_TEXT_MESSAGE;
+    }
+
+    private void notifyCounter(MessageHolderType type) {
+        if (!BuildConfig.DEBUG) return;
+
+        if (!countMap.containsKey(type)) return;
+
+        Integer count = countMap.get(type);
+        count++;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            countMap.replace(type, count);
+        }
+
+        StringBuilder string = new StringBuilder();
+        for (MessageHolderType key : countMap.keySet()) {
+            string.append(key.name()).append(" - ").
+                    append(countMap.get(key)).append("; ");
+        }
+
+        Logger.logDebug("RoomViewHolderFactory", string.toString());
     }
 }
