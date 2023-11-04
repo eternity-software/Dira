@@ -1,5 +1,7 @@
 package com.diraapp.ui.activities.room;
 
+import static com.diraapp.storage.AppStorage.getPath;
+
 import android.Manifest;
 import android.animation.Animator;
 import android.content.Context;
@@ -82,6 +84,7 @@ import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.SliderActivity;
 import com.diraapp.utils.android.DeviceUtils;
+import com.masoudss.lib.utils.Utils;
 import com.r0adkll.slidr.model.SlidrInterface;
 import com.squareup.picasso.Picasso;
 
@@ -95,6 +98,8 @@ import java.util.List;
 public class RoomActivity extends DiraActivity
         implements RoomActivityContract.View, ProcessorListener, UserStatusListener,
         RecordComponentsController.RecordListener, MessageAdapterContract, FilePickerBottomSheet.MultiFilesListener {
+
+    public static final int SEND_FILE_CODE = 34234;
 
     private static final int DO_NOT_NEED_TO_SCROLL = -1;
 
@@ -305,18 +310,50 @@ public class RoomActivity extends DiraActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
-
             super.onActivityResult(requestCode, resultCode, data);
+
             if (resultCode != RESULT_OK && resultCode != MediaSendActivity.CODE) {
                 return;
             }
+
+            Logger.logDebug("dsjfosdpg", String.valueOf(requestCode));
+
             if (requestCode == 2) {
                 final Bundle extras = data.getExtras();
                 if (extras != null) {
 
-
                 }
+            } else if (requestCode == SEND_FILE_CODE) {
+                if (data == null) {
+                    Logger.logDebug("onActivityResult", "data = null");
+                    return;
+                }
+
+                Uri uri = data.getData();
+                if (uri == null) {
+                    Logger.logDebug("onActivityResult", "uri = null");
+                    return;
+                }
+
+                String path = AppStorage.getPath(this, uri);
+                if (path == null) {
+                    Logger.logDebug("onActivityResult", "path = null");
+                    return;
+                }
+
+                final String messageText = data.getStringExtra("text");
+                presenter.sendStatus(UserStatusType.SENDING_FILE);
+                Logger.logDebug("file", "File Path: " + path);
+
+                ArrayList<Attachment> attachments = new ArrayList<>();
+                RoomActivityPresenter.AttachmentReadyListener attachmentReadyListener = attachment -> {
+                    attachments.add(attachment);
+                    presenter.sendMessage(attachments, messageText);
+                };
+
+                presenter.uploadAttachment(AttachmentType.FILE, attachmentReadyListener, path);
             }
+
             if (resultCode == MediaSendActivity.CODE) {
                 if (filePickerBottomSheet != null) {
 
@@ -332,7 +369,6 @@ public class RoomActivity extends DiraActivity
                 final String messageText = data.getStringExtra("text");
 
                 List<String> fileUris = data.getExtras().getStringArrayList("uris");
-
 
                 try {
                     ArrayList<Attachment> attachments = new ArrayList<>();
@@ -357,6 +393,7 @@ public class RoomActivity extends DiraActivity
                     e.printStackTrace();
                 }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

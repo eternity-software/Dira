@@ -1,7 +1,6 @@
 package com.diraapp.ui.adapters.messages.views.viewholders;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.view.View;
@@ -10,25 +9,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.FileProvider;
 
-import com.diraapp.BuildConfig;
-import com.diraapp.DiraApplication;
 import com.diraapp.R;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.FileAttachmentComponent;
-import com.diraapp.ui.components.VoiceMessageView;
-import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
-import com.diraapp.ui.components.dynamic.ThemeImageView;
 
 import java.io.File;
-import java.io.IOException;
 
 public class FileAttachmentViewHolder extends TextMessageViewHolder {
 
@@ -51,12 +42,7 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
         // stop animation
 
         fileIcon.setOnClickListener((View view) -> {
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                openFileOnNewVersions(attachment, file);
-            } else {
-                openFileOnOldVersions(attachment, file);
-            }
+            openFile(file);
         });
 
     }
@@ -101,25 +87,16 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
                             itemView.getContext(), message.getRoomSecret()), message);
     }
 
-    private void openFileOnNewVersions(Attachment attachment, File file) {
-
-    }
-
-    private void openFileOnOldVersions(Attachment attachment, File file) {
+    private void openFile(File file) {
         Uri fileUri = Uri.fromFile(file);
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_STREAM, fileUri);
-        intent.setType(getFileTypeName(file));
+        intent.setType("*/*");
 
         intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                 | Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
         getMessageAdapterContract().getContext().
                 startActivity(Intent.createChooser(intent, "Share Image:"));
-    }
-
-    private String getFileTypeName(File file) {
-
-        return "image/*";
     }
 }

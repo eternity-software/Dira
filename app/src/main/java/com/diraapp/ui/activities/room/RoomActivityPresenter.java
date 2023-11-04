@@ -751,8 +751,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
                 if (attachment.getAttachmentType() == AttachmentType.IMAGE ||
                         attachment.getAttachmentType() == AttachmentType.BUBBLE ||
-                        attachment.getAttachmentType() == AttachmentType.VIDEO
-                ) {
+                        attachment.getAttachmentType() == AttachmentType.VIDEO) {
 
                     String previewUri = fileUri;
                     Bitmap bitmap = null;

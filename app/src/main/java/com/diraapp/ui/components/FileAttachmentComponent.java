@@ -36,20 +36,15 @@ public class FileAttachmentComponent extends FrameLayout {
                             Theme.getColor(getContext(), R.color.self_message_file_background),
                             PorterDuff.Mode.SRC_IN);
 
-            ((ThemeImageView) findViewById(R.id.message_file_attachment_icon)).
-                    getBackground().setColorFilter(
+            ((ThemeImageView) findViewById(R.id.message_file_attachment_icon)).setColorFilter(
                             Theme.getColor(getContext(), R.color.self_message_file),
                             PorterDuff.Mode.SRC_IN);
 
             ((DynamicTextView) findViewById(R.id.message_file_attachment_name)).
-                    getBackground().setColorFilter(
-                            Theme.getColor(getContext(), R.color.self_message_color),
-                            PorterDuff.Mode.SRC_IN);
+                    setTextColor(Theme.getColor(getContext(), R.color.self_message_color));
 
             ((DynamicTextView) findViewById(R.id.message_file_attachment_size)).
-                    getBackground().setColorFilter(
-                            Theme.getColor(getContext(), R.color.self_message_file_size),
-                            PorterDuff.Mode.SRC_IN);
+                    setTextColor(Theme.getColor(getContext(), R.color.self_message_file_size));
         }
 
         isInit = true;

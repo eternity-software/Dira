@@ -2,6 +2,7 @@ package com.diraapp.ui.bottomsheet.filepicker;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,8 +12,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,11 +25,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.BuildConfig;
 import com.diraapp.R;
+import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.GridItemsSpacingDecorator;
 import com.diraapp.ui.adapters.MediaGridAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
+import com.diraapp.utils.Logger;
 import com.diraapp.utils.android.DeviceUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -40,6 +45,8 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     private static RecyclerView.RecycledViewPool recycledViewPool;
     FrameLayout bottomSheet;
     private View view;
+
+    private EditText messageInput;
     private ArrayList<String> images;
     private MediaGridAdapter mediaGridAdapter;
     /**
@@ -92,11 +99,10 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         recyclerView.addItemDecoration(new GridItemsSpacingDecorator(
                 DeviceUtils.dpToPx(2, getContext()),
                 3));
-        EditText messageInput = view.findViewById(R.id.message_box);
+        messageInput = view.findViewById(R.id.message_box);
         if (messageText != null)
             messageInput.setText(messageText);
         inputContainer = view.findViewById(R.id.linearLayout3);
-
 
 
         view.findViewById(R.id.sendButton).setOnClickListener(v -> {
@@ -111,11 +117,18 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
                     Spinner staticSpinner = (Spinner) view.findViewById(R.id.album_picker);
                     buckets.add(0, getString(R.string.media_gallery));
 
+                    for (int i = 0; i < buckets.size(); i++) {
+                        String s = buckets.get(i);
+                        if (s == null) {
+                            buckets.remove(i);
+                        }
+                    }
+
                     // Create an ArrayAdapter using the string array and a default spinner
                     String[] stringArray = new String[buckets.size()];
                     stringArray = buckets.toArray(stringArray);
                     ArrayAdapter<String> staticAdapter = new ArrayAdapter<String>(getContext(),
-                           R.layout.spinner_row, R.id.spinner_text, stringArray);
+                            R.layout.spinner_row, R.id.spinner_text, stringArray);
 
 
                     // Apply the adapter to the spinner
@@ -127,12 +140,9 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
                         public void onItemSelected(AdapterView<?> parent, View view,
                                                    int position, long id) {
                             Log.v("item", (String) parent.getItemAtPosition(position));
-                            if(position == 0)
-                            {
+                            if (position == 0) {
                                 mediaGridAdapter.loadForBucket(null);
-                            }
-                            else
-                            {
+                            } else {
                                 mediaGridAdapter.loadForBucket((String) parent.getItemAtPosition(position));
                                 BottomSheetBehavior.from(bottomSheet)
                                         .setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -167,6 +177,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
             }
         });
 
+        initDocumentPickerButton();
 
         recyclerView.setAdapter(mediaGridAdapter);
         v2.findViewById(R.id.openCamera).setOnClickListener(new View.OnClickListener() {
@@ -233,6 +244,29 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         this.onDismiss = onDismiss;
     }
 
+    private void initDocumentPickerButton() {
+        final ImageView documentPickerButton = view.findViewById(R.id.documents_picker);
+        documentPickerButton.setOnClickListener((View v) -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*");
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+            intent.putExtra("text", messageInput.getText());
+
+            try {
+                getActivity().startActivityForResult(
+                        Intent.createChooser(intent, "Select a File to Upload"),
+                        RoomActivity.SEND_FILE_CODE);
+            } catch (android.content.ActivityNotFoundException ex) {
+                // Potentially direct the user to the Market with a Dialog
+//                Toast.makeText(this, "Please install a File Manager.",
+//                        Toast.LENGTH_SHORT).show();
+            }
+
+            dismiss();
+        });
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onActivityCreated(Bundle arg0) {
@@ -294,8 +328,8 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
 
     }
-
     public interface MultiFilesListener {
         void onSelectedFilesSent(List<SelectorFileInfo> diraMediaInfoList, String messageText);
+
     }
 }

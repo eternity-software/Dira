@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.ViewHolder>  {
+public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.ViewHolder> {
 
 
     private final int threadCount = 0;
@@ -264,7 +264,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     }
 
     @SuppressLint("Range")
-    private ArrayList<SelectorFileInfo> loadGallery(Cursor cursor,  @Nullable  String specificBucket) {
+    private ArrayList<SelectorFileInfo> loadGallery(Cursor cursor, @Nullable String specificBucket) {
 //            Uri uri;
 //            Cursor cursor;
 //            int column_index_data, column_index_folder_name;
@@ -305,13 +305,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
             String title = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.TITLE));
             String bucketName = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.BUCKET_DISPLAY_NAME));
 
-            if(!buckets.contains(bucketName))
+            if (!buckets.contains(bucketName))
                 buckets.add(bucketName);
 
             boolean isBucketAllowed = true;
-            if(specificBucket != null)
-            {
-                isBucketAllowed = bucketName.equals(specificBucket);
+            if (specificBucket != null) {
+                isBucketAllowed = specificBucket.equals(bucketName);
             }
 
             if ((mimeType.startsWith("image") || mimeType.startsWith("video")) && isBucketAllowed) {
@@ -323,14 +322,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         cursor.close();
 
 
-        if(galleryListener != null)
-        {
+        if (galleryListener != null) {
             galleryListener.onGalleryReady(listOfAllMedia, getBuckets());
             galleryListener = null;
         }
 
-        if(specificBucket != null && listOfAllMedia.size() == 0)
-        {
+        if (specificBucket != null && listOfAllMedia.size() == 0) {
             return loadGallery(cursor, null);
         }
 
@@ -342,8 +339,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         return new ArrayList<>(buckets);
     }
 
-    public void loadForBucket(String bucket)
-    {
+    public void loadForBucket(String bucket) {
         mediaElements = loadGallery(getCursorLoader(isOnlyImages).loadInBackground(), bucket);
         notifyDataSetChanged();
     }
@@ -410,8 +406,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     }
 
 
-    public interface GalleryListener
-    {
+    public interface GalleryListener {
         void onGalleryReady(List<SelectorFileInfo> files, List<String> buckets);
     }
 }
