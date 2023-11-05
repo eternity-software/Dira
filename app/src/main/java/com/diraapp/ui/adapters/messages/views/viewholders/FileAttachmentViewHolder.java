@@ -1,11 +1,13 @@
 package com.diraapp.ui.adapters.messages.views.viewholders;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +18,7 @@ import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentDownloader;
+import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.FileAttachmentComponent;
@@ -30,6 +33,8 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
     private TextView fileAttachmentSize;
 
     private ImageView fileIcon;
+    private ProgressBar progressBar;
+
 
     public FileAttachmentViewHolder(@NonNull ViewGroup itemView,
                                     MessageAdapterContract messageAdapterContract,
@@ -41,10 +46,12 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
     @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
         if (file == null) return;
-
+        progressBar.setVisibility(View.GONE);
+        fileIcon.setVisibility(View.VISIBLE);
         // stop animation
 
-        fileIcon.setOnClickListener((View view) -> {
+        fileIcon.setImageDrawable(itemView.getContext().getDrawable(R.drawable.ic_file));
+        messageContainer.setOnClickListener((View view) -> {
             openFile(file, attachment);
         });
 
@@ -59,6 +66,7 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
 
         fileAttachmentName = itemView.findViewById(R.id.message_file_attachment_name);
         fileAttachmentSize = itemView.findViewById(R.id.message_file_attachment_size);
+        progressBar = itemView.findViewById(R.id.progress_circular);
         fileIcon = itemView.findViewById(R.id.message_file_attachment_icon);
     }
 
@@ -72,26 +80,52 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
         String name = attachment.getDisplayFileName();
 
         if (name.equals(StringFormatter.EMPTY_STRING)) {
-            name = "attachment";
+            name = itemView.getContext().getString(R.string.unknown);
         }
 
-        if (name.length() > 22) {
-            String[] s = name.split("\\.");
-            String type = s[s.length - 1];
 
-            int endIndex = 22 - type.length();
-            if (endIndex < 2) endIndex = 22;
-            name = name.substring(0, endIndex) + type;
+        String[] s = name.split("\\.");
+
+        String type = s[s.length - 1];
+        try {
+            int endIndex = name.length() - type.length() - 1;
+
+            name = name.substring(0, endIndex);
+
+            if (name.length() > 18)
+                name = name.substring(0, 18);
+
         }
+        catch (Exception e)
+        {
+            type = itemView.getContext().getString(R.string.unknown);
+        }
+
+
+
 
         fileAttachmentName.setText(name);
 
-        fileAttachmentSize.setText(AppStorage.getStringSize(attachment.getSize()));
+        fileAttachmentSize.setText(AppStorage.getStringSize(attachment.getSize()) + ", " + type.toUpperCase());
+        progressBar.setVisibility(View.VISIBLE);
+        fileIcon.setVisibility(View.INVISIBLE);
+        fileIcon.setImageDrawable(itemView.getContext().getDrawable(R.drawable.ic_download));
+        messageContainer.setOnClickListener(v -> {
+            SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(itemView.getContext(), false,
+                    attachment,
+                    getMessageAdapterContract().getRoom().getSecretName());
 
-        if (!AttachmentDownloader.isAttachmentSaving(message.getSingleAttachment()))
+            AttachmentDownloader.saveAttachmentAsync(saveAttachmentTask,
+                    getMessageAdapterContract().getRoom().getServerAddress());
+
+        });
+        if (!AttachmentDownloader.isAttachmentSaving(message.getSingleAttachment())) {
+            File attachmentFile = AttachmentDownloader.getFileFromAttachment(message.getSingleAttachment(),
+                    itemView.getContext(), message.getRoomSecret());
             onAttachmentLoaded(message.getSingleAttachment(),
-                    AttachmentDownloader.getFileFromAttachment(message.getSingleAttachment(),
-                            itemView.getContext(), message.getRoomSecret()), message);
+                    attachmentFile, message);
+        }
+
     }
 
     private void openFile(File file, Attachment attachment) {
@@ -103,14 +137,12 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
         intent.setAction(Intent.ACTION_VIEW);
 
         String fileExtension = MimeTypeMap.getFileExtensionFromUrl(attachment.getDisplayFileName());
-        Logger.logDebug("File opening", "fileExtention = " + fileExtension);
+        Logger.logDebug("File opening", "fileExtension = " + fileExtension);
 
         String type;
-        if (fileExtension.equals("")) {
-            type = "*/*";
-        } else {
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
-        }
+
+        type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
+
 
         intent.setDataAndType(uri, type);
         Logger.logDebug("File opening", "File type - " + type + ", " + attachment.getDisplayFileName());

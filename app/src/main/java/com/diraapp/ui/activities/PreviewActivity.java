@@ -276,7 +276,7 @@ public class PreviewActivity extends DiraActivity {
                 try {
                     if(usesSharedTransition)
                          // Wait for animation
-                         Thread.sleep(300);
+                         Thread.sleep(600);
                 } catch (InterruptedException e) {
 
                 }
