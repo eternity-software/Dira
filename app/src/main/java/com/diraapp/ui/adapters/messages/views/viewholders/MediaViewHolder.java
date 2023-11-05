@@ -37,6 +37,7 @@ public class MediaViewHolder extends AttachmentViewHolder implements DiraActivit
     private File currentMediaFile;
 
     private boolean isAttachmentLoaded = false;
+    private boolean isBind = false;
 
     public MediaViewHolder(@NonNull ViewGroup itemView,
                            MessageAdapterContract messageAdapterContract,
@@ -131,6 +132,7 @@ public class MediaViewHolder extends AttachmentViewHolder implements DiraActivit
         super.bindMessage(message, previousMessage);
         previewImage.hideOverlay();
 
+
         isAttachmentLoaded = false;
         videoPlayer.reset();
         videoPlayer.setVisibility(View.GONE);
@@ -144,6 +146,7 @@ public class MediaViewHolder extends AttachmentViewHolder implements DiraActivit
 
 
         currentAttachment = attachment;
+        previewImage.setAttached(true);
         previewImage.prepareForAttachment(attachment, getMessageAdapterContract().getRoom(), () -> {
             if (currentAttachment != attachment){
                 return;
@@ -171,6 +174,7 @@ public class MediaViewHolder extends AttachmentViewHolder implements DiraActivit
 
 
         previewImage.loadAttachmentFile(currentMediaFile);
+        isBind = true;
     }
 
     public void onLoadPercentChanged(Attachment attachment, int percent) {
@@ -184,6 +188,7 @@ public class MediaViewHolder extends AttachmentViewHolder implements DiraActivit
         if (!isInitialized) return;
         videoPlayer.stop();
         previewImage.detach();
+        isBind = false;
     }
 
     @Override
@@ -192,7 +197,7 @@ public class MediaViewHolder extends AttachmentViewHolder implements DiraActivit
         if (!isInitialized) return;
         videoPlayer.pause();
         previewImage.detach();
-
+        isBind = false;
     }
 
     @Override

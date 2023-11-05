@@ -345,11 +345,15 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
     }
 
     public void attach() {
-        if (attachment == null | fileInfo == null) return;
+        if (attachment == null | fileInfo == null | isAttached) return;
         isAttached = true;
         prepareForAttachment(attachment, room, onReady);
 
         loadAttachmentFile(new File(fileInfo.getFilePath()));
+    }
+
+    public void setAttached(boolean attached) {
+        isAttached = attached;
     }
 
     @Override
