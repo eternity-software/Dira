@@ -79,9 +79,9 @@
 
                     <Spinner
                         android:id="@+id/album_picker"
-                        android:layout_width="110dp"
+                        android:layout_width="90dp"
                         android:layout_height="match_parent"
-                        android:drawableEnd="@drawable/ic_dropdown"
+
                         android:fontFamily="@font/montserratsemibold"
                         android:text="@string/media_gallery"
                         android:background="@android:color/transparent"
