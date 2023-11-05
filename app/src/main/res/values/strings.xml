@@ -61,8 +61,8 @@
     <string name="users_status_bubble">%s are recording bubble</string>
     <string name="user_status_picking_file">%s is picking attachment</string>
     <string name="users_status_picking_file">%s are picking attachment</string>
-    <string name="user_status_sending_file">%s are sending attachment</string>
-    <string name="users_status_sending_file">%s is sending attachment</string>
+    <string name="user_status_sending_file">%s is sending attachment</string>
+    <string name="users_status_sending_file">%s are sending attachment</string>
     <string name="recording_prefix">Recording</string>
     <string name="recording_preparing">Preparing camera</string>
     <string name="recording_tip_stop">Release to cancel recording</string>
@@ -202,6 +202,7 @@
 
     <string name="file_saved_successfully">File saved to Downloads</string>
     <string name="file_saving_failed">Failed to save file to Downloads</string>
+    <string name="file_opening_failed">No application to open file</string>
 
     <!-- Message tooltip -->
     <string name="message_tooltip_copy">Copy</string>

@@ -30,6 +30,7 @@ import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.ui.activities.RoomSelectorActivity;
 import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.StringFormatter;
 
 public class Notifier {
 
@@ -54,12 +55,22 @@ public class Notifier {
                         .setPriority(NotificationCompat.PRIORITY_HIGH);
 
         String text = "";
+        boolean hasMessageText = false;
+        if (message.getText() != null) {
+            hasMessageText = message.getText().length() != 0;
+        }
 
         if (message.getCustomClientData() == null) {
             CacheUtils cacheUtils = new CacheUtils(context);
             if (message.getAuthorId().equals(cacheUtils.getString(CacheUtils.ID))) return;
 
-            text = message.getAuthorNickname() + ": " + message.getText();
+            if (hasMessageText) {
+                text = message.getAuthorNickname() + ": " + message.getText();
+            } else if (message.getAttachments().size() > 0) {
+                String attachmentText = message.getAttachmentText(context);
+
+                text = message.getAuthorNickname() + ": " + attachmentText;
+            }
 
         } else if (message.getCustomClientData() instanceof RoomJoinClientData) {
             text = context.getString(R.string.room_update_new_member).replace("%s", ((RoomJoinClientData)
