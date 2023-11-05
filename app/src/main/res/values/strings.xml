@@ -224,6 +224,7 @@
     <string name="message_type_video">Video message</string>
     <string name="message_type_attachments">Group of attachments</string>
     <string name="message_type_image">Image</string>
+    <string name="message_type_file">File</string>
 
     <!-- NON-LANGUAGE STRINGS -->
 

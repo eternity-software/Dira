@@ -74,12 +74,10 @@ public class Attachment {
     public float calculateWidthScale(int maxWidth) {
         int width = getWidth();
 
-
         float scale = (float) maxWidth / width;
 
         if (scale < 1)
             return scale;
-
 
         return 1;
     }

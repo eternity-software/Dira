@@ -622,6 +622,8 @@ public class RoomActivity extends DiraActivity
                     text = getResources().getString(R.string.message_type_video);
                 } else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
                     text = getResources().getString(R.string.message_type_voice);
+                } else if (attachment.getAttachmentType() == AttachmentType.FILE) {
+                    text = getResources().getString(R.string.message_type_file);
                 } else if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
                     text = message.getText();
                     if (text == null | "".equals(text)) {

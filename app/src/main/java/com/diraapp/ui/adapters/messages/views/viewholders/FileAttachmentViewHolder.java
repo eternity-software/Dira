@@ -95,14 +95,9 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
             if (name.length() > 18)
                 name = name.substring(0, 18);
 
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             type = itemView.getContext().getString(R.string.unknown);
         }
-
-
-
 
         fileAttachmentName.setText(name);
 
