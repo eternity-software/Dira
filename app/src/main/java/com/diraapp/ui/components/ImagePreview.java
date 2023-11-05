@@ -259,7 +259,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
         sizeTextView.setVisibility(VISIBLE);
         if(isLoading)
         {
-            sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()) +
+            sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()) + " " +
                     getContext().getString(R.string.attachment_in_queue));
         }
         else
@@ -287,7 +287,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
 
     public void setDownloadPercent(int percent) {
         DiraActivity.runOnMainThread(() -> {
-            sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()) + "(" + percent + "%" + ")");
+            sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()) + " (" + percent + "%" + ")");
         });
 
     }

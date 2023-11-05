@@ -45,7 +45,12 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
 
     @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
-        if (file == null) return;
+        if (file == null) {
+            progressBar.setVisibility(View.GONE);
+            fileIcon.setImageDrawable(itemView.getContext().getDrawable(R.drawable.ic_download));
+            fileIcon.setVisibility(View.VISIBLE);
+            return;
+        }
         progressBar.setVisibility(View.GONE);
         fileIcon.setVisibility(View.VISIBLE);
         // stop animation
@@ -102,8 +107,8 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
         fileAttachmentName.setText(name);
 
         fileAttachmentSize.setText(AppStorage.getStringSize(attachment.getSize()) + ", " + type.toUpperCase());
-        progressBar.setVisibility(View.VISIBLE);
-        fileIcon.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.GONE);
+        fileIcon.setVisibility(View.VISIBLE);
         fileIcon.setImageDrawable(itemView.getContext().getDrawable(R.drawable.ic_download));
         messageContainer.setOnClickListener(v -> {
             SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(itemView.getContext(), false,
@@ -112,13 +117,19 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
 
             AttachmentDownloader.saveAttachmentAsync(saveAttachmentTask,
                     getMessageAdapterContract().getRoom().getServerAddress());
-
+            progressBar.setVisibility(View.VISIBLE);
+            fileIcon.setVisibility(View.INVISIBLE);
         });
         if (!AttachmentDownloader.isAttachmentSaving(message.getSingleAttachment())) {
             File attachmentFile = AttachmentDownloader.getFileFromAttachment(message.getSingleAttachment(),
                     itemView.getContext(), message.getRoomSecret());
             onAttachmentLoaded(message.getSingleAttachment(),
                     attachmentFile, message);
+        }
+        else
+        {
+            progressBar.setVisibility(View.VISIBLE);
+            fileIcon.setVisibility(View.INVISIBLE);
         }
 
     }
