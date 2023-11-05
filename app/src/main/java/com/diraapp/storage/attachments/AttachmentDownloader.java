@@ -57,7 +57,8 @@ public class AttachmentDownloader {
                                                 @Override
                                                 public void onProgressChanged(int progress) {
                                                     AttachmentDownloadHandler handler = downloadHandlerHashMap.get(saveAttachmentTask.getAttachment());
-                                                    if(handler != null) handler.onProgressChanged(progress);
+                                                    if (handler != null)
+                                                        handler.onProgressChanged(progress);
                                                 }
                                             },
                                             address, UpdateProcessor.getInstance().getRoom(saveAttachmentTask.getRoomSecret()).getEncryptionKey()) != null) {
@@ -115,16 +116,13 @@ public class AttachmentDownloader {
     }
 
 
-
-    public static void setDownloadHandlerForAttachment(AttachmentDownloadHandler handler, Attachment attachment)
-    {
+    public static void setDownloadHandlerForAttachment(AttachmentDownloadHandler handler, Attachment attachment) {
         downloadHandlerHashMap.put(attachment, handler);
     }
 
-    public static void removeAttachmentDownloadHandler(AttachmentDownloadHandler handler, Attachment attachment)
-    {
+    public static void removeAttachmentDownloadHandler(AttachmentDownloadHandler handler, Attachment attachment) {
         AttachmentDownloadHandler attachmentDownloadHandler = downloadHandlerHashMap.get(attachment);
-        if(attachmentDownloadHandler == handler)
+        if (attachmentDownloadHandler == handler)
             downloadHandlerHashMap.remove(attachment);
     }
 

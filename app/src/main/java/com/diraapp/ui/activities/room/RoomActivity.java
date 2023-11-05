@@ -335,7 +335,7 @@ public class RoomActivity extends DiraActivity
                     return;
                 }
 
-                String path = AppStorage.getPath(this, uri);
+                String path = AppStorage.getRealPathFromURI(this, uri);
                 if (path == null) {
                     Logger.logDebug("onActivityResult", "path = null");
                     return;

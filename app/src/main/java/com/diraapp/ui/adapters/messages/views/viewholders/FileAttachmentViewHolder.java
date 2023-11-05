@@ -1,14 +1,19 @@
 package com.diraapp.ui.adapters.messages.views.viewholders;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.DocumentsContract;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.FileProvider;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.Attachment;
@@ -18,6 +23,8 @@ import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.FileAttachmentComponent;
+import com.diraapp.utils.Logger;
+import com.diraapp.utils.StringFormatter;
 
 import java.io.File;
 
@@ -42,7 +49,7 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
         // stop animation
 
         fileIcon.setOnClickListener((View view) -> {
-            openFile(file);
+            openFile(file, attachment);
         });
 
     }
@@ -66,7 +73,11 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
         // start animation
 
         Attachment attachment = message.getSingleAttachment();
-        String name = attachment.getFileName();
+        String name = attachment.getRealFileName();
+
+        if (name.equals(StringFormatter.EMPTY_STRING)) {
+            name = "attachment";
+        }
 
         if (name.length() > 22) {
             String[] s = name.split("\\.");
@@ -87,16 +98,30 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
                             itemView.getContext(), message.getRoomSecret()), message);
     }
 
-    private void openFile(File file) {
-        Uri fileUri = Uri.fromFile(file);
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_STREAM, fileUri);
-        intent.setType("*/*");
+    private void openFile(File file, Attachment attachment) {
+        Uri uri = FileProvider.getUriForFile(getMessageAdapterContract().getContext(),
+                getMessageAdapterContract().getContext().
+                        getApplicationContext().getPackageName() + ".provider", file);
 
-        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+
+        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(attachment.getRealFileName());
+        Logger.logDebug("File opening", "fileExtention = " + fileExtension);
+
+        String type;
+        if (fileExtension.equals("")) {
+            type = "*/*";
+        } else {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
+        }
+
+        intent.setDataAndType(uri, type);
+        Logger.logDebug("File opening", "File type - " + type + ", " + attachment.getRealFileName());
+
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
         getMessageAdapterContract().getContext().
-                startActivity(Intent.createChooser(intent, "Share Image:"));
+                startActivity(intent);
     }
 }

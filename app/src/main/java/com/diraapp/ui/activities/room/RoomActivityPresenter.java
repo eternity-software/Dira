@@ -781,6 +781,12 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     attachment.setWidth(this.width);
                 }
 
+                if (attachment.getAttachmentType() == AttachmentType.FILE) {
+                    String[] strings = fileUri.split("/");
+                    String name = strings[strings.length - 1];
+                    attachment.setRealFileName(name);
+                }
+
                 attachmentReadyListener.onReady(attachment);
 
 
