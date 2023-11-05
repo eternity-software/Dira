@@ -21,7 +21,7 @@ public class Attachment {
     private long fileCreatedTime;
     private String fileName;
     private long size;
-    private String realFileName = "";
+    private String displayFileName = "";
     private AttachmentType attachmentType;
 
     @ColumnInfo(defaultValue = "-1")
@@ -132,12 +132,12 @@ public class Attachment {
         this.attachmentType = attachmentType;
     }
 
-    public String getRealFileName() {
-        return realFileName;
+    public String getDisplayFileName() {
+        return displayFileName;
     }
 
-    public void setRealFileName(String realFileName) {
-        this.realFileName = realFileName;
+    public void setDisplayFileName(String displayFileName) {
+        this.displayFileName = displayFileName;
     }
 
     public float getVoiceMessageStopProgress() {

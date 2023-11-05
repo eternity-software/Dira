@@ -19,6 +19,7 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
 import com.diraapp.db.migrations.MessageMigrationFrom17To18;
+import com.diraapp.db.migrations.MessageMigrationFrom21To22;
 
 
 @Database(entities = {Message.class, Room.class, Member.class, Attachment.class,
@@ -36,9 +37,10 @@ import com.diraapp.db.migrations.MessageMigrationFrom17To18;
                 @AutoMigration(from = 17, to = 18, spec = MessageMigrationFrom17To18.class),
                 @AutoMigration(from = 18, to = 19),
                 @AutoMigration(from = 19, to = 20),
-                @AutoMigration(from = 20, to = 21)
+                @AutoMigration(from = 20, to = 21),
+                @AutoMigration(from = 21, to = 22, spec = MessageMigrationFrom21To22.class)
         },
-        version = 21,
+        version = 22,
         exportSchema = true)
 @TypeConverters({AttachmentConverter.class, CustomClientDataConverter.class,
         MessageReadingConverter.class})

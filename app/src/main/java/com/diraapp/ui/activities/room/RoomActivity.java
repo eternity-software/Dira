@@ -334,6 +334,7 @@ public class RoomActivity extends DiraActivity
                 }
 
                 String path = AppStorage.getRealPathFromURI(this, uri);
+                if (path == null) path = AppStorage.getPath(this, uri);
                 if (path == null) {
                     Logger.logDebug("onActivityResult", "path = null");
                     return;
@@ -341,7 +342,7 @@ public class RoomActivity extends DiraActivity
 
                 final String messageText = data.getStringExtra("text");
                 presenter.sendStatus(UserStatusType.SENDING_FILE);
-                Logger.logDebug("file", "File Path: " + path);
+                Logger.logDebug(this.getClass().toString(), "File Path: " + path);
 
                 ArrayList<Attachment> attachments = new ArrayList<>();
                 RoomActivityPresenter.AttachmentReadyListener attachmentReadyListener = attachment -> {

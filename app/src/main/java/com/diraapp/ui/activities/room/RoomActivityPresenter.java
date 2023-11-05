@@ -31,7 +31,6 @@ import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
-import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
 import com.diraapp.ui.components.viewswiper.ViewSwiperListener;
 import com.diraapp.utils.EncryptionUtil;
@@ -784,7 +783,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 if (attachment.getAttachmentType() == AttachmentType.FILE) {
                     String[] strings = fileUri.split("/");
                     String name = strings[strings.length - 1];
-                    attachment.setRealFileName(name);
+                    attachment.setDisplayFileName(name);
                 }
 
                 attachmentReadyListener.onReady(attachment);

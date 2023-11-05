@@ -1,10 +1,7 @@
 package com.diraapp.ui.adapters.messages.views.viewholders;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
-import android.provider.DocumentsContract;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
@@ -12,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 
 import com.diraapp.R;
@@ -73,7 +69,7 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
         // start animation
 
         Attachment attachment = message.getSingleAttachment();
-        String name = attachment.getRealFileName();
+        String name = attachment.getDisplayFileName();
 
         if (name.equals(StringFormatter.EMPTY_STRING)) {
             name = "attachment";
@@ -106,7 +102,7 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
 
-        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(attachment.getRealFileName());
+        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(attachment.getDisplayFileName());
         Logger.logDebug("File opening", "fileExtention = " + fileExtension);
 
         String type;
@@ -117,7 +113,7 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
         }
 
         intent.setDataAndType(uri, type);
-        Logger.logDebug("File opening", "File type - " + type + ", " + attachment.getRealFileName());
+        Logger.logDebug("File opening", "File type - " + type + ", " + attachment.getDisplayFileName());
 
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 

@@ -1,7 +1,5 @@
 package com.diraapp.storage;
 
-import static com.diraapp.storage.attachments.AttachmentDownloader.getFileFromAttachment;
-
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -10,7 +8,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -27,14 +24,12 @@ import com.diraapp.db.entities.Attachment;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
-import com.diraapp.utils.StringFormatter;
 import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -239,7 +234,7 @@ public class AppStorage {
         File downloadsDir = Environment.
                 getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
-        String fileName = attachment.getFileUrl() + "_" + attachment.getRealFileName();
+        String fileName = attachment.getFileUrl() + "_" + attachment.getDisplayFileName();
 
         File downloadsFile = new File(downloadsDir, fileName);
 
