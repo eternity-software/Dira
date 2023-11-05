@@ -1,5 +1,7 @@
 package com.diraapp.storage;
 
+import static com.diraapp.storage.attachments.AttachmentDownloader.getFileFromAttachment;
+
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -8,25 +10,31 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.db.entities.Attachment;
+import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
+import com.diraapp.utils.StringFormatter;
 import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -224,6 +232,39 @@ public class AppStorage {
         return directory.getAbsolutePath() + "/" + fileName;
     }
 
+    public static void saveFileToDownloads(Attachment attachment, Context context,
+                                           String roomSecret) {
+        File sourceFile = AttachmentDownloader.getFileFromAttachment(attachment, context, roomSecret);
+
+        File downloadsDir = Environment.
+                getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+
+        String fileName = attachment.getFileUrl() + "_" + attachment.getRealFileName();
+
+        File downloadsFile = new File(downloadsDir, fileName);
+
+        try {
+            FileInputStream inStream = new FileInputStream(sourceFile);
+            FileOutputStream outStream = new FileOutputStream(downloadsFile);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inStream.read(buffer)) > 0) {
+                outStream.write(buffer, 0, length);
+            }
+
+            inStream.close();
+            outStream.close();
+
+            // File copied successfully
+            Toast.makeText(context, context.getString(R.string.file_saved_successfully), Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the file copy error
+            Toast.makeText(context, context.getString(R.string.file_saving_failed), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public static Bitmap getBitmapFromPath(String sourceFileUri, Context context) {
         try {
             ContentResolver contentResolver = context.getContentResolver();
@@ -312,11 +353,11 @@ public class AppStorage {
                     uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 }
                 selection = "_id=?";
-                selectionArgs = new String[]{ split[1] };
+                selectionArgs = new String[]{split[1]};
             }
         }
         if ("content".equalsIgnoreCase(uri.getScheme())) {
-            String[] projection = { MediaStore.Images.Media.DATA };
+            String[] projection = {MediaStore.Images.Media.DATA};
             Cursor cursor = null;
             try {
                 cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);

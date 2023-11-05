@@ -149,4 +149,7 @@
     <string name="users_status_sending_file">%s отпраялет вложение</string>
     <string name="user_status_sending_file">%s отпраяют вложение</string>
     <string name="room_servers_popup_mitm_text">Любой пользовательский сервер может быть скомпрометирован, добавляйте только те сервера, в которых уверены. Как только сервер будет добавлен, будет раскрыт ваш IP адрес</string>
+    <string name="message_tooltip_download">Скачать файл</string>
+    <string name="file_saved_successfully">Файл успешно сохранён</string>
+    <string name="file_saving_failed">При сохранении произошла ошибка</string>
 </resources>

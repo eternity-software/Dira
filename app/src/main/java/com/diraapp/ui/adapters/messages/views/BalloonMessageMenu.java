@@ -16,9 +16,12 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.db.entities.Attachment;
+import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
+import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.adapters.messagetooltipread.MessageTooltipAdapter;
 import com.diraapp.ui.adapters.messagetooltipread.UserReadMessage;
 import com.diraapp.utils.android.DeviceUtils;
@@ -79,6 +82,8 @@ public class BalloonMessageMenu {
         ImageView firstUserIcon = countRow.findViewById(R.id.icon_user_1);
         ImageView secondUserIcon = countRow.findViewById(R.id.icon_user_2);
         TextView countTextView = countRow.findViewById(R.id.count_row_text);
+
+        initDownloadButton(message, layout);
 
         boolean needCopyRow = message.getText().length() > 0;
         if (!needCopyRow) copyRow.setVisibility(View.GONE);
@@ -180,5 +185,24 @@ public class BalloonMessageMenu {
         }));
 
         balloon.showAlignBottom(view);
+    }
+
+    private void initDownloadButton(Message message, RadiusLayout layout) {
+        if (message.getAttachments().size() != 1) return;
+
+        Attachment attachment = message.getSingleAttachment();
+
+        if (attachment.getAttachmentType() != AttachmentType.FILE) return;
+
+        LinearLayout downloadLayout = layout.findViewById(R.id.save_row);
+        downloadLayout.setVisibility(View.VISIBLE);
+
+        downloadLayout.setOnClickListener((View v) -> {
+
+            AppStorage.saveFileToDownloads(attachment, context, message.getRoomSecret());
+
+            balloon.dismiss();
+        });
+
     }
 }

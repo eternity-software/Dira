@@ -200,8 +200,12 @@
     <string name="unsupported_api_title">Your app is outdated</string>
     <string name="unsupported_api_text">Your client app version does not support one of backend server\'s API. App may not work properly. You can try to update to newest version of Dira.</string>
 
+    <string name="file_saved_successfully">File saved to Downloads</string>
+    <string name="file_saving_failed">Failed to save file to Downloads</string>
+
     <!-- Message tooltip -->
     <string name="message_tooltip_copy">Copy</string>
+    <string name="message_tooltip_download">Download file</string>
     <string name="message_tooltip_read_count">%s read</string>
     <string name="message_tooltip_one_read">%s read</string>
     <string name="message_tooltip_zero_read">Nobody read</string>

@@ -316,8 +316,6 @@ public class RoomActivity extends DiraActivity
                 return;
             }
 
-            Logger.logDebug("dsjfosdpg", String.valueOf(requestCode));
-
             if (requestCode == 2) {
                 final Bundle extras = data.getExtras();
                 if (extras != null) {

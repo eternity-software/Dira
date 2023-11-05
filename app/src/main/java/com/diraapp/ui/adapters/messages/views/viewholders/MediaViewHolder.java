@@ -163,9 +163,6 @@ public class MediaViewHolder extends AttachmentViewHolder implements DiraActivit
             messageText.setVisibility(View.GONE);
         }
 
-
-
-
         if (currentMediaFile == null | AttachmentDownloader.isAttachmentSaving(attachment)) {
             AttachmentDownloader.setDownloadHandlerForAttachment(this, attachment);
         }

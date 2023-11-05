@@ -29,6 +29,35 @@
 
             android:textSize="13sp" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/save_row"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_download"
+            app:tint="@color/white">
+
+        </ImageView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/montserratsemibold"
+            android:includeFontPadding="false"
+            android:text="@string/message_tooltip_download"
+            android:textColor="@color/white"
+
+            android:textSize="13sp" />
+
 
     </LinearLayout>
 
