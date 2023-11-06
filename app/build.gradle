@@ -16,8 +16,8 @@ android {
         applicationId 'com.diraapp'
         minSdk 21
         targetSdk 34
-        versionCode 12
-        versionName '0.7.1-SNAPSHOT'
+        versionCode 13
+        versionName '0.7.2'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

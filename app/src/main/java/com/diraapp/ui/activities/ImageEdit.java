@@ -62,11 +62,7 @@ public class ImageEdit extends DiraActivity {
     private ScaleGestureDetector mScaleDetector;
     private float mScaleFactor = 1.f;
 
-    public static void open(Uri uri, Activity activity) {
-        Intent intent = new Intent(activity, ImageEdit.class);
-        intent.putExtra("uri", uri.getPath());
-        activity.startActivity(intent);
-    }
+
 
     public static void openForResult(Uri uri, Activity activity) {
         Intent intent = new Intent(activity, ImageEdit.class);
@@ -81,7 +77,7 @@ public class ImageEdit extends DiraActivity {
         setContentView(R.layout.activity_image_edit);
         final EditText editText = findViewById(R.id.text);
 
-        String uri = getIntent().getExtras().getString("uri");
+        String uri = getIntent().getExtras().getStringArrayList("uris").get(0);
         final ImageView imageView = findViewById(R.id.mainImageView);
         try {
             imageBitmap = ImageRotationFix.handleSamplingAndRotationBitmapNoCropping(this, Uri.fromFile(new File(uri)));
