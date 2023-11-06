@@ -77,7 +77,7 @@ public class ImageEdit extends DiraActivity {
         setContentView(R.layout.activity_image_edit);
         final EditText editText = findViewById(R.id.text);
 
-        String uri = getIntent().getExtras().getStringArrayList("uris").get(0);
+        String uri = getIntent().getExtras().getString("uri");
         final ImageView imageView = findViewById(R.id.mainImageView);
         try {
             imageBitmap = ImageRotationFix.handleSamplingAndRotationBitmapNoCropping(this, Uri.fromFile(new File(uri)));

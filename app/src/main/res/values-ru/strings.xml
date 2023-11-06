@@ -135,8 +135,8 @@
     <string name="user_status_bubble">%s записывает пузырёк</string>
     <string name="message_tooltip_only_you_read">Только Вы</string>
     <string name="users_status_bubble">%s записывают пузырёк</string>
-    <string name="users_status_picking_file">%s отпраляют файл</string>
-    <string name="user_status_picking_file">%s отпраляет файлы</string>
+    <string name="users_status_picking_file">%s выбирают вложение</string>
+    <string name="user_status_picking_file">%s выбирает вложение</string>
     <string name="crash_title">Очень жаль, но…</string>
     <string name="crash_text">Острая курочка во фритюре пришла и сломала приложение, простите пожалуйста</string>
     <string name="crash_button_reopen">Открыть Dira</string>
