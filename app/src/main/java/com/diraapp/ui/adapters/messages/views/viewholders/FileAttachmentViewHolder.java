@@ -9,6 +9,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
@@ -125,9 +126,7 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
                     itemView.getContext(), message.getRoomSecret());
             onAttachmentLoaded(message.getSingleAttachment(),
                     attachmentFile, message);
-        }
-        else
-        {
+        } else {
             progressBar.setVisibility(View.VISIBLE);
             fileIcon.setVisibility(View.INVISIBLE);
         }
@@ -135,27 +134,35 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
     }
 
     private void openFile(File file, Attachment attachment) {
-        Uri uri = FileProvider.getUriForFile(getMessageAdapterContract().getContext(),
-                getMessageAdapterContract().getContext().
-                        getApplicationContext().getPackageName() + ".provider", file);
+        try {
+            Uri uri = FileProvider.getUriForFile(getMessageAdapterContract().getContext(),
+                    getMessageAdapterContract().getContext().
+                            getApplicationContext().getPackageName() + ".provider", file);
 
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
 
-        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(attachment.getDisplayFileName());
-        Logger.logDebug("File opening", "fileExtension = " + fileExtension);
+            String fileExtension = MimeTypeMap.getFileExtensionFromUrl(attachment.getDisplayFileName());
+            Logger.logDebug("File opening", "fileExtension = " + fileExtension);
 
-        String type;
+            String type;
 
-        type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
 
 
-        intent.setDataAndType(uri, type);
-        Logger.logDebug("File opening", "File type - " + type + ", " + attachment.getDisplayFileName());
+            intent.setDataAndType(uri, type);
+            Logger.logDebug("File opening", "File type - " + type + ", " + attachment.getDisplayFileName());
 
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-        getMessageAdapterContract().getContext().
-                startActivity(intent);
+            getMessageAdapterContract().getContext().
+                    startActivity(intent);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getMessageAdapterContract().getContext(),
+                    getMessageAdapterContract().getContext().getString(R.string.file_opening_failed),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }

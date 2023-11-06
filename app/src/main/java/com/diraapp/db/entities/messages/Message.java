@@ -1,15 +1,19 @@
 package com.diraapp.db.entities.messages;
 
+import android.content.Context;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
+import com.diraapp.R;
 import com.diraapp.db.converters.AttachmentConverter;
 import com.diraapp.db.converters.CustomClientDataConverter;
 import com.diraapp.db.converters.MessageReadingConverter;
 import com.diraapp.db.entities.Attachment;
+import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
 import com.diraapp.exceptions.UnknownAuthorException;
 import com.diraapp.utils.CacheUtils;
@@ -20,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 @Entity
 @TypeConverters({AttachmentConverter.class, CustomClientDataConverter.class,
@@ -49,6 +54,9 @@ public class Message {
     private long lastTimeEncryptionKeyUpdated;
 
     private ArrayList<MessageReading> messageReadingList = new ArrayList<>();
+
+
+    private static HashMap<AttachmentType, Integer> attachmentTypeStringHashMap = new HashMap<>();
 
     @Ignore
     public Message(String authorId, String text, String authorNickname) {
@@ -238,6 +246,34 @@ public class Message {
 
     public void setRepliedMessage(Message repliedMessage) {
         this.repliedMessage = repliedMessage;
+    }
+
+    public String getAttachmentText(Context context) {
+        if (attachmentTypeStringHashMap.size() == 0) initAttachmentTypesHashMap();
+
+        int size = getAttachments().size();
+        if (size > 0) {
+            Integer stringId;
+            if (size > 1) {
+                stringId = R.string.message_type_attachments;
+            } else {
+                AttachmentType type = getSingleAttachment().getAttachmentType();
+                stringId = attachmentTypeStringHashMap.get(type);
+            }
+
+            if (stringId == null) return null;
+
+            return context.getString(stringId);
+        }
+        return null;
+    }
+
+    private static void initAttachmentTypesHashMap() {
+        attachmentTypeStringHashMap.put(AttachmentType.IMAGE, R.string.message_type_image);
+        attachmentTypeStringHashMap.put(AttachmentType.VIDEO, R.string.message_type_video);
+        attachmentTypeStringHashMap.put(AttachmentType.FILE, R.string.message_type_file);
+        attachmentTypeStringHashMap.put(AttachmentType.VOICE, R.string.message_type_voice);
+        attachmentTypeStringHashMap.put(AttachmentType.BUBBLE, R.string.message_type_bubble);
     }
 
     @Override

@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.db.entities.Attachment;
+import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.customclientdata.KeyGenerateStartClientData;
@@ -24,9 +26,11 @@ import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientDat
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.StringFormatter;
 import com.diraapp.utils.TimeConverter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapter.ViewHolder> {
@@ -40,7 +44,6 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
     public RoomSelectorAdapter(Activity context) {
         this.context = context;
         layoutInflater = LayoutInflater.from(context);
-
     }
 
     public void setRoomList(List<Room> roomList) {
@@ -81,6 +84,9 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
         try {
             if (message != null) {
                 boolean hasMessageText = false;
+                if (message.getText() != null) {
+                    hasMessageText = message.getText().length() != 0;
+                }
 
                 if (message.getCustomClientData() == null) {
                     String authorPrefix = message.getAuthorNickname();
@@ -97,11 +103,19 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
                             }
                         }
                     }
-                    holder.messageText.setText(message.getText());
-                    holder.accentText.setText(authorPrefix + ": ");
+
+                    if (hasMessageText) {
+                        holder.messageText.setText(message.getText());
+                        holder.accentText.setText(authorPrefix + ": ");
+                    } else if (message.getAttachments().size() > 0) {
+                        String attachmentText = message.getAttachmentText(context);
+
+                        holder.messageText.setText(StringFormatter.EMPTY_STRING);
+                        holder.accentText.setText(authorPrefix + ": " + attachmentText);
+                    }
+
                     holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime()));
 
-                    hasMessageText = true;
                 } else if (message.getCustomClientData() instanceof RoomJoinClientData) {
                     holder.accentText.setText(context.getString(R.string.room_update_new_member)
                             .replace("%s", ((RoomJoinClientData)
