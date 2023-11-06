@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -15,6 +16,7 @@ import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.components.ImagePreview;
 import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.ui.components.WaterfallImageView;
+import com.diraapp.utils.ImageRotationFix;
 import com.diraapp.utils.Logger;
 
 import java.io.File;
@@ -82,7 +84,14 @@ public class WaterfallImageLoader {
                                                 }
 
                                             } else {
-                                                bitmap = decodeFile(new File(imageView.getFileInfo().getFilePath()));
+
+                                                if (imageView.getFileInfo().isImage()) {
+                                                    bitmap = ImageRotationFix.handleSamplingAndRotationBitmap(activity, Uri.fromFile(new File(imageView.getFileInfo().getFilePath())));
+                                                }
+                                                else
+                                                {
+                                                    bitmap = decodeFile(new File(imageView.getFileInfo().getFilePath()));
+                                                }
                                             }
                                         } else {
                                             bitmap = imageView.getFileInfo().getVideoThumbnail();
@@ -130,7 +139,7 @@ public class WaterfallImageLoader {
                                                                 else
                                                                 {
                                                                     waterfallCallback.onImageProcessedSuccess(imageView);
-                                                                    bitmap.recycle();
+                                                                    finalBitmap.recycle();
                                                                     return;
                                                                 }
 

@@ -51,6 +51,7 @@ public class PreviewActivity extends DiraActivity {
     private VideoPlayer videoPlayer;
     private boolean isShown = false;
     private boolean isInTransition = false;
+    private boolean isVideo = false;
     private TouchImageView touchImageView;
     private boolean usesSharedTransition;;
     private String uri;
@@ -97,7 +98,7 @@ public class PreviewActivity extends DiraActivity {
         setContentView(R.layout.activity_preview);
 
         uri = getIntent().getExtras().getString(URI);
-        boolean isVideo = getIntent().getExtras().getBoolean(IS_VIDEO);
+         isVideo = getIntent().getExtras().getBoolean(IS_VIDEO);
 
 
         touchImageView = findViewById(R.id.image_view);
@@ -159,7 +160,8 @@ public class PreviewActivity extends DiraActivity {
                 }
                 super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
 
-                touchImageView.setImageBitmap(transitionBitmap);
+                if(!isVideo)
+                    touchImageView.setImageBitmap(transitionBitmap);
                 isInTransition = false;
             }
         });
@@ -267,6 +269,7 @@ public class PreviewActivity extends DiraActivity {
         super.onStart();
         DiraActivity.runGlobalBackground(() -> {
             Bitmap bitmap = AppStorage.getBitmapFromPath(uri);
+            if(isVideo) return;
             try {
                 if(usesSharedTransition)
                     // Wait for animation
@@ -275,7 +278,7 @@ public class PreviewActivity extends DiraActivity {
 
             }
             runOnUiThread(() -> {
-                if(isDestroyed() | isInTransition) return;
+                if(isDestroyed() | isInTransition ) return;
                 try {
 
                      PreviewActivity.this.currentBitmap = bitmap;
