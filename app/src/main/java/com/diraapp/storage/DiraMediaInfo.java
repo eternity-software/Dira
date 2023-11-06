@@ -54,11 +54,11 @@ public class DiraMediaInfo {
     }
 
     public boolean isImage() {
-        return FileClassifier.isImageFile(filePath);
+        return mimeType.startsWith(MIME_TYPE_IMAGE);
     }
 
     public boolean isVideo() {
-        return FileClassifier.isVideoFile(filePath);
+        return mimeType.startsWith(MIME_TYPE_VIDEO);
     }
 
     public Bitmap getVideoThumbnail() {
