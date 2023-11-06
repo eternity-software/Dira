@@ -45,6 +45,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     private Runnable transitionReenter;
 
     private boolean multiSelect = false;
+    private String currentBucket = "";
 
     private List<SelectorFileInfo> selectedFiles = new ArrayList<>();
     private HashMap<MediaGridItem, SelectorFileInfo> selectedViews = new HashMap<>();
@@ -265,6 +266,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
     @SuppressLint("Range")
     private ArrayList<SelectorFileInfo> loadGallery(Cursor cursor, @Nullable String specificBucket) {
+        if(currentBucket == null && specificBucket == null) return getMediaElements();
+        if(currentBucket != null)
+            if(currentBucket.equals(specificBucket)) return getMediaElements();
+
+        currentBucket = specificBucket;
 //            Uri uri;
 //            Cursor cursor;
 //            int column_index_data, column_index_folder_name;

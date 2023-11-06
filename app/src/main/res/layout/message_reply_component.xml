@@ -72,6 +72,7 @@
             android:fontFamily="@font/montserratsemibold"
             android:gravity="bottom"
             android:maxLines="1"
+            android:singleLine="true"
 
             android:text="Message text"
             android:textColor="@color/white"
