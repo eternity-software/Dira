@@ -33,7 +33,7 @@
 
         android:clipToPadding="false"
         android:nestedScrollingEnabled="false"
-
+        android:layoutAnimation="@anim/layout_items_animation"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"

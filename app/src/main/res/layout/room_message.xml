@@ -42,10 +42,10 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/picture_container"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="38dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            app:cardCornerRadius="100dp"
+            app:cardCornerRadius="32dp"
             app:cardBackgroundColor="@android:color/transparent"
             app:cardElevation="0dp">
 
@@ -53,7 +53,7 @@
                 android:id="@+id/profile_picture"
 
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="38dp"
                 android:src="@drawable/placeholder" />
         </androidx.cardview.widget.CardView>
 
@@ -72,9 +72,10 @@
                 android:layout_weight="0"
 
                 android:fontFamily="@font/montserratbold"
-                android:paddingHorizontal="3dp"
+                android:paddingRight="3dp"
                 android:paddingBottom="5dp"
                 android:text="Author"
+                android:gravity="top"
                 android:textColor="@color/author_color"
                 android:textSize="12sp"
 
@@ -159,6 +160,7 @@
                     android:backgroundTint="@color/gray_trans"
                     android:fontFamily="@font/montserratsemibold"
                     android:gravity="center"
+                    android:alpha="0.8"
                     android:maxLines="1"
                     android:minWidth="20dp"
                     android:paddingHorizontal="6dp"

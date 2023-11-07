@@ -178,6 +178,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
 
             if (!showProfilePicture) {
                 profilePictureContainer.setVisibility(View.INVISIBLE);
+                profilePicture.setVisibility(View.GONE);
                 nicknameText.setVisibility(View.GONE);
             }
 
@@ -188,7 +189,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
                     nicknameText.setText(member.getNickname());
                     if (showProfilePicture) {
                         if (member.getImagePath() != null) {
-                            // TODO: custom image loader
+
                             int imageSize = DeviceUtils.dpToPx(40, itemView.getContext());
                             Picasso.get().load(new File(member.getImagePath()))
                                     .resize(imageSize, imageSize)
@@ -196,11 +197,16 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
                         } else {
                             profilePicture.setImageResource(R.drawable.placeholder);
                         }
+                        profilePicture.setVisibility(View.VISIBLE);
                         profilePictureContainer.setVisibility(View.VISIBLE);
                         nicknameText.setText(message.getAuthorNickname());
                         nicknameText.setVisibility(View.VISIBLE);
                     }
                 } else if (showProfilePicture) {
+                    profilePicture.setVisibility(View.VISIBLE);
+                    profilePicture.setImageDrawable(itemView.getContext().
+                            getDrawable(R.drawable.placeholder));
+                    profilePictureContainer.setVisibility(View.VISIBLE);
                     nicknameText.setText(message.getAuthorNickname());
                     nicknameText.setVisibility(View.VISIBLE);
                 }

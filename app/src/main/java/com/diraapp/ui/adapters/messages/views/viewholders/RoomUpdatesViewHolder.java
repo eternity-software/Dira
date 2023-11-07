@@ -77,6 +77,10 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
             Picasso.get().load(new File(imagePath))
                     .resize(imageSize, imageSize).into(profilePicture);
         }
+        else
+        {
+            profilePicture.setImageDrawable(itemView.getContext().getDrawable(R.drawable.placeholder));
+        }
 
         Context context = this.itemView.getContext();
         if (message.getCustomClientData() instanceof RoomJoinClientData) {

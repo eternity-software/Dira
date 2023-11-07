@@ -115,7 +115,8 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
 
             } else if (message.getText().length() > 0) {
                 if (StringFormatter.isEmoji(message.getText()) &&
-                        StringFormatter.getEmojiCount(message.getText()) < 4) {
+                        StringFormatter.getEmojiCount(message.getText()) < 4
+                && message.getRepliedMessageId() == null) {
                     return MessageHolderType.SELF_EMOJI_MESSAGE;
                 }
                 return MessageHolderType.SELF_TEXT_MESSAGE;

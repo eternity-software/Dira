@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,6 +29,7 @@ import androidx.annotation.Nullable;
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 import androidx.core.app.ActivityCompat;
 import androidx.core.widget.ImageViewCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -159,6 +162,7 @@ public class RoomActivity extends DiraActivity
         binding.recyclerView.setNestedScrollingEnabled(false);
         binding.recyclerView.setItemViewCacheSize(2);
 
+        binding.recyclerView.setItemAnimator(new MessageItemAnimator());
         ViewSwiper viewSwiper = new ViewSwiper(binding.recyclerView);
         viewSwiper.setViewSwiperListener((ViewSwiperListener) presenter);
 
@@ -347,6 +351,8 @@ public class RoomActivity extends DiraActivity
                     return;
                 }
 
+
+                binding.messageTextInput.setText("");
                 final String messageText = data.getStringExtra("text");
                 presenter.sendStatus(UserStatusType.SENDING_FILE);
                 Logger.logDebug(this.getClass().toString(), "File Path: " + path);
@@ -373,7 +379,7 @@ public class RoomActivity extends DiraActivity
                     }
                 }
                 final String messageText = data.getStringExtra("text");
-
+                binding.messageTextInput.setText("");
                 List<String> fileUris = data.getExtras().getStringArrayList("uris");
 
                 try {
