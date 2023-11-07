@@ -30,7 +30,7 @@ public class MessageItemAnimator extends DefaultItemAnimator {
                 view.setTranslationX((float) (view.getTranslationX() - view.getWidth() * 0.2));
             }
 
-            view.setTranslationY(y + view.getHeight());
+            view.setTranslationY(y + view.getHeight() * 2);
             view.animate().translationY(y).setDuration((long) (getMoveDuration() * 1.2)).start();
             view.animate().translationX(x).setDuration((long) (getMoveDuration() * 1.4))
                     .setInterpolator(new DecelerateInterpolator(2f)).start();
