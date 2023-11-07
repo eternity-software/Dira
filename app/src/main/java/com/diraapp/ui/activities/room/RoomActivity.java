@@ -132,6 +132,7 @@ public class RoomActivity extends DiraActivity
     private RecordComponentsController recordComponentsController;
     private RoomActivityContract.Presenter presenter;
     private int lastVisiblePosition = 0;
+    private ViewSwiper viewSwiper;
 
     private boolean isScrollIndicatorShown = true;
 
@@ -163,7 +164,7 @@ public class RoomActivity extends DiraActivity
         binding.recyclerView.setItemViewCacheSize(2);
 
         binding.recyclerView.setItemAnimator(new MessageItemAnimator());
-        ViewSwiper viewSwiper = new ViewSwiper(binding.recyclerView);
+        viewSwiper = new ViewSwiper(binding.recyclerView);
         viewSwiper.setViewSwiperListener((ViewSwiperListener) presenter);
 
 //        binding.recyclerView.getRecycledViewPool().setMaxRecycledViews(1, 4);

@@ -40,8 +40,12 @@ public class ViewSwiper {
     }
 
     public boolean onMotionEvent(RecyclerView rv, MotionEvent event) {
+        canScroll = true;
         View child = rv.findChildViewUnder(event.getX(), event.getY());
-        if (child == null && downView == null) return false;
+        if (child == null && downView == null) {
+
+            return false;
+        }
 
         if (child == null) child = downView;
 
@@ -53,6 +57,7 @@ public class ViewSwiper {
         if (viewHolder == null) return false;
 
         int position = viewHolder.getAdapterPosition();
+
 
 
         if (focusedView != null && child != focusedView) focusedView.animate().x(0)
@@ -102,10 +107,9 @@ public class ViewSwiper {
                     }
                 }
                 break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-            case MotionEvent.ACTION_HOVER_EXIT:
+            default:
 
+                canScroll = true;
                 if (isDown) {
                     isDown = false;
                     downX = 0;
@@ -116,7 +120,7 @@ public class ViewSwiper {
                     downView.animate().x(0).setInterpolator(new DecelerateInterpolator(2f))
                             .setDuration(200);
                     notifyScrollStateChanged(true);
-
+                    isSwiped = false;
                 }
         }
 
