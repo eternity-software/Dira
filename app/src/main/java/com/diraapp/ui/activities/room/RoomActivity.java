@@ -879,12 +879,15 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void notifyRecyclerMessageRead(Message message, int pos) {
+        if (message.getMessageReadingList().size() > 1) return;
         runOnUiThread(() -> {
             BaseMessageViewHolder holder = (BaseMessageViewHolder) binding.recyclerView.
                     findViewHolderForAdapterPosition(pos);
 
-            if (holder == null) return;
-            if (message.getMessageReadingList().size() > 1) return;
+            if (holder == null) {
+                messagesAdapter.notifyItemChanged(pos);
+                return;
+            }
 
             holder.updateMessageReading(message, true);
         });
