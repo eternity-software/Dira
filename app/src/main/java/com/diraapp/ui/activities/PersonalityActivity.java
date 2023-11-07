@@ -142,7 +142,7 @@ public class PersonalityActivity extends DiraActivity {
                 }
             }
             final String message = data.getStringExtra("text");
-            String imageUri = data.getStringExtra("uri");
+            String imageUri = data.getStringArrayListExtra("uris").get(0);
 
 
             try {

@@ -145,7 +145,7 @@ public class RoomSelectorActivity extends AppCompatActivity
         updateRooms(true);
 
 
-        if (!hasAllPermissions()) {
+        if (!hasAllCriticalPermissions()) {
             askForPermissions();
         }
 
@@ -161,7 +161,7 @@ public class RoomSelectorActivity extends AppCompatActivity
         DiraPopup diraPopup = new DiraPopup(RoomSelectorActivity.this);
         diraPopup.setCancellable(false);
         diraPopup.show(getString(R.string.permissions_request_title),
-                getString(R.string.permissions_request_text),
+                getString(R.string.permissions_request_text) + " " + getBadPermissionString(),
                 null,
                 null, new Runnable() {
                     @Override
@@ -196,18 +196,39 @@ public class RoomSelectorActivity extends AppCompatActivity
 
     }
 
-    private boolean hasAllPermissions() {
+    private boolean hasAllCriticalPermissions() {
 
         for (String permission : getPermissions()) {
             if (ContextCompat.checkSelfPermission(this, permission)
                     != PackageManager.PERMISSION_GRANTED) {
-                Logger.logDebug(this.getClass().getSimpleName(),
-                        "Permission not granted: " + permission);
-                return false;
+                if(!permission.equals(Manifest.permission.ACCESS_NOTIFICATION_POLICY) &&
+                        !permission.equals(Manifest.permission.ACCESS_MEDIA_LOCATION)) {
+                    Logger.logDebug(this.getClass().getSimpleName(),
+                            "Permission not granted: " + permission);
+                    return false;
+                }
             }
         }
 
         return true;
+
+    }
+
+
+    private String getBadPermissionString() {
+
+        for (String permission : getPermissions()) {
+            if (ContextCompat.checkSelfPermission(this, permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                if(!permission.equals(Manifest.permission.ACCESS_NOTIFICATION_POLICY)) {
+                    Logger.logDebug(this.getClass().getSimpleName(),
+                            "Permission not granted: " + permission);
+                    return permission;
+                }
+            }
+        }
+
+        return null;
 
     }
 
@@ -220,6 +241,9 @@ public class RoomSelectorActivity extends AppCompatActivity
             permissions.add(Manifest.permission.READ_MEDIA_VIDEO);
             permissions.add(Manifest.permission.POST_NOTIFICATIONS);
             permissions.add(Manifest.permission.ACCESS_MEDIA_LOCATION);
+            permissions.add(Manifest.permission.READ_MEDIA_IMAGES);
+            permissions.add(Manifest.permission.READ_MEDIA_VIDEO);
+            permissions.add(Manifest.permission.READ_MEDIA_AUDIO);
         }
 
 

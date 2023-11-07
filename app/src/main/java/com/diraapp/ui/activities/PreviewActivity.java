@@ -98,7 +98,7 @@ public class PreviewActivity extends DiraActivity {
         setContentView(R.layout.activity_preview);
 
         uri = getIntent().getExtras().getString(URI);
-         isVideo = getIntent().getExtras().getBoolean(IS_VIDEO);
+        isVideo = getIntent().getExtras().getBoolean(IS_VIDEO);
 
 
         touchImageView = findViewById(R.id.image_view);
@@ -111,6 +111,7 @@ public class PreviewActivity extends DiraActivity {
             usesSharedTransition = true;
         else {
             usesSharedTransition = false;
+            isShown = true;
         }
         bitmapPool = null;
 

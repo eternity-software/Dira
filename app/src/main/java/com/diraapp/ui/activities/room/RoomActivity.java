@@ -299,11 +299,18 @@ public class RoomActivity extends DiraActivity
                     cacheUtils.getString(CacheUtils.BACKGROUND_PATH)));
             return;
         }
-        int drawableResourceId = this.getResources().getIdentifier(
-                "background_" + cacheUtils.getString(CacheUtils.BACKGROUND).toLowerCase(),
-                "drawable", this.getPackageName());
-        backgroundView.setColorFilter(Theme.getColor(this, R.color.gray));
-        backgroundView.setImageDrawable(getDrawable(drawableResourceId));
+        try {
+            int drawableResourceId = this.getResources().getIdentifier(
+                    "background_" + cacheUtils.getString(CacheUtils.BACKGROUND).toLowerCase(),
+                    "drawable", this.getPackageName());
+            backgroundView.setColorFilter(Theme.getColor(this, R.color.gray));
+            backgroundView.setImageDrawable(getDrawable(drawableResourceId));
+        }
+        catch (Exception e)
+        {
+            backgroundView.setImageBitmap(null);
+        }
+
 
     }
 

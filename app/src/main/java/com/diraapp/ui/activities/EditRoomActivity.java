@@ -128,7 +128,7 @@ public class EditRoomActivity extends DiraActivity implements ServerSelectorBott
                 }
             }
 
-            String imageUri = data.getStringExtra("uri");
+            String imageUri = data.getStringArrayListExtra("uris").get(0);
 
 
             updatePicture(imageUri);

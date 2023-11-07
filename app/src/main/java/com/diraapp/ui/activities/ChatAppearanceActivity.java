@@ -280,7 +280,7 @@ public class ChatAppearanceActivity extends DiraActivity {
                 }
             }
 
-            String path = data.getStringExtra("uri");
+            String path = data.getStringArrayListExtra("uris").get(0);
 
             applyCustomBackground(path);
         }
