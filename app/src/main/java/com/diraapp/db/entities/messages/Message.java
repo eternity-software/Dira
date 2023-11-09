@@ -108,6 +108,12 @@ public class Message {
         return !isRead() && isClientDataReadable && hasAuthor();
     }
 
+    public boolean isUserMessage() {
+        if (customClientData == null) return true;
+
+        return customClientData.getMessageType() == MessageType.UNENCRYPTED_USER_MESSAGE;
+    }
+
     public boolean isSameDay(Message messageToCompare) {
         Date date = new Date(getTime());
         Date dateCompare = new Date(messageToCompare.getTime());

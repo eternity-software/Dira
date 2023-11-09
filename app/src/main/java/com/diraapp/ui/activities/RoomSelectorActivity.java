@@ -24,6 +24,8 @@ import com.diraapp.api.processors.listeners.ProcessorListener;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.GetUpdatesRequest;
 import com.diraapp.api.updates.MessageReadUpdate;
+import com.diraapp.api.updates.NewMessageUpdate;
+import com.diraapp.api.updates.RoomUpdate;
 import com.diraapp.api.updates.ServerSyncUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
@@ -33,6 +35,7 @@ import com.diraapp.api.userstatus.UserStatusListener;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.daos.MessageDao;
+import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
@@ -84,6 +87,12 @@ public class RoomSelectorActivity extends AppCompatActivity
     private List<Room> roomList = new ArrayList<>();
     private CacheUtils cacheUtils;
 
+    private RecyclerView recyclerView;
+
+    private RoomDao roomDao;
+
+    private MessageDao messageDao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +118,8 @@ public class RoomSelectorActivity extends AppCompatActivity
 
 
         cacheUtils = new CacheUtils(getApplicationContext());
+        roomDao = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao();
+        messageDao = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao();
 
         if (!cacheUtils.hasKey(CacheUtils.AUTO_LOAD_SIZE)) {
             cacheUtils.setLong(CacheUtils.AUTO_LOAD_SIZE, AppStorage.MAX_DEFAULT_ATTACHMENT_AUTOLOAD_SIZE);
@@ -257,7 +268,6 @@ public class RoomSelectorActivity extends AppCompatActivity
 
     }
 
-
     private void updateRooms() {
         updateRooms(false);
     }
@@ -265,15 +275,14 @@ public class RoomSelectorActivity extends AppCompatActivity
     private void updateRooms(boolean updateRooms) {
         if (isRoomsUpdating) return;
         isRoomsUpdating = true;
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recycler_view);
         Thread loadDataThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    roomList = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getAllRoomsByUpdatedTime();
+                    roomList = roomDao.getAllRoomsByUpdatedTime();
                     roomSelectorAdapter = new RoomSelectorAdapter(RoomSelectorActivity.this);
 
-                    MessageDao messageDao = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao();
                     for (Room room : new ArrayList<>(roomList)) {
                         Message message = messageDao.getMessageById(room.getLastMessageId());
                         room.setMessage(message);
@@ -309,6 +318,46 @@ public class RoomSelectorActivity extends AppCompatActivity
             }
         });
         loadDataThread.start();
+    }
+
+    private void updateRoom(String roomSecret) {
+        DiraActivity.runGlobalBackground(() -> {
+            Room room = roomDao.getRoomBySecretName(roomSecret);
+            if (room == null) {
+                Logger.logDebug(RoomSelectorActivity.class.toString(), "room = null" );
+                return;
+            }
+
+            Message message = messageDao.getMessageById(room.getLastMessageId());
+            room.setMessage(message);
+
+            runOnUiThread(() -> {
+                int pos = -1;
+                for (int i = 0; i < roomList.size(); i++) {
+                    Room r = roomList.get(i);
+                    if (r.getSecretName().equals(roomSecret)) {
+                        pos = i;
+                        break;
+                    }
+                }
+
+                if (pos == -1) {
+                    Logger.logDebug(RoomSelectorActivity.class.toString(), "pos = -1" );
+                    return;
+                }
+                roomList.set(pos, room);
+
+                RoomSelectorAdapter.ViewHolder holder = (RoomSelectorAdapter.ViewHolder)
+                        recyclerView.findViewHolderForAdapterPosition(pos);
+
+                if (holder == null) {
+                    roomSelectorAdapter.notifyItemChanged(pos);
+                    return;
+                }
+
+                holder.onBind(room);
+            });
+        });
     }
 
     @Override
@@ -370,9 +419,9 @@ public class RoomSelectorActivity extends AppCompatActivity
     @Override
     public void onUpdate(Update update) {
         if (update.getUpdateType() == UpdateType.NEW_MESSAGE_UPDATE) {
-            updateRooms();
+            updateRoom(((NewMessageUpdate) update).getMessage().getRoomSecret());
         } else if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
-            updateRooms();
+            updateRoom(((RoomUpdate) update).getRoomSecret());
         } else if (update.getUpdateType() == UpdateType.SERVER_SYNC) {
             if (!((ServerSyncUpdate) update).getSupportedApis().contains(UpdateProcessor.API_VERSION)) {
                 runOnUiThread(new Runnable() {
@@ -393,37 +442,38 @@ public class RoomSelectorActivity extends AppCompatActivity
                 });
             }
         } else if (update.getUpdateType() == UpdateType.READ_UPDATE) {
-            Message message = null;
-            int index = -1;
-
-            for (Room room : new ArrayList<>(roomList)) {
-                if (room.getSecretName().equals(update.getRoomSecret())) {
-                    message = room.getMessage();
-                    index = roomList.indexOf(room);
-                    break;
-                }
-            }
-
-            if (message == null) return;
-            if (index == -1) return;
-
-            if (!message.getAuthorId().equals(cacheUtils.getString(CacheUtils.ID))) return;
-
-            if (message.getMessageReadingList().size() != 0) return;
-
-            MessageReadUpdate messageReadUpdate = (MessageReadUpdate) update;
-
-            MessageReading reading = new MessageReading(messageReadUpdate.getUserId(),
-                    messageReadUpdate.getReadTime());
-
-            message.getMessageReadingList().add(reading);
-            int finalIndex = index;
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    roomSelectorAdapter.notifyItemChanged(finalIndex);
-                }
-            });
+            updateRoom(((MessageReadUpdate) update).getRoomSecret());
+//            Message message = null;
+//            int index = -1;
+//
+//            for (Room room : new ArrayList<>(roomList)) {
+//                if (room.getSecretName().equals(update.getRoomSecret())) {
+//                    message = room.getMessage();
+//                    index = roomList.indexOf(room);
+//                    break;
+//                }
+//            }
+//
+//            if (message == null) return;
+//            if (index == -1) return;
+//
+//            if (!message.getAuthorId().equals(cacheUtils.getString(CacheUtils.ID))) return;
+//
+//            if (message.getMessageReadingList().size() != 0) return;
+//
+//            MessageReadUpdate messageReadUpdate = (MessageReadUpdate) update;
+//
+//            MessageReading reading = new MessageReading(messageReadUpdate.getUserId(),
+//                    messageReadUpdate.getReadTime());
+//
+//            message.getMessageReadingList().add(reading);
+//            int finalIndex = index;
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    roomSelectorAdapter.notifyItemChanged(finalIndex);
+//                }
+//            });
         }
     }
 

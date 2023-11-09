@@ -59,79 +59,8 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Room room = roomList.get(position);
-        holder.roomName.setText(room.getName());
 
-        Message message = room.getMessage();
-
-        if (room.getUnreadMessagesIds().size() == 0) {
-            holder.roomContainer.setBackground(context.getResources().getDrawable(R.drawable.room_header_clickable));
-            holder.unreadMessagesCount.setVisibility(View.GONE);
-        } else {
-            holder.roomContainer.setBackground(context.getResources().getDrawable(R.drawable.room_unread_background));
-            holder.unreadMessagesCount.setVisibility(View.VISIBLE);
-            holder.unreadMessagesCount.setText(String.valueOf(room.getUnreadMessagesIds().size()));
-        }
-
-        holder.rootView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, RoomActivity.class);
-                RoomActivity.putRoomExtrasInIntent(intent, room.getSecretName(), room.getName());
-                context.startActivity(intent);
-            }
-        });
-
-        try {
-            if (message != null) {
-                boolean hasMessageText = false;
-                if (message.getText() != null) {
-                    hasMessageText = message.getText().length() != 0;
-                }
-
-                if (message.getCustomClientData() == null) {
-                    String authorPrefix = message.getAuthorNickname();
-                    if (authorPrefix.length() > 12) {
-                        authorPrefix = authorPrefix.substring(0, 11) + "..";
-                    }
-                    CacheUtils cacheUtils = new CacheUtils(context);
-                    if (cacheUtils.getString(CacheUtils.ID).equals(message.getAuthorId())) {
-                        authorPrefix = context.getString(R.string.you);
-                        if (message.getMessageReadingList() != null) {
-                            if (message.getMessageReadingList().size() == 0) {
-                                authorPrefix = authorPrefix + context.
-                                        getString(R.string.room_last_not_read);
-                            }
-                        }
-                    }
-
-                    if (hasMessageText) {
-                        holder.messageText.setText(message.getText());
-                        holder.accentText.setText(authorPrefix + ": ");
-                    } else if (message.getAttachments().size() > 0) {
-                        String attachmentText = message.getAttachmentText(context);
-
-                        holder.messageText.setText(StringFormatter.EMPTY_STRING);
-                        holder.accentText.setText(authorPrefix + ": " + attachmentText);
-                    }
-
-                    holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime()));
-
-                } else {
-                    holder.accentText.setText(message.getCustomClientData().getText(context));
-                    hasMessageText = false;
-                }
-
-                if (!hasMessageText) {
-                    holder.messageText.setText("");
-                }
-            }
-            if (room.getImagePath() != null) {
-                holder.roomPicture.setImageBitmap(AppStorage.getBitmapFromPath(room.getImagePath()));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        holder.onBind(room);
     }
 
     @Override
@@ -163,6 +92,91 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
             timeText = itemView.findViewById(R.id.time_text);
             accentText = itemView.findViewById(R.id.author_text);
             unreadMessagesCount = itemView.findViewById(R.id.unread_messages_count);
+        }
+
+        public void onBind(Room room) {
+            if (room == null) return;
+            roomName.setText(room.getName());
+
+            Message message = room.getMessage();
+
+            if (room.getUnreadMessagesIds().size() == 0) {
+                roomContainer.setBackground(context.getResources().getDrawable(R.drawable.room_header_clickable));
+                unreadMessagesCount.setVisibility(View.GONE);
+            } else {
+                roomContainer.setBackground(context.getResources().getDrawable(R.drawable.room_unread_background));
+                unreadMessagesCount.setVisibility(View.VISIBLE);
+                unreadMessagesCount.setText(String.valueOf(room.getUnreadMessagesIds().size()));
+            }
+
+            rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, RoomActivity.class);
+                    RoomActivity.putRoomExtrasInIntent(intent, room.getSecretName(), room.getName());
+                    context.startActivity(intent);
+                }
+            });
+
+            try {
+                if (message != null) {
+                    boolean hasMessageText = false;
+                    if (message.getText() != null) {
+                        hasMessageText = message.getText().length() != 0;
+                    }
+
+                    if (message.isUserMessage()) {
+                        String authorPrefix = message.getAuthorNickname();
+                        if (authorPrefix.length() > 12) {
+                            authorPrefix = authorPrefix.substring(0, 11) + "..";
+                        }
+
+                        CacheUtils cacheUtils = new CacheUtils(context);
+                        boolean isSelfMessage = cacheUtils.getString(CacheUtils.ID).
+                                equals(message.getAuthorId());
+
+                        if (isSelfMessage) {
+                            authorPrefix = context.getString(R.string.you);
+                            if (message.getMessageReadingList() != null) {
+                                if (message.getMessageReadingList().size() == 0) {
+                                    authorPrefix = authorPrefix + context.
+                                            getString(R.string.room_last_not_read);
+                                }
+                            }
+                        }
+
+                        if (message.hasCustomClientData()) {
+                            messageText.setText(StringFormatter.EMPTY_STRING);
+                            accentText.setText(authorPrefix + ": " + message.
+                                    getCustomClientData().getText(context));
+                        } else if (hasMessageText) {
+                            messageText.setText(message.getText());
+                            accentText.setText(authorPrefix + ": ");
+                        } else if (message.getAttachments().size() > 0) {
+                            String attachmentText = message.getAttachmentText(context);
+
+                            messageText.setText(StringFormatter.EMPTY_STRING);
+                            accentText.setText(authorPrefix + ": " + attachmentText);
+                        }
+
+                        timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime()));
+
+                    } else {
+                        accentText.setText(message.getCustomClientData().getText(context));
+                        hasMessageText = false;
+                    }
+
+                    if (!hasMessageText) {
+                        messageText.setText("");
+                    }
+                }
+                if (room.getImagePath() != null) {
+                    roomPicture.setImageBitmap(AppStorage.getBitmapFromPath(room.getImagePath()));
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
