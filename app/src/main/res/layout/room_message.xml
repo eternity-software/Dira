@@ -119,7 +119,6 @@
                         android:textColor="@color/dark"
                         android:textColorLink="@color/gray"
 
-                        android:textIsSelectable="true"
                         android:textSize="15sp"
 
                         android:visibility="gone"

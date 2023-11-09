@@ -105,7 +105,6 @@
                 android:text=""
                 android:textColor="@color/self_message_color"
                 android:textColorLink="@color/self_message_color_link"
-                android:textIsSelectable="true"
                 android:textSize="15sp"
                 android:visibility="gone"
 
