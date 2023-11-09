@@ -22,6 +22,7 @@ import com.diraapp.api.userstatus.UserStatusHandler;
 import com.diraapp.api.userstatus.UserStatusListener;
 import com.diraapp.api.views.UserStatusType;
 import com.diraapp.db.daos.MessageDao;
+import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
@@ -529,6 +530,15 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         } catch (UnablePerformRequestException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void updateUnsentText() {
+        RoomDao roomDao = view.getRoomDatabase().getRoomDao();
+
+        view.runBackground(() -> {
+            roomDao.update(room);
+        });
     }
 
     @Override

@@ -434,6 +434,14 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+        getRoom().setUnsentText(binding.messageTextInput.getText().toString());
+        presenter.updateUnsentText();
+    }
+
+    @Override
     public void onSocketsCountChange(float percentOpened) {
         runOnUiThread(() -> {
             ImageView imageView = findViewById(R.id.status_light);
@@ -855,6 +863,8 @@ public class RoomActivity extends DiraActivity
             messagesAdapter = new MessagesAdapter(this, new ArrayList<>(), room,
                     new AsyncLayoutInflater(RoomActivity.this), new RoomViewHolderFactory(),
                     getCacheUtils());
+
+            binding.messageTextInput.setText(room.getUnsentText());
 
             binding.recyclerView.setAdapter(messagesAdapter);
 
