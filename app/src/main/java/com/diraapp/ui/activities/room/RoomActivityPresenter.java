@@ -315,19 +315,28 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         view.runBackground(() -> {
             MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
 
+            boolean loadBottom = true;
             int scrollTo;
+            String messageId;
 
             int size = room.getUnreadMessagesIds().size();
             if (size == 0) {
-                scrollTo = 0;
-                loadRoomBottomMessages();
-            } else {
-                Message message = messageDao.getMessageById(room.getUnreadMessagesIds().get(0));
+                if (!room.getFirstVisibleScrolledItemId().equals("")) {
+                    messageId = room.getFirstVisibleScrolledItemId();
+                    Message message = messageDao.getMessageById(messageId);
 
-                if (message == null) {
-                    scrollTo = 0;
-                    loadRoomBottomMessages();
-                } else {
+                    if (message != null) {
+                        loadBottom = false;
+                        loadMessagesNearByTime(message.getTime());
+                    }
+                }
+
+            } else {
+                messageId = room.getUnreadMessagesIds().get(0);
+                Message message = messageDao.getMessageById(messageId);
+
+                if (message != null) {
+                    loadBottom = false;
                     messageList = messageDao.getBeforePartOnRoomLoading(roomSecret, message.getTime());
 
                     List<Message> newerPart = messageDao.getNewerPartOnRoomLoading(roomSecret,
@@ -344,13 +353,18 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
                     loadReplies(messageList, messageDao);
                     view.setMessages(messageList);
+
+                    int finalScrollTo = scrollTo;
+                    view.runOnUiThread(() -> {
+                        view.notifyOnRoomOpenMessagesLoaded(finalScrollTo);
+                    });
                 }
 
             }
 
-            view.runOnUiThread(() -> {
-                view.notifyOnRoomOpenMessagesLoaded(scrollTo);
-            });
+            if (loadBottom) {
+                loadRoomBottomMessages();
+            }
 
             initMembers();
         });

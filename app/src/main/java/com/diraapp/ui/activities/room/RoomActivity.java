@@ -438,7 +438,7 @@ public class RoomActivity extends DiraActivity
         int firstVisiblePos = layoutManager.findFirstVisibleItemPosition();
 
         Message message = presenter.getMessageByPosition(firstVisiblePos);
-
+        getRoom().setFirstVisibleScrolledItemId(message.getId());
 
         getRoom().setUnsentText(binding.messageTextInput.getText().toString());
         presenter.updateUnsentText();
@@ -732,7 +732,10 @@ public class RoomActivity extends DiraActivity
     public void setOnScrollListener() {
         LinearLayout arrow = binding.scrollArrow;
 
-        if (getRoom().getUnreadMessagesIds().size() > 1) {
+        boolean showArrow = getRoom().getUnreadMessagesIds().size() > 1 ||
+                !getRoom().getFirstVisibleScrolledItemId().equals(getRoom().getLastMessageId());
+
+        if (showArrow) {
             isArrowShowed = true;
             arrow.setVisibility(View.VISIBLE);
         } else {
