@@ -696,6 +696,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     @Override
     public Message getMessageByPosition(int pos) {
         if (pos >= messageList.size()) return null;
+        if(pos == -1) return null;
         return messageList.get(pos);
     }
 

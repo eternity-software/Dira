@@ -305,9 +305,7 @@ public class RoomActivity extends DiraActivity
                     "drawable", this.getPackageName());
             backgroundView.setColorFilter(Theme.getColor(this, R.color.gray));
             backgroundView.setImageDrawable(getDrawable(drawableResourceId));
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             backgroundView.setImageBitmap(null);
         }
 
@@ -438,7 +436,8 @@ public class RoomActivity extends DiraActivity
         int firstVisiblePos = layoutManager.findFirstVisibleItemPosition();
 
         Message message = presenter.getMessageByPosition(firstVisiblePos);
-        getRoom().setFirstVisibleScrolledItemId(message.getId());
+        if(message != null)
+            getRoom().setFirstVisibleScrolledItemId(message.getId());
 
         getRoom().setUnsentText(binding.messageTextInput.getText().toString());
         presenter.updateUnsentText();
@@ -732,8 +731,14 @@ public class RoomActivity extends DiraActivity
     public void setOnScrollListener() {
         LinearLayout arrow = binding.scrollArrow;
 
-        boolean showArrow = getRoom().getUnreadMessagesIds().size() > 1 ||
-                !getRoom().getFirstVisibleScrolledItemId().equals(getRoom().getLastMessageId());
+        boolean showArrow = false;
+
+        try {
+            showArrow = getRoom().getUnreadMessagesIds().size() > 1 ||
+                    !getRoom().getFirstVisibleScrolledItemId().equals(getRoom().getLastMessageId());
+        } catch (Exception ignored) {
+            // When message is null
+        }
 
         if (showArrow) {
             isArrowShowed = true;

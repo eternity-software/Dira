@@ -225,6 +225,7 @@ public class Room {
     }
 
     public String getFirstVisibleScrolledItemId() {
+        if(firstVisibleScrolledItemId == null) firstVisibleScrolledItemId = "null";
         return firstVisibleScrolledItemId;
     }
 
