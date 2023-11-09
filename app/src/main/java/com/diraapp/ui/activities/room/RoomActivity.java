@@ -432,6 +432,14 @@ public class RoomActivity extends DiraActivity
     protected void onPause() {
         super.onPause();
 
+        LinearLayoutManager layoutManager = (LinearLayoutManager)
+                binding.recyclerView.getLayoutManager();
+        if (layoutManager == null) return;
+        int firstVisiblePos = layoutManager.findFirstVisibleItemPosition();
+
+        Message message = presenter.getMessageByPosition(firstVisiblePos);
+
+
         getRoom().setUnsentText(binding.messageTextInput.getText().toString());
         presenter.updateUnsentText();
     }

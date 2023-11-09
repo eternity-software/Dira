@@ -324,22 +324,28 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             } else {
                 Message message = messageDao.getMessageById(room.getUnreadMessagesIds().get(0));
 
-                messageList = messageDao.getBeforePartOnRoomLoading(roomSecret, message.getTime());
-
-                List<Message> newerPart = messageDao.getNewerPartOnRoomLoading(roomSecret,
-                        message.getTime());
-
-                Collections.reverse(newerPart);
-                messageList.addAll(0, newerPart);
-
-                if (size < MessageDao.LOADING_COUNT_HALF) {
-                    scrollTo = size - 1;
+                if (message == null) {
+                    scrollTo = 0;
+                    loadRoomBottomMessages();
                 } else {
-                    scrollTo = MessageDao.LOADING_COUNT_HALF - 1;
+                    messageList = messageDao.getBeforePartOnRoomLoading(roomSecret, message.getTime());
+
+                    List<Message> newerPart = messageDao.getNewerPartOnRoomLoading(roomSecret,
+                            message.getTime());
+
+                    Collections.reverse(newerPart);
+                    messageList.addAll(0, newerPart);
+
+                    if (size < MessageDao.LOADING_COUNT_HALF) {
+                        scrollTo = size - 1;
+                    } else {
+                        scrollTo = MessageDao.LOADING_COUNT_HALF - 1;
+                    }
+
+                    loadReplies(messageList, messageDao);
+                    view.setMessages(messageList);
                 }
 
-                loadReplies(messageList, messageDao);
-                view.setMessages(messageList);
             }
 
             view.runOnUiThread(() -> {
@@ -671,6 +677,12 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     @Override
     public Room getRoom() {
         return room;
+    }
+
+    @Override
+    public Message getMessageByPosition(int pos) {
+        if (pos >= messageList.size()) return null;
+        return messageList.get(pos);
     }
 
     @Override

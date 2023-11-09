@@ -105,6 +105,8 @@ public interface RoomActivityContract {
 
         Room getRoom();
 
+        Message getMessageByPosition(int pos);
+
         int getItemsCount();
 
         boolean isNewestMessagesLoaded();

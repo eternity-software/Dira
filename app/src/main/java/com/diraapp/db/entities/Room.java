@@ -1,5 +1,6 @@
 package com.diraapp.db.entities;
 
+import androidx.annotation.ColorInt;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -38,7 +39,8 @@ public class Room {
     private long timeServerStartup;
     @ColumnInfo(defaultValue = "0")
     private long timeEncryptionKeyUpdated;
-
+    @ColumnInfo(defaultValue = "")
+    private String firstVisibleScrolledItemId;
     @ColumnInfo(defaultValue = ("" + Update.DEFAULT_UPDATE_EXPIRE_SEC))
     private int updateExpireSec;
     @ColumnInfo(defaultValue = "")
@@ -220,5 +222,13 @@ public class Room {
 
     public void setUnsentText(String unsentText) {
         this.unsentText = unsentText;
+    }
+
+    public String getFirstVisibleScrolledItemId() {
+        return firstVisibleScrolledItemId;
+    }
+
+    public void setFirstVisibleScrolledItemId(String firstVisibleScrolledItemId) {
+        this.firstVisibleScrolledItemId = firstVisibleScrolledItemId;
     }
 }
