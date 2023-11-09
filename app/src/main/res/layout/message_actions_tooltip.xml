@@ -5,12 +5,14 @@
     android:layout_height="wrap_content"
     android:background="@drawable/tooltip_drawable"
     android:orientation="vertical"
-    android:paddingHorizontal="16dp">
+   >
 
     <LinearLayout
         android:id="@+id/reply_row"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:paddingHorizontal="16dp"
+        android:background="?selectableItemBackground"
         android:gravity="center_vertical">
 
         <com.diraapp.ui.components.dynamic.ThemeImageView
@@ -29,7 +31,7 @@
             android:text="@string/message_tooltip_reply"
             android:textColor="@color/white"
 
-            android:textSize="13sp" />
+            android:textSize="14sp" />
 
     </LinearLayout>
 
@@ -37,6 +39,8 @@
         android:id="@+id/copy_row"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:paddingHorizontal="16dp"
+        android:background="?selectableItemBackground"
         android:gravity="center_vertical">
 
         <ImageView
@@ -53,7 +57,7 @@
             android:text="@string/message_tooltip_copy"
             android:textColor="@color/white"
 
-            android:textSize="13sp" />
+            android:textSize="14sp" />
 
     </LinearLayout>
 
@@ -62,6 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
         android:orientation="horizontal"
         android:visibility="gone">
 
@@ -82,7 +87,7 @@
             android:text="@string/message_tooltip_download"
             android:textColor="@color/white"
 
-            android:textSize="13sp" />
+            android:textSize="14sp" />
 
 
     </LinearLayout>
@@ -91,6 +96,8 @@
         android:id="@+id/count_row"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:background="?selectableItemBackground"
+        android:paddingHorizontal="16dp"
         android:gravity="center_vertical">
 
         <androidx.cardview.widget.CardView
@@ -104,8 +111,8 @@
 
             <ImageView
                 android:id="@+id/icon_user_1"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/placeholder" />
         </androidx.cardview.widget.CardView>
 
@@ -120,8 +127,8 @@
 
             <ImageView
                 android:id="@+id/icon_user_2"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/placeholder" />
         </androidx.cardview.widget.CardView>
 
@@ -129,7 +136,7 @@
             android:id="@+id/count_row_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="4dp"
             android:ellipsize="end"
             android:fontFamily="@font/montserratsemibold"
             android:includeFontPadding="false"
@@ -137,7 +144,7 @@
             android:text="@string/message_tooltip_read_count"
             android:textColor="@color/white"
 
-            android:textSize="13sp" />
+            android:textSize="14sp" />
 
     </LinearLayout>
 
