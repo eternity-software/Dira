@@ -206,6 +206,7 @@
     <string name="file_opening_failed">No application to open file</string>
 
     <!-- Message tooltip -->
+    <string name="message_tooltip_reply">Reply</string>
     <string name="message_tooltip_copy">Copy</string>
     <string name="message_tooltip_download">Download file</string>
     <string name="message_tooltip_read_count">%s read</string>

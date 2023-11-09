@@ -8,6 +8,7 @@ import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.ui.activities.DiraActivityListener;
+import com.diraapp.ui.adapters.messages.views.BalloonMessageMenu;
 import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.ui.activities.PreparedActivity;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
@@ -44,4 +45,6 @@ public interface MessageAdapterContract {
 
     void attachVideoPlayer(DiraVideoPlayer player);
     void addListener(DiraActivityListener player);
+
+    BalloonMessageMenu.BalloonMenuListener getBalloonMessageListener();
 }

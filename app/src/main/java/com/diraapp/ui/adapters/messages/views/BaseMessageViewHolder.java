@@ -45,7 +45,6 @@ import java.util.HashMap;
 public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder implements InflaterListener {
 
     private final MessageAdapterContract messageAdapterContract;
-
     private final ViewHolderManagerContract viewHolderManagerContract;
     protected boolean isInitialized = false, isSelfMessage;
     /**
@@ -157,7 +156,8 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         itemView.setOnClickListener((View v) -> {
             BalloonMessageMenu balloonMessageMenu = new BalloonMessageMenu(itemView.getContext(),
                     messageAdapterContract.getMembers(),
-                    messageAdapterContract.getCacheUtils().getString(CacheUtils.ID));
+                    messageAdapterContract.getCacheUtils().getString(CacheUtils.ID),
+                    messageAdapterContract.getBalloonMessageListener());
             balloonMessageMenu.createBalloon(message, itemView);
         });
         bindUserPicture(message, previousMessage);

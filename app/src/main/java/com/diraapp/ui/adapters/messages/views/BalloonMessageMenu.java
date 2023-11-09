@@ -37,14 +37,15 @@ import java.util.HashMap;
 
 public class BalloonMessageMenu {
 
-
+    private final BalloonMenuListener listener;
     private final Balloon balloon;
     private final HashMap<String, Member> members;
     private final Context context;
     private final String selfId;
 
     public BalloonMessageMenu(Context context, HashMap<String, Member> members,
-                              String selfId) {
+                              String selfId, BalloonMenuListener listener) {
+        this.listener = listener;
         this.members = members;
         this.context = context;
         this.selfId = selfId;
@@ -73,6 +74,7 @@ public class BalloonMessageMenu {
 
         RadiusLayout layout = (RadiusLayout) balloon.getContentView();
         layout.setBackground(ContextCompat.getDrawable(context, R.drawable.tooltip_drawable));
+        LinearLayout replyRow = layout.findViewById(R.id.reply_row);
         LinearLayout copyRow = layout.findViewById(R.id.copy_row);
         LinearLayout countRow = layout.findViewById(R.id.count_row);
 
@@ -170,6 +172,11 @@ public class BalloonMessageMenu {
             }));
         }
 
+        replyRow.setOnClickListener((View v) -> {
+            if (listener != null) listener.onNewMessageReply(message);
+            balloon.dismiss();
+        });
+
         copyRow.setOnClickListener((View v) -> {
             ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clip = ClipData.newPlainText("Copied Text", message.getText());
@@ -204,5 +211,10 @@ public class BalloonMessageMenu {
             balloon.dismiss();
         });
 
+    }
+
+    public interface BalloonMenuListener {
+
+        void onNewMessageReply(Message message);
     }
 }

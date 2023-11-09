@@ -8,6 +8,32 @@
     android:paddingHorizontal="16dp">
 
     <LinearLayout
+        android:id="@+id/reply_row"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical">
+
+        <com.diraapp.ui.components.dynamic.ThemeImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_round_reply"
+            app:tint="@color/white"
+            app:themeImageColor="white"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/montserratsemibold"
+            android:includeFontPadding="false"
+            android:text="@string/message_tooltip_reply"
+            android:textColor="@color/white"
+
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/copy_row"
         android:layout_width="match_parent"
         android:layout_height="48dp"

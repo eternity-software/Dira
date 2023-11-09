@@ -20,6 +20,7 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.LanguageParsingException;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.AppStorage;
+import com.diraapp.ui.adapters.messages.views.BalloonMessageMenu;
 import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.ui.adapters.ChatBackgroundAdapter;
 import com.diraapp.ui.adapters.ColorThemeAdapter;
@@ -214,6 +215,11 @@ public class ChatAppearanceActivity extends DiraActivity {
             @Override
             public void addListener(DiraActivityListener player) {
 
+            }
+
+            @Override
+            public BalloonMessageMenu.BalloonMenuListener getBalloonMessageListener() {
+                return null;
             }
         };
 

@@ -1,7 +1,5 @@
 package com.diraapp.ui.activities.room;
 
-import static com.diraapp.storage.AppStorage.getPath;
-
 import android.Manifest;
 import android.animation.Animator;
 import android.content.Context;
@@ -16,8 +14,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,7 +25,6 @@ import androidx.annotation.Nullable;
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 import androidx.core.app.ActivityCompat;
 import androidx.core.widget.ImageViewCompat;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -72,8 +67,8 @@ import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.MessagesAdapter;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
+import com.diraapp.ui.adapters.messages.views.BalloonMessageMenu;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
-import com.diraapp.ui.adapters.messages.views.viewholders.factories.MessageHolderType;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.RoomViewHolderFactory;
 import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
@@ -87,7 +82,6 @@ import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.SliderActivity;
 import com.diraapp.utils.android.DeviceUtils;
-import com.masoudss.lib.utils.Utils;
 import com.r0adkll.slidr.model.SlidrInterface;
 import com.squareup.picasso.Picasso;
 
@@ -100,7 +94,8 @@ import java.util.List;
 
 public class RoomActivity extends DiraActivity
         implements RoomActivityContract.View, ProcessorListener, UserStatusListener,
-        RecordComponentsController.RecordListener, MessageAdapterContract, FilePickerBottomSheet.MultiFilesListener {
+        RecordComponentsController.RecordListener, MessageAdapterContract,
+        FilePickerBottomSheet.MultiFilesListener, BalloonMessageMenu.BalloonMenuListener {
 
     public static final int SEND_FILE_CODE = 34234;
 
@@ -1124,6 +1119,11 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
+    public BalloonMessageMenu.BalloonMenuListener getBalloonMessageListener() {
+        return (BalloonMessageMenu.BalloonMenuListener) this;
+    }
+
+    @Override
     public void onFirstMessageScrolled(Message message, int index) {
         presenter.loadMessagesBefore(message, index);
     }
@@ -1137,5 +1137,11 @@ public class RoomActivity extends DiraActivity
     public void onSelectedFilesSent(List<SelectorFileInfo> diraMediaInfoList, String messageText) {
         MultiAttachmentLoader multiAttachmentLoader = new MultiAttachmentLoader(messageText, presenter);
         multiAttachmentLoader.send(diraMediaInfoList);
+    }
+
+    @Override
+    public void onNewMessageReply(Message message) {
+        presenter.setReplyingMessage(message);
+        setReplyMessage(message);
     }
 }
