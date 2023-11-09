@@ -126,7 +126,7 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
             roomUpdatesText.setVisibility(View.GONE);
 
             roomUpdatesIcon.setImageDrawable(ContextCompat.
-                    getDrawable(context, R.drawable.ic_room_updates));
+                    getDrawable(context, R.drawable.ic_encrypted));
             applyDefaultIconOnUpdateMessage();
 
             isRoomUpdate = false;

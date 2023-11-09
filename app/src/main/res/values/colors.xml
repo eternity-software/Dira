@@ -40,7 +40,7 @@
     <color name="attributes_text_color">@color/white</color>
     <color name="dark_message_attributes_background">@color/gray_trans</color>
 
-    <color name="self_message_color">@color/light_gray</color>
+    <color name="self_message_color">@color/white</color>
     <color name="self_message_background">@color/gray</color>
     <color name="self_message_color_link">@color/accent</color>
     <color name="self_reply_color">#A0A0A0</color>
