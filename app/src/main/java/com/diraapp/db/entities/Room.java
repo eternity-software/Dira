@@ -49,6 +49,9 @@ public class Room {
     @ColumnInfo(defaultValue = "true")
     private boolean isNotificationsEnabled;
 
+    @ColumnInfo(defaultValue = "")
+    private String unsentText;
+
     private ArrayList<String> unreadMessagesIds = new ArrayList<>();
 
     @Ignore
@@ -209,5 +212,13 @@ public class Room {
             unreadMessagesIds = new ArrayList<>();
         }
         unreadMessagesIds.add(id);
+    }
+
+    public String getUnsentText() {
+        return unsentText;
+    }
+
+    public void setUnsentText(String unsentText) {
+        this.unsentText = unsentText;
     }
 }
