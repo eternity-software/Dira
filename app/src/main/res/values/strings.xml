@@ -169,6 +169,7 @@
     <string name="key_generate_success">Encryption key has been renewed</string>
     <string name="key_generate_time_error">Encryption key generation cancelled</string>
     <string name="key_generate_user_disconnected">Encryption key generation aborted</string>
+    <string name="unencrypted_user_message">Unencrypted message</string>
 
     <!-- Color themes names -->
     <string name="theme_main" translatable="false">Dira</string>

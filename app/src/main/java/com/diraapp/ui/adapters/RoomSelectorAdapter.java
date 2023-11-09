@@ -116,21 +116,9 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
 
                     holder.timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime()));
 
-                } else if (message.getCustomClientData() instanceof RoomJoinClientData) {
-                    holder.accentText.setText(context.getString(R.string.room_update_new_member)
-                            .replace("%s", ((RoomJoinClientData)
-                                    message.getCustomClientData()).getNewNickName()));
-                } else if (message.getCustomClientData() instanceof RoomNameChangeClientData) {
-                    holder.accentText.setText(context.getString(R.string.room_update_name_change));
-                } else if (message.getCustomClientData() instanceof RoomIconChangeClientData) {
-                    holder.accentText.setText(context.getString(R.string.room_update_picture_change));
-                } else if (message.getCustomClientData() instanceof RoomNameAndIconChangeClientData) {
-                    holder.accentText.setText(context.getString(R.string.room_update_name_and_picture_change));
-                } else if (message.getCustomClientData() instanceof KeyGenerateStartClientData) {
-                    holder.accentText.setText(context.getString(R.string.key_generate_start));
-                } else if (message.getCustomClientData() instanceof KeyGeneratedClientData) {
-                    holder.accentText.setText(((KeyGeneratedClientData) message.
-                            getCustomClientData()).getClientDataText(context));
+                } else {
+                    holder.accentText.setText(message.getCustomClientData().getText(context));
+                    hasMessageText = false;
                 }
 
                 if (!hasMessageText) {

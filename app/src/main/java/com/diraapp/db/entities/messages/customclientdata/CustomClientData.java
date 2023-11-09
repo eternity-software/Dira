@@ -1,9 +1,12 @@
 package com.diraapp.db.entities.messages.customclientdata;
 
+import android.content.Context;
+
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.diraapp.db.entities.messages.MessageType;
+import com.diraapp.utils.StringFormatter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -35,5 +38,9 @@ public class CustomClientData {
 
     public void setMessageType(MessageType messageType) {
         this.messageType = messageType;
+    }
+
+    public String getText(Context context) {
+        return StringFormatter.EMPTY_STRING;
     }
 }

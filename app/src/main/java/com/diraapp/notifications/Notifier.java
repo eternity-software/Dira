@@ -72,19 +72,8 @@ public class Notifier {
                 text = message.getAuthorNickname() + ": " + attachmentText;
             }
 
-        } else if (message.getCustomClientData() instanceof RoomJoinClientData) {
-            text = context.getString(R.string.room_update_new_member).replace("%s", ((RoomJoinClientData)
-                    message.getCustomClientData()).getNewNickName());
-        } else if (message.getCustomClientData() instanceof RoomIconChangeClientData) {
-            text = context.getString(R.string.room_update_picture_change);
-        } else if (message.getCustomClientData() instanceof RoomNameChangeClientData) {
-            text = context.getString(R.string.room_update_name_change);
-        } else if (message.getCustomClientData() instanceof RoomNameAndIconChangeClientData) {
-            text = context.getString(R.string.room_update_name_and_picture_change);
-        } else if (message.getCustomClientData() instanceof KeyGenerateStartClientData) {
-            text = context.getString(R.string.key_generate_start);
-        } else if (message.getCustomClientData() instanceof KeyGeneratedClientData) {
-            text = ((KeyGeneratedClientData) message.getCustomClientData()).getClientDataText(context);
+        } else {
+            text = message.getCustomClientData().getText(context);
         }
 
         if (!text.equals("")) {

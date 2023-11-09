@@ -1,8 +1,11 @@
 package com.diraapp.db.entities.messages.customclientdata;
 
+import android.content.Context;
+
 import androidx.room.Entity;
 import androidx.room.Ignore;
 
+import com.diraapp.R;
 import com.diraapp.db.entities.messages.MessageType;
 
 @Entity
@@ -27,5 +30,10 @@ public class RoomIconChangeClientData extends CustomClientData {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    @Override
+    public String getText(Context context) {
+        return context.getString(R.string.room_update_picture_change);
     }
 }

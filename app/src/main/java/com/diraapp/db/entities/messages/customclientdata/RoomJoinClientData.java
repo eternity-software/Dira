@@ -1,9 +1,13 @@
 package com.diraapp.db.entities.messages.customclientdata;
 
+import android.content.Context;
+
 import androidx.room.Entity;
 import androidx.room.Ignore;
 
+import com.diraapp.R;
 import com.diraapp.db.entities.messages.MessageType;
+import com.diraapp.utils.StringFormatter;
 
 @Entity
 public class RoomJoinClientData extends CustomClientData {
@@ -29,5 +33,11 @@ public class RoomJoinClientData extends CustomClientData {
 
     public String getPath() {
         return path;
+    }
+
+    @Override
+    public String getText(Context context) {
+        return context.getString(R.string.room_update_new_member)
+                .replace("%s", newNickName);
     }
 }

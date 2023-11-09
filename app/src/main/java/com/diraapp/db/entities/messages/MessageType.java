@@ -23,5 +23,8 @@ public enum MessageType {
     KEY_GENERATE_START,
 
     @SerializedName("6")
-    KEY_GENERATED
+    KEY_GENERATED,
+
+    @SerializedName("7")
+    UNENCRYPTED_USER_MESSAGE
 }

@@ -10,6 +10,7 @@ import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientDat
 import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
+import com.diraapp.db.entities.messages.customclientdata.UnencryptedMessageClientData;
 import com.google.gson.Gson;
 
 public class CustomClientDataConverter {
@@ -35,6 +36,8 @@ public class CustomClientDataConverter {
             return gson.fromJson(string, KeyGenerateStartClientData.class);
         } else if (clientData.getMessageType().equals(MessageType.KEY_GENERATED)) {
             return gson.fromJson(string, KeyGeneratedClientData.class);
+        } else if (clientData.getMessageType().equals(MessageType.UNENCRYPTED_USER_MESSAGE)) {
+            return gson.fromJson(string, UnencryptedMessageClientData.class);
         }
         return null;
     }

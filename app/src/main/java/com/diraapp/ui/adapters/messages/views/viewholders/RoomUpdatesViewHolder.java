@@ -22,6 +22,7 @@ import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientDat
 import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
+import com.diraapp.db.entities.messages.customclientdata.UnencryptedMessageClientData;
 import com.diraapp.res.Theme;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
@@ -68,25 +69,12 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
         super.bindMessage(message, previousMessage);
         itemView.setClickable(false);
 
-        nicknameText.setVisibility(View.GONE);
         profilePictureContainer.setVisibility(View.VISIBLE);
 
-        String imagePath = getMessageAdapterContract().getRoom().getImagePath();
-        if (imagePath != null) {
-            int imageSize = DeviceUtils.dpToPx(40, itemView.getContext());
-            Picasso.get().load(new File(imagePath))
-                    .resize(imageSize, imageSize).into(profilePicture);
-        }
-        else
-        {
-            profilePicture.setImageDrawable(itemView.getContext().getDrawable(R.drawable.placeholder));
-        }
+        boolean isRoomUpdate = true;
 
         Context context = this.itemView.getContext();
         if (message.getCustomClientData() instanceof RoomJoinClientData) {
-            roomUpdatesMainText.setText(context.getString(R.string.room_update_new_member)
-                    .replace("%s", ((RoomJoinClientData)
-                            message.getCustomClientData()).getNewNickName()));
 
             String path = ((RoomJoinClientData) message.getCustomClientData()).getPath();
             setImageOnRoomUpdateMessage(path);
@@ -94,7 +82,6 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
                     getDrawable(context, R.drawable.ic_room_updates));
             roomUpdatesText.setVisibility(View.GONE);
         } else if (message.getCustomClientData() instanceof RoomNameChangeClientData) {
-            roomUpdatesMainText.setText(context.getString(R.string.room_update_name_change));
 
             roomUpdatesIcon.setImageDrawable(ContextCompat.
                     getDrawable(context, R.drawable.ic_room_updates));
@@ -103,14 +90,12 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
             roomUpdatesText.setVisibility(View.VISIBLE);
             applyDefaultIconOnUpdateMessage();
         } else if (message.getCustomClientData() instanceof RoomIconChangeClientData) {
-            roomUpdatesMainText.setText(context.getString(R.string.room_update_picture_change));
 
             String path = ((RoomIconChangeClientData) message.getCustomClientData()).getImagePath();
             setImageOnRoomUpdateMessage(path);
 
             roomUpdatesText.setVisibility(View.GONE);
         } else if (message.getCustomClientData() instanceof RoomNameAndIconChangeClientData) {
-            roomUpdatesMainText.setText(context.getString(R.string.room_update_name_and_picture_change));
 
             roomUpdatesText.setText(((RoomNameAndIconChangeClientData)
                     message.getCustomClientData()).getOldName());
@@ -121,14 +106,11 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
 
             roomUpdatesText.setVisibility(View.VISIBLE);
         } else if (message.getCustomClientData() instanceof KeyGenerateStartClientData) {
-            roomUpdatesMainText.setText(context.getString(R.string.key_generate_start));
             roomUpdatesIcon.setImageDrawable(ContextCompat.
                     getDrawable(context, R.drawable.ic_encryption));
             roomUpdatesText.setVisibility(View.GONE);
             applyDefaultIconOnUpdateMessage();
         } else if (message.getCustomClientData() instanceof KeyGeneratedClientData) {
-            roomUpdatesMainText.setText(((KeyGeneratedClientData) message.
-                    getCustomClientData()).getClientDataText(context));
 
             if (Objects.equals(((KeyGeneratedClientData) message.
                     getCustomClientData()).getResult(), KeyGeneratedClientData.RESULT_CANCELLED)) {
@@ -140,7 +122,31 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
             }
             roomUpdatesText.setVisibility(View.GONE);
             applyDefaultIconOnUpdateMessage();
+        } else if (message.getCustomClientData() instanceof UnencryptedMessageClientData) {
+            roomUpdatesText.setVisibility(View.GONE);
+
+            roomUpdatesIcon.setImageDrawable(ContextCompat.
+                    getDrawable(context, R.drawable.ic_room_updates));
+            applyDefaultIconOnUpdateMessage();
+
+            isRoomUpdate = false;
         }
+
+        roomUpdatesMainText.setText(message.getCustomClientData().getText(context));
+
+        if (!isRoomUpdate) return;
+
+        nicknameText.setVisibility(View.GONE);
+
+        String imagePath = getMessageAdapterContract().getRoom().getImagePath();
+        if (imagePath != null) {
+            int imageSize = DeviceUtils.dpToPx(40, itemView.getContext());
+            Picasso.get().load(new File(imagePath))
+                    .resize(imageSize, imageSize).into(profilePicture);
+        } else {
+            profilePicture.setImageDrawable(itemView.getContext().getDrawable(R.drawable.placeholder));
+        }
+
     }
 
     @Override

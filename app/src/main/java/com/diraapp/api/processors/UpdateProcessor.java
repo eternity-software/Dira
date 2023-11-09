@@ -33,6 +33,7 @@ import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.messages.customclientdata.UnencryptedMessageClientData;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.exceptions.SingletonException;
 import com.diraapp.exceptions.UnablePerformRequestException;
@@ -176,23 +177,20 @@ public class UpdateProcessor {
             } else if (update.getUpdateType() == UpdateType.NEW_MESSAGE_UPDATE) {
                 NewMessageUpdate newMessageUpdate = ((NewMessageUpdate) update);
 
-                boolean isDecrypted = false;
                 Room room = roomDao.getRoomBySecretName(newMessageUpdate.getMessage().getRoomSecret());
                 if (room.getTimeEncryptionKeyUpdated() == newMessageUpdate.getMessage().getLastTimeEncryptionKeyUpdated()) {
                     if (!room.getEncryptionKey().equals("")) {
                         String rawText = newMessageUpdate.getMessage().getText();
                         newMessageUpdate.getMessage().setText(EncryptionUtil.decrypt(rawText,
                                 room.getEncryptionKey()));
-                        isDecrypted = true;
                     }
+                } else {
+                    UnencryptedMessageClientData clientData = new UnencryptedMessageClientData();
+                    newMessageUpdate.getMessage().setCustomClientData(clientData);
                 }
 
                 ((NewMessageUpdate) update).getMessage().setRead(newMessageUpdate.getMessage().
                         getAuthorId().equals(new CacheUtils(context).getString(CacheUtils.ID)));
-
-                if (!isDecrypted) {
-                    // here you can write your shit code
-                }
 
                 if (DiraApplication.isBackgrounded()) {
                     Notifier.notifyMessage(newMessageUpdate.getMessage(), context);

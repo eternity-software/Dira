@@ -24,7 +24,8 @@ public class KeyGeneratedClientData extends CustomClientData {
         return result;
     }
 
-    public String getClientDataText(Context context) {
+    @Override
+    public String getText(Context context) {
         String text = "";
 
         if (Objects.equals(result, RESULT_SUCCESS)) {

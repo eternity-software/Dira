@@ -15,6 +15,7 @@ import com.diraapp.db.converters.MessageReadingConverter;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
+import com.diraapp.db.entities.messages.customclientdata.UnencryptedMessageClientData;
 import com.diraapp.exceptions.UnknownAuthorException;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.KeyGenerator;
@@ -98,7 +99,13 @@ public class Message {
     }
 
     public boolean isReadable() {
-        return !isRead() && !hasCustomClientData() && hasAuthor();
+        if (!hasCustomClientData()) {
+            return !isRead() && hasAuthor();
+        }
+
+        boolean isClientDataReadable = customClientData instanceof UnencryptedMessageClientData;
+
+        return !isRead() && isClientDataReadable && hasAuthor();
     }
 
     public boolean isSameDay(Message messageToCompare) {
@@ -193,6 +200,7 @@ public class Message {
 
     public boolean isDiraMessage() {
         if (authorId == null) return true;
+        if (customClientData != null) return true;
         return authorId.equals("Dira");
     }
 

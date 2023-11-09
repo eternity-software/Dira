@@ -741,7 +741,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
             applyDefaultIconOnUpdateMessage(holder);
         } else if (message.getCustomClientData() instanceof KeyGeneratedClientData) {
             holder.roomUpdatesMainText.setText(((KeyGeneratedClientData) message.
-                    getCustomClientData()).getClientDataText(context));
+                    getCustomClientData()).getText(context));
 
             if (Objects.equals(((KeyGeneratedClientData) message.
                     getCustomClientData()).getResult(), KeyGeneratedClientData.RESULT_CANCELLED)) {
