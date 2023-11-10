@@ -116,8 +116,9 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         } else if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
             view.runBackground(this::initMembers);
         } else if (update.getUpdateType() == UpdateType.READ_UPDATE) {
+            Logger.logDebug("ReadingDebug", "1");
             if (!update.getRoomSecret().equals(roomSecret)) return;
-
+            Logger.logDebug("ReadingDebug", "2");
             MessageReadUpdate readUpdate = (MessageReadUpdate) update;
 
             Message thisMessage = null;
@@ -132,6 +133,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 }
             }
             if (thisMessage == null) return;
+            Logger.logDebug("ReadingDebug", "3");
+
             if (((MessageReadUpdate) update).getUserId().equals(selfId)) {
 
                 int pos = room.getUnreadMessagesIds().indexOf(thisMessage.getId());
@@ -152,14 +155,14 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 view.updateScrollArrowIndicator();
                 return;
             }
-
+            Logger.logDebug("ReadingDebug", "4");
             MessageReading thisReading = new MessageReading(readUpdate.getUserId(),
                     readUpdate.getReadTime());
 
             for (MessageReading reading : thisMessage.getMessageReadingList()) {
                 if (reading.getUserId().equals(thisReading.getUserId())) return;
             }
-
+            Logger.logDebug("ReadingDebug", "5");
             thisMessage.getMessageReadingList().add(thisReading);
 
             view.notifyRecyclerMessageRead(thisMessage, index);

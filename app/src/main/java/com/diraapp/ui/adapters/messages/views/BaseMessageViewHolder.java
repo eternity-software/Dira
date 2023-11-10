@@ -267,18 +267,24 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     }
 
     public void updateMessageReading(Message message, boolean isAnimated) {
+        Logger.logDebug("ReadingDebug", "10");
         if (!isInitialized) return;
+        Logger.logDebug("ReadingDebug", "11");
         if (!message.hasAuthor()) return;
+        Logger.logDebug("ReadingDebug", "12");
         if (!isSelfMessage) return;
+        Logger.logDebug("ReadingDebug", "13");
         if (message.getMessageReadingList() != null && messageBackground.getBackground() != null) {
             if (message.getMessageReadingList().size() == 0) {
                 messageBackground.getBackground().setColorFilter(
                         Theme.getColor(itemView.getContext(),
                                 R.color.unread_message_background), PorterDuff.Mode.SRC_IN);
+                Logger.logDebug("ReadingDebug", "16");
             } else {
                 if (!isAnimated) {
                     messageBackground.getBackground().setColorFilter(
                             Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
+                    Logger.logDebug("ReadingDebug", "14");
                     return;
                 }
 
@@ -300,6 +306,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
 
                 messageBackgroundAnimator = colorAnimation;
                 colorAnimation.start();
+                Logger.logDebug("ReadingDebug", "15");
             }
         }
     }

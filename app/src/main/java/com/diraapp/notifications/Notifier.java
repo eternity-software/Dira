@@ -100,18 +100,18 @@ public class Notifier {
             }
 
             Intent notificationIntent = new Intent(context, RoomSelectorActivity.class);
+            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             RoomActivity.putRoomExtrasInIntent(notificationIntent, room.getSecretName(), room.getName());
 
             PendingIntent intent;
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 intent = PendingIntent.getActivity(context, 0,
-                        notificationIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+                        notificationIntent, 0);
             } else {
                 intent = PendingIntent.getActivity(context, 0,
                         notificationIntent, 0);
             }
-
             builder.setContentIntent(intent);
         }
 
