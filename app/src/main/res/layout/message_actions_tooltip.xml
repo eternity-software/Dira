@@ -62,6 +62,35 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/delete_row"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingHorizontal="16dp"
+        android:background="?selectableItemBackground"
+        android:gravity="center_vertical">
+
+        <com.diraapp.ui.components.dynamic.ThemeImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_trash"
+            app:tint="@color/white"
+            app:themeImageColor="white"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/montserratsemibold"
+            android:includeFontPadding="false"
+            android:text="@string/message_tooltip_delete"
+            android:textColor="@color/white"
+
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
         android:id="@+id/save_row"
         android:layout_width="match_parent"
         android:layout_height="48dp"

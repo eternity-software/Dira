@@ -391,4 +391,17 @@ public class AppStorage {
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
+
+    public static void deleteAttachment(Context context, Attachment attachment) {
+        String path = attachment.getFileUrl();
+
+        File file = new File(path);
+
+        if (file.exists()) {
+            file.delete();
+            Logger.logDebug(AppStorage.class.toString(), "Attachment deleted successfully");
+        } else {
+            System.out.println("Attachment " + path + " does not exist");
+        }
+    }
 }

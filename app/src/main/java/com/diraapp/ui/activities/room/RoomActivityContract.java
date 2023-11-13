@@ -40,6 +40,7 @@ public interface RoomActivityContract {
         void notifyAdapterItemChanged(int index);
 
         void notifyAdapterItemsDeleted(int start, int last);
+        void notifyAdapterItemRemoved(int pos);
 
         void blinkViewHolder(int position);
 
@@ -138,6 +139,8 @@ public interface RoomActivityContract {
         void sendMessage(ArrayList<Attachment> attachments, String messageText);
 
         void updateUnsentText();
+
+        void deleteMessage(Message message);
     }
 
 }

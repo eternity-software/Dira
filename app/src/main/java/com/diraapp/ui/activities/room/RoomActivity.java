@@ -989,6 +989,11 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
+    public void notifyAdapterItemRemoved(int pos) {
+        messagesAdapter.notifyItemRemoved(pos);
+    }
+
+    @Override
     public void blinkViewHolder(int position) {
         BaseMessageViewHolder holder = (BaseMessageViewHolder) binding.recyclerView.
                 findViewHolderForAdapterPosition(position);
@@ -1162,5 +1167,16 @@ public class RoomActivity extends DiraActivity
     public void onNewMessageReply(Message message) {
         presenter.setReplyingMessage(message);
         setReplyMessage(message);
+    }
+
+    @Override
+    public void onMessageDelete(Message message) {
+        presenter.deleteMessage(message);
+
+        runBackground(() -> {
+            for (Attachment attachment: message.getAttachments()) {
+                AppStorage.deleteAttachment(getContext(), attachment);
+            }
+        });
     }
 }

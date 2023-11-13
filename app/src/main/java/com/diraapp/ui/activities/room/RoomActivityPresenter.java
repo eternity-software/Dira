@@ -566,6 +566,77 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     }
 
     @Override
+    public void deleteMessage(Message message) {
+        view.runBackground(() -> {
+            if (message == null) return;
+
+            int pos = messageList.indexOf(message);
+            if (pos == -1) {
+                Logger.logDebug(RoomActivityPresenter.class.toString(),
+                        "Message to remove not found if list");
+                return;
+            }
+            messageList.remove(pos);
+
+            view.runOnUiThread(() -> {
+                view.notifyAdapterItemRemoved(pos);
+
+                if (replyingMessage != null) {
+                    if (replyingMessage.getId().equals(message.getId())) {
+                        view.setReplyMessage(null);
+                    }
+                }
+            });
+
+            String messageId = message.getId();
+            if (lastReadMessage != null) {
+                if (messageId.equals(lastReadMessage.getId())) lastReadMessage = null;
+            }
+
+            boolean updateRoom = false;
+            if (room.getLastMessageId().equals(messageId)) {
+                updateRoom = true;
+                String newLastMessageId = null;
+                room.setMessage(null);
+                if (messageList.size() > 0) {
+                    room.setMessage(messageList.get(0));
+                    newLastMessageId = room.getMessage().getId();
+                }
+                room.setLastMessageId(newLastMessageId);
+            }
+
+            if (room.getFirstVisibleScrolledItemId().equals(messageId)) {
+                updateRoom = true;
+                String newLastScrolledMessageId = null;
+
+                if (messageList.size() > 0) {
+
+                    final int newPos;
+                    if (pos == 0) newPos = pos;
+                    else newPos = pos - 1;
+
+                    room.setMessage(messageList.get(newPos));
+                    newLastScrolledMessageId = room.getMessage().getId();
+                }
+                room.setFirstVisibleScrolledItemId(newLastScrolledMessageId);
+            }
+
+            if (room.getUnreadMessagesIds().contains(messageId)) {
+                updateRoom = true;
+
+                room.getUnreadMessagesIds().remove(messageId);
+            }
+
+            if (updateRoom) {
+                view.getRoomDatabase().getRoomDao().update(room);
+            }
+
+            // Removing message from db
+            view.getMessagesDatabase().getMessageDao().delete(message);
+        });
+    }
+
+    @Override
     public void onSwiped(int position) {
         replyingMessage = messageList.get(position);
 

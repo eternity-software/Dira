@@ -156,4 +156,5 @@
     <string name="file_opening_failed">Нет приложения для открытия файла</string>
     <string name="unencrypted_user_message">Нерасшифрованное сообщение</string>
     <string name="message_tooltip_reply">Ответить</string>
+    <string name="message_tooltip_delete">Удалить сообщение</string>
 </resources>

@@ -76,6 +76,7 @@ public class BalloonMessageMenu {
         layout.setBackground(ContextCompat.getDrawable(context, R.drawable.tooltip_drawable));
         LinearLayout replyRow = layout.findViewById(R.id.reply_row);
         LinearLayout copyRow = layout.findViewById(R.id.copy_row);
+        LinearLayout deleteRow = layout.findViewById(R.id.delete_row);
         LinearLayout countRow = layout.findViewById(R.id.count_row);
 
         int size = userReadMessages.size();
@@ -177,6 +178,11 @@ public class BalloonMessageMenu {
             balloon.dismiss();
         });
 
+        deleteRow.setOnClickListener((View v) -> {
+            if (listener != null) listener.onMessageDelete(message);
+            balloon.dismiss();
+        });
+
         copyRow.setOnClickListener((View v) -> {
             ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clip = ClipData.newPlainText("Copied Text", message.getText());
@@ -216,5 +222,7 @@ public class BalloonMessageMenu {
     public interface BalloonMenuListener {
 
         void onNewMessageReply(Message message);
+
+        void onMessageDelete(Message message);
     }
 }
