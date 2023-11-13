@@ -1171,12 +1171,6 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void onMessageDelete(Message message) {
-        presenter.deleteMessage(message);
-
-        runBackground(() -> {
-            for (Attachment attachment: message.getAttachments()) {
-                AppStorage.deleteAttachment(getContext(), attachment);
-            }
-        });
+        presenter.deleteMessage(message, this);
     }
 }

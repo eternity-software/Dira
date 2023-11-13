@@ -40,10 +40,13 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
     private final Activity context;
     private List<Room> roomList = new ArrayList<>();
 
+    private final SelectorAdapterContract contract;
 
-    public RoomSelectorAdapter(Activity context) {
+
+    public RoomSelectorAdapter(Activity context, SelectorAdapterContract contract) {
         this.context = context;
         layoutInflater = LayoutInflater.from(context);
+        this.contract = contract;
     }
 
     public void setRoomList(List<Room> roomList) {
@@ -113,6 +116,8 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, RoomActivity.class);
+
+                    contract.onRoomOpen(room.getSecretName());
                     RoomActivity.putRoomExtrasInIntent(intent, room.getSecretName(), room.getName());
                     context.startActivity(intent);
                 }
@@ -182,5 +187,10 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
                 e.printStackTrace();
             }
         }
+    }
+
+    public interface SelectorAdapterContract {
+
+        void onRoomOpen(String roomSecret);
     }
 }

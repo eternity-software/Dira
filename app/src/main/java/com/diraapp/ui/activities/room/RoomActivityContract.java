@@ -1,5 +1,6 @@
 package com.diraapp.ui.activities.room;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
@@ -140,7 +141,7 @@ public interface RoomActivityContract {
 
         void updateUnsentText();
 
-        void deleteMessage(Message message);
+        void deleteMessage(Message message, Context context);
     }
 
 }

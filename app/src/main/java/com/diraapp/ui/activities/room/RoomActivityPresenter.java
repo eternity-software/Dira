@@ -1,6 +1,7 @@
 package com.diraapp.ui.activities.room;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -566,7 +567,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     }
 
     @Override
-    public void deleteMessage(Message message) {
+    public void deleteMessage(Message message, Context context) {
         view.runBackground(() -> {
             if (message == null) return;
 
@@ -587,6 +588,10 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     }
                 }
             });
+
+            for (Attachment attachment: message.getAttachments()) {
+                AppStorage.deleteAttachment(context, attachment, message.getRoomSecret());
+            }
 
             String messageId = message.getId();
             if (lastReadMessage != null) {

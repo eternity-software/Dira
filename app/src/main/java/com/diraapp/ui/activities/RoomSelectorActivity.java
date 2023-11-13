@@ -63,7 +63,8 @@ import java.util.Random;
 import kotlin.NumbersKt;
 
 public class RoomSelectorActivity extends AppCompatActivity
-        implements ProcessorListener, UpdateListener, UserStatusListener {
+        implements ProcessorListener, UpdateListener, UserStatusListener,
+        RoomSelectorAdapter.SelectorAdapterContract {
 
     public static final String PENDING_ROOM_SECRET = "pendingRoomSecret";
     public static final String PENDING_ROOM_NAME = "pendingRoomName";
@@ -94,6 +95,8 @@ public class RoomSelectorActivity extends AppCompatActivity
 
     private RecyclerView recyclerView;
 
+    private String lastOpenedRoomId = null;
+
     private RoomDao roomDao;
 
     private MessageDao messageDao;
@@ -115,8 +118,11 @@ public class RoomSelectorActivity extends AppCompatActivity
         if (getIntent().hasExtra(PENDING_ROOM_SECRET)) {
             if (getIntent().getExtras().getString(PENDING_ROOM_SECRET) != null) {
                 Intent notificationIntent = new Intent(this, RoomActivity.class);
-                RoomActivity.putRoomExtrasInIntent(notificationIntent, getIntent().getExtras().
-                        getString(PENDING_ROOM_SECRET), getIntent().getExtras().getString(PENDING_ROOM_NAME));
+
+                lastOpenedRoomId = getIntent().getExtras().getString(PENDING_ROOM_SECRET);
+
+                RoomActivity.putRoomExtrasInIntent(notificationIntent,
+                        lastOpenedRoomId, getIntent().getExtras().getString(PENDING_ROOM_NAME));
                 startActivity(notificationIntent);
             }
         }
@@ -286,7 +292,8 @@ public class RoomSelectorActivity extends AppCompatActivity
             public void run() {
                 try {
                     roomList = roomDao.getAllRoomsByUpdatedTime();
-                    roomSelectorAdapter = new RoomSelectorAdapter(RoomSelectorActivity.this);
+                    roomSelectorAdapter = new RoomSelectorAdapter(
+                            RoomSelectorActivity.this, RoomSelectorActivity.this);
 
                     for (Room room : new ArrayList<>(roomList)) {
                         Message message = messageDao.getMessageById(room.getLastMessageId());
@@ -409,6 +416,15 @@ public class RoomSelectorActivity extends AppCompatActivity
         if (picPath != null) imageView.setImageBitmap(AppStorage.getBitmapFromPath(picPath));
 
         Notifier.cancelAllNotifications(getApplicationContext());
+
+        if (lastOpenedRoomId == null) return;
+        for (int i = 0; i < roomList.size(); i++) {
+            Room room = roomList.get(i);
+            if (lastOpenedRoomId.equals(room.getSecretName())) {
+                updateRoom(lastOpenedRoomId, false);
+                return;
+            }
+        }
     }
 
     @Override
@@ -518,5 +534,10 @@ public class RoomSelectorActivity extends AppCompatActivity
     @Override
     public void updateRoomStatus(String secretName, ArrayList<UserStatus> userUserStatusList) {
         //
+    }
+
+    @Override
+    public void onRoomOpen(String roomSecret) {
+        lastOpenedRoomId = roomSecret;
     }
 }

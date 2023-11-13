@@ -392,16 +392,16 @@ public class AppStorage {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-    public static void deleteAttachment(Context context, Attachment attachment) {
-        String path = attachment.getFileUrl();
-
-        File file = new File(path);
+    public static void deleteAttachment(Context context, Attachment attachment, String roomSecret) {
+        File file = new File(context.getExternalCacheDir(),
+                roomSecret + "_" + attachment.getFileUrl());
 
         if (file.exists()) {
             file.delete();
             Logger.logDebug(AppStorage.class.toString(), "Attachment deleted successfully");
         } else {
-            System.out.println("Attachment " + path + " does not exist");
+            Logger.logDebug(AppStorage.class.toString(), "Attachment " +
+                    file.toString() + " doesn't exist");
         }
     }
 }
