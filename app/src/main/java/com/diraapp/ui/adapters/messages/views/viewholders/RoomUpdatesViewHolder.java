@@ -161,9 +161,7 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
     private void setImageOnRoomUpdateMessage(String path) {
         if (path == null) {
             roomUpdatesIcon.setImageDrawable(AppCompatResources.getDrawable(itemView.getContext(), R.drawable.placeholder));
-            roomUpdatesIcon.setColorFilter(Theme.getColor(itemView.getContext(), R.color.accent));
-            roomUpdatesIcon.getBackground().setColorFilter(
-                    Theme.getColor(itemView.getContext(), R.color.dark), PorterDuff.Mode.SRC_IN);
+            applyDefaultIconOnUpdateMessage();
         } else {
             Picasso.get().load(new File(path)).into(roomUpdatesIcon);
             roomUpdatesIcon.setImageTintList(null);

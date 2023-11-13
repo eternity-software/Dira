@@ -731,13 +731,13 @@ public class RoomActivity extends DiraActivity
     public void setOnScrollListener() {
         LinearLayout arrow = binding.scrollArrow;
 
-        boolean showArrow = false;
+        boolean showArrow = getRoom().getUnreadMessagesIds().size() > 1;
 
-        try {
-            showArrow = getRoom().getUnreadMessagesIds().size() > 1 ||
-                    !getRoom().getFirstVisibleScrolledItemId().equals(getRoom().getLastMessageId());
-        } catch (Exception ignored) {
-            // When message is null
+        boolean isMessagesIdsExist = getRoom().getFirstVisibleScrolledItemId() != null &&
+                                        getRoom().getLastMessageId() != null;
+
+        if (!showArrow && isMessagesIdsExist) {
+            showArrow = !getRoom().getFirstVisibleScrolledItemId().equals(getRoom().getLastMessageId());
         }
 
         if (showArrow) {

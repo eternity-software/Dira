@@ -152,6 +152,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     }
                 }
 
+                view.updateScrollArrow();
                 view.updateScrollArrowIndicator();
                 return;
             }

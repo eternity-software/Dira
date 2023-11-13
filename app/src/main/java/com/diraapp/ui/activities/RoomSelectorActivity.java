@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.DiraApplication;
@@ -51,11 +52,15 @@ import com.diraapp.ui.components.DiraPopup;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.KeyGenerator;
 import com.diraapp.utils.Logger;
+import com.diraapp.utils.android.DeviceUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+
+import kotlin.NumbersKt;
 
 public class RoomSelectorActivity extends AppCompatActivity
         implements ProcessorListener, UpdateListener, UserStatusListener {
@@ -212,7 +217,7 @@ public class RoomSelectorActivity extends AppCompatActivity
         for (String permission : getPermissions()) {
             if (ContextCompat.checkSelfPermission(this, permission)
                     != PackageManager.PERMISSION_GRANTED) {
-                if(!permission.equals(Manifest.permission.ACCESS_NOTIFICATION_POLICY) &&
+                if (!permission.equals(Manifest.permission.ACCESS_NOTIFICATION_POLICY) &&
                         !permission.equals(Manifest.permission.ACCESS_MEDIA_LOCATION)) {
                     Logger.logDebug(this.getClass().getSimpleName(),
                             "Permission not granted: " + permission);
@@ -231,7 +236,7 @@ public class RoomSelectorActivity extends AppCompatActivity
         for (String permission : getPermissions()) {
             if (ContextCompat.checkSelfPermission(this, permission)
                     != PackageManager.PERMISSION_GRANTED) {
-                if(!permission.equals(Manifest.permission.ACCESS_NOTIFICATION_POLICY)) {
+                if (!permission.equals(Manifest.permission.ACCESS_NOTIFICATION_POLICY)) {
                     Logger.logDebug(this.getClass().getSimpleName(),
                             "Permission not granted: " + permission);
                     return permission;
@@ -320,11 +325,11 @@ public class RoomSelectorActivity extends AppCompatActivity
         loadDataThread.start();
     }
 
-    private void updateRoom(String roomSecret) {
+    private void updateRoom(String roomSecret, boolean withPositionUpdating) {
         DiraActivity.runGlobalBackground(() -> {
             Room room = roomDao.getRoomBySecretName(roomSecret);
             if (room == null) {
-                Logger.logDebug(RoomSelectorActivity.class.toString(), "room = null" );
+                Logger.logDebug(RoomSelectorActivity.class.toString(), "room = null");
                 return;
             }
 
@@ -332,7 +337,9 @@ public class RoomSelectorActivity extends AppCompatActivity
             room.setMessage(message);
 
             runOnUiThread(() -> {
-                int pos = -1;
+                final int NOT_FOUND = -1;
+                final int FIRST_POSITION = 0;
+                int pos = NOT_FOUND;
                 for (int i = 0; i < roomList.size(); i++) {
                     Room r = roomList.get(i);
                     if (r.getSecretName().equals(roomSecret)) {
@@ -341,10 +348,40 @@ public class RoomSelectorActivity extends AppCompatActivity
                     }
                 }
 
-                if (pos == -1) {
-                    Logger.logDebug(RoomSelectorActivity.class.toString(), "pos = -1" );
+                if (pos == NOT_FOUND) {
+                    Logger.logDebug(RoomSelectorActivity.class.toString(),
+                            "pos = -1 -> is it a new room?");
+
+                    roomList.add(0, room);
+                    roomSelectorAdapter.notifyItemInserted(0);
                     return;
                 }
+
+                // If item needs to be moved
+                if (withPositionUpdating && pos != FIRST_POSITION) {
+
+                    roomList.remove(pos);
+                    roomSelectorAdapter.notifyItemRemoved(pos);
+
+                    roomList.add(0, room);
+                    roomSelectorAdapter.notifyItemInserted(0);
+
+                    int higthestVisiblePosition = -1;
+                    LinearLayoutManager layoutManager = (LinearLayoutManager)
+                            recyclerView.getLayoutManager();
+                    if (layoutManager != null) {
+                        higthestVisiblePosition = layoutManager.findFirstVisibleItemPosition();
+                    }
+
+                    boolean isVisible = higthestVisiblePosition == 0;
+                    if (isVisible) {
+                        recyclerView.scrollBy(0, -DeviceUtils.dpToPx(76, this));
+                    }
+
+                    return;
+
+                }
+
                 roomList.set(pos, room);
 
                 RoomSelectorAdapter.ViewHolder holder = (RoomSelectorAdapter.ViewHolder)
@@ -352,10 +389,11 @@ public class RoomSelectorActivity extends AppCompatActivity
 
                 if (holder == null) {
                     roomSelectorAdapter.notifyItemChanged(pos);
-                    return;
+                } else {
+                    holder.onBind(room);
                 }
 
-                holder.onBind(room);
+
             });
         });
     }
@@ -365,7 +403,7 @@ public class RoomSelectorActivity extends AppCompatActivity
         super.onResume();
 
 
-        updateRooms(true);
+        //updateRooms(true);
         ImageView imageView = findViewById(R.id.profile_picture);
         String picPath = cacheUtils.getString(CacheUtils.PICTURE);
         if (picPath != null) imageView.setImageBitmap(AppStorage.getBitmapFromPath(picPath));
@@ -419,9 +457,9 @@ public class RoomSelectorActivity extends AppCompatActivity
     @Override
     public void onUpdate(Update update) {
         if (update.getUpdateType() == UpdateType.NEW_MESSAGE_UPDATE) {
-            updateRoom(((NewMessageUpdate) update).getMessage().getRoomSecret());
+            updateRoom(((NewMessageUpdate) update).getMessage().getRoomSecret(), true);
         } else if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
-            updateRoom(((RoomUpdate) update).getRoomSecret());
+            updateRoom(((RoomUpdate) update).getRoomSecret(), false);
         } else if (update.getUpdateType() == UpdateType.SERVER_SYNC) {
             if (!((ServerSyncUpdate) update).getSupportedApis().contains(UpdateProcessor.API_VERSION)) {
                 runOnUiThread(new Runnable() {
@@ -442,7 +480,7 @@ public class RoomSelectorActivity extends AppCompatActivity
                 });
             }
         } else if (update.getUpdateType() == UpdateType.READ_UPDATE) {
-            updateRoom(((MessageReadUpdate) update).getRoomSecret());
+            updateRoom(((MessageReadUpdate) update).getRoomSecret(), false);
 //            Message message = null;
 //            int index = -1;
 //

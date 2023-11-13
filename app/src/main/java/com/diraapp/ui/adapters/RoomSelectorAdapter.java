@@ -170,8 +170,12 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
                         messageText.setText("");
                     }
                 }
+
                 if (room.getImagePath() != null) {
                     roomPicture.setImageBitmap(AppStorage.getBitmapFromPath(room.getImagePath()));
+                } else {
+                    roomPicture.setImageDrawable(
+                            context.getResources().getDrawable(R.drawable.placeholder));
                 }
 
             } catch (Exception e) {
