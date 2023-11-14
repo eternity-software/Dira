@@ -230,7 +230,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         return rootView.findViewById(id);
     }
 
-    private void fillDateAndTime(Message message, Message previousMessage) {
+    public void fillDateAndTime(Message message, Message previousMessage) {
 
         boolean isSameDay = false;
         boolean isSameYear = false;

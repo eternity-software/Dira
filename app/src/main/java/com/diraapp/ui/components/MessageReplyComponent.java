@@ -18,6 +18,7 @@ import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.messages.customclientdata.UnencryptedMessageClientData;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
@@ -109,6 +110,17 @@ public class MessageReplyComponent extends FrameLayout {
             if (text == null) text = StringFormatter.EMPTY_STRING;
             replyText.setTextColor(Theme.getColor
                     (getContext(), textColorId));
+        }
+
+        if (message.hasCustomClientData()) {
+            if (message.getCustomClientData() instanceof UnencryptedMessageClientData) {
+                text = getResources().getString(R.string.unencrypted_user_message);
+
+                int statusTextColor = 0;
+                if (isSelfMessage) statusTextColor = R.color.self_reply_color;
+                else statusTextColor = R.color.message_reply_color;
+                replyText.setTextColor(Theme.getColor(getContext(), statusTextColor));
+            }
         }
 
         if (!showImage) {

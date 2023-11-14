@@ -994,6 +994,21 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
+    public void notifyUpdateHolderTimeAndPicture(int pos, Message message, Message previousMessage) {
+        BaseMessageViewHolder holder = (BaseMessageViewHolder) binding.recyclerView.
+                findViewHolderForAdapterPosition(pos);
+
+        if (holder == null) {
+            messagesAdapter.notifyItemChanged(pos);
+            Logger.logDebug(RoomActivity.class.toString(), "Update message time by notifying");
+            return;
+        }
+
+        holder.bindUserPicture(message, previousMessage);
+        holder.fillDateAndTime(message, previousMessage);
+    }
+
+    @Override
     public void blinkViewHolder(int position) {
         BaseMessageViewHolder holder = (BaseMessageViewHolder) binding.recyclerView.
                 findViewHolderForAdapterPosition(position);

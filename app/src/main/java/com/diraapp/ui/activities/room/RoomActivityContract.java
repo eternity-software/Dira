@@ -43,6 +43,8 @@ public interface RoomActivityContract {
         void notifyAdapterItemsDeleted(int start, int last);
         void notifyAdapterItemRemoved(int pos);
 
+        void notifyUpdateHolderTimeAndPicture(int pos, Message message, Message previousMessage);
+
         void blinkViewHolder(int position);
 
         boolean isMessageVisible(int position);

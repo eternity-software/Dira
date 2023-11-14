@@ -236,7 +236,13 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     view.notifyMessageInsertedWithoutScroll(
                             index + 1, index + oldMessages.size());
 
-                    view.notifyAdapterItemChanged(notifyingIndex);
+                    Message upperMessage = null;
+                    Message bottomMessage = messageList.get(notifyingIndex);
+                    if (messageList.size() > notifyingIndex + 1) {
+                        upperMessage = messageList.get(notifyingIndex + 1);
+                    }
+                    view.notifyUpdateHolderTimeAndPicture(notifyingIndex, bottomMessage, upperMessage);
+                    //view.notifyAdapterItemChanged(notifyingIndex);
 
                     if (isMessagesRemoved) {
                         messageList.subList(0, MessageDao.LOADING_COUNT).clear();
@@ -587,6 +593,17 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                         view.setReplyMessage(null);
                     }
                 }
+
+                if (pos == 0) return;
+
+                Message upperMessage = null;
+                Message bottomMessage = messageList.get(pos - 1);
+                if (messageList.size() > pos) {
+                    upperMessage = messageList.get(pos);
+                }
+
+                view.notifyUpdateHolderTimeAndPicture(pos - 1, bottomMessage, upperMessage);
+
             });
 
             for (Attachment attachment: message.getAttachments()) {
