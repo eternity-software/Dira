@@ -15,6 +15,7 @@ import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.UnablePerformRequestException;
+import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.utils.CacheUtils;
 
 import java.util.ArrayList;
@@ -43,7 +44,9 @@ public interface RoomActivityContract {
         void notifyAdapterItemsDeleted(int start, int last);
         void notifyAdapterItemRemoved(int pos);
 
-        void notifyUpdateHolderTimeAndPicture(int pos, Message message, Message previousMessage);
+        void notifyViewHolderUpdateTimeAndPicture(int pos, Message message, Message previousMessage);
+
+        void notifyViewHolder(int pos, BaseMessageViewHolder.ViewHolderNotification notification);
 
         void blinkViewHolder(int position);
 

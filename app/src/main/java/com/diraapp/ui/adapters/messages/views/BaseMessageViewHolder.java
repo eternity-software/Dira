@@ -401,4 +401,9 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     public void setDelayedMessageBind(DelayedMessageBind delayedMessageBind) {
         this.delayedMessageBind = delayedMessageBind;
     }
+
+    public interface ViewHolderNotification {
+
+        void updateViewHolder(BaseMessageViewHolder holder);
+    }
 }

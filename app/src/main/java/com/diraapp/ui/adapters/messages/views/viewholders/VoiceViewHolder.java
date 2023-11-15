@@ -83,7 +83,7 @@ public class VoiceViewHolder extends AttachmentViewHolder {
 
         });
 
-
+        waveformSeekBar.setVisibility(View.VISIBLE);
         waveformSeekBar.setProgress(attachment.getVoiceMessageStopProgress());
         voiceLayout.setVisibility(View.VISIBLE);
 
@@ -163,10 +163,19 @@ public class VoiceViewHolder extends AttachmentViewHolder {
     public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
 
+        clearItem();
+
         if (!AttachmentDownloader.isAttachmentSaving(message.getSingleAttachment()))
             onAttachmentLoaded(message.getSingleAttachment(),
                     AttachmentDownloader.getFileFromAttachment(message.getSingleAttachment(),
                             itemView.getContext(), message.getRoomSecret()), message);
+    }
+
+    private void clearItem() {
+        playButton.setOnClickListener((View v) -> {});
+
+        waveformSeekBar.setVisibility(View.INVISIBLE);
+
     }
 
 }

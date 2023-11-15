@@ -769,7 +769,7 @@ public class RoomActivity extends DiraActivity
                     if (layoutManager == null) return;
                     int position = layoutManager.findFirstVisibleItemPosition();
 
-                    if (position < 2 & presenter.isNewestMessagesLoaded()) {
+                    if (position < 1 & presenter.isNewestMessagesLoaded()) {
                         if (!isArrowShowed) return;
                         isArrowShowed = false;
                         performScaleAnimation(1, 0, arrow);
@@ -804,7 +804,7 @@ public class RoomActivity extends DiraActivity
 
         Logger.logDebug("Scroll arrow", " pos - " + position);
 
-        if (position < 2) {
+        if (position < 1) {
             if (presenter.isNewestMessagesLoaded() && isArrowShowed) {
                 isArrowShowed = false;
 
@@ -917,17 +917,14 @@ public class RoomActivity extends DiraActivity
         Logger.logDebug("ReadingDebug", "6");
         if (message.getMessageReadingList().size() > 1) return;
         Logger.logDebug("ReadingDebug", "7");
+
         runOnUiThread(() -> {
-            BaseMessageViewHolder holder = (BaseMessageViewHolder) binding.recyclerView.
-                    findViewHolderForAdapterPosition(pos);
             Logger.logDebug("ReadingDebug", "8 " + pos);
 
-            if (holder == null) {
-                messagesAdapter.notifyItemChanged(pos);
-                return;
-            }
-            Logger.logDebug("ReadingDebug", "9");
-            holder.updateMessageReading(message, true);
+            notifyViewHolder(pos, (BaseMessageViewHolder holder) -> {
+                Logger.logDebug("ReadingDebug", "9");
+                holder.updateMessageReading(message, true);
+            });
         });
     }
 
@@ -994,7 +991,15 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
-    public void notifyUpdateHolderTimeAndPicture(int pos, Message message, Message previousMessage) {
+    public void notifyViewHolderUpdateTimeAndPicture(int pos, Message message, Message previousMessage) {
+        notifyViewHolder(pos, (BaseMessageViewHolder holder) -> {
+            holder.bindUserPicture(message, previousMessage);
+            holder.fillDateAndTime(message, previousMessage);
+        } );
+    }
+
+    @Override
+    public void notifyViewHolder(int pos, BaseMessageViewHolder.ViewHolderNotification notification) {
         BaseMessageViewHolder holder = (BaseMessageViewHolder) binding.recyclerView.
                 findViewHolderForAdapterPosition(pos);
 
@@ -1004,8 +1009,7 @@ public class RoomActivity extends DiraActivity
             return;
         }
 
-        holder.bindUserPicture(message, previousMessage);
-        holder.fillDateAndTime(message, previousMessage);
+        notification.updateViewHolder(holder);
     }
 
     @Override

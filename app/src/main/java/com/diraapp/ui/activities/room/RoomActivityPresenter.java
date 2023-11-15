@@ -241,7 +241,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     if (messageList.size() > notifyingIndex + 1) {
                         upperMessage = messageList.get(notifyingIndex + 1);
                     }
-                    view.notifyUpdateHolderTimeAndPicture(notifyingIndex, bottomMessage, upperMessage);
+                    view.notifyViewHolderUpdateTimeAndPicture(notifyingIndex, bottomMessage, upperMessage);
                     //view.notifyAdapterItemChanged(notifyingIndex);
 
                     if (isMessagesRemoved) {
@@ -602,7 +602,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     upperMessage = messageList.get(pos);
                 }
 
-                view.notifyUpdateHolderTimeAndPicture(pos - 1, bottomMessage, upperMessage);
+                view.notifyViewHolderUpdateTimeAndPicture(pos - 1, bottomMessage, upperMessage);
 
             });
 
