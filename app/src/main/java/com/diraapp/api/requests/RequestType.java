@@ -34,5 +34,7 @@ public enum RequestType {
     @SerializedName("14")
     MESSAGE_READ,
     @SerializedName("15")
-    USER_STATUS_REQUEST
+    USER_STATUS_REQUEST,
+    @SerializedName("16")
+    ATTACHMENT_LISTENED_REQUEST
 }

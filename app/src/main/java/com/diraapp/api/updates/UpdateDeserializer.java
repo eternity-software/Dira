@@ -42,6 +42,8 @@ public class UpdateDeserializer {
                 return new Gson().fromJson(message, MessageReadUpdate.class);
             case USER_STATUS_UPDATE:
                 return new Gson().fromJson(message, UserStatusUpdate.class);
+            case ATTACHMENT_LISTENED_UPDATE:
+                return new Gson().fromJson(message, AttachmentListenedUpdate.class);
         }
         return rawUpdate;
     }

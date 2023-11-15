@@ -41,9 +41,10 @@ import com.diraapp.db.migrations.MessageMigrationFrom21To22;
                 @AutoMigration(from = 21, to = 22, spec = MessageMigrationFrom21To22.class),
                 @AutoMigration(from = 22, to = 23),
                 @AutoMigration(from = 23, to = 24),
-                @AutoMigration(from = 24, to = 25)
+                @AutoMigration(from = 24, to = 25),
+                @AutoMigration(from = 25, to = 26)
         },
-        version = 25,
+        version = 26,
         exportSchema = true)
 @TypeConverters({AttachmentConverter.class, CustomClientDataConverter.class,
         MessageReadingConverter.class})

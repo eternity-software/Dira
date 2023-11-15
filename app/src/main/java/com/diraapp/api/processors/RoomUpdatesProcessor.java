@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.diraapp.api.requests.Request;
+import com.diraapp.api.requests.RequestType;
+import com.diraapp.api.updates.AttachmentListenedUpdate;
 import com.diraapp.api.updates.DhInitUpdate;
 import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.updates.MessageReadUpdate;
@@ -18,6 +20,7 @@ import com.diraapp.api.views.RoomMember;
 import com.diraapp.db.daos.MemberDao;
 import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.daos.RoomDao;
+import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
@@ -169,7 +172,9 @@ public class RoomUpdatesProcessor {
                 } else if (update instanceof MemberUpdate) {
                     newMessage = updateMember((MemberUpdate) update);
                 } else if (update instanceof MessageReadUpdate) {
-                    updateMessageReading((MessageReadUpdate) update, room);
+                    onReadUpdate((MessageReadUpdate) update, room);
+                } else if (update instanceof AttachmentListenedUpdate) {
+                    updateAttachmentListening((AttachmentListenedUpdate) update, room);
                 } else if (update instanceof DhInitUpdate) {
                     newMessage = UpdateProcessor.getInstance().getClientMessageProcessor().
                             notifyRoomKeyGenerationStart((DhInitUpdate) update, room);
@@ -268,19 +273,28 @@ public class RoomUpdatesProcessor {
         return null;
     }
 
-    private void updateMessageReading(MessageReadUpdate update, Room room) {
+    private void onReadUpdate(MessageReadUpdate update, Room room) {
 
         Message message = messageDao.getMessageById(update.getMessageId());
 
-        MessageReading messageReading = new MessageReading(update.getUserId(), update.getReadTime());
+        updateReading(message, room, update.getUserId(), update.getReadTime());
+    }
+
+    private void updateReading(Message message, Room room, String userId, long readTime) {
+        updateReading(message, room, userId, readTime, false);
+    }
+
+    private void updateReading(Message message, Room room, String userId, long readTime, boolean isListened) {
+        MessageReading messageReading = new MessageReading(userId, readTime);
+        messageReading.setHasListened(isListened);
 
         if (message == null) {
             return;
         }
-        if (message.getAuthorId().equals(update.getUserId())) return;
+        if (message.getAuthorId().equals(userId)) return;
 
         String selfId = new CacheUtils(context).getString(CacheUtils.ID);
-        if (update.getUserId().equals(selfId)) {
+        if (userId.equals(selfId)) {
             if (message.getAuthorId().equals(selfId)) return;
 
             message.setRead(true);
@@ -302,6 +316,43 @@ public class RoomUpdatesProcessor {
             message.getMessageReadingList().add(messageReading);
         }
         messageDao.update(message);
+    }
+
+    private void updateAttachmentListening(AttachmentListenedUpdate update, Room room) {
+        Message message = messageDao.getMessageById(update.getMessageId());
+
+        if (message == null) return;
+
+        if (!message.hasAuthor()) return;
+        if (message.getAuthorId().equals(update.getUserId())) return;
+        if (message.getAttachments().size() == 0) return;
+
+        Attachment attachment = message.getSingleAttachment();
+
+        String selfId = new CacheUtils(context).getString(CacheUtils.ID);
+        if (update.getUserId().equals(selfId)) {
+            attachment.setListened(true);
+            return;
+        } else {
+            if (message.getAuthorId().equals(selfId)) {
+                attachment.setListened(true);
+            }
+        }
+
+        MessageReading messageReading = null;
+        for (MessageReading mr: message.getMessageReadingList()) {
+            if (mr.getUserId().equals(update.getUserId())) {
+                messageReading = mr;
+                break;
+            }
+        }
+
+        if (messageReading != null) {
+            messageReading.setHasListened(true);
+            messageDao.update(message);
+        } else {
+            updateReading(message, room, update.getUserId(), System.currentTimeMillis(), true);
+        }
     }
 
 }

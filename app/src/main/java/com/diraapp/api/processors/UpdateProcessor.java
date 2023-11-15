@@ -239,6 +239,8 @@ public class UpdateProcessor {
                 sendRequest(request, address);
             } else if (update.getUpdateType() == UpdateType.READ_UPDATE) {
                 roomUpdatesProcessor.updateRoom(update);
+            } else if (update.getUpdateType() == UpdateType.ATTACHMENT_LISTENED_UPDATE) {
+                roomUpdatesProcessor.updateRoom(update);
             }
 
             notifyUpdateListeners(update);

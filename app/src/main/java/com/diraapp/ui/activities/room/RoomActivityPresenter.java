@@ -14,6 +14,7 @@ import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.SendMessageRequest;
 import com.diraapp.api.requests.SendUserStatusRequest;
+import com.diraapp.api.updates.AttachmentListenedUpdate;
 import com.diraapp.api.updates.MessageReadUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.Update;
@@ -34,6 +35,7 @@ import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
+import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.components.viewswiper.ViewSwiperListener;
 import com.diraapp.utils.EncryptionUtil;
 import com.diraapp.utils.Logger;
@@ -134,40 +136,13 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 }
             }
             if (thisMessage == null) return;
-            Logger.logDebug("ReadingDebug", "3");
 
-            if (((MessageReadUpdate) update).getUserId().equals(selfId)) {
-
-                int pos = room.getUnreadMessagesIds().indexOf(thisMessage.getId());
-
-                ArrayList<String> toDelete = new ArrayList<>();
-                if (pos != -1) {
-                    for (int i = 0; i <= pos; i++) {
-                        toDelete.add(room.getUnreadMessagesIds().get(i));
-                    }
-                    room.removeFromUnreadMessages(toDelete);
-
-                    if (lastReadMessage == null) lastReadMessage = thisMessage;
-                    else if (thisMessage.getTime() > lastReadMessage.getTime()) {
-                        lastReadMessage = thisMessage;
-                    }
-                }
-
-                view.updateScrollArrow();
-                view.updateScrollArrowIndicator();
-                return;
-            }
-            Logger.logDebug("ReadingDebug", "4");
-            MessageReading thisReading = new MessageReading(readUpdate.getUserId(),
+            onMessageRead(thisMessage, index, readUpdate.getUserId(),
                     readUpdate.getReadTime());
+        } else if (update.getUpdateType() == UpdateType.ATTACHMENT_LISTENED_UPDATE) {
+            AttachmentListenedUpdate listenedUpdate = (AttachmentListenedUpdate) update;
 
-            for (MessageReading reading : thisMessage.getMessageReadingList()) {
-                if (reading.getUserId().equals(thisReading.getUserId())) return;
-            }
-            Logger.logDebug("ReadingDebug", "5");
-            thisMessage.getMessageReadingList().add(thisReading);
-
-            view.notifyRecyclerMessageRead(thisMessage, index);
+            onAttachmentListenedUpdate(listenedUpdate);
         }
     }
 
@@ -570,6 +545,103 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         view.runBackground(() -> {
             roomDao.update(room);
         });
+    }
+
+    private void onMessageRead(Message thisMessage, int index, String userId, long readTime) {
+        onMessageRead(thisMessage, index, userId, readTime, false);
+    }
+
+    private void onMessageRead(Message thisMessage, int index, String userId, long readTime,
+                               boolean isListened) {
+
+        Logger.logDebug("ReadingDebug", "3");
+
+        if (userId.equals(selfId)) {
+
+            int pos = room.getUnreadMessagesIds().indexOf(thisMessage.getId());
+
+            ArrayList<String> toDelete = new ArrayList<>();
+            if (pos != -1) {
+                for (int i = 0; i <= pos; i++) {
+                    toDelete.add(room.getUnreadMessagesIds().get(i));
+                }
+                room.removeFromUnreadMessages(toDelete);
+
+                if (lastReadMessage == null) lastReadMessage = thisMessage;
+                else if (thisMessage.getTime() > lastReadMessage.getTime()) {
+                    lastReadMessage = thisMessage;
+                }
+            }
+
+            view.updateScrollArrow();
+            view.updateScrollArrowIndicator();
+            return;
+        }
+        Logger.logDebug("ReadingDebug", "4");
+        MessageReading thisReading = new MessageReading(userId,
+                readTime);
+        thisReading.setHasListened(isListened);
+
+        for (MessageReading reading : thisMessage.getMessageReadingList()) {
+            if (reading.getUserId().equals(thisReading.getUserId())) return;
+        }
+        Logger.logDebug("ReadingDebug", "5");
+        thisMessage.getMessageReadingList().add(thisReading);
+
+        view.notifyRecyclerMessageRead(thisMessage, index);
+    }
+
+    private void onAttachmentListenedUpdate(AttachmentListenedUpdate listenedUpdate) {
+        Message thisMessage = null;
+        int index = 0;
+
+        for (int i = 0; i < messageList.size(); i++) {
+            Message message = messageList.get(i);
+            if (message.getId().equals(listenedUpdate.getMessageId())) {
+                thisMessage = message;
+                index = i;
+                break;
+            }
+        }
+        if (thisMessage == null) return;
+
+        if (!thisMessage.hasAuthor()) return;
+        if (thisMessage.getAuthorId().equals(listenedUpdate.getUserId())) return;
+        if (thisMessage.getAttachments().size() == 0) return;
+
+        Attachment attachment = thisMessage.getSingleAttachment();
+        boolean isSelf = listenedUpdate.getUserId().equals(selfId);
+
+        if (isSelf) {
+            attachment.setListened(true);
+        } else {
+            if (thisMessage.getAuthorId().equals(selfId)) {
+                attachment.setListened(true);
+            }
+        }
+
+        // notify ViewHolder
+        view.notifyViewHolder(index, (BaseMessageViewHolder holder) -> {
+            // notify ViewHolder somehow
+        } );
+
+        if (isSelf) return;
+
+        MessageReading messageReading = null;
+        for (MessageReading mr: thisMessage.getMessageReadingList()) {
+            if (mr.getUserId().equals(listenedUpdate.getUserId())) {
+                messageReading = mr;
+                break;
+            }
+        }
+
+        if (messageReading != null) {
+            messageReading.setHasListened(true);
+        } else {
+            onMessageRead(thisMessage, index, listenedUpdate.getUserId(),
+                    System.currentTimeMillis(), true);
+        }
+
     }
 
     @Override

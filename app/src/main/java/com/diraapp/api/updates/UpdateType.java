@@ -34,6 +34,8 @@ public enum UpdateType {
     @SerializedName("14")
     READ_UPDATE,
     @SerializedName("15")
-    USER_STATUS_UPDATE
+    USER_STATUS_UPDATE,
+    @SerializedName("16")
+    ATTACHMENT_LISTENED_UPDATE
 }
 
