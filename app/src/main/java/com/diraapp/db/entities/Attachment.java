@@ -22,6 +22,9 @@ public class Attachment {
     private String fileName;
     private long size;
     private String displayFileName = "";
+
+    @ColumnInfo(defaultValue = "false")
+    private boolean isListened = false;
     private AttachmentType attachmentType;
 
     @ColumnInfo(defaultValue = "-1")
@@ -178,5 +181,13 @@ public class Attachment {
                 ", imagePreview='" + imagePreview + '\'' +
                 ", voiceMessageStopPoint=" + voiceMessageStopPoint +
                 '}';
+    }
+
+    public boolean isListened() {
+        return isListened;
+    }
+
+    public void setListened(boolean listened) {
+        isListened = listened;
     }
 }
