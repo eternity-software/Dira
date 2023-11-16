@@ -355,15 +355,19 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         if (!message.isReadable()) return;
         if (message.getAuthorId().equals(selfId)) return;
 
-        message.setRead(true);
 
         MessageReadRequest request = new MessageReadRequest(selfId, System.currentTimeMillis(),
                 message.getId(), message.getRoomSecret());
         try {
             UpdateProcessor.getInstance().sendRequest(request, messageAdapterContract.getRoom().getServerAddress());
+            message.setRead(true);
         } catch (UnablePerformRequestException e) {
             e.printStackTrace();
         }
+    }
+
+    public void updateListeningIndicator() {
+
     }
 
     protected String getSelfId() {

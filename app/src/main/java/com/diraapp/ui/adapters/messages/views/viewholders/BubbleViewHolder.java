@@ -8,8 +8,11 @@ import androidx.cardview.widget.CardView;
 
 import com.diraapp.BuildConfig;
 import com.diraapp.R;
+import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.api.requests.AttachmentListenedRequest;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
@@ -48,6 +51,8 @@ public class BubbleViewHolder extends AttachmentViewHolder {
         }
 
         bubblePlayer.setOnClickListener(v -> {
+            sendMessageListened(message);
+
             DiraMediaPlayer diraMediaPlayer = getViewHolderManagerContract().getDiraMediaPlayer();
 
             if (BuildConfig.DEBUG) bubblePlayer.showDebugLog();
@@ -130,5 +135,29 @@ public class BubbleViewHolder extends AttachmentViewHolder {
         super.onViewAttached();
         if (!isInitialized | currentMediaFile == null) return;
         bubblePlayer.play(currentMediaFile.getPath());
+    }
+
+    private void sendMessageListened(Message message) {
+        if (!message.hasAuthor()) return;
+        if (isSelfMessage) return;
+
+        Attachment attachment = message.getSingleAttachment();
+        if (attachment.isListened()) return;
+
+        AttachmentListenedRequest request =
+                new AttachmentListenedRequest(message.getRoomSecret(), message.getId(), getSelfId());
+
+        try {
+            UpdateProcessor.getInstance().
+                    sendRequest(request, getMessageAdapterContract().getRoom().getServerAddress());
+            attachment.setListened(true);
+        } catch (UnablePerformRequestException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateListeningIndicator() {
+
     }
 }

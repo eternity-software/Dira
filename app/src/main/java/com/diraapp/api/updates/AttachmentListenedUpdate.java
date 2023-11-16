@@ -6,10 +6,11 @@ public class AttachmentListenedUpdate extends Update {
 
     private String messageId;
 
-    public AttachmentListenedUpdate(String roomSecret, String messageId, String memberId) {
+    public AttachmentListenedUpdate(String roomSecret, String messageId, String userId) {
         super(0, UpdateType.ATTACHMENT_LISTENED_UPDATE);
-        this.userId = memberId;
+        this.userId = userId;
         this.messageId = messageId;
+        this.setRoomSecret(roomSecret);
     }
 
     public String getUserId() {

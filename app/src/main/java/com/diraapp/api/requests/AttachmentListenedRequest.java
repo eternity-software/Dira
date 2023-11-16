@@ -4,12 +4,15 @@ public class AttachmentListenedRequest extends Request {
 
     private String messageId;
 
+    private String roomSecret;
+
     private String userId;
 
-    public AttachmentListenedRequest(String roomSecret, String messageId, String memberId) {
+    public AttachmentListenedRequest(String roomSecret, String messageId, String userId) {
         super(0, RequestType.ATTACHMENT_LISTENED_REQUEST);
         this.messageId = messageId;
-        this.userId = memberId;
+        this.userId = userId;
+        this.roomSecret = roomSecret;
     }
 
     public String getMessageId() {
@@ -26,5 +29,13 @@ public class AttachmentListenedRequest extends Request {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getRoomSecret() {
+        return roomSecret;
+    }
+
+    public void setRoomSecret(String roomSecret) {
+        this.roomSecret = roomSecret;
     }
 }

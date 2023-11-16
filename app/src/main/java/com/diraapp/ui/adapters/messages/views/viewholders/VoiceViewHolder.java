@@ -13,8 +13,12 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 
 import com.diraapp.R;
+import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.api.requests.AttachmentListenedRequest;
+import com.diraapp.api.updates.AttachmentListenedUpdate;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
@@ -90,6 +94,8 @@ public class VoiceViewHolder extends AttachmentViewHolder {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                sendMessageListened(message);
 
                 try {
                     DiraMediaPlayer diraMediaPlayer = getViewHolderManagerContract().getDiraMediaPlayer();
@@ -176,6 +182,30 @@ public class VoiceViewHolder extends AttachmentViewHolder {
 
         waveformSeekBar.setVisibility(View.INVISIBLE);
 
+    }
+
+    private void sendMessageListened(Message message) {
+        if (!message.hasAuthor()) return;
+        if (isSelfMessage) return;
+
+        Attachment attachment = message.getSingleAttachment();
+        if (attachment.isListened()) return;
+
+        AttachmentListenedRequest request =
+                new AttachmentListenedRequest(message.getRoomSecret(), message.getId(), getSelfId());
+
+        try {
+            UpdateProcessor.getInstance().
+                    sendRequest(request, getMessageAdapterContract().getRoom().getServerAddress());
+            attachment.setListened(true);
+        } catch (UnablePerformRequestException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateListeningIndicator() {
+        // Change visibility
     }
 
 }
