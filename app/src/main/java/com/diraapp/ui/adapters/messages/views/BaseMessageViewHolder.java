@@ -170,6 +170,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     }
 
     public void bindUserPicture(@NonNull Message message, @Nullable Message previousMessage) {
+        if (!isInitialized) return;
         if (profilePicture != null)
             profilePicture.setImageBitmap(null);
         if (!isSelfMessage) {
@@ -231,6 +232,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     }
 
     public void fillDateAndTime(Message message, Message previousMessage) {
+        if (!isInitialized) return;
 
         boolean isSameDay = false;
         boolean isSameYear = false;
@@ -408,6 +410,6 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
 
     public interface ViewHolderNotification {
 
-        void updateViewHolder(BaseMessageViewHolder holder);
+        void notifyViewHolder(BaseMessageViewHolder holder);
     }
 }

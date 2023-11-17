@@ -24,6 +24,7 @@ import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.adapters.messagetooltipread.MessageTooltipAdapter;
 import com.diraapp.ui.adapters.messagetooltipread.UserReadMessage;
+import com.diraapp.utils.Logger;
 import com.diraapp.utils.android.DeviceUtils;
 import com.skydoves.balloon.Balloon;
 import com.skydoves.balloon.BalloonAnimation;
@@ -37,6 +38,7 @@ import java.util.HashMap;
 
 public class BalloonMessageMenu {
 
+    private static boolean isBalloonActive = false;
     private final BalloonMenuListener listener;
     private final Balloon balloon;
     private final HashMap<String, Member> members;
@@ -58,6 +60,9 @@ public class BalloonMessageMenu {
     }
 
     public void createBalloon(Message message, View view) {
+        if (isBalloonActive) return;
+        isBalloonActive = true;
+
         if (message.getMessageReadingList() == null) return;
         if (!message.hasAuthor()) return;
         ArrayList<UserReadMessage> userReadMessages = new ArrayList<>(
@@ -158,11 +163,17 @@ public class BalloonMessageMenu {
             countListRow.setOnClickListener((View v) -> {
                 listBalloon.dismiss();
                 balloon.showAlignBottom(view);
+                isBalloonActive = true;
             });
 
             countRow.setOnClickListener((View v) -> {
                 balloon.dismiss();
                 listBalloon.showAlignBottom(view);
+                isBalloonActive = true;
+            });
+
+            listBalloon.setOnBalloonDismissListener(() -> {
+                isBalloonActive = false;
             });
 
             listBalloon.setOnBalloonOutsideTouchListener((new OnBalloonOutsideTouchListener() {
@@ -197,6 +208,10 @@ public class BalloonMessageMenu {
             }
         }));
 
+        balloon.setOnBalloonDismissListener(() -> {
+            isBalloonActive = false;
+        });
+
         balloon.showAlignBottom(view);
     }
 
@@ -213,7 +228,6 @@ public class BalloonMessageMenu {
         downloadLayout.setOnClickListener((View v) -> {
 
             AppStorage.saveFileToDownloads(attachment, context, message.getRoomSecret());
-
             balloon.dismiss();
         });
 

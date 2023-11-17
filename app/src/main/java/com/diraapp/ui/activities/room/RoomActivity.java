@@ -1009,7 +1009,7 @@ public class RoomActivity extends DiraActivity
             return;
         }
 
-        notification.updateViewHolder(holder);
+        notification.notifyViewHolder(holder);
     }
 
     @Override
