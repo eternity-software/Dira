@@ -157,4 +157,6 @@
     <string name="unencrypted_user_message">Нерасшифрованное сообщение</string>
     <string name="message_tooltip_reply">Ответить</string>
     <string name="message_tooltip_delete">Удалить сообщение</string>
+    <string name="message_tooltip_delete_title">Удалить данное сообщение</string>
+    <string name="message_tooltip_delete_text">Сообщение будет удалено локально</string>
 </resources>

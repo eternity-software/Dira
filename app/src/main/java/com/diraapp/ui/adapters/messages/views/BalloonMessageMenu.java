@@ -24,6 +24,7 @@ import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.adapters.messagetooltipread.MessageTooltipAdapter;
 import com.diraapp.ui.adapters.messagetooltipread.UserReadMessage;
+import com.diraapp.ui.components.DiraPopup;
 import com.diraapp.utils.android.DeviceUtils;
 import com.skydoves.balloon.Balloon;
 import com.skydoves.balloon.BalloonAnimation;
@@ -192,8 +193,7 @@ public class BalloonMessageMenu {
         });
 
         deleteRow.setOnClickListener((View v) -> {
-            if (listener != null) listener.onMessageDelete(message);
-            balloon.dismiss();
+            createDeletionPopup(message);
         });
 
         copyRow.setOnClickListener((View v) -> {
@@ -245,6 +245,17 @@ public class BalloonMessageMenu {
             }
         }
         return isListened;
+    }
+
+    private void createDeletionPopup(Message message) {
+        DiraPopup diraPopup = new DiraPopup(context);
+
+        diraPopup.show(context.getString(R.string.message_tooltip_delete_title),
+                context.getString(R.string.message_tooltip_delete_text),
+                null, null, () -> {
+                    if (listener != null) listener.onMessageDelete(message);
+                });
+        balloon.dismiss();
     }
 
     public interface BalloonMenuListener {
