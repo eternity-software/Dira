@@ -1,7 +1,9 @@
 package com.diraapp.ui.adapters.messages.views.viewholders;
 
 import android.media.MediaPlayer;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -92,7 +94,7 @@ public class BubbleViewHolder extends AttachmentViewHolder {
     @Override
     protected void postInflate() {
         super.postInflate();
-        CardView bubble = new BubbleMessageView(itemView.getContext());
+        CardView bubble = new BubbleMessageView(itemView.getContext(), isSelfMessage);
         //  bubbleContainer = find(BubbleMessageView.BUBBLE_CONTAINER_ID);
         outerContainer.addView(bubble);
         bubblePlayer = find(R.id.bubble_player);
@@ -105,6 +107,8 @@ public class BubbleViewHolder extends AttachmentViewHolder {
         super.bindMessage(message, previousMessage);
         if (message.getAttachments().size() == 0) return;
         bubblePlayer.reset();
+
+        updateListeningIndicator(message.getSingleAttachment());
 
         Attachment bubbleAttachment = message.getAttachments().get(0);
         currentMediaFile = AttachmentDownloader.getFileFromAttachment(bubbleAttachment,
@@ -157,7 +161,14 @@ public class BubbleViewHolder extends AttachmentViewHolder {
     }
 
     @Override
-    public void updateListeningIndicator() {
+    public void updateListeningIndicator(Attachment attachment) {
+        if (!isInitialized) return;
 
+        LinearLayout indicator = itemView.findViewById(R.id.listened_indicator);
+        if (attachment.isListened()) {
+            indicator.setVisibility(View.VISIBLE);
+        } else {
+            indicator.setVisibility(View.INVISIBLE);
+        }
     }
 }

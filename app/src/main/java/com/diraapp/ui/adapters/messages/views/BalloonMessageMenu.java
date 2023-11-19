@@ -24,7 +24,6 @@ import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.adapters.messagetooltipread.MessageTooltipAdapter;
 import com.diraapp.ui.adapters.messagetooltipread.UserReadMessage;
-import com.diraapp.utils.Logger;
 import com.diraapp.utils.android.DeviceUtils;
 import com.skydoves.balloon.Balloon;
 import com.skydoves.balloon.BalloonAnimation;
@@ -71,8 +70,11 @@ public class BalloonMessageMenu {
         for (MessageReading messageReading : message.getMessageReadingList()) {
             Member member = members.get(messageReading.getUserId());
             if (member == null) continue;
+
+            boolean isListened = isListened(message);
+
             UserReadMessage userReadMessage = new UserReadMessage(
-                    member.getNickname(), member.getImagePath());
+                    member.getNickname(), member.getImagePath(), isListened);
             userReadMessages.add(userReadMessage);
         }
 
@@ -231,6 +233,18 @@ public class BalloonMessageMenu {
             balloon.dismiss();
         });
 
+    }
+
+    private boolean isListened(Message message) {
+        boolean isListened = true;
+        if (message.getAttachments().size() != 0) {
+            Attachment attachment = message.getSingleAttachment();
+
+            if (attachment.isListenable()) {
+                isListened = attachment.isListened();
+            }
+        }
+        return isListened;
     }
 
     public interface BalloonMenuListener {

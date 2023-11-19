@@ -992,7 +992,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
             Member member = members.get(messageReading.getUserId());
             if (member == null) continue;
             UserReadMessage userReadMessage = new UserReadMessage(
-                    member.getNickname(), member.getImagePath());
+                    member.getNickname(), member.getImagePath(), true);
             userReadMessages.add(userReadMessage);
         }
 
@@ -1173,7 +1173,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
                     VIEW_TYPE_ROOM_MESSAGE_BUBBLE, isSelfMessage);
             holder.bubbleViewContainer.addView(replyComponent);
 
-            CardView bubble = new BubbleMessageView(context);
+            CardView bubble = new BubbleMessageView(context, isSelfMessage);
             holder.bubbleViewContainer.addView(bubble);
 
             holder.messageContainer.setVisibility(View.GONE);

@@ -6,9 +6,12 @@ public class UserReadMessage {
 
     private final String picturePath;
 
-    public UserReadMessage(String nickName, String picture) {
+    private final boolean isListened;
+
+    public UserReadMessage(String nickName, String picture, boolean isListened) {
         this.nickName = nickName;
         this.picturePath = picture;
+        this.isListened = isListened;
     }
 
     public String getNickName() {
@@ -17,5 +20,9 @@ public class UserReadMessage {
 
     public String getPicturePath() {
         return picturePath;
+    }
+
+    public boolean isListened() {
+        return isListened;
     }
 }

@@ -20,6 +20,17 @@
         android:src="@drawable/ic_play"
         app:tint="@color/gray" />
 
+    <LinearLayout
+        android:id="@+id/listened_indicator"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginStart="-16dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/light_round"
+        android:orientation="horizontal" />
+
     <com.masoudss.lib.WaveformSeekBar
         android:id="@+id/waveform_seek_bar"
         android:layout_width="wrap_content"

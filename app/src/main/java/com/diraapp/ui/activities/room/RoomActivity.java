@@ -1003,7 +1003,11 @@ public class RoomActivity extends DiraActivity
         BaseMessageViewHolder holder = (BaseMessageViewHolder) binding.recyclerView.
                 findViewHolderForAdapterPosition(pos);
 
-        if (holder == null) {
+        boolean notFound = holder == null;
+
+        if (!notFound) notFound = !holder.isInitialized();
+
+        if (notFound) {
             messagesAdapter.notifyItemChanged(pos);
             Logger.logDebug(RoomActivity.class.toString(), "Update message time by notifying");
             return;

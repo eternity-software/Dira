@@ -190,4 +190,8 @@ public class Attachment {
     public void setListened(boolean listened) {
         isListened = listened;
     }
+
+    public boolean isListenable() {
+        return attachmentType == AttachmentType.BUBBLE || attachmentType == AttachmentType.VOICE;
+    }
 }

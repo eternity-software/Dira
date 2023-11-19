@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,6 +41,13 @@ public class MessageTooltipAdapter extends RecyclerView.Adapter<MessageTooltipAd
         UserReadMessage userReadMessage = users.get(position);
 
         holder.nickNameView.setText(userReadMessage.getNickName());
+
+        if (userReadMessage.isListened()) {
+            holder.listenedIndicator.setVisibility(View.INVISIBLE);
+        } else {
+            holder.listenedIndicator.setVisibility(View.VISIBLE);
+        }
+
         if (userReadMessage.getPicturePath() != null) {
             Picasso.get().load(new File(userReadMessage.getPicturePath())).into(holder.userPictureView);
         }
@@ -55,10 +63,13 @@ public class MessageTooltipAdapter extends RecyclerView.Adapter<MessageTooltipAd
         TextView nickNameView;
         ImageView userPictureView;
 
+        LinearLayout listenedIndicator;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             nickNameView = itemView.findViewById(R.id.user_read_nickname);
             userPictureView = itemView.findViewById(R.id.user_read_picture);
+            listenedIndicator = itemView.findViewById(R.id.listened_indicator);
         }
     }
 }

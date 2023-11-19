@@ -34,4 +34,20 @@
         android:textIsSelectable="true"
         android:textSize="13sp" />
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.diraapp.ui.components.dynamic.ThemeLinearLayout
+            android:id="@+id/listened_indicator"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="end|center_vertical"
+            android:background="@drawable/light_round"
+
+            app:themeBackgroundColor="white"
+            android:orientation="horizontal" />
+
+    </FrameLayout>
+
 </LinearLayout>

@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.requests.MessageReadRequest;
+import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.AlreadyInitializedException;
@@ -368,7 +369,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         }
     }
 
-    public void updateListeningIndicator() {
+    public void updateListeningIndicator(Attachment attachment) {
 
     }
 

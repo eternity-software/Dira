@@ -621,8 +621,9 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         }
 
         // notify ViewHolder
+        Message finalThisMessage = thisMessage;
         view.notifyViewHolder(index, (BaseMessageViewHolder holder) -> {
-            // notify ViewHolder somehow
+            holder.updateListeningIndicator(finalThisMessage.getSingleAttachment());
         } );
 
         if (isSelf) return;

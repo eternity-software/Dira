@@ -169,6 +169,7 @@ public class VoiceViewHolder extends AttachmentViewHolder {
     public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
 
+        updateListeningIndicator(message.getSingleAttachment());
         clearItem();
 
         if (!AttachmentDownloader.isAttachmentSaving(message.getSingleAttachment()))
@@ -204,8 +205,15 @@ public class VoiceViewHolder extends AttachmentViewHolder {
     }
 
     @Override
-    public void updateListeningIndicator() {
-        // Change visibility
+    public void updateListeningIndicator(Attachment attachment) {
+        if (!isInitialized) return;
+
+        LinearLayout indicator = itemView.findViewById(R.id.listened_indicator);
+        if (!attachment.isListened()) {
+            indicator.setVisibility(View.VISIBLE);
+        } else {
+            indicator.setVisibility(View.INVISIBLE);
+        }
     }
 
 }

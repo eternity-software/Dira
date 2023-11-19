@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/bubble_player"
-    android:layout_width="200dp"
-    android:layout_height="200dp" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer
+        android:id="@+id/bubble_player"
+        android:layout_width="200dp"
+        android:layout_height="200dp" />
+
+    <LinearLayout
+        android:id="@+id/listened_indicator"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginStart="-24dp"
+        android:layout_marginBottom="0dp"
+        android:background="@drawable/light_round"
+        android:orientation="horizontal" />
+
+</LinearLayout>
