@@ -128,7 +128,8 @@ public class ChatAppearanceActivity extends DiraActivity {
         long keyTime = 1;
 
         String secretName = "1111";
-        Room room = new Room(null, keyTime, secretName, null, false, new ArrayList<>());
+        Room room = new Room(null, keyTime, secretName, null,
+                false, new ArrayList<>(), new ArrayList<>());
         room.setTimeEncryptionKeyUpdated(keyTime);
 
         Message senderMessage = new Message();

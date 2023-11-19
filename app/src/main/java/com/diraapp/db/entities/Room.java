@@ -56,21 +56,29 @@ public class Room {
 
     private ArrayList<String> unreadMessagesIds = new ArrayList<>();
 
+    private ArrayList<String> pinnedMessagesIds = new ArrayList<>();
+
     @Ignore
     private Message message;
 
     public Room(String name, long lastUpdatedTime, String secretName, String serverAddress,
-                boolean isNotificationsEnabled, ArrayList<String> unreadMessagesIds) {
+                boolean isNotificationsEnabled, ArrayList<String> unreadMessagesIds,
+                ArrayList<String> pinnedMessagesIds) {
         this.name = name;
         this.lastUpdatedTime = lastUpdatedTime;
         this.secretName = secretName;
         this.serverAddress = serverAddress;
         this.isNotificationsEnabled = isNotificationsEnabled;
+
         if (unreadMessagesIds == null) {
-            this.unreadMessagesIds = new ArrayList<>();
-            return;
+            unreadMessagesIds = new ArrayList<>();
         }
         this.unreadMessagesIds = unreadMessagesIds;
+
+        if (pinnedMessagesIds == null) {
+            pinnedMessagesIds = new ArrayList<>();
+        }
+        this.pinnedMessagesIds = pinnedMessagesIds;
     }
 
     public int getUpdateExpireSec() {
@@ -199,6 +207,14 @@ public class Room {
 
     public ArrayList<String> getUnreadMessagesIds() {
         return unreadMessagesIds;
+    }
+
+    public ArrayList<String> getPinnedMessagesIds() {
+        return pinnedMessagesIds;
+    }
+
+    public void setPinnedMessagesIds(ArrayList<String> pinnedMessagesIds) {
+        this.pinnedMessagesIds = pinnedMessagesIds;
     }
 
     public void setUnreadMessagesIds(ArrayList<String> unreadMessagesIds) {

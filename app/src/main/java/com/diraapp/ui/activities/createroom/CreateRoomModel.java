@@ -21,7 +21,8 @@ public class CreateRoomModel implements CreateRoomContract.Model {
     public void createRoom(String roomName, String roomSecret, String welcomeMessage,
                            String authorId, String authorName, String serverAddress, int updateExpireSec) {
 
-        Room room = new Room(roomName, System.currentTimeMillis(), roomSecret, serverAddress, true, new ArrayList<>());
+        Room room = new Room(roomName, System.currentTimeMillis(), roomSecret,
+                serverAddress, true, new ArrayList<>(), new ArrayList<>());
 
         room.setUpdateExpireSec(updateExpireSec);
         roomDao.insertAll(room);
