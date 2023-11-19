@@ -6,6 +6,7 @@ import com.diraapp.db.entities.messages.MessageType;
 import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
 import com.diraapp.db.entities.messages.customclientdata.KeyGenerateStartClientData;
 import com.diraapp.db.entities.messages.customclientdata.KeyGeneratedClientData;
+import com.diraapp.db.entities.messages.customclientdata.PinnedMessageClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
@@ -38,6 +39,8 @@ public class CustomClientDataConverter {
             return gson.fromJson(string, KeyGeneratedClientData.class);
         } else if (clientData.getMessageType().equals(MessageType.UNENCRYPTED_USER_MESSAGE)) {
             return gson.fromJson(string, UnencryptedMessageClientData.class);
+        } else if (clientData.getMessageType().equals(MessageType.PINNED_MESSAGE_CHANGED)) {
+            return gson.fromJson(string, PinnedMessageClientData.class);
         }
         return null;
     }

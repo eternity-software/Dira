@@ -6,6 +6,8 @@ import com.diraapp.DiraApplication;
 import com.diraapp.api.updates.DhInitUpdate;
 import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
+import com.diraapp.api.updates.PinnedMessageAddedUpdate;
+import com.diraapp.api.updates.PinnedMessageRemovedUpdate;
 import com.diraapp.api.updates.RenewingConfirmUpdate;
 import com.diraapp.api.updates.RoomUpdate;
 import com.diraapp.api.updates.Update;
@@ -15,6 +17,7 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
 import com.diraapp.db.entities.messages.customclientdata.KeyGenerateStartClientData;
 import com.diraapp.db.entities.messages.customclientdata.KeyGeneratedClientData;
+import com.diraapp.db.entities.messages.customclientdata.PinnedMessageClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
@@ -71,6 +74,19 @@ public class ClientMessageProcessor {
         }
 
         clientData = new KeyGeneratedClientData(code);
+        return notifyClientMessage(update, clientData, room);
+    }
+
+    public Message notifyPinnedMessageAdded(Update update, Room room) {
+        PinnedMessageClientData clientData;
+        if (update instanceof PinnedMessageAddedUpdate) {
+            PinnedMessageAddedUpdate p = (PinnedMessageAddedUpdate) update;
+            clientData = new PinnedMessageClientData(p.getMessageId(), p.getRoomSecret(), p.getUserId(), true);
+        } else {
+            PinnedMessageRemovedUpdate p = (PinnedMessageRemovedUpdate) update;
+            clientData = new PinnedMessageClientData(p.getMessageId(), p.getRoomSecret(), p.getUserId(), false);
+        }
+
         return notifyClientMessage(update, clientData, room);
     }
 

@@ -44,6 +44,10 @@ public class UpdateDeserializer {
                 return new Gson().fromJson(message, UserStatusUpdate.class);
             case ATTACHMENT_LISTENED_UPDATE:
                 return new Gson().fromJson(message, AttachmentListenedUpdate.class);
+            case PINNED_MESSAGE_ADDED_UPDATE:
+                return new Gson().fromJson(message, PinnedMessageAddedUpdate.class);
+            case PINNED_MESSAGE_REMOVED_UPDATE:
+                return new Gson().fromJson(message, PinnedMessageRemovedUpdate.class);
         }
         return rawUpdate;
     }

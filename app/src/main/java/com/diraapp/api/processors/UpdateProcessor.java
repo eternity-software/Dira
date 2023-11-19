@@ -241,6 +241,9 @@ public class UpdateProcessor {
                 roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.ATTACHMENT_LISTENED_UPDATE) {
                 roomUpdatesProcessor.updateRoom(update);
+            } else if (update.getUpdateType() == UpdateType.PINNED_MESSAGE_ADDED_UPDATE ||
+                        update.getUpdateType() == UpdateType.PINNED_MESSAGE_REMOVED_UPDATE) {
+                roomUpdatesProcessor.updateRoom(update);
             }
 
             notifyUpdateListeners(update);

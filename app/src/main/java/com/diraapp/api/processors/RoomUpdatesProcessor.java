@@ -3,6 +3,7 @@ package com.diraapp.api.processors;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.diraapp.api.requests.PinnedMessageRemovedRequest;
 import com.diraapp.api.requests.Request;
 import com.diraapp.api.requests.RequestType;
 import com.diraapp.api.updates.AttachmentListenedUpdate;
@@ -11,6 +12,8 @@ import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.updates.MessageReadUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.NewRoomUpdate;
+import com.diraapp.api.updates.PinnedMessageAddedUpdate;
+import com.diraapp.api.updates.PinnedMessageRemovedUpdate;
 import com.diraapp.api.updates.RenewingCancelUpdate;
 import com.diraapp.api.updates.RenewingConfirmUpdate;
 import com.diraapp.api.updates.RoomUpdate;
@@ -25,6 +28,7 @@ import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
+import com.diraapp.db.entities.messages.customclientdata.PinnedMessageClientData;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
@@ -186,6 +190,11 @@ public class RoomUpdatesProcessor {
                 } else if (update instanceof RenewingConfirmUpdate) {
                     newMessage = UpdateProcessor.getInstance().getClientMessageProcessor().
                             notifyRoomKeyGenerationStop(update, room);
+                } else if (update instanceof PinnedMessageAddedUpdate ||
+                            update instanceof PinnedMessageRemovedUpdate) {
+                    onPinnedMessageUpdate(update, room);
+                    newMessage = UpdateProcessor.getInstance().getClientMessageProcessor().
+                            notifyPinnedMessageAdded(update, room);
                 }
 
                 if (newMessage != null) {
@@ -354,6 +363,24 @@ public class RoomUpdatesProcessor {
             messageDao.update(message);
         } else {
             updateReading(message, room, update.getUserId(), System.currentTimeMillis(), true);
+        }
+    }
+
+    private void onPinnedMessageUpdate(Update update, Room room) {
+        String messageId;
+        if (update instanceof PinnedMessageAddedUpdate) {
+            messageId = ((PinnedMessageAddedUpdate) update).getMessageId();
+
+            if (room.getPinnedMessagesIds().contains(messageId)) return;
+
+            room.getPinnedMessagesIds().add(messageId);
+
+        } else {
+            messageId = ((PinnedMessageRemovedUpdate) update).getMessageId();
+
+            if (!room.getPinnedMessagesIds().contains(messageId)) return;
+
+            room.getPinnedMessagesIds().remove(messageId);
         }
     }
 

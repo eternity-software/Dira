@@ -26,5 +26,8 @@ public enum MessageType {
     KEY_GENERATED,
 
     @SerializedName("7")
-    UNENCRYPTED_USER_MESSAGE
+    UNENCRYPTED_USER_MESSAGE,
+
+    @SerializedName("8")
+    PINNED_MESSAGE_CHANGED
 }

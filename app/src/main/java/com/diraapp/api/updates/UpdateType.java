@@ -36,6 +36,10 @@ public enum UpdateType {
     @SerializedName("15")
     USER_STATUS_UPDATE,
     @SerializedName("16")
-    ATTACHMENT_LISTENED_UPDATE
+    ATTACHMENT_LISTENED_UPDATE,
+    @SerializedName("17")
+    PINNED_MESSAGE_ADDED_UPDATE,
+    @SerializedName("18")
+    PINNED_MESSAGE_REMOVED_UPDATE
 }
 
