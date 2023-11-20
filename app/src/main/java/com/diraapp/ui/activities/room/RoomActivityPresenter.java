@@ -14,9 +14,12 @@ import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.SendMessageRequest;
 import com.diraapp.api.requests.SendUserStatusRequest;
+import com.diraapp.api.requests.SubscribeRequest;
 import com.diraapp.api.updates.AttachmentListenedUpdate;
 import com.diraapp.api.updates.MessageReadUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
+import com.diraapp.api.updates.PinnedMessageAddedUpdate;
+import com.diraapp.api.updates.PinnedMessageRemovedUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
 import com.diraapp.api.userstatus.UserStatus;
@@ -46,8 +49,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Filter;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -58,6 +64,10 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
 
     private static final int MAX_ADAPTER_MESSAGES_COUNT = 200;
+
+    private ArrayList<Message> pinnedMessages = new ArrayList<>();
+
+    private HashSet<String> pinnedIds = new HashSet<>();
     private final String roomSecret;
     private final String selfId;
 
@@ -143,6 +153,10 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             AttachmentListenedUpdate listenedUpdate = (AttachmentListenedUpdate) update;
 
             onAttachmentListenedUpdate(listenedUpdate);
+        } else if (update.getUpdateType() == UpdateType.PINNED_MESSAGE_ADDED_UPDATE) {
+            addPinned((PinnedMessageAddedUpdate) update);
+        } else if (update.getUpdateType() == UpdateType.PINNED_MESSAGE_REMOVED_UPDATE) {
+            removePinned((PinnedMessageRemovedUpdate) update);
         }
     }
 
@@ -353,8 +367,30 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             }
 
             initMembers();
+
+            loadPinnedMessages();
         });
 
+    }
+
+    private void loadPinnedMessages() {
+        pinnedIds = new HashSet<>(room.getPinnedMessagesIds().size());
+        pinnedMessages = new ArrayList<>(room.getPinnedMessagesIds().size());
+
+        MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
+
+        for (String id: room.getPinnedMessagesIds()) {
+            Message message = messageDao.getMessageById(id);
+
+            if (message == null) continue;
+
+            pinnedMessages.add(message);
+            pinnedIds.add(id);
+        }
+
+        view.runOnUiThread(() -> {
+            view.updatePinned();
+        });
     }
 
     @Override
@@ -592,6 +628,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     }
 
     private void onAttachmentListenedUpdate(AttachmentListenedUpdate listenedUpdate) {
+        if (!listenedUpdate.getRoomSecret().equals(roomSecret)) return;
+
         Message thisMessage = null;
         int index = 0;
 
@@ -722,6 +760,13 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 room.getUnreadMessagesIds().remove(messageId);
             }
 
+            if (pinnedIds.contains(messageId)) {
+                updateRoom = true;
+
+                removePinned(new PinnedMessageRemovedUpdate(
+                                roomSecret, messageId, message.getAuthorId()));
+            }
+
             if (updateRoom) {
                 view.getRoomDatabase().getRoomDao().update(room);
             }
@@ -729,6 +774,55 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             // Removing message from db
             view.getMessagesDatabase().getMessageDao().delete(message);
         });
+    }
+
+    @Override
+    public ArrayList<Message> getPinnedMessages() {
+        return pinnedMessages;
+    }
+
+    @Override
+    public void addPinned(PinnedMessageAddedUpdate update) {
+        if (!update.getRoomSecret().equals(roomSecret)) return;
+        if (pinnedIds.contains(update.getMessageId())) return;
+
+        pinnedIds.add(update.getMessageId());
+
+        view.runBackground(() -> {
+            Message message = view.getMessagesDatabase().getMessageDao().
+                    getMessageById(update.getMessageId());
+
+            pinnedMessages.add(message);
+
+            room.getPinnedMessagesIds().add(update.getMessageId());
+
+            view.runOnUiThread(() -> {
+                view.updatePinned();
+            });
+        });
+    }
+
+    @Override
+    public void removePinned(PinnedMessageRemovedUpdate update) {
+        if (!update.getRoomSecret().equals(roomSecret)) return;
+        if (pinnedIds.contains(update.getMessageId())) return;
+
+        pinnedIds.remove(update.getMessageId());
+
+        Message message = null;
+        for (Message m: pinnedMessages) {
+            if (m.getId().equals(update.getMessageId())) {
+                message = m;
+                break;
+            }
+        }
+
+        if (message == null) return;
+        pinnedMessages.remove(message);
+
+        room.getPinnedMessagesIds().remove(update.getMessageId());
+
+        view.updatePinned();
     }
 
     @Override

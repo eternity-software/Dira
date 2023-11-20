@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 
 import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
+import com.diraapp.api.updates.PinnedMessageAddedUpdate;
+import com.diraapp.api.updates.PinnedMessageRemovedUpdate;
 import com.diraapp.api.userstatus.UserStatus;
 import com.diraapp.api.views.UserStatusType;
 import com.diraapp.db.DiraMessageDatabase;
@@ -97,6 +99,8 @@ public interface RoomActivityContract {
         void updateScrollArrow();
 
         void updateScrollArrowIndicator();
+
+        void updatePinned();
     }
 
     interface Presenter {
@@ -147,6 +151,12 @@ public interface RoomActivityContract {
         void updateUnsentText();
 
         void deleteMessage(Message message, Context context);
+
+        ArrayList<Message> getPinnedMessages();
+
+        void addPinned(PinnedMessageAddedUpdate update);
+
+        void removePinned(PinnedMessageRemovedUpdate update);
     }
 
 }

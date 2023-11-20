@@ -48,6 +48,9 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     private final MessageAdapterContract messageAdapterContract;
     private final ViewHolderManagerContract viewHolderManagerContract;
     protected boolean isInitialized = false, isSelfMessage;
+
+    private Message currentMessage = null;
+
     /**
      * Indicates that message will be without background (ex. BubbleMessage)
      */
@@ -151,6 +154,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
      */
     public void bindMessage(@NonNull Message message, @Nullable Message previousMessage) {
         isOnScreen = true;
+        currentMessage = message;
         fillDateAndTime(message, previousMessage);
         checkReadStatus(message);
         itemView.setClickable(true);
@@ -382,6 +386,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     }
 
     public void onViewRecycled() {
+        currentMessage = null;
         isOnScreen = false;
     }
 
@@ -395,6 +400,14 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         if (!isInitialized) return;
         if (isOnScreen) return;
         isOnScreen = true;
+    }
+
+    public Message getCurrentMessage() {
+        return currentMessage;
+    }
+
+    public void setCurrentMessage(Message currentMessage) {
+        this.currentMessage = currentMessage;
     }
 
     public boolean isInitialized() {

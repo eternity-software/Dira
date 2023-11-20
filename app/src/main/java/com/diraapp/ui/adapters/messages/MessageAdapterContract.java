@@ -47,4 +47,8 @@ public interface MessageAdapterContract {
     void addListener(DiraActivityListener player);
 
     BalloonMessageMenu.BalloonMenuListener getBalloonMessageListener();
+
+    void onMessageAttached(Message message);
+
+    void onMessageDetached(Message message);
 }

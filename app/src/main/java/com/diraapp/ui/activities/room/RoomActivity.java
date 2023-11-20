@@ -109,6 +109,7 @@ public class RoomActivity extends DiraActivity
     private FilePickerBottomSheet filePickerBottomSheet;
     private ActivityRoomBinding binding;
 
+    private boolean isPinnedShowed = false;
     private boolean isArrowShowed = true;
 
     private final MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
@@ -830,6 +831,31 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
+    public void updatePinned() {
+        ArrayList<Message> pinnedMessages = presenter.getPinnedMessages();
+
+        int size = pinnedMessages.size();
+
+        if (size == 0) {
+            if (!isPinnedShowed) return;
+            isPinnedShowed = false;
+
+            // disappearance
+            return;
+        }
+
+        Message currentPinned = pinnedMessages.get(size - 1);
+
+        // set text
+
+        if (isPinnedShowed) return;
+        isPinnedShowed = true;
+
+        // appearance
+
+    }
+
+    @Override
     public void onMediaMessageRecorded(String path, AttachmentType attachmentType) {
 
         ArrayList<Attachment> attachments = new ArrayList<>();
@@ -1168,6 +1194,20 @@ public class RoomActivity extends DiraActivity
     @Override
     public BalloonMessageMenu.BalloonMenuListener getBalloonMessageListener() {
         return (BalloonMessageMenu.BalloonMenuListener) this;
+    }
+
+    @Override
+    public void onMessageAttached(Message message) {
+//        if (getRoom().getPinnedMessagesIds().contains(message.getId())) {
+//            updatePinned();
+//        }
+    }
+
+    @Override
+    public void onMessageDetached(Message message) {
+//        if (getRoom().getPinnedMessagesIds().contains(message.getId())) {
+//            updatePinned();
+//        }
     }
 
     @Override
