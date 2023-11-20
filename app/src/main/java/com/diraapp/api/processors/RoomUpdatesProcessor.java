@@ -343,26 +343,26 @@ public class RoomUpdatesProcessor {
         String selfId = new CacheUtils(context).getString(CacheUtils.ID);
         if (update.getUserId().equals(selfId)) {
             attachment.setListened(true);
-            return;
+            messageDao.update(message);
         } else {
             if (message.getAuthorId().equals(selfId)) {
                 attachment.setListened(true);
             }
-        }
 
-        MessageReading messageReading = null;
-        for (MessageReading mr: message.getMessageReadingList()) {
-            if (mr.getUserId().equals(update.getUserId())) {
-                messageReading = mr;
-                break;
+            MessageReading messageReading = null;
+            for (MessageReading mr: message.getMessageReadingList()) {
+                if (mr.getUserId().equals(update.getUserId())) {
+                    messageReading = mr;
+                    break;
+                }
             }
-        }
 
-        if (messageReading != null) {
-            messageReading.setHasListened(true);
-            messageDao.update(message);
-        } else {
-            updateReading(message, room, update.getUserId(), System.currentTimeMillis(), true);
+            if (messageReading != null) {
+                messageReading.setHasListened(true);
+                messageDao.update(message);
+            } else {
+                updateReading(message, room, update.getUserId(), System.currentTimeMillis(), true);
+            }
         }
     }
 

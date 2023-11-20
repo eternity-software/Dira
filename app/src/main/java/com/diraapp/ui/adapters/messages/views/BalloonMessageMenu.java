@@ -72,7 +72,7 @@ public class BalloonMessageMenu {
             Member member = members.get(messageReading.getUserId());
             if (member == null) continue;
 
-            boolean isListened = isListened(message);
+            boolean isListened = messageReading.isHasListened();
 
             UserReadMessage userReadMessage = new UserReadMessage(
                     member.getNickname(), member.getImagePath(), isListened);
@@ -233,18 +233,6 @@ public class BalloonMessageMenu {
             balloon.dismiss();
         });
 
-    }
-
-    private boolean isListened(Message message) {
-        boolean isListened = true;
-        if (message.getAttachments().size() != 0) {
-            Attachment attachment = message.getSingleAttachment();
-
-            if (attachment.isListenable()) {
-                isListened = attachment.isListened();
-            }
-        }
-        return isListened;
     }
 
     private void createDeletionPopup(Message message) {

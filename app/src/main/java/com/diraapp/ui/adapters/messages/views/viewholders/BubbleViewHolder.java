@@ -165,7 +165,7 @@ public class BubbleViewHolder extends AttachmentViewHolder {
         if (!isInitialized) return;
 
         LinearLayout indicator = itemView.findViewById(R.id.listened_indicator);
-        if (attachment.isListened()) {
+        if (!attachment.isListened()) {
             indicator.setVisibility(View.VISIBLE);
         } else {
             indicator.setVisibility(View.INVISIBLE);
