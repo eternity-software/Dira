@@ -23,6 +23,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,6 +38,7 @@ import com.diraapp.DiraApplication;
 import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.ProcessorListener;
+import com.diraapp.api.requests.Request;
 import com.diraapp.api.userstatus.UserStatus;
 import com.diraapp.api.userstatus.UserStatusHandler;
 import com.diraapp.api.userstatus.UserStatusListener;
@@ -49,6 +51,7 @@ import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.AppStorage;
@@ -109,7 +112,6 @@ public class RoomActivity extends DiraActivity
     private FilePickerBottomSheet filePickerBottomSheet;
     private ActivityRoomBinding binding;
 
-    private boolean isPinnedShowed = false;
     private boolean isArrowShowed = true;
 
     private final MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
@@ -623,88 +625,97 @@ public class RoomActivity extends DiraActivity
         runOnUiThread(() -> {
             if (message == null) {
                 presenter.setReplyingMessage(null);
-                binding.replyLayout.setVisibility(View.GONE);
                 return;
             }
 
             showKeyboard(binding.messageTextInput);
-
-            String text = "";
-            Attachment attachment = null;
-            boolean showImage = false;
-            int size = message.getAttachments().size();
-            if (size > 0) {
-                attachment = message.getAttachments().get(0);
-            }
-
-            if (attachment != null) {
-                binding.replyText.setTextColor(Theme.getColor(this, R.color.self_reply_color));
-                if (size > 1) {
-                    text = getResources().getString(R.string.message_type_attachments);
-                } else if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
-                    text = getResources().getString(R.string.message_type_bubble);
-                } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
-                    text = getResources().getString(R.string.message_type_video);
-                } else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
-                    text = getResources().getString(R.string.message_type_voice);
-                } else if (attachment.getAttachmentType() == AttachmentType.FILE) {
-                    text = getResources().getString(R.string.message_type_file);
-                } else if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
-                    text = message.getText();
-                    if (text == null | "".equals(text)) {
-                        text = getResources().getString(R.string.message_type_image);
-                    } else {
-                        binding.replyText.setTextColor(Theme.getColor
-                                (this, R.color.self_message_color));
-                    }
-
-                    File file = AttachmentDownloader.getFileFromAttachment(attachment,
-                            this, roomSecret);
-
-                    if (file != null) {
-                        Picasso.get().load(file).into(binding.replyImage);
-                        binding.replyImageCard.setVisibility(View.VISIBLE);
-                    }
-                    showImage = true;
-                }
-            } else {
-                text = message.getText();
-                if (text == null) text = "";
-            }
-
-            if (!showImage) {
-                binding.replyImageCard.setVisibility(View.GONE);
-            }
-
-            HashMap<String, Member> members = presenter.getMembers();
-
-            String author = "";
-            boolean isUnknown = true;
-            if (message.getAuthorId().equals(getCacheUtils().getString(CacheUtils.ID))) {
-                author = getString(R.string.you);
-                isUnknown = false;
-            } else if (members != null) {
-                Member member = members.get(message.getAuthorId());
-                if (member != null) {
-                    author = member.getNickname();
-                    isUnknown = false;
-                }
-            }
-
-            if (isUnknown) {
-                author = getString(R.string.unknown);
-            }
-
-            binding.replyAuthorName.setText(author);
-            binding.replyText.setText(text);
-
-
-            if (binding.replyLayout.getVisibility() != View.VISIBLE) {
-                binding.replyLayout.setVisibility(View.VISIBLE);
-                performHeightAnimation(0, DeviceUtils.dpToPx(48, this), binding.replyLayout);
-            }
-
+            fillViews(message, binding.replyAuthorName, binding.replyText, binding.replyImageCard,
+                    binding.replyImage, 48, binding.replyLayout);
         });
+    }
+
+    private void fillViews(Message message, TextView authorText, TextView textView,
+                           CardView imageCard, ImageView image, int dp, LinearLayout layout) {
+        if (message == null) {
+            binding.replyLayout.setVisibility(View.GONE);
+            layout.setVisibility(View.GONE);
+            return;
+        }
+
+        String text = "";
+        Attachment attachment = null;
+        boolean showImage = false;
+        int size = message.getAttachments().size();
+        if (size > 0) {
+            attachment = message.getAttachments().get(0);
+        }
+
+        if (attachment != null) {
+            textView.setTextColor(Theme.getColor(this, R.color.self_reply_color));
+            if (size > 1) {
+                text = getResources().getString(R.string.message_type_attachments);
+            } else if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
+                text = getResources().getString(R.string.message_type_bubble);
+            } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
+                text = getResources().getString(R.string.message_type_video);
+            } else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
+                text = getResources().getString(R.string.message_type_voice);
+            } else if (attachment.getAttachmentType() == AttachmentType.FILE) {
+                text = getResources().getString(R.string.message_type_file);
+            } else if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
+                text = message.getText();
+                if (text == null | "".equals(text)) {
+                    text = getResources().getString(R.string.message_type_image);
+                } else {
+                    textView.setTextColor(Theme.getColor
+                            (this, R.color.self_message_color));
+                }
+
+                File file = AttachmentDownloader.getFileFromAttachment(attachment,
+                        this, roomSecret);
+
+                if (file != null) {
+                    Picasso.get().load(file).into(image);
+                    imageCard.setVisibility(View.VISIBLE);
+                }
+                showImage = true;
+            }
+        } else {
+            text = message.getText();
+            if (text == null) text = "";
+        }
+
+        if (!showImage) {
+            imageCard.setVisibility(View.GONE);
+        }
+
+        HashMap<String, Member> members = presenter.getMembers();
+
+        String author = "";
+        boolean isUnknown = true;
+        if (message.getAuthorId().equals(getCacheUtils().getString(CacheUtils.ID))) {
+            author = getString(R.string.you);
+            isUnknown = false;
+        } else if (members != null) {
+            Member member = members.get(message.getAuthorId());
+            if (member != null) {
+                author = member.getNickname();
+                isUnknown = false;
+            }
+        }
+
+        if (isUnknown) {
+            author = getString(R.string.unknown);
+        }
+
+        authorText.setText(author);
+        textView.setText(text);
+
+
+        if (layout.getVisibility() != View.VISIBLE) {
+            layout.setVisibility(View.VISIBLE);
+            performHeightAnimation(0, DeviceUtils.dpToPx(dp, this), layout);
+        }
     }
 
     @Override
@@ -837,21 +848,29 @@ public class RoomActivity extends DiraActivity
         int size = pinnedMessages.size();
 
         if (size == 0) {
-            if (!isPinnedShowed) return;
-            isPinnedShowed = false;
-
-            // disappearance
+            fillPinnedComponent(null);
             return;
         }
 
         Message currentPinned = pinnedMessages.get(size - 1);
 
-        // set text
+        fillPinnedComponent(currentPinned);
+    }
 
-        if (isPinnedShowed) return;
-        isPinnedShowed = true;
+    private void fillPinnedComponent(Message message) {
+        runOnUiThread(() -> {
+            if (message == null) {
+                binding.pinnedText.setOnClickListener((View v) -> {});
+            } else {
+                binding.pinnedText.setOnClickListener((View v) -> {
+                    presenter.scrollToMessage(message);
+                });
+            }
 
-        // appearance
+            fillViews(message, binding.pinnedAuthorName, binding.pinnedText, binding.pinnedImageCard,
+                    binding.pinnedImage, 48, binding.pinnedLayout);
+
+        });
 
     }
 
@@ -1235,5 +1254,19 @@ public class RoomActivity extends DiraActivity
     @Override
     public void onMessageDelete(Message message) {
         presenter.deleteMessage(message, this);
+    }
+
+    @Override
+    public boolean isMessagePinned(String messageId) {
+        return presenter.isPinned(messageId);
+    }
+
+    @Override
+    public void sendRequest(Request request) {
+        try {
+            UpdateProcessor.getInstance().sendRequest(request, getRoom().getServerAddress());
+        } catch (UnablePerformRequestException e) {
+            e.printStackTrace();
+        }
     }
 }

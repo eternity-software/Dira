@@ -446,6 +446,28 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         });
     }
 
+    @Override
+    public void scrollToMessage(Message message) {
+        if (message == null) return;
+        int messageIndex = -1;
+
+        for (int i = 0; i < messageList.size(); i++) {
+            Message m = messageList.get(i);
+            if (m.getId().equals(message.getId())) {
+                messageIndex = i;
+                break;
+            }
+        }
+
+        if (messageIndex != -1) {
+            view.scrollToAndStop(messageIndex);
+            view.blinkViewHolder(messageIndex);
+            return;
+        }
+
+        loadMessagesNearByTime(message.getTime(), true);
+    }
+
     private void loadReplies(List<Message> messages, MessageDao messageDao) {
         HashMap<String, Message> messageHashMap = new HashMap<>(messages.size());
 
@@ -782,6 +804,11 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     }
 
     @Override
+    public boolean isPinned(String messageId) {
+        return pinnedIds.contains(messageId);
+    }
+
+    @Override
     public void addPinned(PinnedMessageAddedUpdate update) {
         if (!update.getRoomSecret().equals(roomSecret)) return;
         if (pinnedIds.contains(update.getMessageId())) return;
@@ -932,24 +959,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     @Override
     public void onReplyClicked(Message message) {
-        if (message == null) return;
-        int messageIndex = -1;
-
-        for (int i = 0; i < messageList.size(); i++) {
-            Message m = messageList.get(i);
-            if (m.getId().equals(message.getId())) {
-                messageIndex = i;
-                break;
-            }
-        }
-
-        if (messageIndex != -1) {
-            view.scrollToAndStop(messageIndex);
-            view.blinkViewHolder(messageIndex);
-            return;
-        }
-
-        loadMessagesNearByTime(message.getTime(), true);
+        scrollToMessage(message);
     }
 
     @Override

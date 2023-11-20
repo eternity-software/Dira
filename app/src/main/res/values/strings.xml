@@ -210,6 +210,8 @@
     <!-- Message tooltip -->
     <string name="message_tooltip_reply">Reply</string>
     <string name="message_tooltip_copy">Copy</string>
+    <string name="message_tooltip_pin">Pin</string>
+    <string name="message_tooltip_unpin">Unpin</string>
     <string name="message_tooltip_delete">Delete message</string>
     <string name="message_tooltip_delete_title">Delete this message</string>
     <string name="message_tooltip_delete_text">Message will be deleted locally</string>

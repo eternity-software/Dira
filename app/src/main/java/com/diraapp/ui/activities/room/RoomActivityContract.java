@@ -136,6 +136,8 @@ public interface RoomActivityContract {
 
         void loadMessagesNearByTime(long time, boolean needBlink);
 
+        void scrollToMessage(Message message);
+
         boolean sendTextMessage(String text);
 
         void uploadAttachment(AttachmentType attachmentType, RoomActivityPresenter.AttachmentReadyListener attachmentReadyListener, String fileUri);
@@ -153,6 +155,8 @@ public interface RoomActivityContract {
         void deleteMessage(Message message, Context context);
 
         ArrayList<Message> getPinnedMessages();
+
+        boolean isPinned(String messageId);
 
         void addPinned(PinnedMessageAddedUpdate update);
 

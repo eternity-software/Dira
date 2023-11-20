@@ -222,6 +222,16 @@ public class ChatAppearanceActivity extends DiraActivity {
             public BalloonMessageMenu.BalloonMenuListener getBalloonMessageListener() {
                 return null;
             }
+
+            @Override
+            public void onMessageAttached(Message message) {
+
+            }
+
+            @Override
+            public void onMessageDetached(Message message) {
+
+            }
         };
 
         messagesAdapter = new MessagesAdapter(contract, messages, room,

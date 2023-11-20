@@ -16,6 +16,13 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.api.requests.PinnedMessageAddedRequest;
+import com.diraapp.api.requests.PinnedMessageRemovedRequest;
+import com.diraapp.api.requests.Request;
+import com.diraapp.api.updates.PinnedMessageAddedUpdate;
+import com.diraapp.api.updates.PinnedMessageRemovedUpdate;
+import com.diraapp.api.updates.Update;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
@@ -187,6 +194,8 @@ public class BalloonMessageMenu {
             }));
         }
 
+        fillPinnedRow(message, layout);
+
         replyRow.setOnClickListener((View v) -> {
             if (listener != null) listener.onNewMessageReply(message);
             balloon.dismiss();
@@ -246,10 +255,46 @@ public class BalloonMessageMenu {
         balloon.dismiss();
     }
 
+    private void fillPinnedRow(Message message, RadiusLayout layout) {
+        LinearLayout pinRow = layout.findViewById(R.id.pin_row);
+        if (listener == null) {
+            pinRow.setVisibility(View.GONE);
+            return;
+        }
+
+        if (listener.isMessagePinned(message.getId())) {
+            TextView pinText = pinRow.findViewById(R.id.pin_row_text);
+            ImageView pinImage = pinRow.findViewById(R.id.pin_row_image);
+
+            pinText.setText(context.getString(R.string.message_tooltip_unpin));
+            // change icon
+
+            pinRow.setOnClickListener((View v) -> {
+                PinnedMessageRemovedRequest request = new PinnedMessageRemovedRequest(
+                        message.getRoomSecret(), message.getId(), selfId);
+
+                listener.sendRequest(request);
+                balloon.dismiss();
+            });
+        } else {
+            pinRow.setOnClickListener((View v) -> {
+                PinnedMessageAddedRequest request = new PinnedMessageAddedRequest(
+                        message.getRoomSecret(), message.getId(), selfId);
+
+                listener.sendRequest(request);
+                balloon.dismiss();
+            });
+        }
+    }
+
     public interface BalloonMenuListener {
 
         void onNewMessageReply(Message message);
 
         void onMessageDelete(Message message);
+
+        boolean isMessagePinned(String messageId);
+
+        void sendRequest(Request request);
     }
 }

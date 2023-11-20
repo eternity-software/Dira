@@ -15,9 +15,11 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 
 import com.diraapp.R;
+import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.customclientdata.KeyGenerateStartClientData;
 import com.diraapp.db.entities.messages.customclientdata.KeyGeneratedClientData;
+import com.diraapp.db.entities.messages.customclientdata.PinnedMessageClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
@@ -74,6 +76,8 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
         boolean isRoomUpdate = true;
 
         Context context = this.itemView.getContext();
+
+        String text = null;
         if (message.getCustomClientData() instanceof RoomJoinClientData) {
 
             String path = ((RoomJoinClientData) message.getCustomClientData()).getPath();
@@ -130,9 +134,28 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
             applyDefaultIconOnUpdateMessage();
 
             isRoomUpdate = false;
+        } else if (message.getCustomClientData() instanceof PinnedMessageClientData) {
+            roomUpdatesText.setVisibility(View.GONE);
+
+            roomUpdatesIcon.setImageDrawable(ContextCompat.
+                    getDrawable(context, R.drawable.ic_pin)); // add unpin icon
+            applyDefaultIconOnUpdateMessage();
+
+            PinnedMessageClientData clientData = (PinnedMessageClientData) message.getCustomClientData();
+            Member member = getMessageAdapterContract().getMembers().get(clientData.getUserId());
+
+            if (member != null) {
+                text = clientData.getPinnedText(context, member.getNickname());
+            } else {
+                text = clientData.getPinnedText(context, context.getString(R.string.unknown));
+            }
         }
 
-        roomUpdatesMainText.setText(message.getCustomClientData().getText(context));
+        if (text == null) {
+            text = message.getCustomClientData().getText(context);
+        }
+
+        roomUpdatesMainText.setText(text);
 
         if (!isRoomUpdate) return;
 
