@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.db.entities.messages.MessageReading;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -24,10 +25,13 @@ public class MessageTooltipAdapter extends RecyclerView.Adapter<MessageTooltipAd
     private final Context context;
     private List<UserReadMessage> users = new ArrayList<>();
 
-    public MessageTooltipAdapter(Context context, List<UserReadMessage> list) {
+    private final boolean isListenable;
+
+    public MessageTooltipAdapter(Context context, List<UserReadMessage> list, boolean isListenable) {
         this.context = context;
         layoutInflater = LayoutInflater.from(context);
         users = list;
+        this.isListenable = isListenable;
     }
 
     @NonNull
@@ -42,11 +46,7 @@ public class MessageTooltipAdapter extends RecyclerView.Adapter<MessageTooltipAd
 
         holder.nickNameView.setText(userReadMessage.getNickName());
 
-        if (userReadMessage.isListened()) {
-            holder.listenedIndicator.setVisibility(View.INVISIBLE);
-        } else {
-            holder.listenedIndicator.setVisibility(View.VISIBLE);
-        }
+        holder.bindListenIndicator(userReadMessage, isListenable);
 
         if (userReadMessage.getPicturePath() != null) {
             Picasso.get().load(new File(userReadMessage.getPicturePath())).into(holder.userPictureView);
@@ -70,6 +70,19 @@ public class MessageTooltipAdapter extends RecyclerView.Adapter<MessageTooltipAd
             nickNameView = itemView.findViewById(R.id.user_read_nickname);
             userPictureView = itemView.findViewById(R.id.user_read_picture);
             listenedIndicator = itemView.findViewById(R.id.listened_indicator);
+        }
+
+        public void bindListenIndicator(UserReadMessage userReadMessage, boolean isListenable) {
+            if (!isListenable) {
+                this.listenedIndicator.setVisibility(View.INVISIBLE);
+                return;
+            }
+
+            if (userReadMessage.isListened()) {
+                this.listenedIndicator.setVisibility(View.INVISIBLE);
+            } else {
+                this.listenedIndicator.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

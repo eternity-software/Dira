@@ -625,10 +625,10 @@ public class RoomActivity extends DiraActivity
         runOnUiThread(() -> {
             if (message == null) {
                 presenter.setReplyingMessage(null);
-                return;
+            } else {
+                showKeyboard(binding.messageTextInput);
             }
 
-            showKeyboard(binding.messageTextInput);
             fillViews(message, binding.replyAuthorName, binding.replyText, binding.replyImageCard,
                     binding.replyImage, 48, binding.replyLayout);
         });

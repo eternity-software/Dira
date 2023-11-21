@@ -1078,7 +1078,8 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
                 recyclerLayout.requestLayout();
             }
 
-            MessageTooltipAdapter adapter = new MessageTooltipAdapter(context, userReadMessages);
+            MessageTooltipAdapter adapter = new MessageTooltipAdapter(
+                    context, userReadMessages, message.isListenable());
             recyclerView.setAdapter(adapter);
 
             countListRow.setOnClickListener((View v) -> {

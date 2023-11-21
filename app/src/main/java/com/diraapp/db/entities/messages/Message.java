@@ -282,6 +282,16 @@ public class Message {
         return null;
     }
 
+    public boolean isListenable() {
+        if (this.getAttachments().size() != 0) {
+            Attachment attachment = this.getSingleAttachment();
+
+            return attachment.isListenable();
+        }
+
+        return false;
+    }
+
     private static void initAttachmentTypesHashMap() {
         attachmentTypeStringHashMap.put(AttachmentType.IMAGE, R.string.message_type_image);
         attachmentTypeStringHashMap.put(AttachmentType.VIDEO, R.string.message_type_video);
