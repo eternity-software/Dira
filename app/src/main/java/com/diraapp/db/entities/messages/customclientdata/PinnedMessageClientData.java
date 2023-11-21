@@ -60,13 +60,23 @@ public class PinnedMessageClientData extends CustomClientData {
         isAddition = addition;
     }
 
+    @Override
+    public String getText(Context context) {
+        if (isAddition) {
+            return context.getString(R.string.room_update_add_pinned);
+
+        } else {
+            return context.getString(R.string.room_update_remove_pinned);
+        }
+    }
+
     public String getPinnedText(Context context, String userName) {
         if (isAddition) {
-            return context.getString(R.string.room_update_add_pinned)
+            return context.getString(R.string.room_update_add_pinned_user)
                     .replace("%s", userName);
 
         } else {
-            return context.getString(R.string.room_update_remove_pinned)
+            return context.getString(R.string.room_update_remove_pinned_user)
                     .replace("%s", userName);
         }
     }

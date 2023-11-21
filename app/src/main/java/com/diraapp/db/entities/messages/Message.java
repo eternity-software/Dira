@@ -262,6 +262,34 @@ public class Message {
         this.repliedMessage = repliedMessage;
     }
 
+    public boolean hasText() {
+        boolean hasMessageText = false;
+        if (text != null) {
+            hasMessageText = getText().length() != 0;
+        }
+
+        return hasMessageText;
+    }
+
+    public String getMessageTextPreview(Context context) {
+        String s;
+        if (hasCustomClientData()) {
+            s = customClientData.getText(context);
+        } else if (hasText()) {
+            s = text;
+        } else if (attachments.size() > 0) {
+            s = getAttachmentText(context);
+        } else {
+            s = context.getString(R.string.unknown);
+        }
+
+        if (s.length() > 20) {
+            s = s.substring(0, 20) + "...";
+        }
+
+        return s;
+    }
+
     public String getAttachmentText(Context context) {
         if (attachmentTypeStringHashMap.size() == 0) initAttachmentTypesHashMap();
 

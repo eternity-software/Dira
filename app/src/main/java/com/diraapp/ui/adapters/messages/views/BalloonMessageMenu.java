@@ -103,7 +103,7 @@ public class BalloonMessageMenu {
 
         initDownloadButton(message, layout);
 
-        boolean needCopyRow = message.getText().length() > 0;
+        boolean needCopyRow = message.hasText();
         if (!needCopyRow) copyRow.setVisibility(View.GONE);
 
         String countText = "";

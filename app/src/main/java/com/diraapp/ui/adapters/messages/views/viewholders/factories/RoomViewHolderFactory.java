@@ -113,7 +113,7 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
                 }
                 return MessageHolderType.SELF_SINGLE_ATTACHMENT_MESSAGE;
 
-            } else if (message.getText().length() > 0) {
+            } else if (message.hasText()) {
                 if (StringFormatter.isEmoji(message.getText()) &&
                         StringFormatter.getEmojiCount(message.getText()) < 4
                 && message.getRepliedMessageId() == null) {
@@ -136,7 +136,7 @@ public class RoomViewHolderFactory implements BaseViewHolderFactory {
                 return MessageHolderType.ROOM_FILE_ATTACHMENT;
             }
             return MessageHolderType.ROOM_SINGLE_ATTACHMENT_MESSAGE;
-        } else if (message.getText().length() > 0) {
+        } else if (message.hasText()) {
             if (StringFormatter.isEmoji(message.getText()) &&
                     StringFormatter.getEmojiCount(message.getText()) < 4) {
                 return MessageHolderType.ROOM_EMOJI_MESSAGE;

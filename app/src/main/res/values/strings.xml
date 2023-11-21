@@ -165,8 +165,10 @@
     <string name="room_update_name_change">Room name changed</string>
     <string name="room_update_name_and_picture_change">Room name and picture changed</string>
     <string name="room_update_new_member">%s joins room</string>
-    <string name="room_update_add_pinned">%s pinned the message</string>
-    <string name="room_update_remove_pinned">%s unpinned the message</string>
+    <string name="room_update_add_pinned">Message pinned</string>
+    <string name="room_update_add_pinned_user">%s pinned the message</string>
+    <string name="room_update_remove_pinned">Message unpinned</string>
+    <string name="room_update_remove_pinned_user">%s unpinned the message</string>
     <string name="key_generate_start">Encryption key renewing started</string>
     <string name="key_generate_success">Encryption key has been renewed</string>
     <string name="key_generate_time_error">Encryption key generation cancelled</string>

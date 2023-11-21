@@ -161,6 +161,8 @@
     <string name="message_tooltip_delete">Удалить сообщение</string>
     <string name="message_tooltip_delete_title">Удалить данное сообщение</string>
     <string name="message_tooltip_delete_text">Сообщение будет удалено локально</string>
-    <string name="room_update_add_pinned">Закрепил сообщение</string>
-    <string name="room_update_remove_pinned">Открепил сообщение</string>
+    <string name="room_update_add_pinned">Сообщение закреплено</string>
+    <string name="room_update_add_pinned_user">%s прикрепил сообщение</string>
+    <string name="room_update_remove_pinned">Сообщение откреплено</string>
+    <string name="room_update_remove_pinned_user">%s открепил сообщение</string>
 </resources>

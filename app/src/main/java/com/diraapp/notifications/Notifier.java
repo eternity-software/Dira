@@ -47,31 +47,20 @@ public class Notifier {
     public static void notifyMessage(Message message, Room room, Context context) {
         createNotificationChannel(context);
 
-        // Need to check if ClientMessage!
-
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, DIRA_ID)
                         .setSmallIcon(R.drawable.notification)
                         .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-        String text = "";
-        boolean hasMessageText = false;
-        if (message.getText() != null) {
-            hasMessageText = message.getText().length() != 0;
+
+        CacheUtils cacheUtils = new CacheUtils(context);
+        if (message.hasAuthor()) {
+            if (message.getAuthorId().equals(cacheUtils.getString(CacheUtils.ID))) return;
         }
 
-        if (message.getCustomClientData() == null) {
-            CacheUtils cacheUtils = new CacheUtils(context);
-            if (message.getAuthorId().equals(cacheUtils.getString(CacheUtils.ID))) return;
-
-            if (hasMessageText) {
-                text = message.getAuthorNickname() + ": " + message.getText();
-            } else if (message.getAttachments().size() > 0) {
-                String attachmentText = message.getAttachmentText(context);
-
-                text = message.getAuthorNickname() + ": " + attachmentText;
-            }
-
+        String text;
+        if (message.hasAuthor()) {
+            text = message.getAuthorNickname() + ": " + message.getMessageTextPreview(context);
         } else {
             text = message.getCustomClientData().getText(context);
         }

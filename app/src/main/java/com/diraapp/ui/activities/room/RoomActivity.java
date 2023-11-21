@@ -650,19 +650,11 @@ public class RoomActivity extends DiraActivity
             attachment = message.getAttachments().get(0);
         }
 
-        if (attachment != null) {
+        if (message.hasCustomClientData()) {
+            text = message.getMessageTextPreview(this);
+        } else if (attachment != null) {
             textView.setTextColor(Theme.getColor(this, R.color.self_reply_color));
-            if (size > 1) {
-                text = getResources().getString(R.string.message_type_attachments);
-            } else if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
-                text = getResources().getString(R.string.message_type_bubble);
-            } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
-                text = getResources().getString(R.string.message_type_video);
-            } else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
-                text = getResources().getString(R.string.message_type_voice);
-            } else if (attachment.getAttachmentType() == AttachmentType.FILE) {
-                text = getResources().getString(R.string.message_type_file);
-            } else if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
+            if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
                 text = message.getText();
                 if (text == null | "".equals(text)) {
                     text = getResources().getString(R.string.message_type_image);
@@ -679,6 +671,8 @@ public class RoomActivity extends DiraActivity
                     imageCard.setVisibility(View.VISIBLE);
                 }
                 showImage = true;
+            } else {
+                text = message.getAttachmentText(this);
             }
         } else {
             text = message.getText();

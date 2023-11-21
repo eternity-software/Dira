@@ -71,24 +71,21 @@ public class MessageReplyComponent extends FrameLayout {
         if (isSelfMessage) textColorId = R.color.self_message_color;
         else textColorId = R.color.message_color;
 
-        if (attachment != null) {
+        if (message.hasCustomClientData()) {
             int statusTextColor = 0;
             if (isSelfMessage) statusTextColor = R.color.self_reply_color;
             else statusTextColor = R.color.message_reply_color;
             replyText.setTextColor(Theme.getColor(getContext(), statusTextColor));
-            if (size > 1) {
-                text = getContext().getResources().getString(R.string.message_type_attachments);
-            } else if (attachment.getAttachmentType() == AttachmentType.BUBBLE) {
-                text = getContext().getResources().getString(R.string.message_type_bubble);
-            } else if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
-                text = getContext().getResources().getString(R.string.message_type_video);
-            } else if (attachment.getAttachmentType() == AttachmentType.FILE) {
-                text = getResources().getString(R.string.message_type_file);
-            }  else if (attachment.getAttachmentType() == AttachmentType.VOICE) {
-                text = getContext().getResources().getString(R.string.message_type_voice);
-            } else if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
-                text = message.getText();
-                if (text == null | StringFormatter.EMPTY_STRING.equals(text)) {
+
+            text = message.getMessageTextPreview(getContext());
+        } else if (attachment != null) {
+            int statusTextColor = 0;
+            if (isSelfMessage) statusTextColor = R.color.self_reply_color;
+            else statusTextColor = R.color.message_reply_color;
+            replyText.setTextColor(Theme.getColor(getContext(), statusTextColor));
+            if (attachment.getAttachmentType() == AttachmentType.IMAGE) {
+                text = message.getMessageTextPreview(getContext());
+                if (!message.hasText()) {
                     text = getContext().getResources().getString(R.string.message_type_image);
                 } else {
                     replyText.setTextColor(Theme.getColor
@@ -104,23 +101,14 @@ public class MessageReplyComponent extends FrameLayout {
                     replyImageCard.setVisibility(View.VISIBLE);
                 }
                 showImage = true;
+            } else {
+                text = message.getAttachmentText(getContext());
             }
         } else {
-            text = message.getText();
+            text = message.getMessageTextPreview(getContext());
             if (text == null) text = StringFormatter.EMPTY_STRING;
             replyText.setTextColor(Theme.getColor
                     (getContext(), textColorId));
-        }
-
-        if (message.hasCustomClientData()) {
-            if (message.getCustomClientData() instanceof UnencryptedMessageClientData) {
-                text = getResources().getString(R.string.unencrypted_user_message);
-
-                int statusTextColor = 0;
-                if (isSelfMessage) statusTextColor = R.color.self_reply_color;
-                else statusTextColor = R.color.message_reply_color;
-                replyText.setTextColor(Theme.getColor(getContext(), statusTextColor));
-            }
         }
 
         if (!showImage) {

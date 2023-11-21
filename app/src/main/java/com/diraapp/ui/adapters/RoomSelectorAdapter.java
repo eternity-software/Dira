@@ -125,10 +125,7 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
 
             try {
                 if (message != null) {
-                    boolean hasMessageText = false;
-                    if (message.getText() != null) {
-                        hasMessageText = message.getText().length() != 0;
-                    }
+                    boolean hasMessageText = message.hasText();
 
                     if (message.isUserMessage()) {
                         String authorPrefix = message.getAuthorNickname();
