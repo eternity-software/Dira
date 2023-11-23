@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import com.diraapp.R;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
 import com.diraapp.db.entities.messages.customclientdata.KeyGenerateStartClientData;
 import com.diraapp.db.entities.messages.customclientdata.KeyGeneratedClientData;
 import com.diraapp.db.entities.messages.customclientdata.PinnedMessageClientData;
@@ -30,6 +31,7 @@ import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.RoomMessageCustomClientDataView;
+import com.diraapp.utils.Logger;
 import com.diraapp.utils.android.DeviceUtils;
 import com.squareup.picasso.Picasso;
 
@@ -147,12 +149,18 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
             if (member != null) {
                 text = clientData.getPinnedText(context, member.getNickname());
             } else {
-                text = clientData.getPinnedText(context, context.getString(R.string.unknown));
+                text = clientData.getPinnedText(context, null);
             }
         }
 
         if (text == null) {
-            text = message.getCustomClientData().getText(context);
+            CustomClientData customClientData = message.getCustomClientData();
+
+            if (customClientData != null) {
+                text = customClientData.getText(context);
+            } else {
+                Logger.logDebug(RoomUpdatesViewHolder.class.getName(), "Client data == null (" + message.getText() + ")");
+            }
         }
 
         roomUpdatesMainText.setText(text);

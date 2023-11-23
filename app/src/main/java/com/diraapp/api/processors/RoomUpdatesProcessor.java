@@ -32,6 +32,7 @@ import com.diraapp.db.entities.messages.customclientdata.PinnedMessageClientData
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;

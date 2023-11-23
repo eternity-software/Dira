@@ -862,7 +862,7 @@ public class RoomActivity extends DiraActivity
             }
 
             fillViews(message, binding.pinnedAuthorName, binding.pinnedText, binding.pinnedImageCard,
-                    binding.pinnedImage, 48, binding.pinnedLayout);
+                    binding.pinnedImage, 64, binding.pinnedLayout);
 
         });
 

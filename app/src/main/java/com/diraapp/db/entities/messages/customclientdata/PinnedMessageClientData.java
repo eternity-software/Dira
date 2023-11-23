@@ -7,6 +7,7 @@ import androidx.room.Ignore;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.messages.MessageType;
+import com.diraapp.utils.CacheUtils;
 
 @Entity
 public class PinnedMessageClientData extends CustomClientData {
@@ -22,6 +23,7 @@ public class PinnedMessageClientData extends CustomClientData {
     @Ignore
     public PinnedMessageClientData(String messageId, String roomSecret,
                                    String userId, boolean isAddition) {
+        this.setMessageType(MessageType.PINNED_MESSAGE_CHANGED);
         this.messageId = messageId;
         this.roomSecret = roomSecret;
         this.userId = userId;
@@ -71,6 +73,16 @@ public class PinnedMessageClientData extends CustomClientData {
     }
 
     public String getPinnedText(Context context, String userName) {
+        if (userName == null) {
+            String selfId = new CacheUtils(context).getString(CacheUtils.ID);
+
+            if (userId.equals(selfId)) {
+                userName = context.getString(R.string.you);
+            } else {
+                userName = context.getString(R.string.unknown);
+            }
+        }
+
         if (isAddition) {
             return context.getString(R.string.room_update_add_pinned_user)
                     .replace("%s", userName);
