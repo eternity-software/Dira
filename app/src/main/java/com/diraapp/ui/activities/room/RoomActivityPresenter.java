@@ -14,7 +14,6 @@ import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.SendMessageRequest;
 import com.diraapp.api.requests.SendUserStatusRequest;
-import com.diraapp.api.requests.SubscribeRequest;
 import com.diraapp.api.updates.AttachmentListenedUpdate;
 import com.diraapp.api.updates.MessageReadUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
@@ -49,11 +48,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Filter;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -71,7 +68,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     private final String roomSecret;
     private final String selfId;
 
-    private List<Message> messageList;
+    private List<Message> messageList = new ArrayList<>();
     private RoomActivityContract.View view;
     private UserStatus currentUserStatus;
     private Room room;
@@ -389,7 +386,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         }
 
         view.runOnUiThread(() -> {
-            view.updatePinned();
+            view.showLastPinned();
         });
     }
 
@@ -449,6 +446,28 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     @Override
     public void scrollToMessage(Message message) {
         if (message == null) return;
+        int messageIndex = getMessagePos(message);
+
+        if (messageIndex != -1) {
+            view.scrollToAndStop(messageIndex);
+            view.blinkViewHolder(messageIndex);
+            return;
+        }
+
+        loadMessagesNearByTime(message.getTime(), true);
+    }
+
+    @Override
+    public void blinkMessage(Message message) {
+        if (message == null) return;
+        int messageIndex = getMessagePos(message);
+
+        if (messageIndex != -1) {
+            view.blinkViewHolder(messageIndex);
+        }
+    }
+
+    private int getMessagePos(Message message) {
         int messageIndex = -1;
 
         for (int i = 0; i < messageList.size(); i++) {
@@ -459,13 +478,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             }
         }
 
-        if (messageIndex != -1) {
-            view.scrollToAndStop(messageIndex);
-            view.blinkViewHolder(messageIndex);
-            return;
-        }
-
-        loadMessagesNearByTime(message.getTime(), true);
+        return messageIndex;
     }
 
     private void loadReplies(List<Message> messages, MessageDao messageDao) {
@@ -824,7 +837,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             room.getPinnedMessagesIds().add(update.getMessageId());
 
             view.runOnUiThread(() -> {
-                view.updatePinned();
+                view.showLastPinned();
             });
         });
     }
@@ -832,7 +845,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     @Override
     public void removePinned(PinnedMessageRemovedUpdate update) {
         if (!update.getRoomSecret().equals(roomSecret)) return;
-        if (pinnedIds.contains(update.getMessageId())) return;
+        if (!pinnedIds.contains(update.getMessageId())) return;
 
         pinnedIds.remove(update.getMessageId());
 
@@ -849,7 +862,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
         room.getPinnedMessagesIds().remove(update.getMessageId());
 
-        view.updatePinned();
+        view.showLastPinned();
     }
 
     @Override

@@ -39,7 +39,7 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/room_info_pan"
+        app:layout_constraintTop_toBottomOf="@+id/pinned_layout"
         app:reverseLayout="true"
         app:stackFromEnd="false">
 
@@ -53,7 +53,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
 
-        app:layout_constraintTop_toBottomOf="@+id/pinned_layout"
+        app:layout_constraintTop_toBottomOf="@id/pinned_layout"
         app:srcCompat="@drawable/shadow_gradient" />
 
     <LinearLayout
@@ -64,6 +64,7 @@
 
         android:background="@drawable/bottom_rounded"
         android:paddingVertical="8dp"
+        android:paddingHorizontal="10dp"
         app:layout_constraintTop_toBottomOf="@+id/room_info_pan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -71,6 +72,7 @@
         android:visibility="gone">
 
         <com.diraapp.ui.components.dynamic.ThemeImageView
+            android:id="@+id/pinned_left_line"
             android:layout_width="4dp"
             android:layout_height="match_parent"
             android:layout_marginVertical="8dp"
@@ -137,14 +139,42 @@
 
         </LinearLayout>
 
-        <com.diraapp.ui.components.dynamic.ThemeImageView
-            android:id="@+id/pins_icon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:paddingHorizontal="8dp"
-            android:src="@drawable/ic_pin"
-            app:themeImageColor="light_gray" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <com.diraapp.ui.components.dynamic.ThemeImageView
+                android:id="@+id/pins_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:paddingHorizontal="8dp"
+                android:src="@drawable/ic_pin"
+                app:themeImageColor="light_gray" />
+
+            <com.diraapp.ui.components.dynamic.DynamicTextView
+                android:id="@+id/pinned_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:fontFamily="@font/montserratsemibold"
+                android:maxLines="1"
+
+                android:layout_marginStart="-20dp"
+                android:layout_marginBottom="2dp"
+                android:paddingHorizontal="5dp"
+                app:themeColorBackground="accent"
+                android:background="@drawable/accent_rounded"
+
+                android:text="10"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:transitionName="name"
+                app:themeColor="self_message_color" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
@@ -476,7 +506,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
         <androidx.cardview.widget.CardView

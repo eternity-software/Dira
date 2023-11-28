@@ -74,6 +74,9 @@
 
     <!-- Room info -->
 
+    <!-- Pinned messages activity -->
+    <string name="pinned_messages_title">Pinned messages</string>
+
     <!-- Members -->
 
     <string name="members_title">Members</string>

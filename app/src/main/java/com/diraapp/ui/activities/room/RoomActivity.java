@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -113,6 +114,12 @@ public class RoomActivity extends DiraActivity
     private ActivityRoomBinding binding;
 
     private boolean isArrowShowed = true;
+    private boolean isScrollIndicatorShown = true;
+
+    private boolean isLastPinnedShown = false;
+    private int currentPinnedShownPos = 0;
+
+    private int currentPinnedTapCount = 0;
 
     private final MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
         @Override
@@ -132,7 +139,6 @@ public class RoomActivity extends DiraActivity
     private int lastVisiblePosition = 0;
     private ViewSwiper viewSwiper;
 
-    private boolean isScrollIndicatorShown = true;
 
     public static void putRoomExtrasInIntent(Intent intent, String roomSecret, String roomName) {
         intent.putExtra(RoomSelectorActivity.PENDING_ROOM_SECRET, roomSecret);
@@ -637,7 +643,6 @@ public class RoomActivity extends DiraActivity
     private void fillViews(Message message, TextView authorText, TextView textView,
                            CardView imageCard, ImageView image, int dp, LinearLayout layout) {
         if (message == null) {
-            binding.replyLayout.setVisibility(View.GONE);
             layout.setVisibility(View.GONE);
             return;
         }
@@ -647,7 +652,7 @@ public class RoomActivity extends DiraActivity
         boolean showImage = false;
         int size = message.getAttachments().size();
         if (size > 0) {
-            attachment = message.getAttachments().get(0);
+            attachment = message.getSingleAttachment();
         }
 
         if (message.hasCustomClientData()) {
@@ -775,6 +780,12 @@ public class RoomActivity extends DiraActivity
                     if (layoutManager == null) return;
                     int position = layoutManager.findFirstVisibleItemPosition();
 
+                    if (currentPinnedTapCount != 0) currentPinnedTapCount = 0;
+//                    if (updatePinnedOnScroll) {
+//                        Logger.logDebug("fdfsdfsdf", "last on scroll");
+//                        showLastPinned();
+//                    }
+
                     if (position < 1 & presenter.isNewestMessagesLoaded()) {
                         if (!isArrowShowed) return;
                         isArrowShowed = false;
@@ -836,28 +847,74 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
-    public void updatePinned() {
-        ArrayList<Message> pinnedMessages = presenter.getPinnedMessages();
+    public void showLastPinned() {
+        currentPinnedShownPos = presenter.getPinnedMessages().size() - 1;
+        updatePinned(currentPinnedShownPos);
+    }
 
-        int size = pinnedMessages.size();
+    @Override
+    public void showNextPinned() {
+        currentPinnedShownPos--;
 
-        if (size == 0) {
-            fillPinnedComponent(null);
-            return;
-        }
+        int size = presenter.getPinnedMessages().size();
+        if (currentPinnedShownPos == -1) currentPinnedShownPos += size;
 
-        Message currentPinned = pinnedMessages.get(size - 1);
+        updatePinned(currentPinnedShownPos);
+    }
 
-        fillPinnedComponent(currentPinned);
+    @Override
+    public void updatePinned(int messagePos) {
+        runOnUiThread(() -> {
+            ArrayList<Message> pinnedMessages = presenter.getPinnedMessages();
+
+            int size = presenter.getPinnedMessages().size();
+            Logger.logDebug(RoomActivity.class.getName(), "Pin updated (" +
+                    "pos = " + currentPinnedShownPos + ", size = " +
+                    size + ")");
+
+            if (size == 0) {
+                fillPinnedComponent(null);
+                isLastPinnedShown = false;
+
+                binding.pinnedCount.setVisibility(View.GONE);
+                return;
+            }
+
+            isLastPinnedShown = currentPinnedShownPos != size - 1;
+            if (isLastPinnedShown) {
+                binding.pinnedLeftLine.getBackground().setColorFilter(Theme.getColor(this,
+                        R.color.self_reply_color), PorterDuff.Mode.SRC_ATOP);
+            } else {
+                binding.pinnedLeftLine.getBackground().setColorFilter(Theme.getColor(this,
+                        R.color.accent), PorterDuff.Mode.SRC_ATOP);
+            }
+
+            binding.pinnedCount.setVisibility(View.VISIBLE);
+            binding.pinnedCount.setText(String.valueOf(size));
+            Message currentPinned = pinnedMessages.get(currentPinnedShownPos);
+
+            fillPinnedComponent(currentPinned);
+        });
     }
 
     private void fillPinnedComponent(Message message) {
         runOnUiThread(() -> {
             if (message == null) {
-                binding.pinnedText.setOnClickListener((View v) -> {});
+                binding.pinnedLayout.setOnClickListener((View v) -> {});
             } else {
-                binding.pinnedText.setOnClickListener((View v) -> {
+                currentPinnedTapCount = 0;
+                Logger.logDebug(RoomActivity.class.getName(), "New onClick (tapCount = " + currentPinnedTapCount + ")");
+
+                binding.pinnedLayout.setOnClickListener((View v) -> {
+                    currentPinnedTapCount++;
+                    Logger.logDebug(RoomActivity.class.getName(), "click! (tapCount = " + currentPinnedTapCount + ")");
                     presenter.scrollToMessage(message);
+
+                    if (currentPinnedTapCount == 2) {
+                        binding.pinnedLayout.setOnClickListener((View v2) -> {});
+                        Logger.logDebug(RoomActivity.class.getName(), "showNext (tapCount = " + currentPinnedTapCount + ")");
+                        showNextPinned();
+                    }
                 });
             }
 

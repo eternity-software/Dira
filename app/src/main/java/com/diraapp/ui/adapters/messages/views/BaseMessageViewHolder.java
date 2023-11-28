@@ -174,6 +174,10 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         return getItemViewType() != MessageHolderType.ROOM_UPDATES.ordinal();
     }
 
+    private void setOnClickListener() {
+
+    }
+
     public void bindUserPicture(@NonNull Message message, @Nullable Message previousMessage) {
         if (!isInitialized) return;
         if (profilePicture != null)

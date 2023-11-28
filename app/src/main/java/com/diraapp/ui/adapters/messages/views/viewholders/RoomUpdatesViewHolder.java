@@ -71,7 +71,6 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
     @Override
     public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
-        itemView.setClickable(false);
 
         profilePictureContainer.setVisibility(View.VISIBLE);
 
@@ -167,6 +166,7 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
 
         if (!isRoomUpdate) return;
 
+        itemView.setClickable(false);
         nicknameText.setVisibility(View.GONE);
 
         String imagePath = getMessageAdapterContract().getRoom().getImagePath();

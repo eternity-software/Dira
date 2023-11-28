@@ -100,7 +100,11 @@ public interface RoomActivityContract {
 
         void updateScrollArrowIndicator();
 
-        void updatePinned();
+        void showLastPinned();
+
+        void showNextPinned();
+
+        void updatePinned(int messagePos);
     }
 
     interface Presenter {
@@ -137,6 +141,8 @@ public interface RoomActivityContract {
         void loadMessagesNearByTime(long time, boolean needBlink);
 
         void scrollToMessage(Message message);
+
+        void blinkMessage(Message message);
 
         boolean sendTextMessage(String text);
 
