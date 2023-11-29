@@ -37,9 +37,8 @@ import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.daos.RoomDao;
-import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.exceptions.LanguageParsingException;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.res.Theme;
@@ -55,12 +54,9 @@ import com.diraapp.utils.Logger;
 import com.diraapp.utils.android.DeviceUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-
-import kotlin.NumbersKt;
 
 public class RoomSelectorActivity extends AppCompatActivity
         implements ProcessorListener, UpdateListener, UserStatusListener,

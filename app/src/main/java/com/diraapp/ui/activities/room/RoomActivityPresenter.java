@@ -30,7 +30,7 @@ import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.exceptions.UnablePerformRequestException;

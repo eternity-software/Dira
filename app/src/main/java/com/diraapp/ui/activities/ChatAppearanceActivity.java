@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.LanguageParsingException;
 import com.diraapp.res.Theme;

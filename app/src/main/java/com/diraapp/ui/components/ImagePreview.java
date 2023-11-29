@@ -17,7 +17,7 @@ import com.diraapp.BuildConfig;
 import com.diraapp.R;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
-import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.storage.attachments.AttachmentDownloader;

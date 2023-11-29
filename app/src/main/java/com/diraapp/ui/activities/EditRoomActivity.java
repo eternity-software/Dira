@@ -13,7 +13,7 @@ import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.requests.RoomUpdateRequest;
 import com.diraapp.db.DiraRoomDatabase;
-import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.images.ImagesWorker;

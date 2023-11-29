@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diraapp.R;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.ui.adapters.MembersAdapter;
 import com.diraapp.utils.SliderActivity;
 

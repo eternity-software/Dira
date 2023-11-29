@@ -12,7 +12,7 @@ import com.diraapp.api.views.DhKey;
 import com.diraapp.db.daos.MemberDao;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;

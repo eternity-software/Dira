@@ -17,20 +17,13 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.diraapp.R;
 import com.diraapp.db.DiraRoomDatabase;
-import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.db.entities.messages.customclientdata.KeyGenerateStartClientData;
-import com.diraapp.db.entities.messages.customclientdata.KeyGeneratedClientData;
-import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientData;
-import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
-import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
-import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.ui.activities.RoomSelectorActivity;
 import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.utils.CacheUtils;
-import com.diraapp.utils.StringFormatter;
 
 public class Notifier {
 

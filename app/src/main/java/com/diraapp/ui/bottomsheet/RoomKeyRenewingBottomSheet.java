@@ -24,7 +24,7 @@ import com.diraapp.api.updates.UpdateType;
 import com.diraapp.api.views.BaseMember;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.res.Theme;
 import com.diraapp.ui.adapters.MemberStatus;

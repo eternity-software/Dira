@@ -3,9 +3,7 @@ package com.diraapp.api.processors;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.diraapp.api.requests.PinnedMessageRemovedRequest;
 import com.diraapp.api.requests.Request;
-import com.diraapp.api.requests.RequestType;
 import com.diraapp.api.updates.AttachmentListenedUpdate;
 import com.diraapp.api.updates.DhInitUpdate;
 import com.diraapp.api.updates.MemberUpdate;
@@ -25,14 +23,12 @@ import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
-import com.diraapp.db.entities.messages.customclientdata.PinnedMessageClientData;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
-import com.diraapp.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;

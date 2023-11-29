@@ -1,6 +1,5 @@
-package com.diraapp.db.entities;
+package com.diraapp.db.entities.rooms;
 
-import androidx.annotation.ColorInt;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -27,6 +26,10 @@ public class Room {
     private String name;
     private String lastMessageId;
     private String imagePath;
+
+    private RoomType roomType = RoomType.PUBLIC;
+
+    private RoomStatusType roomStatusType = RoomStatusType.SECURE;
     @ColumnInfo(defaultValue = UpdateProcessor.OFFICIAL_ADDRESS)
     private String serverAddress;
 
@@ -91,6 +94,22 @@ public class Room {
 
     public String getClientSecret() {
         return clientSecret;
+    }
+
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
+
+    public RoomStatusType getRoomStatusType() {
+        return roomStatusType;
+    }
+
+    public void setRoomStatusType(RoomStatusType roomStatusType) {
+        this.roomStatusType = roomStatusType;
     }
 
     public void setClientSecret(String clientSecret) {

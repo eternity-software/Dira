@@ -11,9 +11,8 @@ import com.diraapp.db.converters.UnreadIdsConverter;
 import com.diraapp.db.daos.MemberDao;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.db.migrations.MessageMigrationFrom17To18;
 import com.diraapp.db.migrations.RoomMigrationFrom17To18;
 import com.diraapp.db.migrations.RoomMigrationFrom21To22;
 
@@ -38,9 +37,10 @@ import com.diraapp.db.migrations.RoomMigrationFrom21To22;
                 @AutoMigration(from = 23, to = 24),
                 @AutoMigration(from = 24, to = 25),
                 @AutoMigration(from = 25, to = 26),
-                @AutoMigration(from = 26, to = 27)
+                @AutoMigration(from = 26, to = 27),
+                @AutoMigration(from = 27, to = 28)
         },
-        version = 27,
+        version = 28,
         exportSchema = true)
 @TypeConverters({UnreadIdsConverter.class})
 public abstract class DiraRoomDatabase extends RoomDatabase {

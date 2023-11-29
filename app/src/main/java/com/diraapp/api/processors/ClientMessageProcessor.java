@@ -12,7 +12,7 @@ import com.diraapp.api.updates.RenewingConfirmUpdate;
 import com.diraapp.api.updates.RoomUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.db.DiraRoomDatabase;
-import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
 import com.diraapp.db.entities.messages.customclientdata.KeyGenerateStartClientData;

@@ -6,7 +6,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.rooms.Room;
 
 import java.util.List;
 

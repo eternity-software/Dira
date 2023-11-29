@@ -13,16 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
-import com.diraapp.db.entities.Attachment;
-import com.diraapp.db.entities.AttachmentType;
-import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.db.entities.messages.customclientdata.KeyGenerateStartClientData;
-import com.diraapp.db.entities.messages.customclientdata.KeyGeneratedClientData;
-import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientData;
-import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
-import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
-import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.utils.CacheUtils;
@@ -30,7 +22,6 @@ import com.diraapp.utils.StringFormatter;
 import com.diraapp.utils.TimeConverter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapter.ViewHolder> {

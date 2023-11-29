@@ -14,7 +14,7 @@ import com.diraapp.db.daos.AttachmentDao;
 import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
@@ -43,9 +43,10 @@ import com.diraapp.db.migrations.MessageMigrationFrom21To22;
                 @AutoMigration(from = 23, to = 24),
                 @AutoMigration(from = 24, to = 25),
                 @AutoMigration(from = 25, to = 26),
-                @AutoMigration(from = 26, to = 27)
+                @AutoMigration(from = 26, to = 27),
+                @AutoMigration(from = 27, to = 28)
         },
-        version = 27,
+        version = 28,
         exportSchema = true)
 @TypeConverters({AttachmentConverter.class, CustomClientDataConverter.class,
         MessageReadingConverter.class})

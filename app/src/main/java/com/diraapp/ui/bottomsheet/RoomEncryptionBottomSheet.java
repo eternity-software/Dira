@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.diraapp.R;
-import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.rooms.Room;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class RoomEncryptionBottomSheet extends BottomSheetDialogFragment {

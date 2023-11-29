@@ -32,7 +32,7 @@ import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.Room;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.customclientdata.UnencryptedMessageClientData;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.exceptions.SingletonException;
