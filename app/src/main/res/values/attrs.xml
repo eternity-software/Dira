@@ -36,4 +36,10 @@
     <declare-styleable name="DiraCheckBoxComponent">
         <attr name="isChecked" format="boolean" />
     </declare-styleable>
+    <declare-styleable name="DiraRadioComponentItem">
+        <attr name="item_text" format="string" />
+    </declare-styleable>
+    <declare-styleable name="DiraRadioComponent">
+        <attr name="default_selected" format="integer" />
+    </declare-styleable>
 </resources>

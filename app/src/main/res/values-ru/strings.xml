@@ -24,6 +24,8 @@
     <string name="official_host_server">Официальный сервер</string>
     <string name="tip_room_title">Что такое комната?</string>
     <string name="tip_room_text">Комната - это место для общения. Все участники комнаты имеют равные права и возможности.</string>
+    <string name="room_type_public">Публичная комната</string>
+    <string name="room_type_private">Приватная комната</string>
     <string name="your_personality">Ваша личность</string>
     <string name="your_picture">Ваше изображение</string>
     <string name="change">Изменить</string>

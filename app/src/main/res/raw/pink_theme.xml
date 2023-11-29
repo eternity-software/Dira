@@ -95,6 +95,9 @@
     <color name="message_file">@color/white</color>
     <color name="message_file_size">#835A6D</color>
 
+    <color name="dira_radio_text">@color/self_message_color</color>
+    <color name="dira_radio_text_selected">@color/accent</color>
+
     <!-- Paint colors !-->
     <color name="paintBlack">#131313</color>
     <color name="paintWhite">#F3F3F3</color>

@@ -130,6 +130,28 @@
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
+            <com.diraapp.ui.components.DiraRadioComponent
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:default_selected="0">
+
+                <com.diraapp.ui.components.DiraRadioComponentItem
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:item_text="@string/room_type_public"/>
+
+                <com.diraapp.ui.components.DiraRadioComponentItem
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="8dp"
+                    app:item_text="@string/room_type_private"/>
+
+            </com.diraapp.ui.components.DiraRadioComponent>
+
             <TextView
 
                 android:layout_width="wrap_content"

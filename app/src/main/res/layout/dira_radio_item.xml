@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.diraapp.ui.components.dynamic.ThemeImageView
+        android:id="@+id/dira_radio_item_check"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:gravity="center_vertical"
+        app:themeImageColor="dira_radio_text"
+        android:visibility="gone"
+        android:src="@drawable/ic_check"/>
+
+    <com.diraapp.ui.components.dynamic.ThemeImageView
+        android:id="@+id/dira_radio_item_hide"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="4dp"
+        android:gravity="center_vertical"
+        app:themeImageColor="dira_radio_text"
+        android:visibility="visible"
+        android:src="@drawable/ic_hide"/>
+
+    <com.diraapp.ui.components.dynamic.DynamicTextView
+        android:id="@+id/dira_radio_item_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+
+        android:fontFamily="@font/montserratbold"
+        android:gravity="center_vertical"
+        android:minWidth="15dp"
+        android:paddingEnd="24dp"
+        android:paddingStart="4dp"
+        android:text=""
+        android:textSize="14sp"
+        android:visibility="visible"
+        app:themeColor="dira_radio_text" />
+
+</merge>

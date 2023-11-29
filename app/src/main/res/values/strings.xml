@@ -30,6 +30,8 @@
     <string name="official_host_server">Official server</string>
     <string name="tip_room_title">What is room?</string>
     <string name="tip_room_text">Room is a place for chatting. Anyone in room has all access to it and cannot be kicked from it, because room secret never changes and every room member has access to it.</string>
+    <string name="room_type_public">Public room</string>
+    <string name="room_type_private">Private room</string>
 
     <!-- Your personality -->
     <string name="your_personality">Your personality</string>
