@@ -144,7 +144,7 @@
     <string name="crash_button_copy">Скопировать ошибку</string>
     <string name="message_type_bubble">Пузырёк</string>
     <string name="message_type_voice">Голосовое сообщение</string>
-    <string name="message_type_video">Видео сообщение</string>
+    <string name="message_type_video">Видео</string>
     <string name="message_type_attachments">Группа вложений</string>
     <string name="message_type_image">Изображение</string>
     <string name="users_status_sending_file">%s отправляют вложение</string>

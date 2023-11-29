@@ -33,4 +33,7 @@
         <attr name="themePreviewChatMessageColor" format="integer" />
         <attr name="themePreviewName" format="string" />
     </declare-styleable>
+    <declare-styleable name="DiraCheckBoxComponent">
+        <attr name="isChecked" format="boolean" />
+    </declare-styleable>
 </resources>
