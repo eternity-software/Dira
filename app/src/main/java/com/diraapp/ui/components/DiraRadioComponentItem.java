@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
-import android.media.Image;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,19 +84,24 @@ public class DiraRadioComponentItem extends LinearLayout {
     }
 
     public void setSelected(boolean isSelected) {
-        if (this.isSelected == isSelected) return;
         this.isSelected = isSelected;
 
         if (isSelected) {
+            Logger.logDebug("hhh", "1");
             textView.setTextColor(Theme.getColor(getContext(), R.color.dira_radio_text_selected));
+            this.getBackground().setColorFilter(Theme.getColor(getContext(),
+                    R.color.dira_radio_layout_selected), PorterDuff.Mode.SRC_ATOP);
             check.setVisibility(VISIBLE);
             hide.setVisibility(GONE);
             return;
         }
 
+        Logger.logDebug("hhh", "2");
         check.setVisibility(GONE);
         hide.setVisibility(VISIBLE);
         textView.setTextColor(Theme.getColor(getContext(), R.color.dira_radio_text));
+        this.getBackground().setColorFilter(Theme.getColor(getContext(),
+                R.color.dira_radio_layout), PorterDuff.Mode.SRC_ATOP);
     }
 
 }

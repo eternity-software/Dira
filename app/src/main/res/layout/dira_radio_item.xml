@@ -9,7 +9,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:gravity="center_vertical"
-        app:themeImageColor="dira_radio_text"
+        app:themeImageColor="dira_radio_text_selected"
         android:visibility="gone"
         android:src="@drawable/ic_check"/>
 

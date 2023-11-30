@@ -97,8 +97,9 @@
 
     <color name="dira_radio_text">@color/white</color>
     <color name="dira_radio_layout">@color/gray</color>
-    <color name="dira_radio_text_selected">@color/white</color>
-    <color name="dira_radio_text_layout_selected">@color/accent</color>
+
+    <color name="dira_radio_text_selected">@color/message_color</color>
+    <color name="dira_radio_layout_selected">@color/accent</color>
 
     <!-- Paint colors !-->
     <color name="paintBlack">#131313</color>
