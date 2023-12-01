@@ -83,8 +83,6 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
 
             String path = ((RoomJoinClientData) message.getCustomClientData()).getPath();
             setImageOnRoomUpdateMessage(path);
-            roomUpdatesIcon.setImageDrawable(ContextCompat.
-                    getDrawable(context, R.drawable.ic_room_updates));
             roomUpdatesText.setVisibility(View.GONE);
         } else if (message.getCustomClientData() instanceof RoomNameChangeClientData) {
 

@@ -329,12 +329,24 @@ public class RoomSelectorActivity extends AppCompatActivity
     }
 
     private void updateRoom(String roomSecret, boolean withPositionUpdating) {
+        updateRoom(roomSecret, withPositionUpdating, null);
+    }
+
+    private void updateRoom(String roomSecret, boolean withPositionUpdating,
+                            OnRoomLoadedListener onLoadedCallback) {
         DiraActivity.runGlobalBackground(() -> {
+
+            Logger.logDebug(RoomSelectorActivity.class.getName(), "update room - " + roomSecret);
             Room room = roomDao.getRoomBySecretName(roomSecret);
+            if (onLoadedCallback != null) {
+                if (!onLoadedCallback.keepUpdate(room)) return;
+            }
+
             if (room == null) {
-                Logger.logDebug(RoomSelectorActivity.class.toString(), "room = null");
+                Logger.logDebug(RoomSelectorActivity.class.getName(), "room = null");
                 return;
             }
+            Logger.logDebug(RoomSelectorActivity.class.getName(), "name - " + room.getName());
 
             Message message = messageDao.getMessageById(room.getLastMessageId());
             room.setMessage(message);
@@ -417,7 +429,10 @@ public class RoomSelectorActivity extends AppCompatActivity
         for (int i = 0; i < roomList.size(); i++) {
             Room room = roomList.get(i);
             if (lastOpenedRoomId.equals(room.getSecretName())) {
-                updateRoom(lastOpenedRoomId, false);
+                updateRoom(lastOpenedRoomId, false, (Room currentRoom) -> {
+                    lastOpenedRoomId = null;
+                    return true;
+                });
                 return;
             }
         }
@@ -492,38 +507,10 @@ public class RoomSelectorActivity extends AppCompatActivity
                 });
             }
         } else if (update.getUpdateType() == UpdateType.READ_UPDATE) {
-            updateRoom(((MessageReadUpdate) update).getRoomSecret(), false);
-//            Message message = null;
-//            int index = -1;
-//
-//            for (Room room : new ArrayList<>(roomList)) {
-//                if (room.getSecretName().equals(update.getRoomSecret())) {
-//                    message = room.getMessage();
-//                    index = roomList.indexOf(room);
-//                    break;
-//                }
-//            }
-//
-//            if (message == null) return;
-//            if (index == -1) return;
-//
-//            if (!message.getAuthorId().equals(cacheUtils.getString(CacheUtils.ID))) return;
-//
-//            if (message.getMessageReadingList().size() != 0) return;
-//
-//            MessageReadUpdate messageReadUpdate = (MessageReadUpdate) update;
-//
-//            MessageReading reading = new MessageReading(messageReadUpdate.getUserId(),
-//                    messageReadUpdate.getReadTime());
-//
-//            message.getMessageReadingList().add(reading);
-//            int finalIndex = index;
-//            runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    roomSelectorAdapter.notifyItemChanged(finalIndex);
-//                }
-//            });
+            MessageReadUpdate readUpdate = ((MessageReadUpdate) update);
+            updateRoom(readUpdate.getRoomSecret(), false,
+                    (Room room) -> readUpdate.getMessageId().equals(room.getLastMessageId()));
+
         }
     }
 
@@ -535,5 +522,9 @@ public class RoomSelectorActivity extends AppCompatActivity
     @Override
     public void onRoomOpen(String roomSecret) {
         lastOpenedRoomId = roomSecret;
+    }
+
+    private interface OnRoomLoadedListener {
+        boolean keepUpdate(Room room);
     }
 }
