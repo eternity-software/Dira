@@ -7,13 +7,13 @@ import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.requests.VerifyRoomInfoRequest;
 import com.diraapp.api.updates.AcceptedStatusAnswer;
 import com.diraapp.api.updates.Update;
+import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.utils.KeyGenerator;
 
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
 
 public class CreateRoomPresenter implements CreateRoomContract.Presenter {
-
 
     private final CreateRoomContract.View view;
     private final CreateRoomContract.Model model;
@@ -39,6 +39,7 @@ public class CreateRoomPresenter implements CreateRoomContract.Presenter {
         try {
             String roomName = view.getRoomName();
             String welcomeMessage = view.getWelcomeMessage();
+            RoomType type = view.getRoomType();
 
             UpdateProcessor.getInstance().sendRequest(
                     new VerifyRoomInfoRequest(roomName, roomSecret),
@@ -47,7 +48,8 @@ public class CreateRoomPresenter implements CreateRoomContract.Presenter {
 
                         if (acceptedStatusAnswer.isAccepted()) {
                             model.createRoom(roomName, roomSecret, welcomeMessage,
-                                    view.getAuthorId(), view.getAuthorName(), serverAddress, updateExpireSec);
+                                    view.getAuthorId(), view.getAuthorName(), serverAddress,
+                                    type, updateExpireSec);
                             view.finish();
                         }
                     }, serverAddress);

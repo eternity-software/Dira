@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.diraapp.databinding.ActivityCreateRoomBinding;
 import com.diraapp.db.DiraRoomDatabase;
+import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.bottomsheet.ServerSelectorBottomSheet;
 import com.diraapp.utils.CacheUtils;
@@ -104,6 +105,12 @@ public class CreateRoomActivity extends DiraActivity implements CreateRoomContra
     @Override
     public String getAuthorId() {
         return cacheUtils.getString(CacheUtils.ID);
+    }
+
+    @Override
+    public RoomType getRoomType() {
+        int type = binding.roomTypeSelector.getCurrentSelected();
+        return RoomType.values()[type];
     }
 
     @Override

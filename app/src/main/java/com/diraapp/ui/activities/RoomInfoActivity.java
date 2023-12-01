@@ -28,6 +28,7 @@ import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DiraMediaInfo;
@@ -123,79 +124,6 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
                 if (room == null) return;
                 RoomEncryptionBottomSheet roomEncryptionBottomSheet = new RoomEncryptionBottomSheet(room);
                 roomEncryptionBottomSheet.show(getSupportFragmentManager(), "");
-            }
-        });
-        findViewById(R.id.icon_invite).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                ImageView inviteIcon = findViewById(R.id.icon_invite);
-                ProgressBar progressBar = findViewById(R.id.progress_circular);
-
-                if (progressBar.getVisibility() == View.VISIBLE) return;
-                inviteIcon.setVisibility(View.GONE);
-                progressBar.setVisibility(View.VISIBLE);
-
-                List<RoomMember> roomMembers = new ArrayList<>();
-
-                for (Member member : members) {
-                    roomMembers.add(new RoomMember(member.getId(), member.getNickname(),
-                            AppStorage.getBase64FromBitmap(AppStorage.getBitmapFromPath(member.getImagePath())),
-                            member.getRoomSecret(),
-                            member.getLastTimeUpdated()));
-                }
-
-                CacheUtils cacheUtils = new CacheUtils(getApplicationContext());
-
-                roomMembers.add(new RoomMember(cacheUtils.getString(CacheUtils.ID),
-                        cacheUtils.getString(CacheUtils.NICKNAME),
-                        AppStorage.getBase64FromBitmap(AppStorage.getBitmapFromPath(cacheUtils.getString(CacheUtils.PICTURE))),
-                        room.getSecretName(), System.currentTimeMillis()));
-
-                CreateInviteRequest createInviteRequest = new CreateInviteRequest(room.getName(),
-                        room.getSecretName(),
-                        AppStorage.getBase64FromBitmap(AppStorage.getBitmapFromPath(room.getImagePath())),
-                        roomMembers);
-
-                try {
-                    UpdateProcessor.getInstance().sendRequest(createInviteRequest, new UpdateListener() {
-                        @Override
-                        public void onUpdate(Update update) {
-                            if (update.getUpdateType() == UpdateType.ROOM_CREATE_INVITATION) {
-                                NewInvitationUpdate newInvitationUpdate = (NewInvitationUpdate) update;
-
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        inviteIcon.setVisibility(View.VISIBLE);
-                                        progressBar.setVisibility(View.GONE);
-
-                                        try {
-                                            InvitationCodeBottomSheet invitationCodeBottomSheet = new InvitationCodeBottomSheet();
-                                            invitationCodeBottomSheet.setCode(newInvitationUpdate.getInvitationCode());
-                                            invitationCodeBottomSheet.setRoomName(room.getName());
-                                            invitationCodeBottomSheet.show(getSupportFragmentManager(), "Invitation bottom sheet");
-                                        } catch (Exception e) {
-
-                                        }
-
-                                    }
-                                });
-                            }
-                        }
-                    }, room.getServerAddress());
-                } catch (UnablePerformRequestException e) {
-                    e.printStackTrace();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            inviteIcon.setVisibility(View.VISIBLE);
-                            progressBar.setVisibility(View.GONE);
-
-                        }
-                    });
-                }
             }
         });
 
@@ -329,6 +257,8 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
                             memberImage_2.setImageBitmap(AppStorage.getBitmapFromPath(members.get(1).getImagePath()));
                         }
 
+                        initInviteButton();
+
                         roomName.setText(room.getName());
                         membersCount.setText(getString(R.string.members_count).replace("%s", String.valueOf(members.size() + 1)));
 
@@ -398,5 +328,92 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
     protected void onResume() {
         super.onResume();
         loadData();
+    }
+
+    private void initInviteButton() {
+        View inviteIcon = findViewById(R.id.icon_invite);
+
+        if (room.getRoomType() == RoomType.PRIVATE && members.size() > 0) {
+            inviteIcon.setVisibility(View.GONE);
+            return;
+        }
+
+        inviteIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (room.getRoomType() == RoomType.PRIVATE && members.size() > 0) {
+                    inviteIcon.setVisibility(View.GONE);
+                    inviteIcon.setClickable(false);
+                    return;
+                }
+
+                ImageView inviteIcon = findViewById(R.id.icon_invite);
+                ProgressBar progressBar = findViewById(R.id.progress_circular);
+
+                if (progressBar.getVisibility() == View.VISIBLE) return;
+                inviteIcon.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
+
+                List<RoomMember> roomMembers = new ArrayList<>();
+
+                for (Member member : members) {
+                    roomMembers.add(new RoomMember(member.getId(), member.getNickname(),
+                            AppStorage.getBase64FromBitmap(AppStorage.getBitmapFromPath(member.getImagePath())),
+                            member.getRoomSecret(),
+                            member.getLastTimeUpdated()));
+                }
+
+                CacheUtils cacheUtils = new CacheUtils(getApplicationContext());
+
+                roomMembers.add(new RoomMember(cacheUtils.getString(CacheUtils.ID),
+                        cacheUtils.getString(CacheUtils.NICKNAME),
+                        AppStorage.getBase64FromBitmap(AppStorage.getBitmapFromPath(cacheUtils.getString(CacheUtils.PICTURE))),
+                        room.getSecretName(), System.currentTimeMillis()));
+
+                CreateInviteRequest createInviteRequest = new CreateInviteRequest(room.getName(),
+                        room.getSecretName(),
+                        AppStorage.getBase64FromBitmap(AppStorage.getBitmapFromPath(room.getImagePath())),
+                        roomMembers, room.getRoomType());
+
+                try {
+                    UpdateProcessor.getInstance().sendRequest(createInviteRequest, new UpdateListener() {
+                        @Override
+                        public void onUpdate(Update update) {
+                            if (update.getUpdateType() == UpdateType.ROOM_CREATE_INVITATION) {
+                                NewInvitationUpdate newInvitationUpdate = (NewInvitationUpdate) update;
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        inviteIcon.setVisibility(View.VISIBLE);
+                                        progressBar.setVisibility(View.GONE);
+
+                                        try {
+                                            InvitationCodeBottomSheet invitationCodeBottomSheet = new InvitationCodeBottomSheet();
+                                            invitationCodeBottomSheet.setCode(newInvitationUpdate.getInvitationCode());
+                                            invitationCodeBottomSheet.setRoomName(room.getName());
+                                            invitationCodeBottomSheet.show(getSupportFragmentManager(), "Invitation bottom sheet");
+                                        } catch (Exception e) {
+
+                                        }
+
+                                    }
+                                });
+                            }
+                        }
+                    }, room.getServerAddress());
+                } catch (UnablePerformRequestException e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            inviteIcon.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
+
+                        }
+                    });
+                }
+            }
+        });
     }
 }

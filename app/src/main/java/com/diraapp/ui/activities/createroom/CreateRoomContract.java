@@ -2,6 +2,8 @@ package com.diraapp.ui.activities.createroom;
 
 import android.content.ClipboardManager;
 
+import com.diraapp.db.entities.rooms.RoomType;
+
 public interface CreateRoomContract {
 
     interface Presenter {
@@ -34,12 +36,14 @@ public interface CreateRoomContract {
         String getAuthorName();
 
         String getAuthorId();
+
+        RoomType getRoomType();
     }
 
     interface Model {
         void createRoom(String roomName, String secretName, String welcomeMessage,
                         String authorId, String authorName, String serverAddress,
-                        int updateExpireSec);
+                        RoomType roomType, int updateExpireSec);
     }
 
 }

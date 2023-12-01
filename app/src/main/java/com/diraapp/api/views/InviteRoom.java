@@ -1,6 +1,8 @@
 package com.diraapp.api.views;
 
 
+import com.diraapp.db.entities.rooms.RoomType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,13 +13,16 @@ public class InviteRoom {
     private String name;
     private String base64pic;
 
+    private RoomType roomType;
     private List<RoomMember> roomMemberList = new ArrayList<>();
 
-    public InviteRoom(String name, String secretName, String base64pic, List<RoomMember> roomMemberList) {
+    public InviteRoom(String name, String secretName, String base64pic,
+                      List<RoomMember> roomMemberList, RoomType roomType) {
         this.name = name;
         this.base64pic = base64pic;
         this.roomMemberList = roomMemberList;
         this.secretName = secretName;
+        this.roomType = roomType;
     }
 
     public List<RoomMember> getMemberList() {
@@ -50,5 +55,13 @@ public class InviteRoom {
 
     public void setSecretName(String secretName) {
         this.secretName = secretName;
+    }
+
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
     }
 }

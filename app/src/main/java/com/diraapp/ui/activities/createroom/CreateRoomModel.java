@@ -5,6 +5,7 @@ import com.diraapp.api.requests.SendMessageRequest;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.utils.KeyGenerator;
 
 import java.util.ArrayList;
@@ -19,10 +20,11 @@ public class CreateRoomModel implements CreateRoomContract.Model {
 
     @Override
     public void createRoom(String roomName, String roomSecret, String welcomeMessage,
-                           String authorId, String authorName, String serverAddress, int updateExpireSec) {
+                           String authorId, String authorName, String serverAddress,
+                           RoomType roomType, int updateExpireSec) {
 
         Room room = new Room(roomName, System.currentTimeMillis(), roomSecret,
-                serverAddress, true, new ArrayList<>(), new ArrayList<>());
+                serverAddress, true, new ArrayList<>(), new ArrayList<>(), roomType);
 
         room.setUpdateExpireSec(updateExpireSec);
         roomDao.insertAll(room);

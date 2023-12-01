@@ -66,7 +66,7 @@ public class Room {
 
     public Room(String name, long lastUpdatedTime, String secretName, String serverAddress,
                 boolean isNotificationsEnabled, ArrayList<String> unreadMessagesIds,
-                ArrayList<String> pinnedMessagesIds) {
+                ArrayList<String> pinnedMessagesIds, RoomType roomType) {
         this.name = name;
         this.lastUpdatedTime = lastUpdatedTime;
         this.secretName = secretName;
@@ -82,6 +82,9 @@ public class Room {
             pinnedMessagesIds = new ArrayList<>();
         }
         this.pinnedMessagesIds = pinnedMessagesIds;
+
+        if (roomType == null) roomType = RoomType.PUBLIC;
+        this.roomType = roomType;
     }
 
     public int getUpdateExpireSec() {

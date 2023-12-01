@@ -13,6 +13,7 @@ import com.diraapp.db.daos.MemberDao;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.rooms.Room;
+import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
@@ -74,6 +75,13 @@ public class DiraKeyProtocolProcessor {
             if (dhInfo != null) {
                 DhKey dhKey = keyReceivedUpdate.getDhKey();
                 Logger.logDebug(this.getClass().getSimpleName(), "Received N=" + dhKey.getN());
+
+                if (room.getRoomType() == RoomType.PRIVATE && dhKey.getN() > 1) {
+                    Logger.logDebug(this.getClass().getSimpleName(), "Received N=" + dhKey.getN() + ", but room is private");
+                    return;
+                }
+
+
                 BigInteger G = new BigInteger(dhKey.getG());
                 if (G.equals(BigInteger.ONE)) return;
                 BigInteger P = new BigInteger(dhInfo.getP());

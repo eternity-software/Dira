@@ -62,7 +62,7 @@ public class RoomUpdatesProcessor {
 
             Room room = new Room(inviteRoom.getName(), System.currentTimeMillis(),
                     inviteRoom.getSecretName(), serverAddress, true,
-                    new ArrayList<>(), new ArrayList<>());
+                    new ArrayList<>(), new ArrayList<>(), inviteRoom.getRoomType());
 
             if (inviteRoom.getBase64pic() != null) {
                 Bitmap bitmap = AppStorage.getBitmapFromBase64(inviteRoom.getBase64pic());

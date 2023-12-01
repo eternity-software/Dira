@@ -17,6 +17,7 @@ import com.diraapp.R;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.exceptions.LanguageParsingException;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.AppStorage;
@@ -129,7 +130,7 @@ public class ChatAppearanceActivity extends DiraActivity {
 
         String secretName = "1111";
         Room room = new Room(null, keyTime, secretName, null,
-                false, new ArrayList<>(), new ArrayList<>());
+                false, new ArrayList<>(), new ArrayList<>(), RoomType.PUBLIC);
         room.setTimeEncryptionKeyUpdated(keyTime);
 
         Message senderMessage = new Message();

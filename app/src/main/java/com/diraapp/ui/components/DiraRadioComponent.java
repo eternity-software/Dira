@@ -19,12 +19,8 @@ public class DiraRadioComponent extends LinearLayout {
 
     private final ArrayList<DiraRadioComponentItem> views = new ArrayList<>();
 
-    public DiraRadioComponent(Context context) {
-        super(context);
-    }
-
     public DiraRadioComponent(Context context, AttributeSet attrs) {
-        super(context);
+        super(context, attrs, 0);
         init(context, attrs);
     }
 
