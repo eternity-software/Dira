@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diraapp.R;
 import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.utils.CacheUtils;
@@ -74,6 +75,8 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
 
         TextView unreadMessagesCount;
 
+        ImageView publicRoomIndicator;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -86,6 +89,7 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
             timeText = itemView.findViewById(R.id.time_text);
             accentText = itemView.findViewById(R.id.author_text);
             unreadMessagesCount = itemView.findViewById(R.id.unread_messages_count);
+            publicRoomIndicator = itemView.findViewById(R.id.public_room_indicator);
         }
 
         public void onBind(Room room) {
@@ -93,6 +97,12 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
             roomName.setText(room.getName());
 
             Message message = room.getMessage();
+
+            if (room.getRoomType() == RoomType.PUBLIC) {
+                publicRoomIndicator.setVisibility(View.VISIBLE);
+            } else {
+                publicRoomIndicator.setVisibility(View.GONE);
+            }
 
             if (room.getUnreadMessagesIds().size() == 0) {
                 roomContainer.setBackground(context.getResources().getDrawable(R.drawable.room_header_clickable));

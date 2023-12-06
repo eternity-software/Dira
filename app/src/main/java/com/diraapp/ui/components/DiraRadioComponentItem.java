@@ -57,7 +57,7 @@ public class DiraRadioComponentItem extends LinearLayout {
         getBackground().setColorFilter(Theme.getColor(getContext(),
                 R.color.gray), PorterDuff.Mode.SRC_ATOP);
 
-        int padding = DeviceUtils.dpToPx(6, getContext());
+        int padding = DeviceUtils.dpToPx(10, getContext());
 
         setPadding(padding, padding, padding, padding);
 
