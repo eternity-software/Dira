@@ -93,6 +93,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -120,6 +121,8 @@ public class RoomActivity extends DiraActivity
     private int currentPinnedShownPos = 0;
 
     private int currentPinnedTapCount = 0;
+
+    private final HashSet<String> messagesToBlinkIds = new HashSet<>();
 
     private final MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
         @Override
@@ -897,6 +900,11 @@ public class RoomActivity extends DiraActivity
         });
     }
 
+    @Override
+    public void addMessageToBlinkId(String messageId) {
+        messagesToBlinkIds.add(messageId);
+    }
+
     private void fillPinnedComponent(Message message) {
         runOnUiThread(() -> {
             if (message == null) {
@@ -1278,6 +1286,15 @@ public class RoomActivity extends DiraActivity
 //        if (getRoom().getPinnedMessagesIds().contains(message.getId())) {
 //            updatePinned();
 //        }
+    }
+
+    @Override
+    public boolean isMessageNeedBlink(String messageId) {
+        if (messagesToBlinkIds.contains(messageId)) {
+            messagesToBlinkIds.remove(messageId);
+            return true;
+        }
+        return false;
     }
 
     @Override

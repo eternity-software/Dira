@@ -105,6 +105,8 @@ public interface RoomActivityContract {
         void showNextPinned();
 
         void updatePinned(int messagePos);
+
+        void addMessageToBlinkId(String messageId);
     }
 
     interface Presenter {

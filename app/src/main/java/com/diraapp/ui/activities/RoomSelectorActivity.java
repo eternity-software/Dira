@@ -483,6 +483,7 @@ public class RoomSelectorActivity extends AppCompatActivity
 
     @Override
     public void onUpdate(Update update) {
+        Logger.logDebug("fdsfsaaaaa", "new update - " + update.getUpdateType() + " | " + this.hashCode());
         if (update.getUpdateType() == UpdateType.NEW_MESSAGE_UPDATE) {
             updateRoom(((NewMessageUpdate) update).getMessage().getRoomSecret(), true);
         } else if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {

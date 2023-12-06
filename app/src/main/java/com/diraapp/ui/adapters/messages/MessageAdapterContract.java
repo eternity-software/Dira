@@ -51,4 +51,6 @@ public interface MessageAdapterContract {
     void onMessageAttached(Message message);
 
     void onMessageDetached(Message message);
+
+    boolean isMessageNeedBlink(String messageId);
 }

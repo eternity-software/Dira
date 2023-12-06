@@ -17,7 +17,9 @@ import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.CreateInviteRequest;
+import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.updates.NewInvitationUpdate;
+import com.diraapp.api.updates.NewMessageUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
 import com.diraapp.api.views.RoomMember;
@@ -275,6 +277,22 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
     public void onUpdate(Update update) {
         if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
             loadData();
+        } else if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
+            MemberUpdate memberUpdate = (MemberUpdate) update;
+
+            boolean isSelf = memberUpdate.getId().equals(
+                    new CacheUtils(this).getString(CacheUtils.ID));
+            if (isSelf) return;
+
+            initInviteButton();
+        } else if (update.getUpdateType() == UpdateType.NEW_MESSAGE_UPDATE) {
+            NewMessageUpdate messageUpdate = (NewMessageUpdate) update;
+
+            boolean isSelf = new CacheUtils(this).getString(CacheUtils.ID).equals(
+                    messageUpdate.getMessage().getAuthorId());
+            if (isSelf) return;
+
+            initInviteButton();
         }
     }
 
@@ -332,6 +350,8 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
 
     private void initInviteButton() {
         View inviteIcon = findViewById(R.id.icon_invite);
+
+        if (room == null) return;
 
         if (room.getRoomType() == RoomType.PRIVATE && members.size() > 0) {
             inviteIcon.setVisibility(View.GONE);

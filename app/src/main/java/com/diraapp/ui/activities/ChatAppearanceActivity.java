@@ -233,6 +233,11 @@ public class ChatAppearanceActivity extends DiraActivity {
             public void onMessageDetached(Message message) {
 
             }
+
+            @Override
+            public boolean isMessageNeedBlink(String messageId) {
+                return false;
+            }
         };
 
         messagesAdapter = new MessagesAdapter(contract, messages, room,

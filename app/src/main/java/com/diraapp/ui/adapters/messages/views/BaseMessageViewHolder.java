@@ -168,6 +168,10 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         bindUserPicture(message, previousMessage);
         if (hasReplySupport())
             replyComponent.fillMessageReply(message.getRepliedMessage(), messageAdapterContract);
+
+        if (messageAdapterContract.isMessageNeedBlink(message.getId())) {
+            blink();
+        }
     }
 
     public boolean hasReplySupport() {
@@ -401,6 +405,11 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     }
 
     public void onViewAttached() {
+        if (currentMessage != null) {
+            if (messageAdapterContract.isMessageNeedBlink(currentMessage.getId())) {
+                blink();
+            }
+        }
         if (!isInitialized) return;
         if (isOnScreen) return;
         isOnScreen = true;

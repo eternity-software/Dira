@@ -450,21 +450,28 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
         if (messageIndex != -1) {
             view.scrollToAndStop(messageIndex);
-            view.blinkViewHolder(messageIndex);
+
+            if (view.isMessageVisible(messageIndex)) {
+                view.blinkViewHolder(messageIndex);
+            } else {
+                view.addMessageToBlinkId(message.getId());
+            }
             return;
         }
 
+        view.addMessageToBlinkId(message.getId());
         loadMessagesNearByTime(message.getTime(), true);
     }
 
+
     @Override
     public void blinkMessage(Message message) {
-        if (message == null) return;
-        int messageIndex = getMessagePos(message);
-
-        if (messageIndex != -1) {
-            view.blinkViewHolder(messageIndex);
-        }
+//        if (message == null) return;
+//        int messageIndex = getMessagePos(message);
+//
+//        if (messageIndex != -1) {
+//            view.blinkViewHolder(messageIndex);
+//        }
     }
 
     private int getMessagePos(Message message) {
