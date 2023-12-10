@@ -6,9 +6,12 @@
     <color name="accent_medium">#1AE3CB</color>
     <color name="unread_message_background">#4B50746A</color>
     <color name="dark">#202020</color>
+    <color name="dark_medium">#262626</color>
+    <color name="dark_lighter">#2F2F2F</color>
     <color name="light_gray">#CDCDCD</color>
     <color name="medium_light_gray">#6D6D6D</color>
     <color name="medium_light_light_gray">#B7B7B7</color>
+    <color name="medium_light_medium_light_gray">#A0A0A0</color>
     <color name="gray">#424242</color>
     <color name="gray_trans">#81202020</color>
     <color name="white">#FFFFFF</color>
@@ -43,7 +46,7 @@
     <color name="self_message_color">@color/white</color>
     <color name="self_message_background">@color/gray</color>
     <color name="self_message_color_link">@color/accent</color>
-    <color name="self_reply_color">#A0A0A0</color>
+    <color name="self_reply_color">@color/medium_light_medium_light_gray</color>
 
     <color name="message_background">@color/accent</color>
     <color name="message_color">@color/dark</color>

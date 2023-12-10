@@ -30,12 +30,13 @@
 
         android:clipChildren="true"
 
-
         android:clipToPadding="false"
-        android:nestedScrollingEnabled="false"
         android:layoutAnimation="@anim/layout_items_animation"
+        android:nestedScrollingEnabled="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 
+        android:layout_marginVertical="-16dp"
+        android:paddingVertical="16dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,22 +64,14 @@
         app:layout_constraintStart_toStartOf="parent"
 
         android:background="@drawable/bottom_rounded"
+        android:backgroundTint="@color/dark_medium"
         android:paddingVertical="8dp"
         android:paddingHorizontal="10dp"
         app:layout_constraintTop_toBottomOf="@+id/room_info_pan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="gone">
-
-        <com.diraapp.ui.components.dynamic.ThemeImageView
-            android:id="@+id/pinned_left_line"
-            android:layout_width="4dp"
-            android:layout_height="match_parent"
-            android:layout_marginVertical="8dp"
-            android:layout_marginStart="4dp"
-            android:background="@drawable/gray_rounded"
-            app:themeBackgroundTint="self_reply_color" />
+        android:visibility="visible">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/pinned_image_card"
@@ -102,8 +95,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginVertical="4dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
@@ -139,41 +131,41 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <com.diraapp.ui.components.dynamic.ThemeLinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal"
+            app:themeBackgroundColor="gray"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:background="@drawable/rounded_background">
 
             <com.diraapp.ui.components.dynamic.ThemeImageView
                 android:id="@+id/pins_icon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
                 android:layout_gravity="center_vertical"
-                android:paddingHorizontal="8dp"
-                android:src="@drawable/ic_pin"
-                app:themeImageColor="light_gray" />
+                android:src="@drawable/ic_pinned"
+                app:themeImageColor="medium_light_medium_light_gray" />
 
             <com.diraapp.ui.components.dynamic.DynamicTextView
                 android:id="@+id/pinned_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
+                android:layout_gravity="center_vertical"
                 android:fontFamily="@font/montserratsemibold"
                 android:maxLines="1"
 
-                android:layout_marginStart="-20dp"
-                android:layout_marginBottom="2dp"
-                android:paddingHorizontal="5dp"
-                app:themeColorBackground="accent"
-                android:background="@drawable/accent_rounded"
+                android:layout_marginStart="6dp"
 
                 android:text="10"
                 android:textColor="@color/white"
-                android:textSize="10sp"
+                android:textSize="14sp"
                 android:transitionName="name"
                 app:themeColor="self_message_color" />
 
-        </LinearLayout>
+        </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
 
 
     </LinearLayout>
@@ -184,6 +176,7 @@
         android:layout_width="match_parent"
         android:layout_height="68dp"
         android:background="@drawable/room_header_clickable"
+        android:backgroundTint="@color/dark_lighter"
         android:elevation="2dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -554,11 +547,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
         android:orientation="horizontal"
+        android:layout_marginBottom="12dp"
 
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/recycler_view"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout

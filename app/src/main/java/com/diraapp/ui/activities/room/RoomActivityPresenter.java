@@ -449,13 +449,13 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         int messageIndex = getMessagePos(message);
 
         if (messageIndex != -1) {
-            view.scrollToAndStop(messageIndex);
-
             if (view.isMessageVisible(messageIndex)) {
                 view.blinkViewHolder(messageIndex);
             } else {
                 view.addMessageToBlinkId(message.getId());
             }
+
+            view.scrollToAndStop(messageIndex);
             return;
         }
 

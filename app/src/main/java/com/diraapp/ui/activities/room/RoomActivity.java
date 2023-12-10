@@ -116,7 +116,6 @@ public class RoomActivity extends DiraActivity
 
     private boolean isArrowShowed = true;
     private boolean isScrollIndicatorShown = true;
-
     private boolean isLastPinnedShown = false;
     private int currentPinnedShownPos = 0;
 
@@ -266,35 +265,7 @@ public class RoomActivity extends DiraActivity
 
         UserStatusHandler.getInstance().addListener(this);
 
-        binding.replyClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                performHeightAnimation(DeviceUtils.dpToPx(48, RoomActivity.this), 0, binding.replyLayout)
-                        .addListener(new Animator.AnimatorListener() {
-                            @Override
-                            public void onAnimationStart(@NonNull Animator animator) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(@NonNull Animator animator) {
-                                setReplyMessage(null);
-                            }
-
-                            @Override
-                            public void onAnimationCancel(@NonNull Animator animator) {
-
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(@NonNull Animator animator) {
-
-                            }
-                        });
-
-            }
-        });
+        binding.replyClose.setOnClickListener((View view) -> setReplyMessage(null));
 
     }
 
@@ -639,14 +610,34 @@ public class RoomActivity extends DiraActivity
             }
 
             fillViews(message, binding.replyAuthorName, binding.replyText, binding.replyImageCard,
-                    binding.replyImage, 48, binding.replyLayout);
+                    binding.replyImage, DeviceUtils.dpToPx(48, this), binding.replyLayout);
         });
     }
 
     private void fillViews(Message message, TextView authorText, TextView textView,
-                           CardView imageCard, ImageView image, int dp, LinearLayout layout) {
+                           CardView imageCard, ImageView image, int px, LinearLayout layout) {
         if (message == null) {
-            layout.setVisibility(View.GONE);
+
+            if (layout.getVisibility() == View.VISIBLE) {
+                performHeightAnimation(px, 0, layout).addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(@NonNull Animator animator) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(@NonNull Animator animator) {
+                        layout.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(@NonNull Animator animator) {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(@NonNull Animator animator) {
+                    }
+                });
+            }
             return;
         }
 
@@ -716,7 +707,7 @@ public class RoomActivity extends DiraActivity
 
         if (layout.getVisibility() != View.VISIBLE) {
             layout.setVisibility(View.VISIBLE);
-            performHeightAnimation(0, DeviceUtils.dpToPx(dp, this), layout);
+            performHeightAnimation(0, px, layout);
         }
     }
 
@@ -884,16 +875,21 @@ public class RoomActivity extends DiraActivity
             }
 
             isLastPinnedShown = currentPinnedShownPos != size - 1;
-            if (isLastPinnedShown) {
-                binding.pinnedLeftLine.getBackground().setColorFilter(Theme.getColor(this,
-                        R.color.self_reply_color), PorterDuff.Mode.SRC_ATOP);
-            } else {
-                binding.pinnedLeftLine.getBackground().setColorFilter(Theme.getColor(this,
-                        R.color.accent), PorterDuff.Mode.SRC_ATOP);
-            }
+//            if (isLastPinnedShown) {
+//                binding.pinnedLeftLine.getBackground().setColorFilter(Theme.getColor(this,
+//                        R.color.self_reply_color), PorterDuff.Mode.SRC_ATOP);
+//            } else {
+//                binding.pinnedLeftLine.getBackground().setColorFilter(Theme.getColor(this,
+//                        R.color.accent), PorterDuff.Mode.SRC_ATOP);
+//            }
 
             binding.pinnedCount.setVisibility(View.VISIBLE);
-            binding.pinnedCount.setText(String.valueOf(size));
+
+            String sizeText;
+            if (size > 99) sizeText = "99+";
+            else sizeText = String.valueOf(size);
+
+            binding.pinnedCount.setText(sizeText);
             Message currentPinned = pinnedMessages.get(currentPinnedShownPos);
 
             fillPinnedComponent(currentPinned);
@@ -926,8 +922,11 @@ public class RoomActivity extends DiraActivity
                 });
             }
 
+            int px = Math.max(2 * DeviceUtils.dpToPx(8, this) + 2 * DeviceUtils.spToPx(12, this),
+                            DeviceUtils.dpToPx(8 + 8 + 40, this));
+            Logger.logDebug("sdfdsfdsfsdf", "dddddd - " + px);
             fillViews(message, binding.pinnedAuthorName, binding.pinnedText, binding.pinnedImageCard,
-                    binding.pinnedImage, 64, binding.pinnedLayout);
+                    binding.pinnedImage, px, binding.pinnedLayout);
 
         });
 
