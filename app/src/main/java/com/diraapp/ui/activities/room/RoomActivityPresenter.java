@@ -618,11 +618,15 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     }
 
     @Override
-    public void updateUnsentText() {
+    public void updateDynamicRoomFields() {
         RoomDao roomDao = view.getRoomDatabase().getRoomDao();
 
         view.runBackground(() -> {
-            roomDao.update(room);
+            Room dbRoom = roomDao.getRoomBySecretName(roomSecret);
+
+            dbRoom.setFirstVisibleScrolledItemId(room.getFirstVisibleScrolledItemId());
+            dbRoom.setUnsentText(room.getUnsentText());
+            roomDao.update(dbRoom);
         });
     }
 
@@ -769,6 +773,9 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 if (messageId.equals(lastReadMessage.getId())) lastReadMessage = null;
             }
 
+            RoomDao roomDao = view.getRoomDatabase().getRoomDao();
+            Room dbRoom = roomDao.getRoomBySecretName(roomSecret);
+
             boolean updateRoom = false;
             if (room.getLastMessageId().equals(messageId)) {
                 updateRoom = true;
@@ -779,6 +786,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     newLastMessageId = room.getMessage().getId();
                 }
                 room.setLastMessageId(newLastMessageId);
+                dbRoom.setLastMessageId(newLastMessageId);
             }
 
             if (room.getFirstVisibleScrolledItemId().equals(messageId)) {
@@ -795,12 +803,14 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     newLastScrolledMessageId = room.getMessage().getId();
                 }
                 room.setFirstVisibleScrolledItemId(newLastScrolledMessageId);
+                dbRoom.setFirstVisibleScrolledItemId(newLastScrolledMessageId);
             }
 
             if (room.getUnreadMessagesIds().contains(messageId)) {
                 updateRoom = true;
 
                 room.getUnreadMessagesIds().remove(messageId);
+                dbRoom.getUnreadMessagesIds().remove(messageId);
             }
 
             if (pinnedIds.contains(messageId)) {
@@ -808,10 +818,11 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
                 removePinned(new PinnedMessageRemovedUpdate(
                                 roomSecret, messageId, message.getAuthorId()));
+                dbRoom.getPinnedMessagesIds().remove(messageId);
             }
 
             if (updateRoom) {
-                view.getRoomDatabase().getRoomDao().update(room);
+                roomDao.update(dbRoom);
             }
 
             // Removing message from db

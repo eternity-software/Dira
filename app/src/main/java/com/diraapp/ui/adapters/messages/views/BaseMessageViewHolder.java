@@ -63,6 +63,9 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     protected View profilePictureContainer;
     private TextView timeText;
     private TextView dateText;
+
+    private LinearLayout outerReplyContainer;
+
     private MessageReplyComponent replyComponent;
 
     /**
@@ -102,6 +105,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         messageContainer = find(R.id.message_container);
         messageBackground = find(R.id.message_background);
         postInflatedViewsContainer = find(R.id.views_container);
+        outerReplyContainer = find(R.id.outer_reply_container);
 
         if (hasReplySupport())
             postInflateReplyViews();
@@ -273,7 +277,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
                 getItemViewType(), isSelfMessage);
 
         if (isOuterContainer) {
-            outerContainer.addView(replyComponent);
+            outerReplyContainer.addView(replyComponent);
         } else {
             postInflatedViewsContainer.addView(replyComponent);
         }

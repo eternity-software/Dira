@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -423,7 +422,7 @@ public class RoomActivity extends DiraActivity
             getRoom().setFirstVisibleScrolledItemId(message.getId());
 
         getRoom().setUnsentText(binding.messageTextInput.getText().toString());
-        presenter.updateUnsentText();
+        presenter.updateDynamicRoomFields();
     }
 
     @Override

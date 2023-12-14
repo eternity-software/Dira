@@ -158,7 +158,7 @@ public interface RoomActivityContract {
 
         void sendMessage(ArrayList<Attachment> attachments, String messageText);
 
-        void updateUnsentText();
+        void updateDynamicRoomFields();
 
         void deleteMessage(Message message, Context context);
 
