@@ -8,15 +8,6 @@
     android:orientation="vertical"
     android:paddingVertical="2dp">
 
-
-    <LinearLayout
-        android:id="@+id/bubble_view_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-    </LinearLayout>
-
     <com.diraapp.ui.components.dynamic.DynamicTextView
         android:id="@+id/date_view"
         android:layout_width="wrap_content"
@@ -114,6 +105,14 @@
                 app:themeColorLink="self_message_color_link" />
 
         </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bubble_view_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/emoji_view"

@@ -54,6 +54,8 @@ import com.diraapp.utils.Logger;
 import com.diraapp.utils.android.DeviceUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -292,6 +294,7 @@ public class RoomSelectorActivity extends AppCompatActivity
                             RoomSelectorActivity.this, RoomSelectorActivity.this);
 
                     for (Room room : new ArrayList<>(roomList)) {
+                        Logger.logDebug(room.getName(), "" + room.getLastUpdatedTime());
                         Message message = messageDao.getMessageById(room.getLastMessageId());
                         room.setMessage(message);
                     }

@@ -10,6 +10,7 @@ import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.updates.Update;
 import com.diraapp.db.converters.UnreadIdsConverter;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.utils.Logger;
 
 import org.jetbrains.annotations.NotNull;
 

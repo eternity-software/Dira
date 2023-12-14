@@ -29,6 +29,7 @@ import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -194,6 +195,7 @@ public class RoomUpdatesProcessor {
                             notifyPinnedMessageAdded(update, room);
                 }
 
+                long pre = room.getLastUpdatedTime();
                 if (newMessage != null) {
                     room.setLastMessageId(newMessage.getId());
                     room.setLastUpdatedTime(newMessage.getTime());
@@ -214,6 +216,7 @@ public class RoomUpdatesProcessor {
                         newMessage.setAuthorId("Dira");
                     messageDao.insertAll(newMessage);
                 }
+                Logger.logDebug("RoomUpdatesProcessor gjfkjgifjg", "m:" + newMessage.getTime() + "\ns:" + System.currentTimeMillis() + "\nb:" + pre);
                 roomDao.update(room);
             } else {
 

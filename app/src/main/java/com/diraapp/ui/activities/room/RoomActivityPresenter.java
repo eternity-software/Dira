@@ -106,6 +106,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             }
 
             room.setLastMessageId(message.getId());
+            room.setLastUpdatedTime(message.getTime());
 
             view.notifyRecyclerMessage(newMessageUpdate.getMessage(), needUpdateList);
 
