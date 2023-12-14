@@ -84,59 +84,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.diraapp.ui.components.dynamic.ThemeLinearLayout
-                    android:id="@+id/message_container"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/dialog_message"
-                    android:orientation="vertical"
-                    app:themeBackgroundColor="message_background">
-
-
-                    <LinearLayout
-                        android:id="@+id/views_container"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                    </LinearLayout>
-
-                    <com.diraapp.ui.components.dynamic.DynamicTextView
-                        android:id="@+id/message_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="6dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="7dp"
-                        android:autoLink="all"
-                        android:fontFamily="@font/montserratsemibold"
-                        android:padding="0dp"
-                        android:text=""
-                        android:textColor="@color/dark"
-                        android:textColorLink="@color/gray"
-
-                        android:textSize="15sp"
-
-                        android:visibility="gone"
-
-                        app:themeColor="message_color"
-                        app:themeColorLink="message_color_link" />
-
-
-                </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
-
-                <TextView
-                    android:id="@+id/emoji_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🐈"
-                    android:textColor="@color/accent"
-                    android:textSize="42sp"
-                    android:visibility="gone" />
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/bubble_view_container"
@@ -146,29 +94,89 @@
 
                 </LinearLayout>
 
-                <com.diraapp.ui.components.dynamic.DynamicTextView
-                    android:id="@+id/time_view"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginLeft="4dp"
+                    android:orientation="horizontal">
 
-                    android:layout_weight="0"
-                    android:background="@drawable/gray_rounded"
+                    <TextView
+                        android:id="@+id/emoji_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🐈"
+                        android:textColor="@color/accent"
+                        android:textSize="42sp"
+                        android:visibility="gone" />
 
-                    android:backgroundTint="@color/gray_trans"
-                    android:fontFamily="@font/montserratsemibold"
-                    android:gravity="center"
-                    android:alpha="0.8"
-                    android:maxLines="1"
-                    android:minWidth="20dp"
-                    android:paddingHorizontal="6dp"
-                    android:paddingVertical="2dp"
-                    android:text="00:00"
-                    android:textColor="@color/white"
-                    android:textSize="11sp"
-                    app:themeColor="attributes_text_color"
-                    app:themeColorBackground="dark_message_attributes_background" />
+                    <com.diraapp.ui.components.dynamic.ThemeLinearLayout
+                        android:id="@+id/message_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/dialog_message"
+                        android:orientation="vertical"
+                        app:themeBackgroundColor="message_background">
+
+
+                        <LinearLayout
+                            android:id="@+id/views_container"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
+
+                        <com.diraapp.ui.components.dynamic.DynamicTextView
+                            android:id="@+id/message_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="7dp"
+                            android:autoLink="all"
+                            android:fontFamily="@font/montserratsemibold"
+                            android:padding="0dp"
+                            android:text=""
+                            android:textColor="@color/dark"
+                            android:textColorLink="@color/gray"
+
+                            android:textSize="15sp"
+
+                            android:visibility="gone"
+
+                            app:themeColor="message_color"
+                            app:themeColorLink="message_color_link" />
+
+
+                    </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
+
+                    <com.diraapp.ui.components.dynamic.DynamicTextView
+                        android:id="@+id/time_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="4dp"
+
+                        android:layout_weight="0"
+                        android:background="@drawable/gray_rounded"
+
+                        android:backgroundTint="@color/gray_trans"
+                        android:fontFamily="@font/montserratsemibold"
+                        android:gravity="center"
+                        android:alpha="0.8"
+                        android:maxLines="1"
+                        android:minWidth="20dp"
+                        android:paddingHorizontal="6dp"
+                        android:paddingVertical="2dp"
+                        android:text="00:00"
+                        android:textColor="@color/white"
+                        android:textSize="11sp"
+                        app:themeColor="attributes_text_color"
+                        app:themeColorBackground="dark_message_attributes_background" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
 

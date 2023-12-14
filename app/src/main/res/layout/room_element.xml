@@ -45,8 +45,9 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
                     android:layout_gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content">
 
                     <com.diraapp.ui.components.dynamic.ThemeImageView
@@ -60,11 +61,10 @@
 
                     <TextView
                         android:id="@+id/room_name"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="22dp"
                         android:layout_weight="1"
                         android:fontFamily="@font/montserratbold"
-                        android:layout_gravity="bottom"
                         android:maxLines="1"
                         android:text=".."
                         android:textColor="@color/white"
@@ -75,15 +75,16 @@
 
                 <TextView
                     android:id="@+id/time_text"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
 
                     android:layout_height="18dp"
-                    android:layout_gravity="center_vertical"
                     android:layout_marginLeft="4dp"
                     android:layout_marginTop="2dp"
                     android:fontFamily="@font/montserratsemibold"
-                    android:gravity="center_vertical|right"
-                    android:text=""
+                    android:layout_gravity="end"
+                    android:gravity="center_vertical|end"
+                    android:text="11:00"
                     android:textColor="@color/light_gray"
                     android:textSize="12sp" />
 
