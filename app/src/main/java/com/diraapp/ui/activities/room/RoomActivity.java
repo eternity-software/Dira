@@ -334,9 +334,10 @@ public class RoomActivity extends DiraActivity
                 Logger.logDebug(this.getClass().toString(), "File Path: " + path);
 
                 ArrayList<Attachment> attachments = new ArrayList<>();
+                final String replyId = presenter.getAndClearReplyId();
                 RoomActivityPresenter.AttachmentReadyListener attachmentReadyListener = attachment -> {
                     attachments.add(attachment);
-                    presenter.sendMessage(attachments, messageText);
+                    presenter.sendMessage(attachments, messageText, replyId);
                 };
 
                 presenter.uploadAttachment(AttachmentType.FILE, attachmentReadyListener, path);
@@ -362,9 +363,10 @@ public class RoomActivity extends DiraActivity
                     ArrayList<Attachment> attachments = new ArrayList<>();
                     presenter.sendStatus(UserStatusType.SENDING_FILE);
                     if (fileUris.size() == 1) {
+                        final String replyId = presenter.getAndClearReplyId();
                         RoomActivityPresenter.AttachmentReadyListener attachmentReadyListener = attachment -> {
                             attachments.add(attachment);
-                            presenter.sendMessage(attachments, messageText);
+                            presenter.sendMessage(attachments, messageText, replyId);
                         };
                         String fileUri = fileUris.get(0);
                         if (FileClassifier.isVideoFile(fileUri)) {
@@ -935,9 +937,10 @@ public class RoomActivity extends DiraActivity
     public void onMediaMessageRecorded(String path, AttachmentType attachmentType) {
 
         ArrayList<Attachment> attachments = new ArrayList<>();
+        final String replyId = presenter.getAndClearReplyId();
         RoomActivityPresenter.AttachmentReadyListener attachmentReadyListener = attachment -> {
             attachments.add(attachment);
-            presenter.sendMessage(attachments, "");
+            presenter.sendMessage(attachments, "", replyId);
         };
         presenter.uploadAttachment(attachmentType, attachmentReadyListener, path);
     }

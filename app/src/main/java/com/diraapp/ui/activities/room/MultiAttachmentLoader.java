@@ -31,6 +31,7 @@ public class MultiAttachmentLoader {
         }
 
         int i = 0;
+        final String replyId = presenter.getAndClearReplyId();
         for (Object obj : diraMediaInfoList) {
             if (obj instanceof DiraMediaInfo) {
                 DiraMediaInfo diraMediaInfo = (DiraMediaInfo) obj;
@@ -45,7 +46,7 @@ public class MultiAttachmentLoader {
                                 attachments.set(currentI, attachment);
                                 uploadedCount++;
                                 if (uploadedCount == readySize) {
-                                    presenter.sendMessage((ArrayList<Attachment>) attachments, messageText);
+                                    presenter.sendMessage((ArrayList<Attachment>) attachments, messageText, replyId);
                                 }
                             }
                         },

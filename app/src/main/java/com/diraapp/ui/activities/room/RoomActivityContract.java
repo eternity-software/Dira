@@ -156,7 +156,9 @@ public interface RoomActivityContract {
 
         void onScrollArrowPressed();
 
-        void sendMessage(ArrayList<Attachment> attachments, String messageText);
+        String getAndClearReplyId();
+
+        void sendMessage(ArrayList<Attachment> attachments, String messageText, String replyId);
 
         void updateDynamicRoomFields();
 

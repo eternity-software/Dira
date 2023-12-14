@@ -524,6 +524,9 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             Message message = Message.generateMessage(view.getCacheUtils(), roomSecret);
             message.setLastTimeEncryptionKeyUpdated(room.getTimeEncryptionKeyUpdated());
 
+            final String replyId = getAndClearReplyId();
+            message.setRepliedMessageId(replyId);
+
             if (room.getEncryptionKey().equals("")) {
                 message.setText(text);
             } else {
@@ -589,14 +592,11 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
 
     @Override
-    public void sendMessage(ArrayList<Attachment> attachments, String messageText) {
-        String replyId;
-        if (replyingMessage != null) replyId = replyingMessage.getId();
-        else {
+    public void sendMessage(ArrayList<Attachment> attachments, String messageText, String replyId) {
+        if (replyId.equals("")) {
             replyId = null;
         }
 
-        view.setReplyMessage(null);
         Message message = Message.generateMessage(view.getCacheUtils(), roomSecret);
         message.setRepliedMessageId(replyId);
 
@@ -893,12 +893,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     @Override
     public void sendMessage(Message message) throws UnablePerformRequestException {
-        if (replyingMessage != null) {
-            if (message.getRepliedMessageId() == null) {
-                message.setRepliedMessageId(replyingMessage.getId());
-            }
-            view.setReplyMessage(null);
-        }
 
         SendMessageRequest sendMessageRequest = new SendMessageRequest(message, room.getUpdateExpireSec());
 
@@ -987,6 +981,16 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 view.scrollTo(finalPosition);
             });
         });
+    }
+
+    @Override
+    public String getAndClearReplyId() {
+        if (replyingMessage == null) {
+            return "";
+        }
+        String replyId = replyingMessage.getId();
+        view.setReplyMessage(null);
+        return replyId;
     }
 
     @Override
