@@ -51,6 +51,7 @@
                     android:layout_height="wrap_content">
 
                     <com.diraapp.ui.components.dynamic.ThemeImageView
+                        android:gravity="center_vertical"
                         android:id="@+id/public_room_indicator"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
@@ -60,6 +61,7 @@
                         android:visibility="visible"/>
 
                     <TextView
+                        android:gravity="center_vertical"
                         android:id="@+id/room_name"
                         android:layout_width="wrap_content"
                         android:layout_height="22dp"
