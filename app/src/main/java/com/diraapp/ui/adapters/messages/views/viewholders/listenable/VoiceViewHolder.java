@@ -2,7 +2,6 @@ package com.diraapp.ui.adapters.messages.views.viewholders.listenable;
 
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.os.Debug;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.diraapp.BuildConfig;
 import com.diraapp.R;
@@ -19,6 +19,7 @@ import com.diraapp.api.requests.AttachmentListenedRequest;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.UnablePerformRequestException;
+import com.diraapp.res.Theme;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
@@ -37,6 +38,8 @@ public class VoiceViewHolder extends ListenableViewHolder {
     LinearLayout voiceLayout;
     ImageView playButton;
 
+    VoiceMessageView voiceView;
+
     public VoiceViewHolder(@NonNull ViewGroup itemView,
                            MessageAdapterContract messageAdapterContract,
                            ViewHolderManagerContract viewHolderManagerContract,
@@ -52,6 +55,7 @@ public class VoiceViewHolder extends ListenableViewHolder {
         waveformSeekBar.setProgress(0);
         setState(ListenableViewHolderState.UNSELECTED);
 
+        voiceView.setPlayButton();
         //play icon
     }
 
@@ -71,10 +75,12 @@ public class VoiceViewHolder extends ListenableViewHolder {
             //play icon
             waveformSeekBar.setProgress(progress);
             setState(ListenableViewHolderState.PAUSED);
+            voiceView.setPlayButton();
             Logger.logDebug("VoiceMessageViewHolder", "Paused");
         } else {
             //pause icon
             setState(ListenableViewHolderState.PLAYING);
+            voiceView.setPauseButton();
             Logger.logDebug("VoiceMessageViewHolder", "Playing");
         }
     }
@@ -89,6 +95,7 @@ public class VoiceViewHolder extends ListenableViewHolder {
         setState(ListenableViewHolderState.PLAYING);
         //pause icon
 
+        voiceView.setPauseButton();
         if (BuildConfig.DEBUG) {
             Logger.logDebug("VoiceMessageViewHolder", "started");
         }
@@ -142,6 +149,8 @@ public class VoiceViewHolder extends ListenableViewHolder {
 
         playButton.setOnClickListener((View v) -> {
 
+            sendMessageListened(message);
+
             GlobalMediaPlayer global = GlobalMediaPlayer.getInstance();
             if (getState() == ListenableViewHolderState.PAUSED ||
                 getState() == ListenableViewHolderState.PLAYING) {
@@ -157,15 +166,20 @@ public class VoiceViewHolder extends ListenableViewHolder {
             public void onProgressChanged(@NonNull WaveformSeekBar waveformSeekBar, float v, boolean fromUser) {
                 if (fromUser) {
 
+                    sendMessageListened(message);
+
                     if (!getMessageAdapterContract().
                             isCurrentListeningAppeared(VoiceViewHolder.this)) {
 
                         GlobalMediaPlayer.getInstance().
                                 changePlyingMessage(getCurrentMessage(), file,
-                                        VoiceViewHolder.this, v/10);
+                                        VoiceViewHolder.this, v, true);
                     } else {
-                        GlobalMediaPlayer.getInstance().setCurrentProgress(v/10);
+                        GlobalMediaPlayer.getInstance().
+                                changePlyingMessageWithoutClearing(getCurrentMessage(), file,
+                                        VoiceViewHolder.this, v);
                     }
+
                 }
             }
         });
@@ -236,9 +250,9 @@ public class VoiceViewHolder extends ListenableViewHolder {
     @Override
     protected void postInflate() {
         super.postInflate();
-        View view = new VoiceMessageView(itemView.getContext(), isSelfMessage);
+        voiceView = new VoiceMessageView(itemView.getContext(), isSelfMessage);
         messageContainer.setVisibility(View.VISIBLE);
-        postInflatedViewsContainer.addView(view);
+        postInflatedViewsContainer.addView(voiceView);
 
         waveformSeekBar = itemView.findViewById(R.id.waveform_seek_bar);
         playButton = itemView.findViewById(R.id.play_button);
@@ -249,6 +263,7 @@ public class VoiceViewHolder extends ListenableViewHolder {
     public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
 
+        voiceView.setPlayButton();
         updateListeningIndicator(message.getSingleAttachment());
         clearItem();
 
@@ -261,7 +276,7 @@ public class VoiceViewHolder extends ListenableViewHolder {
     private void clearItem() {
         playButton.setOnClickListener((View v) -> {});
 
-        waveformSeekBar.setVisibility(View.INVISIBLE);
+        clearProgress(getCurrentMessage().getSingleAttachment(), getCurrentMessage());
 
     }
 

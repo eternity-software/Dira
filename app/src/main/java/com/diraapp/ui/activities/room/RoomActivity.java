@@ -1316,6 +1316,7 @@ public class RoomActivity extends DiraActivity
 
         if (viewHolder.getCurrentMessage().getId().equals(currentListeningMessage.getId())) {
             currentListenableViewHolder = viewHolder;
+            currentListenableViewHolder.start();
             Logger.logDebug("RoomActivity", "Current listenable has been found");
             return true;
         }

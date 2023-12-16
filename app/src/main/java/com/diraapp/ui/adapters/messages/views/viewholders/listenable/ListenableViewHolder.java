@@ -51,7 +51,10 @@ public abstract class ListenableViewHolder extends AttachmentViewHolder {
         if (!isInitialized) return;
         if (getCurrentMessage() == null) return;
 
-        getMessageAdapterContract().isCurrentListeningDisappeared(this);
+        if (getMessageAdapterContract().isCurrentListeningDisappeared(this)) {
+            getMessageAdapterContract().setNewCurrentListenableViewHolder(null);
+        }
+
     }
 
     @Override
@@ -61,7 +64,9 @@ public abstract class ListenableViewHolder extends AttachmentViewHolder {
         if (!isInitialized) return;
         if (getCurrentMessage() == null) return;
 
-        getMessageAdapterContract().isCurrentListeningDisappeared(this);
+        if (getMessageAdapterContract().isCurrentListeningDisappeared(this)) {
+            getMessageAdapterContract().setNewCurrentListenableViewHolder(null);
+        }
     }
 
     @Override
@@ -76,6 +81,7 @@ public abstract class ListenableViewHolder extends AttachmentViewHolder {
             } else {
                 state = ListenableViewHolderState.PLAYING;
             }
+
             return;
         }
 

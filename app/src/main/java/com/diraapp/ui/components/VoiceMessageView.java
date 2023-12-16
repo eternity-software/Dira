@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.diraapp.R;
 import com.diraapp.res.Theme;
@@ -19,6 +20,12 @@ public class VoiceMessageView extends LinearLayout {
 
     public static final int VOICE_CONTAINER_ID = 642377;
     private boolean isSelfMessage;
+
+    private boolean isPlayButtonActive = true;
+
+    private int playButtonColor;
+
+    private ImageView playButton;
 
 
     public VoiceMessageView(Context context, boolean isSelfMessage) {
@@ -40,7 +47,7 @@ public class VoiceMessageView extends LinearLayout {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View root = inflater.inflate(R.layout.message_voice, this);
 
-            ImageView playButton = findViewById(R.id.play_button);
+            playButton = findViewById(R.id.play_button);
             WaveformSeekBar bar = findViewById(R.id.waveform_seek_bar);
             LinearLayout indicator = findViewById(R.id.listened_indicator);
 
@@ -60,21 +67,21 @@ public class VoiceMessageView extends LinearLayout {
 
             int waveBackgroundColor = Theme.getColor(getContext(), R.color.message_waves_background);
             int wavesColor = Theme.getColor(getContext(), R.color.message_waves);
-            int playColor = Theme.getColor(getContext(), R.color.message_voice_play);
+            playButtonColor = Theme.getColor(getContext(), R.color.message_voice_play);
             int playColorBackground = Theme.getColor(getContext(), R.color.message_voice_play_background);
             int indicatorColor = Theme.getColor(getContext(), R.color.message_voice_play);
 
             if (isSelfMessage) {
                 waveBackgroundColor = Theme.getColor(getContext(), R.color.self_message_waves_background);
                 wavesColor = Theme.getColor(getContext(), R.color.self_message_waves);
-                playColor = Theme.getColor(getContext(), R.color.self_message_voice_play);
+                playButtonColor = Theme.getColor(getContext(), R.color.self_message_voice_play);
                 playColorBackground = Theme.getColor(getContext(), R.color.self_message_voice_play_background);
                 indicatorColor = Theme.getColor(getContext(), R.color.self_message_voice_play);
             }
 
 
             playButton.getBackground().setColorFilter(playColorBackground, PorterDuff.Mode.SRC_ATOP);
-            playButton.setColorFilter(playColor);
+            playButton.setColorFilter(playButtonColor);
             bar.setWaveBackgroundColor(waveBackgroundColor);
             bar.setWaveProgressColor(wavesColor);
 
@@ -84,5 +91,21 @@ public class VoiceMessageView extends LinearLayout {
             e.printStackTrace();
         }
 
+    }
+
+    public void setPlayButton() {
+        if (isPlayButtonActive) return;
+
+        playButton.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_play));
+
+        isPlayButtonActive = true;
+    }
+
+    public void setPauseButton() {
+        if (!isPlayButtonActive) return;
+
+        playButton.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_pause));
+
+        isPlayButtonActive = false;
     }
 }

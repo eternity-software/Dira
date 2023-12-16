@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.ui.adapters.messages.views.viewholders.listenable.ListenableViewHolder;
+import com.diraapp.ui.adapters.messages.views.viewholders.listenable.VoiceViewHolder;
 import com.diraapp.utils.Logger;
 
 import java.io.File;
@@ -47,17 +48,25 @@ public class GlobalMediaPlayer {
         return isPaused;
     }
 
-    public void setCurrentProgress(float progress) {
+    public void setCurrentProgress(VoiceViewHolder viewHolder, float progress) {
         diraMediaPlayer.setProgress(progress);
         currentProgress = progress;
+
+        notifyStarted(viewHolder);
     }
 
     public void changePlyingMessage(@NonNull Message message, @NonNull File file, ListenableViewHolder viewHolder) {
-        changePlyingMessage(message, file, viewHolder, 0);
+        changePlyingMessage(message, file, viewHolder, 0, true);
+    }
+
+    public void changePlyingMessageWithoutClearing(@NonNull Message message, @NonNull File file,
+                                    ListenableViewHolder viewHolder, float progress) {
+        changePlyingMessage(message, file, viewHolder, progress, false);
     }
 
     public void changePlyingMessage(@NonNull Message message, @NonNull File file,
-                                    ListenableViewHolder viewHolder, float progress) {
+                                    ListenableViewHolder viewHolder, float progress,
+                                    boolean clearPrevious) {
 
         currentMessage = message;
         currentProgress = progress;
@@ -69,7 +78,8 @@ public class GlobalMediaPlayer {
                 diraMediaPlayer.stop();
             }
 
-            notifyClosed();
+            if (clearPrevious) notifyClosed();
+
             diraMediaPlayer.reset();
             diraMediaPlayer.setDataSource(file.getPath());
 
@@ -86,6 +96,7 @@ public class GlobalMediaPlayer {
 
                         if (currentProgress/10 == 1) {
                             notifyClosed();
+                            // looks like it doesn't work correctly with short voice messages
                             Logger.logDebug("GlobalMediaPlayer", "ended");
                             diraMediaPlayer.stop();
                         }
@@ -101,7 +112,7 @@ public class GlobalMediaPlayer {
                 }));
 
 
-                diraMediaPlayer.setProgress(currentProgress);
+                diraMediaPlayer.setProgress(currentProgress / 10);
                 diraMediaPlayer.start();
 
                 diraMediaPlayer.setOnPreparedListener(null);
@@ -119,7 +130,7 @@ public class GlobalMediaPlayer {
             Logger.logDebug("GlobalMediaPlayer", "paused");
             isPaused = true;
         } else {
-            changePlyingMessage(currentMessage, currentFile, null, currentProgress);
+            changePlyingMessage(currentMessage, currentFile, null, currentProgress, false);
             Logger.logDebug("GlobalMediaPlayer", "playing");
             isPaused = false;
         }
