@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.media.DiraMediaPlayer;
+import com.diraapp.ui.adapters.messages.views.viewholders.listenable.ListenableViewHolder;
 import com.diraapp.utils.Logger;
 
 import java.io.File;
@@ -46,10 +47,20 @@ public class GlobalMediaPlayer {
         return isPaused;
     }
 
-    public void changePlyingMessage(@NonNull Message message, @NonNull File file) {
+    public void setCurrentProgress(float progress) {
+        diraMediaPlayer.setProgress(progress);
+        currentProgress = progress;
+    }
+
+    public void changePlyingMessage(@NonNull Message message, @NonNull File file, ListenableViewHolder viewHolder) {
+        changePlyingMessage(message, file, viewHolder, 0);
+    }
+
+    public void changePlyingMessage(@NonNull Message message, @NonNull File file,
+                                    ListenableViewHolder viewHolder, float progress) {
 
         currentMessage = message;
-        currentProgress = 0;
+        currentProgress = progress;
         currentFile = file;
         isPaused = false;
 
@@ -57,26 +68,40 @@ public class GlobalMediaPlayer {
             if (diraMediaPlayer.isPlaying()) {
                 diraMediaPlayer.stop();
             }
+
+            notifyClosed();
             diraMediaPlayer.reset();
             diraMediaPlayer.setDataSource(file.getPath());
 
             diraMediaPlayer.prepareAsync();
 
             diraMediaPlayer.setOnPreparedListener((MediaPlayer mp) -> {
-                notifyStarted();
-                diraMediaPlayer.setOnProgressTick(() -> {
-                    new Handler(Looper.getMainLooper()).post(() -> {
-                        try {
-                            currentProgress = 10 * diraMediaPlayer.getProgress();
-                            notifyProgressChanged();
+                notifyStarted(viewHolder);
+                diraMediaPlayer.setOnProgressTick(() -> new Handler(Looper.getMainLooper()).post(() -> {
+                    try {
+                        currentProgress = 10 * diraMediaPlayer.getProgress();
+                        notifyProgressChanged();
 
-                            isPaused = !diraMediaPlayer.isPlaying();
+                        Logger.logDebug("GlobalMediaPlayer", "p = " + currentProgress);
 
-                            message.getSingleAttachment().setVoiceMessageStopProgress(currentProgress);
-                        } catch (Exception ignored) {
+                        if (currentProgress/10 == 1) {
+                            notifyClosed();
+                            Logger.logDebug("GlobalMediaPlayer", "ended");
+                            diraMediaPlayer.stop();
                         }
-                    });
-                });
+                        isPaused = !diraMediaPlayer.isPlaying();
+
+                        message.getSingleAttachment().setVoiceMessageStopProgress(currentProgress);
+
+                        if (isPaused) {
+                            diraMediaPlayer.setOnProgressTick(null);
+                        }
+                    } catch (Exception ignored) {
+                    }
+                }));
+
+
+                diraMediaPlayer.setProgress(currentProgress);
                 diraMediaPlayer.start();
 
                 diraMediaPlayer.setOnPreparedListener(null);
@@ -91,10 +116,11 @@ public class GlobalMediaPlayer {
 
         if (diraMediaPlayer.isPlaying()) {
             diraMediaPlayer.stop();
-            Logger.logDebug("ffffffffffffsssss", "paused");
+            Logger.logDebug("GlobalMediaPlayer", "paused");
             isPaused = true;
         } else {
-            diraMediaPlayer.start();
+            changePlyingMessage(currentMessage, currentFile, null, currentProgress);
+            Logger.logDebug("GlobalMediaPlayer", "playing");
             isPaused = false;
         }
         notifyPause();
@@ -117,27 +143,27 @@ public class GlobalMediaPlayer {
 
 
 
-    private void notifyStarted() {
+    private void notifyStarted(ListenableViewHolder viewHolder) {
         for (GlobalMediaPlayerListener listener: listeners) {
-            listener.onStart(currentMessage, currentFile);
+            listener.onGlobalMediaPlayerStart(currentMessage, currentFile, viewHolder);
         }
     }
 
     private void notifyProgressChanged() {
         for (GlobalMediaPlayerListener listener: listeners) {
-            listener.onProgressChanged(currentProgress, currentMessage);
+            listener.onGlobalMediaPlayerProgressChanged(currentProgress, currentMessage);
         }
     }
 
     private void notifyClosed() {
         for (GlobalMediaPlayerListener listener: listeners) {
-            listener.onClose();
+            listener.onGlobalMediaPlayerClose();
         }
     }
 
     private void notifyPause() {
         for (GlobalMediaPlayerListener listener: listeners) {
-            listener.onPauseClicked(isPaused, currentProgress);
+            listener.onGlobalMediaPlayerPauseClicked(isPaused, currentProgress);
         }
     }
 

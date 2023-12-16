@@ -1,16 +1,17 @@
 package com.diraapp.ui.singlemediaplayer;
 
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.ui.adapters.messages.views.viewholders.listenable.ListenableViewHolder;
 
 import java.io.File;
 
 public interface GlobalMediaPlayerListener {
 
-    void onPauseClicked(boolean isPaused, float progress);
+    void onGlobalMediaPlayerPauseClicked(boolean isPaused, float progress);
 
-    void onClose();
+    void onGlobalMediaPlayerClose();
 
-    void onStart(Message message, File file);
+    void onGlobalMediaPlayerStart(Message message, File file, ListenableViewHolder viewHolder);
 
-    void onProgressChanged(float progress, Message message);
+    void onGlobalMediaPlayerProgressChanged(float progress, Message message);
 }

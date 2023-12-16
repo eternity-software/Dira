@@ -82,6 +82,7 @@ import com.diraapp.ui.components.RecordComponentsController;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.viewswiper.ViewSwiper;
 import com.diraapp.ui.components.viewswiper.ViewSwiperListener;
+import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayer;
 import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayerListener;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
@@ -183,6 +184,7 @@ public class RoomActivity extends DiraActivity
 //        binding.recyclerView.getRecycledViewPool().setMaxRecycledViews(21, 4);
 
 
+        GlobalMediaPlayer.getInstance().registerListener(this);
 
 
         TextView nameView = findViewById(R.id.room_name);
@@ -416,6 +418,7 @@ public class RoomActivity extends DiraActivity
         presenter.detachView();
         UpdateProcessor.getInstance().removeProcessorListener(this);
         UserStatusHandler.getInstance().removeListener(this);
+        GlobalMediaPlayer.getInstance().removeListener(this);
         System.gc();
     }
 
@@ -1309,8 +1312,11 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public boolean isCurrentListeningAppeared(ListenableViewHolder viewHolder) {
-        if (viewHolder.getCurrentMessage().equals(currentListeningMessage)) {
+        if (currentListeningMessage == null) return false;
+
+        if (viewHolder.getCurrentMessage().getId().equals(currentListeningMessage.getId())) {
             currentListenableViewHolder = viewHolder;
+            Logger.logDebug("RoomActivity", "Current listenable has been found");
             return true;
         }
         return false;
@@ -1318,7 +1324,9 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public boolean isCurrentListeningDisappeared(ListenableViewHolder viewHolder) {
-        if (viewHolder.getCurrentMessage().equals(currentListeningMessage)) {
+        if (currentListeningMessage == null) return false;
+
+        if (viewHolder.getCurrentMessage().getId().equals(currentListeningMessage.getId())) {
             currentListenableViewHolder = null;
             return true;
         }
@@ -1372,14 +1380,14 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
-    public void onPauseClicked(boolean isPaused, float progress) {
+    public void onGlobalMediaPlayerPauseClicked(boolean isPaused, float progress) {
         if (currentListenableViewHolder == null) return;
 
         currentListenableViewHolder.pause(isPaused, progress);
     }
 
     @Override
-    public void onClose() {
+    public void onGlobalMediaPlayerClose() {
         if (currentListenableViewHolder == null) return;
 
         Message message = currentListenableViewHolder.getCurrentMessage();
@@ -1390,15 +1398,21 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
-    public void onStart(Message message, File file) {
-        if (currentListenableViewHolder == null) return;
+    public void onGlobalMediaPlayerStart(Message message, File file, ListenableViewHolder viewHolder) {
+        if (viewHolder != null) {
+            currentListenableViewHolder = viewHolder;
+        }
 
         currentListeningMessage = message;
+
+        if (currentListenableViewHolder == null) return;
+
+        currentListenableViewHolder.start();
         // hide bar
     }
 
     @Override
-    public void onProgressChanged(float progress, Message message) {
+    public void onGlobalMediaPlayerProgressChanged(float progress, Message message) {
         if (currentListenableViewHolder == null) return;
 
         if (!message.equals(currentListenableViewHolder.getCurrentMessage())) {

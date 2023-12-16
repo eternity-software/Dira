@@ -22,6 +22,7 @@ import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayer;
+import com.diraapp.utils.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,7 +96,7 @@ public class BubbleViewHolder extends ListenableViewHolder {
 
         bubblePlayer.setOnClickListener((View v) -> {
 
-            if (BuildConfig.DEBUG) bubblePlayer.showDebugLog();
+            //if (BuildConfig.DEBUG) bubblePlayer.showDebugLog();
 
             GlobalMediaPlayer global = GlobalMediaPlayer.getInstance();
             if (getState() == ListenableViewHolderState.PAUSED) {
@@ -103,9 +104,10 @@ public class BubbleViewHolder extends ListenableViewHolder {
             } else if (getState() == ListenableViewHolderState.PLAYING) {
                 global.onPaused();
             } else {
-                global.changePlyingMessage(getCurrentMessage(), file);
+                global.changePlyingMessage(getCurrentMessage(), file, this);
             }
 
+            getMessageAdapterContract().setNewCurrentListenableViewHolder(this);
         });
 
 //        bubblePlayer.setOnClickListener(v -> {
