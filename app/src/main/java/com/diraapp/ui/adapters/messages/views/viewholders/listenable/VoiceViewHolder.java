@@ -1,7 +1,6 @@
-package com.diraapp.ui.adapters.messages.views.viewholders;
+package com.diraapp.ui.adapters.messages.views.viewholders.listenable;
 
 import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,23 +14,20 @@ import androidx.annotation.NonNull;
 import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.requests.AttachmentListenedRequest;
-import com.diraapp.api.updates.AttachmentListenedUpdate;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.UnablePerformRequestException;
-import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.VoiceMessageView;
-import com.masoudss.lib.SeekBarOnProgressChanged;
+import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayer;
 import com.masoudss.lib.WaveformSeekBar;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
-public class VoiceViewHolder extends AttachmentViewHolder {
+public class VoiceViewHolder extends ListenableViewHolder {
 
     WaveformSeekBar waveformSeekBar;
     LinearLayout voiceLayout;
@@ -43,6 +39,47 @@ public class VoiceViewHolder extends AttachmentViewHolder {
                            boolean isSelfMessage) {
         super(itemView, messageAdapterContract, viewHolderManagerContract, isSelfMessage);
 
+    }
+
+    @Override
+    public void clearProgress(Attachment attachment, Message message) {
+        if (!isInitialized) return;
+
+        waveformSeekBar.setProgress(0);
+        setState(ListenableViewHolderState.UNSELECTED);
+
+        //play icon
+    }
+
+    @Override
+    public void setProgress(float progress) {
+        if (!isInitialized) return;
+
+        waveformSeekBar.setProgress(progress);
+    }
+
+    @Override
+    public void pause(boolean isPaused, float progress) {
+        if (!isInitialized) return;
+
+        if (isPaused) {
+            //play icon
+            waveformSeekBar.setProgress(progress);
+            setState(ListenableViewHolderState.PAUSED);
+        } else {
+            //pause icon
+            setState(ListenableViewHolderState.PLAYING);
+        }
+    }
+
+    @Override
+    public void start() {
+        if (!isInitialized) return;
+
+        waveformSeekBar.setProgress(0);
+
+        setState(ListenableViewHolderState.PLAYING);
+        //pause icon
     }
 
     @Override
@@ -91,61 +128,71 @@ public class VoiceViewHolder extends AttachmentViewHolder {
         waveformSeekBar.setProgress(attachment.getVoiceMessageStopProgress());
         voiceLayout.setVisibility(View.VISIBLE);
 
-        playButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                sendMessageListened(message);
-
-                try {
-                    DiraMediaPlayer diraMediaPlayer = getViewHolderManagerContract().getDiraMediaPlayer();
-                    if (diraMediaPlayer.isPlaying()) {
-                        diraMediaPlayer.stop();
-                    }
-                    diraMediaPlayer.reset();
-                    diraMediaPlayer.setDataSource(file.getPath());
-
-                    diraMediaPlayer.prepareAsync();
-
-                    diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mp) {
-                            diraMediaPlayer.start();
-                            waveformSeekBar.setOnProgressChanged(new SeekBarOnProgressChanged() {
-                                @Override
-                                public void onProgressChanged(@NonNull WaveformSeekBar waveformSeekBar, float v, boolean fromUser) {
-                                    if (fromUser) {
-                                        diraMediaPlayer.setProgress(v / 10);
-                                    }
-                                }
-                            });
-
-                            diraMediaPlayer.setOnProgressTick(new Runnable() {
-                                @Override
-                                public void run() {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            try {
-                                                float progress = 10 * diraMediaPlayer.getProgress();
-                                                waveformSeekBar.setProgress(progress);
-
-                                                attachment.setVoiceMessageStopProgress(progress);
-                                            } catch (Exception ignored) {
-                                            }
-                                        }
-                                    });
-                                }
-                            });
-
-
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        playButton.setOnClickListener((View v) -> {
+            GlobalMediaPlayer global = GlobalMediaPlayer.getInstance();
+            if (getState() == ListenableViewHolderState.PAUSED ||
+                getState() == ListenableViewHolderState.PLAYING) {
+                global.onPaused();
+            } else {
+                global.changePlyingMessage(getCurrentMessage(), file);
             }
         });
+
+//        playButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                sendMessageListened(message);
+//
+//                try {
+//                    DiraMediaPlayer diraMediaPlayer = getViewHolderManagerContract().getDiraMediaPlayer();
+//                    if (diraMediaPlayer.isPlaying()) {
+//                        diraMediaPlayer.stop();
+//                    }
+//                    diraMediaPlayer.reset();
+//                    diraMediaPlayer.setDataSource(file.getPath());
+//
+//                    diraMediaPlayer.prepareAsync();
+//
+//                    diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                        @Override
+//                        public void onPrepared(MediaPlayer mp) {
+//                            diraMediaPlayer.start();
+//                            waveformSeekBar.setOnProgressChanged(new SeekBarOnProgressChanged() {
+//                                @Override
+//                                public void onProgressChanged(@NonNull WaveformSeekBar waveformSeekBar, float v, boolean fromUser) {
+//                                    if (fromUser) {
+//                                        diraMediaPlayer.setProgress(v / 10);
+//                                    }
+//                                }
+//                            });
+//
+//                            diraMediaPlayer.setOnProgressTick(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            try {
+//                                                float progress = 10 * diraMediaPlayer.getProgress();
+//                                                waveformSeekBar.setProgress(progress);
+//
+//                                                attachment.setVoiceMessageStopProgress(progress);
+//                                            } catch (Exception ignored) {
+//                                            }
+//                                        }
+//                                    });
+//                                }
+//                            });
+//
+//
+//                        }
+//                    });
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
     }
 
     @Override

@@ -22,6 +22,7 @@ import com.diraapp.exceptions.LanguageParsingException;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.adapters.messages.views.BalloonMessageMenu;
+import com.diraapp.ui.adapters.messages.views.viewholders.listenable.ListenableViewHolder;
 import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.ui.adapters.ChatBackgroundAdapter;
 import com.diraapp.ui.adapters.ColorThemeAdapter;
@@ -237,6 +238,21 @@ public class ChatAppearanceActivity extends DiraActivity {
             @Override
             public boolean isMessageNeedBlink(String messageId) {
                 return false;
+            }
+
+            @Override
+            public boolean isCurrentListeningAppeared(ListenableViewHolder viewHolder) {
+                return false;
+            }
+
+            @Override
+            public boolean isCurrentListeningDisappeared(ListenableViewHolder viewHolder) {
+                return false;
+            }
+
+            @Override
+            public void setNewCurrentListenableViewHolder(ListenableViewHolder viewHolder) {
+
             }
         };
 

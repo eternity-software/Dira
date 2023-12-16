@@ -72,6 +72,7 @@ import com.diraapp.ui.adapters.messages.MessagesAdapter;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
 import com.diraapp.ui.adapters.messages.views.BalloonMessageMenu;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
+import com.diraapp.ui.adapters.messages.views.viewholders.listenable.ListenableViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.RoomViewHolderFactory;
 import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
@@ -81,6 +82,7 @@ import com.diraapp.ui.components.RecordComponentsController;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.viewswiper.ViewSwiper;
 import com.diraapp.ui.components.viewswiper.ViewSwiperListener;
+import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayerListener;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.SliderActivity;
@@ -99,7 +101,8 @@ import java.util.List;
 public class RoomActivity extends DiraActivity
         implements RoomActivityContract.View, ProcessorListener, UserStatusListener,
         RecordComponentsController.RecordListener, MessageAdapterContract,
-        FilePickerBottomSheet.MultiFilesListener, BalloonMessageMenu.BalloonMenuListener {
+        FilePickerBottomSheet.MultiFilesListener, BalloonMessageMenu.BalloonMenuListener,
+        GlobalMediaPlayerListener {
 
     public static final int SEND_FILE_CODE = 34234;
 
@@ -140,6 +143,10 @@ public class RoomActivity extends DiraActivity
     private int lastVisiblePosition = 0;
     private ViewSwiper viewSwiper;
 
+    private ListenableViewHolder currentListenableViewHolder;
+
+    private Message currentListeningMessage;
+
 
     public static void putRoomExtrasInIntent(Intent intent, String roomSecret, String roomName) {
         intent.putExtra(RoomSelectorActivity.PENDING_ROOM_SECRET, roomSecret);
@@ -174,6 +181,8 @@ public class RoomActivity extends DiraActivity
 
 //        binding.recyclerView.getRecycledViewPool().setMaxRecycledViews(1, 4);
 //        binding.recyclerView.getRecycledViewPool().setMaxRecycledViews(21, 4);
+
+
 
 
         TextView nameView = findViewById(R.id.room_name);
@@ -1299,6 +1308,29 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
+    public boolean isCurrentListeningAppeared(ListenableViewHolder viewHolder) {
+        if (viewHolder.getCurrentMessage().equals(currentListeningMessage)) {
+            currentListenableViewHolder = viewHolder;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isCurrentListeningDisappeared(ListenableViewHolder viewHolder) {
+        if (viewHolder.getCurrentMessage().equals(currentListeningMessage)) {
+            currentListenableViewHolder = null;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void setNewCurrentListenableViewHolder(ListenableViewHolder viewHolder) {
+        currentListenableViewHolder = viewHolder;
+    }
+
+    @Override
     public void onFirstMessageScrolled(Message message, int index) {
         presenter.loadMessagesBefore(message, index);
     }
@@ -1337,5 +1369,41 @@ public class RoomActivity extends DiraActivity
         } catch (UnablePerformRequestException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onPauseClicked(boolean isPaused, float progress) {
+        if (currentListenableViewHolder == null) return;
+
+        currentListenableViewHolder.pause(isPaused, progress);
+    }
+
+    @Override
+    public void onClose() {
+        if (currentListenableViewHolder == null) return;
+
+        Message message = currentListenableViewHolder.getCurrentMessage();
+        currentListenableViewHolder.clearProgress(message.getSingleAttachment(), message);
+
+        currentListeningMessage = null;
+        currentListenableViewHolder = null;
+    }
+
+    @Override
+    public void onStart(Message message, File file) {
+        if (currentListenableViewHolder == null) return;
+
+        currentListeningMessage = message;
+        // hide bar
+    }
+
+    @Override
+    public void onProgressChanged(float progress, Message message) {
+        if (currentListenableViewHolder == null) return;
+
+        if (!message.equals(currentListenableViewHolder.getCurrentMessage())) {
+            throw new RuntimeException("Wrong Listenable ViewHolder playing listenable message");
+        }
+        currentListenableViewHolder.setProgress(progress);
     }
 }

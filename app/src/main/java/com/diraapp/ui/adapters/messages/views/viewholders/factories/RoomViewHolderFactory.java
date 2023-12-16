@@ -3,10 +3,7 @@ package com.diraapp.ui.adapters.messages.views.viewholders.factories;
 import android.os.Build;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-
 import com.diraapp.BuildConfig;
-import com.diraapp.DiraApplication;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
@@ -14,18 +11,16 @@ import com.diraapp.exceptions.UnknownViewTypeException;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
-import com.diraapp.ui.adapters.messages.views.viewholders.BubbleViewHolder;
+import com.diraapp.ui.adapters.messages.views.viewholders.listenable.BubbleViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.EmojiMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.FileAttachmentViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.MediaViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.RoomUpdatesViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.TextMessageViewHolder;
-import com.diraapp.ui.adapters.messages.views.viewholders.VoiceViewHolder;
+import com.diraapp.ui.adapters.messages.views.viewholders.listenable.VoiceViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.groups.AttachmentGroupViewHolder;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.StringFormatter;
-
-import org.w3c.dom.Entity;
 
 import java.util.HashMap;
 

@@ -9,6 +9,7 @@ import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.ui.activities.DiraActivityListener;
 import com.diraapp.ui.adapters.messages.views.BalloonMessageMenu;
+import com.diraapp.ui.adapters.messages.views.viewholders.listenable.ListenableViewHolder;
 import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.ui.activities.PreparedActivity;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
@@ -53,4 +54,10 @@ public interface MessageAdapterContract {
     void onMessageDetached(Message message);
 
     boolean isMessageNeedBlink(String messageId);
+
+    boolean isCurrentListeningAppeared(ListenableViewHolder viewHolder);
+
+    boolean isCurrentListeningDisappeared(ListenableViewHolder viewHolder);
+
+    void setNewCurrentListenableViewHolder(ListenableViewHolder viewHolder);
 }

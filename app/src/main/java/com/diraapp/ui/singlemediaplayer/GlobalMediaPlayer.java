@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.media.DiraMediaPlayer;
+import com.diraapp.utils.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +36,14 @@ public class GlobalMediaPlayer {
         }
 
         return instance;
+    }
+
+    public float getCurrentProgress() {
+        return currentProgress;
+    }
+
+    public boolean isPaused() {
+        return isPaused;
     }
 
     public void changePlyingMessage(@NonNull Message message, @NonNull File file) {
@@ -68,6 +77,7 @@ public class GlobalMediaPlayer {
                         }
                     });
                 });
+                diraMediaPlayer.start();
 
                 diraMediaPlayer.setOnPreparedListener(null);
             });
@@ -81,6 +91,7 @@ public class GlobalMediaPlayer {
 
         if (diraMediaPlayer.isPlaying()) {
             diraMediaPlayer.stop();
+            Logger.logDebug("ffffffffffffsssss", "paused");
             isPaused = true;
         } else {
             diraMediaPlayer.start();
@@ -90,6 +101,7 @@ public class GlobalMediaPlayer {
     }
 
     public void onClose() {
+        // only for bar now
         if (diraMediaPlayer.isPlaying()) {
             diraMediaPlayer.stop();
         }
@@ -125,7 +137,7 @@ public class GlobalMediaPlayer {
 
     private void notifyPause() {
         for (GlobalMediaPlayerListener listener: listeners) {
-            listener.onPauseClicked(isPaused);
+            listener.onPauseClicked(isPaused, currentProgress);
         }
     }
 
@@ -134,5 +146,13 @@ public class GlobalMediaPlayer {
             diraMediaPlayer.release();
         }
         instance = null;
+    }
+
+    public void registerListener(GlobalMediaPlayerListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeListener(GlobalMediaPlayerListener listener) {
+        listeners.remove(listener);
     }
 }

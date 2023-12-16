@@ -1,4 +1,4 @@
-package com.diraapp.ui.adapters.messages.views.viewholders;
+package com.diraapp.ui.adapters.messages.views.viewholders.listenable;
 
 import android.media.MediaPlayer;
 import android.view.View;
@@ -21,11 +21,12 @@ import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
+import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayer;
 
 import java.io.File;
 import java.io.IOException;
 
-public class BubbleViewHolder extends AttachmentViewHolder {
+public class BubbleViewHolder extends ListenableViewHolder {
 
     private DiraVideoPlayer bubblePlayer;
     private BubbleMessageView bubbleContainer;
@@ -42,6 +43,46 @@ public class BubbleViewHolder extends AttachmentViewHolder {
     }
 
     @Override
+    public void clearProgress(Attachment attachment, Message message) {
+        if (!isInitialized) return;
+
+        setState(ListenableViewHolderState.UNSELECTED);
+        onAttachmentLoaded(attachment, currentMediaFile, message);
+    }
+
+    @Override
+    public void setProgress(float progress) {
+        if (!isInitialized) return;
+
+        //bubblePlayer.setProgress(progress);
+    }
+
+    @Override
+    public void pause(boolean isPaused, float progress) {
+        if (!isInitialized) return;
+
+        if (isPaused) {
+            bubblePlayer.setProgress(progress);
+            bubblePlayer.pause();
+            setState(ListenableViewHolderState.PAUSED);
+        } else {
+            bubblePlayer.play();
+            bubblePlayer.setSpeed(1f);
+            bubblePlayer.setProgress(progress);
+            setState(ListenableViewHolderState.PLAYING);
+        }
+    }
+
+    @Override
+    public void start() {
+        if (!isInitialized) return;
+
+        bubblePlayer.setSpeed(1f);
+        bubblePlayer.setProgress(0);
+        setState(ListenableViewHolderState.PLAYING);
+    }
+
+    @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
         if (file == null) return;
         bubblePlayer.play(file.getPath());
@@ -52,38 +93,53 @@ public class BubbleViewHolder extends AttachmentViewHolder {
             e.printStackTrace();
         }
 
-        bubblePlayer.setOnClickListener(v -> {
-            sendMessageListened(message);
-
-            DiraMediaPlayer diraMediaPlayer = getViewHolderManagerContract().getDiraMediaPlayer();
+        bubblePlayer.setOnClickListener((View v) -> {
 
             if (BuildConfig.DEBUG) bubblePlayer.showDebugLog();
 
-            try {
-                if (diraMediaPlayer.isPlaying()) {
-                    diraMediaPlayer.stop();
-                }
-                diraMediaPlayer.reset();
-                diraMediaPlayer.setDataSource(file.getPath());
-
-                diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mp) {
-
-                        diraMediaPlayer.start();
-                        //timeText.setText(AppStorage.getStringSize(attachment.getSize()));
-                        ((DiraVideoPlayer) v).setSpeed(1f);
-                        ((DiraVideoPlayer) v).setProgress(0);
-                        diraMediaPlayer.setOnPreparedListener(null);
-
-                    }
-                });
-                diraMediaPlayer.prepareAsync();
-            } catch (IOException e) {
-                e.printStackTrace();
+            GlobalMediaPlayer global = GlobalMediaPlayer.getInstance();
+            if (getState() == ListenableViewHolderState.PAUSED) {
+                global.onPaused();
+            } else if (getState() == ListenableViewHolderState.PLAYING) {
+                global.onPaused();
+            } else {
+                global.changePlyingMessage(getCurrentMessage(), file);
             }
 
         });
+
+//        bubblePlayer.setOnClickListener(v -> {
+//            sendMessageListened(message);
+//
+//            DiraMediaPlayer diraMediaPlayer = getViewHolderManagerContract().getDiraMediaPlayer();
+//
+//            if (BuildConfig.DEBUG) bubblePlayer.showDebugLog();
+//
+//            try {
+//                if (diraMediaPlayer.isPlaying()) {
+//                    diraMediaPlayer.stop();
+//                }
+//                diraMediaPlayer.reset();
+//                diraMediaPlayer.setDataSource(file.getPath());
+//
+//                diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                    @Override
+//                    public void onPrepared(MediaPlayer mp) {
+//
+//                        diraMediaPlayer.start();
+//                        //timeText.setText(AppStorage.getStringSize(attachment.getSize()));
+//                        ((DiraVideoPlayer) v).setSpeed(1f);
+//                        ((DiraVideoPlayer) v).setProgress(0);
+//                        diraMediaPlayer.setOnPreparedListener(null);
+//
+//                    }
+//                });
+//                diraMediaPlayer.prepareAsync();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//        });
     }
 
     @Override

@@ -6,7 +6,7 @@ import java.io.File;
 
 public interface GlobalMediaPlayerListener {
 
-    void onPauseClicked(boolean isPaused);
+    void onPauseClicked(boolean isPaused, float progress);
 
     void onClose();
 
