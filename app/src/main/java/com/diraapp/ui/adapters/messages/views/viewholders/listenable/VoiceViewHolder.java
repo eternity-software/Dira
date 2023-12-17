@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 
 import com.diraapp.BuildConfig;
 import com.diraapp.R;
@@ -19,7 +18,6 @@ import com.diraapp.api.requests.AttachmentListenedRequest;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.UnablePerformRequestException;
-import com.diraapp.res.Theme;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
@@ -49,7 +47,7 @@ public class VoiceViewHolder extends ListenableViewHolder {
     }
 
     @Override
-    public void clearProgress(Attachment attachment, Message message) {
+    public void clearProgress() {
         if (!isInitialized) return;
 
         waveformSeekBar.setProgress(0);
@@ -90,7 +88,6 @@ public class VoiceViewHolder extends ListenableViewHolder {
         if (!isInitialized) return;
 
         waveformSeekBar.setProgress(GlobalMediaPlayer.getInstance().getCurrentProgress());
-        getMessageAdapterContract().setNewCurrentListenableViewHolder(this);
 
         setState(ListenableViewHolderState.PLAYING);
         //pause icon
@@ -151,12 +148,11 @@ public class VoiceViewHolder extends ListenableViewHolder {
 
             sendMessageListened(message);
 
-            GlobalMediaPlayer global = GlobalMediaPlayer.getInstance();
             if (getState() == ListenableViewHolderState.PAUSED ||
                 getState() == ListenableViewHolderState.PLAYING) {
-                global.onPaused();
+                getMessageAdapterContract().currentListenablePaused(this);
             } else {
-                global.changePlyingMessage(getCurrentMessage(), file, this);
+                getMessageAdapterContract().currentListenableStarted(this, file, 0);
             }
         });
 
@@ -171,13 +167,11 @@ public class VoiceViewHolder extends ListenableViewHolder {
                     if (!getMessageAdapterContract().
                             isCurrentListeningAppeared(VoiceViewHolder.this)) {
 
-                        GlobalMediaPlayer.getInstance().
-                                changePlyingMessage(getCurrentMessage(), file,
-                                        VoiceViewHolder.this, v, true);
+                        getMessageAdapterContract().currentListenableStarted(
+                                VoiceViewHolder.this, file, v);
                     } else {
-                        GlobalMediaPlayer.getInstance().
-                                changePlyingMessageWithoutClearing(getCurrentMessage(), file,
-                                        VoiceViewHolder.this, v);
+                        getMessageAdapterContract().currentListenableProgressChangedByUser(
+                                VoiceViewHolder.this, file, v);
                     }
 
                 }
@@ -276,8 +270,7 @@ public class VoiceViewHolder extends ListenableViewHolder {
     private void clearItem() {
         playButton.setOnClickListener((View v) -> {});
 
-        clearProgress(getCurrentMessage().getSingleAttachment(), getCurrentMessage());
-
+        clearProgress();
     }
 
     private void sendMessageListened(Message message) {

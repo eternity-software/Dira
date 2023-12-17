@@ -16,6 +16,7 @@ import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.utils.CacheUtils;
 
+import java.io.File;
 import java.util.HashMap;
 
 /**
@@ -59,5 +60,7 @@ public interface MessageAdapterContract {
 
     boolean isCurrentListeningDisappeared(ListenableViewHolder viewHolder);
 
-    void setNewCurrentListenableViewHolder(ListenableViewHolder viewHolder);
+    void currentListenableStarted(ListenableViewHolder viewHolder, File file, float progress);
+    void currentListenablePaused(ListenableViewHolder viewHolder);
+    void currentListenableProgressChangedByUser(ListenableViewHolder viewHolder, File file, float progress);
 }

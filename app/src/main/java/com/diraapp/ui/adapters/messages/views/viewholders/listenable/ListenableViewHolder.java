@@ -11,8 +11,6 @@ import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.adapters.messages.views.viewholders.AttachmentViewHolder;
 import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayer;
 
-import java.io.File;
-
 public abstract class ListenableViewHolder extends AttachmentViewHolder {
 
     private ListenableViewHolderState state = ListenableViewHolderState.UNSELECTED;
@@ -21,7 +19,7 @@ public abstract class ListenableViewHolder extends AttachmentViewHolder {
         super(itemView, messageAdapterContract, viewHolderManagerContract, isSelfMessage);
     }
 
-    abstract public void clearProgress(Attachment attachment, Message message);
+    abstract public void clearProgress();
 
     abstract public void setProgress(float progress);
 
@@ -32,16 +30,7 @@ public abstract class ListenableViewHolder extends AttachmentViewHolder {
     @Override
     public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
-        if (getMessageAdapterContract().isCurrentListeningAppeared(this)) {
-            if (GlobalMediaPlayer.getInstance().isPaused()) {
-                state = ListenableViewHolderState.PAUSED;
-            } else {
-                state = ListenableViewHolderState.PLAYING;
-            }
-            return;
-        }
-
-        state = ListenableViewHolderState.UNSELECTED;
+        initStateOnAppearance();
     }
 
     @Override
@@ -51,9 +40,7 @@ public abstract class ListenableViewHolder extends AttachmentViewHolder {
         if (!isInitialized) return;
         if (getCurrentMessage() == null) return;
 
-        if (getMessageAdapterContract().isCurrentListeningDisappeared(this)) {
-            getMessageAdapterContract().setNewCurrentListenableViewHolder(null);
-        }
+        getMessageAdapterContract().isCurrentListeningDisappeared(this);
 
     }
 
@@ -61,32 +48,33 @@ public abstract class ListenableViewHolder extends AttachmentViewHolder {
     public void onViewDetached() {
         super.onViewDetached();
         state = ListenableViewHolderState.UNSELECTED;
-        if (!isInitialized) return;
-        if (getCurrentMessage() == null) return;
+        if (!isInitialized || getCurrentMessage() == null) {
+            return;
+        }
 
         if (getMessageAdapterContract().isCurrentListeningDisappeared(this)) {
-            getMessageAdapterContract().setNewCurrentListenableViewHolder(null);
+            clearProgress();
         }
+
     }
 
     @Override
     public void onViewAttached() {
         super.onViewAttached();
-        if (!isInitialized) return;
-        if (getCurrentMessage() == null) return;
-
-        if (getMessageAdapterContract().isCurrentListeningAppeared(this)) {
-            if (GlobalMediaPlayer.getInstance().isPaused()) {
-                state = ListenableViewHolderState.PAUSED;
-            } else {
-                state = ListenableViewHolderState.PLAYING;
-            }
-
+        if (!isInitialized || getCurrentMessage() == null) {
+            state = ListenableViewHolderState.UNSELECTED;
             return;
         }
 
+        initStateOnAppearance();
+    }
+
+    private void initStateOnAppearance() {
+        if (getMessageAdapterContract().isCurrentListeningAppeared(this)) return;
+
         state = ListenableViewHolderState.UNSELECTED;
     }
+
 
     public ListenableViewHolderState getState() {
         return state;

@@ -11,7 +11,7 @@ public interface GlobalMediaPlayerListener {
 
     void onGlobalMediaPlayerClose();
 
-    void onGlobalMediaPlayerStart(Message message, File file, ListenableViewHolder viewHolder);
+    void onGlobalMediaPlayerStart(Message message, File file);
 
     void onGlobalMediaPlayerProgressChanged(float progress, Message message);
 }

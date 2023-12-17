@@ -48,25 +48,12 @@ public class GlobalMediaPlayer {
         return isPaused;
     }
 
-    public void setCurrentProgress(VoiceViewHolder viewHolder, float progress) {
-        diraMediaPlayer.setProgress(progress);
-        currentProgress = progress;
-
-        notifyStarted(viewHolder);
+    public Message getCurrentMessage() {
+        return currentMessage;
     }
 
-    public void changePlyingMessage(@NonNull Message message, @NonNull File file, ListenableViewHolder viewHolder) {
-        changePlyingMessage(message, file, viewHolder, 0, true);
-    }
 
-    public void changePlyingMessageWithoutClearing(@NonNull Message message, @NonNull File file,
-                                    ListenableViewHolder viewHolder, float progress) {
-        changePlyingMessage(message, file, viewHolder, progress, false);
-    }
-
-    public void changePlyingMessage(@NonNull Message message, @NonNull File file,
-                                    ListenableViewHolder viewHolder, float progress,
-                                    boolean clearPrevious) {
+    public void changePlyingMessage(@NonNull Message message, @NonNull File file, float progress) {
 
         currentMessage = message;
         currentProgress = progress;
@@ -78,15 +65,13 @@ public class GlobalMediaPlayer {
                 diraMediaPlayer.stop();
             }
 
-            if (clearPrevious) notifyClosed();
-
             diraMediaPlayer.reset();
             diraMediaPlayer.setDataSource(file.getPath());
 
             diraMediaPlayer.prepareAsync();
 
             diraMediaPlayer.setOnPreparedListener((MediaPlayer mp) -> {
-                notifyStarted(viewHolder);
+                notifyStarted();
                 diraMediaPlayer.setOnProgressTick(() -> new Handler(Looper.getMainLooper()).post(() -> {
                     try {
                         currentProgress = 10 * diraMediaPlayer.getProgress();
@@ -94,12 +79,6 @@ public class GlobalMediaPlayer {
 
                         Logger.logDebug("GlobalMediaPlayer", "p = " + currentProgress);
 
-                        if (currentProgress/10 == 1) {
-                            notifyClosed();
-                            // looks like it doesn't work correctly with short voice messages
-                            Logger.logDebug("GlobalMediaPlayer", "ended");
-                            diraMediaPlayer.stop();
-                        }
                         isPaused = !diraMediaPlayer.isPlaying();
 
                         message.getSingleAttachment().setVoiceMessageStopProgress(currentProgress);
@@ -110,6 +89,17 @@ public class GlobalMediaPlayer {
                     } catch (Exception ignored) {
                     }
                 }));
+
+                diraMediaPlayer.setOnCompletionListener((MediaPlayer mediaPlayer) -> {
+                    currentMessage = null;
+                    currentProgress = 0;
+                    isPaused = true;
+                    currentFile = null;
+                    diraMediaPlayer.stop();
+                    notifyClosed();
+                    diraMediaPlayer.setOnProgressTick(null);
+                    diraMediaPlayer.setOnCompletionListener(null);
+                });
 
 
                 diraMediaPlayer.setProgress(currentProgress / 10);
@@ -130,7 +120,7 @@ public class GlobalMediaPlayer {
             Logger.logDebug("GlobalMediaPlayer", "paused");
             isPaused = true;
         } else {
-            changePlyingMessage(currentMessage, currentFile, null, currentProgress, false);
+            changePlyingMessage(currentMessage, currentFile, currentProgress);
             Logger.logDebug("GlobalMediaPlayer", "playing");
             isPaused = false;
         }
@@ -154,9 +144,9 @@ public class GlobalMediaPlayer {
 
 
 
-    private void notifyStarted(ListenableViewHolder viewHolder) {
+    private void notifyStarted() {
         for (GlobalMediaPlayerListener listener: listeners) {
-            listener.onGlobalMediaPlayerStart(currentMessage, currentFile, viewHolder);
+            listener.onGlobalMediaPlayerStart(currentMessage, currentFile);
         }
     }
 

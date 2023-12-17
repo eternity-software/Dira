@@ -97,6 +97,7 @@ public class VoiceMessageView extends LinearLayout {
         if (isPlayButtonActive) return;
 
         playButton.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_play));
+        playButton.setColorFilter(playButtonColor);
 
         isPlayButtonActive = true;
     }
@@ -105,6 +106,7 @@ public class VoiceMessageView extends LinearLayout {
         if (!isPlayButtonActive) return;
 
         playButton.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_pause));
+        playButton.setColorFilter(playButtonColor);
 
         isPlayButtonActive = false;
     }

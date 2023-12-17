@@ -523,6 +523,10 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
         return state;
     }
 
+    public boolean isPlaying() {
+        return state == DiraVideoPlayerState.PLAYING;
+    }
+
 
     @Override
     public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {

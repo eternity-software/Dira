@@ -1,6 +1,5 @@
 package com.diraapp.ui.adapters.messages.views.viewholders.listenable;
 
-import android.media.MediaPlayer;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -8,14 +7,12 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
-import com.diraapp.BuildConfig;
 import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.requests.AttachmentListenedRequest;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.exceptions.UnablePerformRequestException;
-import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
@@ -25,7 +22,6 @@ import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayer;
 import com.diraapp.utils.Logger;
 
 import java.io.File;
-import java.io.IOException;
 
 public class BubbleViewHolder extends ListenableViewHolder {
 
@@ -44,11 +40,13 @@ public class BubbleViewHolder extends ListenableViewHolder {
     }
 
     @Override
-    public void clearProgress(Attachment attachment, Message message) {
+    public void clearProgress() {
         if (!isInitialized) return;
 
         setState(ListenableViewHolderState.UNSELECTED);
-        onAttachmentLoaded(attachment, currentMediaFile, message);
+        if (getCurrentMessage() == null) return;
+        onAttachmentLoaded(
+                getCurrentMessage().getSingleAttachment(), currentMediaFile, getCurrentMessage());
     }
 
     @Override
@@ -63,11 +61,13 @@ public class BubbleViewHolder extends ListenableViewHolder {
         if (!isInitialized) return;
 
         if (isPaused) {
-            bubblePlayer.setProgress(progress / 10);
             bubblePlayer.pause();
+            bubblePlayer.setProgress(progress / 10);
             setState(ListenableViewHolderState.PAUSED);
         } else {
-            bubblePlayer.play();
+            if (!bubblePlayer.isPlaying()) {
+                bubblePlayer.play();
+            }
             bubblePlayer.setSpeed(1f);
             bubblePlayer.setProgress(progress / 10);
             setState(ListenableViewHolderState.PLAYING);
@@ -100,16 +100,12 @@ public class BubbleViewHolder extends ListenableViewHolder {
 
             //if (BuildConfig.DEBUG) bubblePlayer.showDebugLog();
 
-            GlobalMediaPlayer global = GlobalMediaPlayer.getInstance();
-            if (getState() == ListenableViewHolderState.PAUSED) {
-                global.onPaused();
-            } else if (getState() == ListenableViewHolderState.PLAYING) {
-                global.onPaused();
-            } else {
-                global.changePlyingMessage(getCurrentMessage(), file, this);
+            if (getState() == ListenableViewHolderState.PAUSED ||
+                    getState() == ListenableViewHolderState.PLAYING) {
+                getMessageAdapterContract().currentListenablePaused(this);
+            }  else {
+                getMessageAdapterContract().currentListenableStarted(this, file, 0);
             }
-
-            getMessageAdapterContract().setNewCurrentListenableViewHolder(this);
         });
 
 //        bubblePlayer.setOnClickListener(v -> {

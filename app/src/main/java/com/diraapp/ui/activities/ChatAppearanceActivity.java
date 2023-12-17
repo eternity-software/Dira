@@ -40,6 +40,7 @@ import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.utils.CacheUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -251,7 +252,17 @@ public class ChatAppearanceActivity extends DiraActivity {
             }
 
             @Override
-            public void setNewCurrentListenableViewHolder(ListenableViewHolder viewHolder) {
+            public void currentListenableStarted(ListenableViewHolder viewHolder, File file, float progress) {
+
+            }
+
+            @Override
+            public void currentListenablePaused(ListenableViewHolder viewHolder) {
+
+            }
+
+            @Override
+            public void currentListenableProgressChangedByUser(ListenableViewHolder viewHolder, File file, float progress) {
 
             }
         };
