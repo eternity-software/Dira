@@ -176,10 +176,14 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
         });
     }
 
+    public void play() {
+        play(() -> {});
+    }
+
     /**
      * Ask player to play (only if playing task existed)
      */
-    public void play() {
+    public void play(Runnable onStarted) {
         if (mediaPlayer == null) return;
         if (state != DiraVideoPlayerState.PREPARING && state != DiraVideoPlayerState.PAUSED)
             return;
@@ -193,6 +197,10 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
                     setSpeed(0.3f);
                 }
                 notifyStateChanged(DiraVideoPlayerState.PLAYING);
+
+                if (onStarted != null) {
+                    onStarted.run();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

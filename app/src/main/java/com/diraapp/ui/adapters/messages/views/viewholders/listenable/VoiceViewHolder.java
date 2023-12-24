@@ -74,12 +74,12 @@ public class VoiceViewHolder extends ListenableViewHolder {
             waveformSeekBar.setProgress(progress);
             setState(ListenableViewHolderState.PAUSED);
             voiceView.setPlayButton();
-            Logger.logDebug("VoiceMessageViewHolder", "Paused");
+            Logger.logDebug("VoiceMessageViewHolder", "VoiceMessageViewHolder - Paused");
         } else {
             //pause icon
             setState(ListenableViewHolderState.PLAYING);
             voiceView.setPauseButton();
-            Logger.logDebug("VoiceMessageViewHolder", "Playing");
+            Logger.logDebug("VoiceMessageViewHolder", "VoiceMessageViewHolder - Playing");
         }
     }
 
@@ -257,9 +257,11 @@ public class VoiceViewHolder extends ListenableViewHolder {
     public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
 
-        voiceView.setPlayButton();
+        if (getState() != ListenableViewHolderState.PLAYING) {
+            clearItem();
+        }
+
         updateListeningIndicator(message.getSingleAttachment());
-        clearItem();
 
         if (!AttachmentDownloader.isAttachmentSaving(message.getSingleAttachment()))
             onAttachmentLoaded(message.getSingleAttachment(),

@@ -1330,7 +1330,9 @@ public class RoomActivity extends DiraActivity
 
         if (viewHolder.getCurrentMessage().getId().equals(
                 GlobalMediaPlayer.getInstance().getCurrentMessage().getId())) {
+
             currentListenableViewHolder = null;
+            Logger.logDebug("RoomActivity", "Current listenable has been recycled");
             return true;
         }
         return false;
@@ -1437,7 +1439,7 @@ public class RoomActivity extends DiraActivity
             return;
         }
 
-        if (!message.equals(currentListenableViewHolder.getCurrentMessage())) {
+        if (!message.getId().equals(currentListenableViewHolder.getCurrentMessage().getId())) {
             throw new RuntimeException("Wrong Listenable ViewHolder playing listenable message");
         }
         currentListenableViewHolder.setProgress(progress);

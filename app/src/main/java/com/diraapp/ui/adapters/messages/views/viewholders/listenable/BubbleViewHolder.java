@@ -1,5 +1,7 @@
 package com.diraapp.ui.adapters.messages.views.viewholders.listenable;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -65,11 +67,12 @@ public class BubbleViewHolder extends ListenableViewHolder {
             bubblePlayer.setProgress(progress / 10);
             setState(ListenableViewHolderState.PAUSED);
         } else {
-            if (!bubblePlayer.isPlaying()) {
-                bubblePlayer.play();
-            }
-            bubblePlayer.setSpeed(1f);
-            bubblePlayer.setProgress(progress / 10);
+
+            bubblePlayer.play(() -> new Handler(Looper.getMainLooper()).post(() -> {
+                bubblePlayer.setSpeed(1f);
+                bubblePlayer.setProgress(progress / 10);
+            }));
+
             setState(ListenableViewHolderState.PLAYING);
         }
     }

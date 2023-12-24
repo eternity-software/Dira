@@ -79,9 +79,9 @@ public class VoiceMessageView extends LinearLayout {
                 indicatorColor = Theme.getColor(getContext(), R.color.self_message_voice_play);
             }
 
-
             playButton.getBackground().setColorFilter(playColorBackground, PorterDuff.Mode.SRC_ATOP);
             playButton.setColorFilter(playButtonColor);
+
             bar.setWaveBackgroundColor(waveBackgroundColor);
             bar.setWaveProgressColor(wavesColor);
 

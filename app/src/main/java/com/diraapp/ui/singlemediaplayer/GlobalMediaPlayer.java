@@ -86,7 +86,8 @@ public class GlobalMediaPlayer {
                         if (isPaused) {
                             diraMediaPlayer.setOnProgressTick(null);
                         }
-                    } catch (Exception ignored) {
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }));
 
