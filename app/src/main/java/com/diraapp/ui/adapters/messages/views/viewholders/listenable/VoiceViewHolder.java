@@ -54,7 +54,6 @@ public class VoiceViewHolder extends ListenableViewHolder {
         setState(ListenableViewHolderState.UNSELECTED);
 
         voiceView.setPlayButton();
-        //play icon
     }
 
     @Override
@@ -70,13 +69,11 @@ public class VoiceViewHolder extends ListenableViewHolder {
         if (!isInitialized) return;
 
         if (isPaused) {
-            //play icon
-            waveformSeekBar.setProgress(progress);
             setState(ListenableViewHolderState.PAUSED);
+            waveformSeekBar.setProgress(progress);
             voiceView.setPlayButton();
             Logger.logDebug("VoiceMessageViewHolder", "VoiceMessageViewHolder - Paused");
         } else {
-            //pause icon
             setState(ListenableViewHolderState.PLAYING);
             voiceView.setPauseButton();
             Logger.logDebug("VoiceMessageViewHolder", "VoiceMessageViewHolder - Playing");
@@ -141,7 +138,7 @@ public class VoiceViewHolder extends ListenableViewHolder {
         });
 
         waveformSeekBar.setVisibility(View.VISIBLE);
-        waveformSeekBar.setProgress(attachment.getVoiceMessageStopProgress());
+        //waveformSeekBar.setProgress(attachment.getVoiceMessageStopProgress());
         voiceLayout.setVisibility(View.VISIBLE);
 
         playButton.setOnClickListener((View v) -> {
@@ -257,7 +254,7 @@ public class VoiceViewHolder extends ListenableViewHolder {
     public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
 
-        if (getState() != ListenableViewHolderState.PLAYING) {
+        if (getState() == ListenableViewHolderState.UNSELECTED) {
             clearItem();
         }
 

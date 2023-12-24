@@ -185,8 +185,9 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
      */
     public void play(Runnable onStarted) {
         if (mediaPlayer == null) return;
-        if (state != DiraVideoPlayerState.PREPARING && state != DiraVideoPlayerState.PAUSED)
+        if (state != DiraVideoPlayerState.PREPARING && state != DiraVideoPlayerState.PAUSED) {
             return;
+        }
         threadPoolExecutor.execute(() -> {
             try {
 

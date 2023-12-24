@@ -1435,7 +1435,7 @@ public class RoomActivity extends DiraActivity
     @Override
     public void onGlobalMediaPlayerProgressChanged(float progress, Message message) {
         if (currentListenableViewHolder == null) {
-            Logger.logDebug("RoomActivity", "1111111222222222256");
+            Logger.logDebug("RoomActivity", "currentListenableViewHolder = null!");
             return;
         }
 

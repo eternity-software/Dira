@@ -30,6 +30,8 @@ public class BubbleViewHolder extends ListenableViewHolder {
     private DiraVideoPlayer bubblePlayer;
     private BubbleMessageView bubbleContainer;
 
+    private float lastProgress = 0;
+
     private File currentMediaFile;
 
     public BubbleViewHolder(@NonNull ViewGroup itemView,
@@ -45,7 +47,7 @@ public class BubbleViewHolder extends ListenableViewHolder {
     public void clearProgress() {
         if (!isInitialized) return;
 
-        setState(ListenableViewHolderState.UNSELECTED);
+        clearItem();
         if (getCurrentMessage() == null) return;
         onAttachmentLoaded(
                 getCurrentMessage().getSingleAttachment(), currentMediaFile, getCurrentMessage());
@@ -63,17 +65,18 @@ public class BubbleViewHolder extends ListenableViewHolder {
         if (!isInitialized) return;
 
         if (isPaused) {
+            setState(ListenableViewHolderState.PAUSED);
             bubblePlayer.pause();
             bubblePlayer.setProgress(progress / 10);
-            setState(ListenableViewHolderState.PAUSED);
         } else {
-
+            setState(ListenableViewHolderState.PLAYING);
+            lastProgress = progress / 10;
             bubblePlayer.play(() -> new Handler(Looper.getMainLooper()).post(() -> {
                 bubblePlayer.setSpeed(1f);
-                bubblePlayer.setProgress(progress / 10);
+                bubblePlayer.setProgress(lastProgress);
+                lastProgress = 0;
             }));
 
-            setState(ListenableViewHolderState.PLAYING);
         }
     }
 
@@ -81,6 +84,7 @@ public class BubbleViewHolder extends ListenableViewHolder {
     public void start() {
         if (!isInitialized) return;
 
+        lastProgress = 0;
         bubblePlayer.setSpeed(1f);
         bubblePlayer.setProgress(GlobalMediaPlayer.getInstance().getCurrentProgress() / 10);
         setState(ListenableViewHolderState.PLAYING);
@@ -89,7 +93,15 @@ public class BubbleViewHolder extends ListenableViewHolder {
     @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
         if (file == null) return;
-        bubblePlayer.play(file.getPath());
+
+        if (getState() == ListenableViewHolderState.UNSELECTED) {
+            bubblePlayer.play(file.getPath());
+        }
+
+        if (lastProgress != 0) {
+            bubblePlayer.setProgress(lastProgress);
+            bubblePlayer.setSpeed(1f);
+        }
 
         try {
             //loading.setVisibility(View.GONE);
@@ -165,7 +177,7 @@ public class BubbleViewHolder extends ListenableViewHolder {
     public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
         if (message.getAttachments().size() == 0) return;
-        bubblePlayer.reset();
+        if (getState() == ListenableViewHolderState.UNSELECTED) clearItem();
 
         updateListeningIndicator(message.getSingleAttachment());
 
@@ -176,7 +188,7 @@ public class BubbleViewHolder extends ListenableViewHolder {
         if (!AttachmentDownloader.isAttachmentSaving(bubbleAttachment))
             onAttachmentLoaded(bubbleAttachment,
                     currentMediaFile, message);
-
+        //
     }
 
     @Override
@@ -184,6 +196,7 @@ public class BubbleViewHolder extends ListenableViewHolder {
         super.onViewRecycled();
         if (!isInitialized) return;
         bubblePlayer.stop();
+        lastProgress = 0;
     }
 
     @Override
@@ -191,13 +204,21 @@ public class BubbleViewHolder extends ListenableViewHolder {
         super.onViewDetached();
         if (!isInitialized) return;
         bubblePlayer.pause();
+        lastProgress = 0;
     }
 
     @Override
     public void onViewAttached() {
         super.onViewAttached();
         if (!isInitialized | currentMediaFile == null) return;
-        bubblePlayer.play(currentMediaFile.getPath());
+        if (getState() == ListenableViewHolderState.UNSELECTED) {
+            clearProgress();
+        }
+
+        if (lastProgress != 0) {
+            bubblePlayer.setProgress(lastProgress);
+            bubblePlayer.setSpeed(1f);
+        }
     }
 
     private void sendMessageListened(Message message) {
@@ -229,5 +250,11 @@ public class BubbleViewHolder extends ListenableViewHolder {
         } else {
             indicator.setVisibility(View.INVISIBLE);
         }
+    }
+
+    private void clearItem() {
+        lastProgress = 0;
+        bubblePlayer.reset();
+        setState(ListenableViewHolderState.UNSELECTED);
     }
 }
