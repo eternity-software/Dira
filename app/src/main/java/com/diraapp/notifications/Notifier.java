@@ -87,7 +87,10 @@ public class Notifier {
 
             PendingIntent intent;
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                intent = PendingIntent.getActivity(context, 0,
+                        notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 intent = PendingIntent.getActivity(context, 0,
                         notificationIntent, 0);
             } else {

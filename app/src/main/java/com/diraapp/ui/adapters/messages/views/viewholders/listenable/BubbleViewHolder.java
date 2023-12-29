@@ -98,11 +98,6 @@ public class BubbleViewHolder extends ListenableViewHolder {
             bubblePlayer.play(file.getPath());
         }
 
-        if (lastProgress != 0) {
-            bubblePlayer.setProgress(lastProgress);
-            bubblePlayer.setSpeed(1f);
-        }
-
         try {
             //loading.setVisibility(View.GONE);
         } catch (Exception e) {
@@ -213,11 +208,6 @@ public class BubbleViewHolder extends ListenableViewHolder {
         if (!isInitialized | currentMediaFile == null) return;
         if (getState() == ListenableViewHolderState.UNSELECTED) {
             clearProgress();
-        }
-
-        if (lastProgress != 0) {
-            bubblePlayer.setProgress(lastProgress);
-            bubblePlayer.setSpeed(1f);
         }
     }
 

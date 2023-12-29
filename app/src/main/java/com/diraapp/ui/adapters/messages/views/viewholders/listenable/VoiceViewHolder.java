@@ -145,8 +145,7 @@ public class VoiceViewHolder extends ListenableViewHolder {
 
             sendMessageListened(message);
 
-            if (getState() == ListenableViewHolderState.PAUSED ||
-                getState() == ListenableViewHolderState.PLAYING) {
+            if (getState() != ListenableViewHolderState.UNSELECTED) {
                 getMessageAdapterContract().currentListenablePaused(this);
             } else {
                 getMessageAdapterContract().currentListenableStarted(this, file, 0);
@@ -161,8 +160,7 @@ public class VoiceViewHolder extends ListenableViewHolder {
 
                     sendMessageListened(message);
 
-                    if (!getMessageAdapterContract().
-                            isCurrentListeningAppeared(VoiceViewHolder.this)) {
+                    if (getState() == ListenableViewHolderState.UNSELECTED) {
 
                         getMessageAdapterContract().currentListenableStarted(
                                 VoiceViewHolder.this, file, v);
