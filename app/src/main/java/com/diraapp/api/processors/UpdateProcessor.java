@@ -3,6 +3,8 @@ package com.diraapp.api.processors;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.diraapp.DiraApplication;
 import com.diraapp.api.SocketClient;
 import com.diraapp.api.processors.listeners.ProcessorListener;
@@ -41,6 +43,7 @@ import com.diraapp.notifications.Notifier;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
+import com.diraapp.storage.images.Callback;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.EncryptionUtil;
 import com.diraapp.utils.Logger;
@@ -193,7 +196,7 @@ public class UpdateProcessor {
                         getAuthorId().equals(new CacheUtils(context).getString(CacheUtils.ID)));
 
                 if (DiraApplication.isBackgrounded()) {
-                    Notifier.notifyMessage(newMessageUpdate.getMessage(), context);
+                    Notifier.notifyMessage(newMessageUpdate.getMessage(), room, context);
                 }
                 roomUpdatesProcessor.updateRoom(update);
 
@@ -417,8 +420,8 @@ public class UpdateProcessor {
                                 }
                             }
                         }, serverAddress);
-            } catch (Exception ignored) {
-                ignored.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
 
             }
         }

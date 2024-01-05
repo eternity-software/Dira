@@ -1,14 +1,21 @@
 package com.diraapp.ui.activities.createroom;
 
 import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.SendMessageRequest;
+import com.diraapp.api.updates.ServerSyncUpdate;
+import com.diraapp.api.updates.SubscribeUpdate;
+import com.diraapp.api.updates.Update;
+import com.diraapp.api.updates.UpdateType;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.utils.KeyGenerator;
+import com.diraapp.utils.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CreateRoomModel implements CreateRoomContract.Model {
 
@@ -38,11 +45,29 @@ public class CreateRoomModel implements CreateRoomContract.Model {
 
         SendMessageRequest sendMessageRequest = new SendMessageRequest(message, updateExpireSec);
 
-        UpdateProcessor.getInstance().sendSubscribeRequest();
         try {
-            UpdateProcessor.getInstance().sendRequest(sendMessageRequest, serverAddress);
+            UpdateProcessor.getInstance().addUpdateListener(new UpdateListener() {
+                @Override
+                public void onUpdate(Update update) {
+                    if (update.getUpdateType() != UpdateType.SUBSCRIBE_UPDATE) return;
+
+                    SubscribeUpdate syncUpdate = (SubscribeUpdate) update;
+
+                    if (syncUpdate.getSubscribedRoomSecrets().contains(roomSecret)) {
+                        try {
+                            UpdateProcessor.getInstance().sendRequest(sendMessageRequest, serverAddress);
+                        } catch (Exception ignored) {
+                        }
+                        UpdateProcessor.getInstance().removeUpdateListener(this);
+                    }
+                }
+            });
+
+            UpdateProcessor.getInstance().sendSubscribeRequest();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 }
