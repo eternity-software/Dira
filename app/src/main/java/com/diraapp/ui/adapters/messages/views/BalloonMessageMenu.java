@@ -16,13 +16,9 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
-import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.requests.PinnedMessageAddedRequest;
 import com.diraapp.api.requests.PinnedMessageRemovedRequest;
 import com.diraapp.api.requests.Request;
-import com.diraapp.api.updates.PinnedMessageAddedUpdate;
-import com.diraapp.api.updates.PinnedMessageRemovedUpdate;
-import com.diraapp.api.updates.Update;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
@@ -53,7 +49,7 @@ public class BalloonMessageMenu {
     private final String selfId;
 
     public BalloonMessageMenu(Context context, HashMap<String, Member> members,
-                              String selfId, BalloonMenuListener listener) {
+                              String selfId, @NonNull BalloonMenuListener listener) {
         this.listener = listener;
         this.members = members;
         this.context = context;
@@ -198,7 +194,7 @@ public class BalloonMessageMenu {
         fillPinnedRow(message, layout);
 
         replyRow.setOnClickListener((View v) -> {
-            if (listener != null) listener.onNewMessageReply(message);
+            listener.onNewMessageReply(message);
             balloon.dismiss();
         });
 
@@ -223,6 +219,8 @@ public class BalloonMessageMenu {
         balloon.setOnBalloonDismissListener(() -> {
             isBalloonActive = false;
         });
+
+        listener.onBalloonShown();
 
         balloon.showAlignBottom(view);
     }
@@ -251,17 +249,13 @@ public class BalloonMessageMenu {
         diraPopup.show(context.getString(R.string.message_tooltip_delete_title),
                 context.getString(R.string.message_tooltip_delete_text),
                 null, null, () -> {
-                    if (listener != null) listener.onMessageDelete(message);
+                    listener.onMessageDelete(message);
                 });
         balloon.dismiss();
     }
 
     private void fillPinnedRow(Message message, RadiusLayout layout) {
         LinearLayout pinRow = layout.findViewById(R.id.pin_row);
-        if (listener == null) {
-            pinRow.setVisibility(View.GONE);
-            return;
-        }
 
         if (listener.isMessagePinned(message.getId())) {
             TextView pinText = pinRow.findViewById(R.id.pin_row_text);
@@ -289,6 +283,8 @@ public class BalloonMessageMenu {
     }
 
     public interface BalloonMenuListener {
+
+        void onBalloonShown();
 
         void onNewMessageReply(Message message);
 

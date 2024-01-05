@@ -10,7 +10,9 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.ui.adapters.messages.views.viewholders.listenable.ListenableViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.listenable.VoiceViewHolder;
+import com.diraapp.utils.KeyGenerator;
 import com.diraapp.utils.Logger;
+import com.diraapp.utils.StringFormatter;
 
 import java.io.File;
 import java.io.IOException;
@@ -92,9 +94,14 @@ public class GlobalMediaPlayer {
                     }
                 }));
 
-                final String thisMessageId = currentMessage.getId();
+                final String thisMessageId;
+                if (currentMessage == null) {
+                    thisMessageId = StringFormatter.EMPTY_STRING;
+                } else {
+                    thisMessageId = currentMessage.getId();
+                }
                 diraMediaPlayer.setOnCompletionListener((MediaPlayer mediaPlayer) -> {
-                    if (currentMessage != null) {
+                    if (currentMessage != null && !thisMessageId.equals(StringFormatter.EMPTY_STRING)) {
                         if (!currentMessage.getId().equals(thisMessageId)) return;
                     }
                     currentMessage = null;

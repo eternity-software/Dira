@@ -4,8 +4,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
+import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.api.requests.AttachmentListenedRequest;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.adapters.messages.views.viewholders.AttachmentViewHolder;
@@ -82,5 +85,24 @@ public abstract class ListenableViewHolder extends AttachmentViewHolder {
 
     public void setState(ListenableViewHolderState state) {
         this.state = state;
+    }
+
+    public void sendMessageListened(Message message) {
+        if (!message.hasAuthor()) return;
+        if (isSelfMessage) return;
+
+        Attachment attachment = message.getSingleAttachment();
+        if (attachment.isListened()) return;
+
+        AttachmentListenedRequest request =
+                new AttachmentListenedRequest(message.getRoomSecret(), message.getId(), getSelfId());
+
+        try {
+            UpdateProcessor.getInstance().
+                    sendRequest(request, getMessageAdapterContract().getRoom().getServerAddress());
+            attachment.setListened(true);
+        } catch (UnablePerformRequestException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -177,7 +177,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
     }
 
     public void play() {
-        play(() -> {});
+        play((Runnable) null);
     }
 
     /**

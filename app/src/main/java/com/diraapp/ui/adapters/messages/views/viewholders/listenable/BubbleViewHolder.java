@@ -48,9 +48,12 @@ public class BubbleViewHolder extends ListenableViewHolder {
         if (!isInitialized) return;
 
         clearItem();
-        if (getCurrentMessage() == null) return;
-        onAttachmentLoaded(
-                getCurrentMessage().getSingleAttachment(), currentMediaFile, getCurrentMessage());
+        if (getCurrentMessage() == null | currentMediaFile == null)  {
+            return;
+        }
+
+        bubblePlayer.setProgress(0);
+        bubblePlayer.play(currentMediaFile.getPath());
     }
 
     @Override
@@ -208,25 +211,7 @@ public class BubbleViewHolder extends ListenableViewHolder {
         if (!isInitialized | currentMediaFile == null) return;
         if (getState() == ListenableViewHolderState.UNSELECTED) {
             clearProgress();
-        }
-    }
-
-    private void sendMessageListened(Message message) {
-        if (!message.hasAuthor()) return;
-        if (isSelfMessage) return;
-
-        Attachment attachment = message.getSingleAttachment();
-        if (attachment.isListened()) return;
-
-        AttachmentListenedRequest request =
-                new AttachmentListenedRequest(message.getRoomSecret(), message.getId(), getSelfId());
-
-        try {
-            UpdateProcessor.getInstance().
-                    sendRequest(request, getMessageAdapterContract().getRoom().getServerAddress());
-            attachment.setListened(true);
-        } catch (UnablePerformRequestException e) {
-            e.printStackTrace();
+            bubblePlayer.play(currentMediaFile.getPath());
         }
     }
 
@@ -243,8 +228,8 @@ public class BubbleViewHolder extends ListenableViewHolder {
     }
 
     private void clearItem() {
+        setState(ListenableViewHolderState.UNSELECTED);
         lastProgress = 0;
         bubblePlayer.reset();
-        setState(ListenableViewHolderState.UNSELECTED);
     }
 }

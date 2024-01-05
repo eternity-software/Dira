@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.inputmethodservice.Keyboard;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -976,6 +977,14 @@ public class RoomActivity extends DiraActivity
                 , 100);
     }
 
+    public void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
     @Override
     public void fillRoomInfo(Bitmap picture, Room room) {
         runOnUiThread(() -> {
@@ -1379,6 +1388,11 @@ public class RoomActivity extends DiraActivity
     public void onSelectedFilesSent(List<SelectorFileInfo> diraMediaInfoList, String messageText) {
         MultiAttachmentLoader multiAttachmentLoader = new MultiAttachmentLoader(messageText, presenter);
         multiAttachmentLoader.send(diraMediaInfoList);
+    }
+
+    @Override
+    public void onBalloonShown() {
+        //hideKeyboard();
     }
 
     @Override

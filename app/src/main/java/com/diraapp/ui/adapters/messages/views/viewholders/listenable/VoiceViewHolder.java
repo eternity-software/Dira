@@ -50,8 +50,8 @@ public class VoiceViewHolder extends ListenableViewHolder {
     public void clearProgress() {
         if (!isInitialized) return;
 
-        waveformSeekBar.setProgress(0);
         setState(ListenableViewHolderState.UNSELECTED);
+        waveformSeekBar.setProgress(0);
 
         voiceView.setPlayButton();
     }
@@ -154,20 +154,19 @@ public class VoiceViewHolder extends ListenableViewHolder {
         waveformSeekBar.setOnProgressChanged(new SeekBarOnProgressChanged() {
             @Override
             public void onProgressChanged(@NonNull WaveformSeekBar waveformSeekBar, float v, boolean fromUser) {
-                if (fromUser) {
+                if (!fromUser) return;
 
-                    sendMessageListened(message);
+                sendMessageListened(message);
 
-                    if (getState() == ListenableViewHolderState.UNSELECTED) {
+                if (getState() == ListenableViewHolderState.UNSELECTED) {
 
-                        getMessageAdapterContract().currentListenableStarted(
-                                VoiceViewHolder.this, file, v);
-                    } else {
-                        getMessageAdapterContract().currentListenableProgressChangedByUser(
-                                VoiceViewHolder.this, file, v);
-                    }
-
+                    getMessageAdapterContract().currentListenableStarted(
+                            VoiceViewHolder.this, file, v);
+                } else {
+                    getMessageAdapterContract().currentListenableProgressChangedByUser(
+                            VoiceViewHolder.this, file, v);
                 }
+
             }
         });
 
@@ -266,25 +265,6 @@ public class VoiceViewHolder extends ListenableViewHolder {
         playButton.setOnClickListener((View v) -> {});
 
         clearProgress();
-    }
-
-    private void sendMessageListened(Message message) {
-        if (!message.hasAuthor()) return;
-        if (isSelfMessage) return;
-
-        Attachment attachment = message.getSingleAttachment();
-        if (attachment.isListened()) return;
-
-        AttachmentListenedRequest request =
-                new AttachmentListenedRequest(message.getRoomSecret(), message.getId(), getSelfId());
-
-        try {
-            UpdateProcessor.getInstance().
-                    sendRequest(request, getMessageAdapterContract().getRoom().getServerAddress());
-            attachment.setListened(true);
-        } catch (UnablePerformRequestException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
