@@ -214,6 +214,15 @@ public class Message {
         return authorNickname;
     }
 
+    public String getShortAuthorNickname() {
+
+        if (authorNickname.length() > 22) {
+            String text = authorNickname.substring(0, 19) + "...";
+            return text;
+        }
+        return authorNickname;
+    }
+
     public void setAuthorNickname(String authorNickname) {
         this.authorNickname = authorNickname;
     }

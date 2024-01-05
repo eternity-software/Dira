@@ -42,4 +42,6 @@
     <declare-styleable name="DiraRadioComponent">
         <attr name="default_selected" format="integer" />
     </declare-styleable>
+    <declare-styleable name="GlobalPlayerComponent">
+    </declare-styleable>
 </resources>
