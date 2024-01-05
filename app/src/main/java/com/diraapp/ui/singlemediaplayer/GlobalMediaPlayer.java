@@ -15,6 +15,7 @@ import com.diraapp.utils.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class GlobalMediaPlayer {
 
@@ -91,7 +92,11 @@ public class GlobalMediaPlayer {
                     }
                 }));
 
+                final String thisMessageId = currentMessage.getId();
                 diraMediaPlayer.setOnCompletionListener((MediaPlayer mediaPlayer) -> {
+                    if (currentMessage != null) {
+                        if (!currentMessage.getId().equals(thisMessageId)) return;
+                    }
                     currentMessage = null;
                     currentProgress = 0;
                     isPaused = true;

@@ -22,6 +22,7 @@
 
 
         <com.diraapp.ui.components.TouchImageView
+            app:strokeColor="@null"
             android:id="@+id/fileImageView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

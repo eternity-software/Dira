@@ -90,9 +90,7 @@ public class VoiceViewHolder extends ListenableViewHolder {
         //pause icon
 
         voiceView.setPauseButton();
-        if (BuildConfig.DEBUG) {
-            Logger.logDebug("VoiceMessageViewHolder", "started");
-        }
+        Logger.logDebug("VoiceMessageViewHolder", "started");
     }
 
     @Override
