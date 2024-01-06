@@ -74,11 +74,7 @@ public class BubbleViewHolder extends ListenableViewHolder {
         } else {
             setState(ListenableViewHolderState.PLAYING);
             lastProgress = progress / 10;
-            bubblePlayer.play(() -> new Handler(Looper.getMainLooper()).post(() -> {
-                bubblePlayer.setSpeed(1f);
-                bubblePlayer.setProgress(lastProgress);
-                lastProgress = 0;
-            }));
+            bubblePlayer.play();
 
         }
     }
@@ -91,6 +87,26 @@ public class BubbleViewHolder extends ListenableViewHolder {
         bubblePlayer.setSpeed(1f);
         bubblePlayer.setProgress(GlobalMediaPlayer.getInstance().getCurrentProgress() / 10);
         setState(ListenableViewHolderState.PLAYING);
+    }
+
+    @Override
+    public void rebindPlaying(boolean isPaused, float progress) {
+        if (!isInitialized) return;
+
+        if (isPaused) {
+            setState(ListenableViewHolderState.PAUSED);
+            bubblePlayer.pause();
+            bubblePlayer.setProgress(progress / 10);
+        } else {
+            setState(ListenableViewHolderState.PLAYING);
+            lastProgress = progress / 10;
+            bubblePlayer.play(() -> new Handler(Looper.getMainLooper()).post(() -> {
+                bubblePlayer.setSpeed(1f);
+                bubblePlayer.setProgress(lastProgress);
+                lastProgress = 0;
+            }));
+
+        }
     }
 
     @Override

@@ -51,6 +51,14 @@ public class GlobalMediaPlayer {
         return isPaused;
     }
 
+    public boolean isActive() {
+        return currentMessage != null;
+    }
+
+    public File getCurrentFile() {
+        return currentFile;
+    }
+
     public Message getCurrentMessage() {
         return currentMessage;
     }
@@ -155,6 +163,9 @@ public class GlobalMediaPlayer {
         notifyClosed();
     }
 
+    public boolean isPlaying() {
+        return diraMediaPlayer.isPlaying();
+    }
 
 
     private void notifyStarted() {

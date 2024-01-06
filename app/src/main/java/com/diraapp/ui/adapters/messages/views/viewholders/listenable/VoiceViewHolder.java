@@ -94,6 +94,20 @@ public class VoiceViewHolder extends ListenableViewHolder {
     }
 
     @Override
+    public void rebindPlaying(boolean isPaused, float progress) {
+        if (!isInitialized) return;
+
+        if (isPaused) {
+            setState(ListenableViewHolderState.PAUSED);
+            waveformSeekBar.setProgress(progress);
+            voiceView.setPlayButton();
+        } else {
+            setState(ListenableViewHolderState.PLAYING);
+            voiceView.setPauseButton();
+        }
+    }
+
+    @Override
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
         // holder.loading.setVisibility(View.GONE);
 

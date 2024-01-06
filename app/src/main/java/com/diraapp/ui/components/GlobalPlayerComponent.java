@@ -1,8 +1,6 @@
 package com.diraapp.ui.components;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.media.Image;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.util.AttributeSet;
@@ -10,7 +8,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.diraapp.R;
-import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.res.Theme;
 import com.diraapp.ui.components.dynamic.ThemeLinearLayout;
@@ -37,7 +33,7 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
     private String currentMessageDurationString = "00:00";
 
     private TextView authorText;
-    private TextView dateText;
+    private TextView timeView;
 
     private ImageView playButton;
     private ImageView closeButton;
@@ -55,10 +51,8 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
     private void init(Context context, @Nullable AttributeSet attrs) {
         inflate();
 
-        // scale animation
-
         authorText = findViewById(R.id.author_name);
-        dateText = findViewById(R.id.time_view);
+        timeView = findViewById(R.id.time_view);
         playButton = findViewById(R.id.play_button);
         closeButton = findViewById(R.id.close_button);
 
@@ -72,6 +66,10 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
             GlobalMediaPlayer.getInstance().onClose();
             hide();
         });
+
+        GlobalMediaPlayer.getInstance().registerListener(this);
+
+        resume();
 
     }
 
@@ -113,6 +111,8 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
         if (isHidden) return;
 
         //anim
+        this.setVisibility(GONE);
+
         isHidden = true;
     }
 
@@ -120,6 +120,8 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
         if (!isHidden) return;
 
         //anim
+        this.setVisibility(VISIBLE);
+
         isHidden = false;
     }
 
@@ -136,6 +138,33 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
             e.printStackTrace();
             currentMessageDuration = 60_000;
         }
+
+        currentMessageDurationString = getTimeString(currentMessageDuration);
+    }
+
+    private String getTimeString(long millis) {
+        long seconds = millis / 1000;
+
+        long s = seconds % 60;
+        long m = (seconds / 60) % 60;
+
+        return m + ":" + s;
+    }
+
+    private void fillTimeView(float currentProgress) {
+        fillTimeView(currentProgress, null);
+    }
+
+    private void fillTimeView(float currentProgress, File file) {
+        currentProgress = currentProgress / 10;
+
+        String s = getTimeString((long) (currentMessageDuration * currentProgress));
+
+        if (file != null) readDuration(file);
+
+        String time = s + " / " + currentMessageDurationString;
+
+        timeView.setText(time);
     }
 
     private void setAuthorName(Message message) {
@@ -158,7 +187,9 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
             setPauseButton();
         }
 
-        //update progress text
+        fillTimeView(progress);
+
+        show();
     }
 
     @Override
@@ -168,18 +199,30 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
 
     @Override
     public void onGlobalMediaPlayerStart(Message message, File file) {
-        show();
-
-        readDuration(file);
         setAuthorName(message);
+        fillTimeView(0, file);
 
         setPauseButton();
+
+        show();
     }
 
     @Override
     public void onGlobalMediaPlayerProgressChanged(float progress, Message message) {
         show();
-        long progressMillis = (long) progress * currentMessageDuration;
-        //update progress text
+        setPauseButton();
+
+        fillTimeView(progress);
+    }
+
+    private void resume() {
+        GlobalMediaPlayer global = GlobalMediaPlayer.getInstance();
+
+        if (!global.isActive()) return;
+
+        setAuthorName(global.getCurrentMessage());
+        fillTimeView(global.getCurrentProgress(), global.getCurrentFile());
+
+        onGlobalMediaPlayerPauseClicked(global.isPaused(), global.getCurrentProgress());
     }
 }

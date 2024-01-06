@@ -30,6 +30,8 @@ public abstract class ListenableViewHolder extends AttachmentViewHolder {
 
     abstract public void start();
 
+    abstract public void rebindPlaying(boolean isPaused, float progress);
+
     @Override
     public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
