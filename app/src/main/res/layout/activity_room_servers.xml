@@ -98,8 +98,8 @@
                     android:layout_weight="0"
                     android:background="@drawable/accent_rounded"
                     android:orientation="horizontal"
-                    app:themeBackgroundColor="accent_image_button_color"
-                    android:paddingHorizontal="16dp">
+                    android:paddingHorizontal="16dp"
+                    app:themeBackgroundColor="accent_image_button_color">
 
                     <ImageView
                         android:layout_width="wrap_content"

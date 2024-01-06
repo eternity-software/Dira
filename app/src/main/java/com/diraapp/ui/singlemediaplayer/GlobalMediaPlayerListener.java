@@ -1,7 +1,6 @@
 package com.diraapp.ui.singlemediaplayer;
 
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.ui.adapters.messages.views.viewholders.listenable.ListenableViewHolder;
 
 import java.io.File;
 

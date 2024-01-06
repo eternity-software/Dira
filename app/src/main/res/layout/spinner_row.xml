@@ -3,12 +3,12 @@
     android:id="@+id/spinner_text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:ellipsize="marquee"
     android:fontFamily="@font/montserratsemibold"
+    android:gravity="center"
     android:paddingHorizontal="4dp"
     android:paddingVertical="8dp"
+    android:singleLine="true"
     android:text="@string/media_gallery"
-    android:gravity="center"
-    android:ellipsize="marquee"
     android:textColor="@color/white"
-    android:textSize="16sp"
-    android:singleLine="true" />
+    android:textSize="16sp" />

@@ -33,6 +33,7 @@ import java.util.concurrent.Executors;
 
 public class ImagePreview extends RelativeLayout implements WaterfallImageView, DiraActivityListener {
 
+    private static int bitmapCounter = 0;
     private View rootView;
     private ImageView imageView;
     private TextView sizeTextView;
@@ -40,24 +41,14 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
     private View overlay;
     private View progressBar;
     private ImageView downloadButton;
-
     private Attachment attachment;
-
     private boolean isMainImageLoaded = false;
-
     private Room room;
-
     private Bitmap loadedBitmap;
-
     private WaterfallBalancer waterfallBalancer;
-
     private DiraMediaInfo fileInfo;
-
     private Runnable onReady;
     private boolean isAttached = true;
-
-    private static int bitmapCounter = 0;
-
     private ExecutorService dummyThreadPool = Executors.newFixedThreadPool(2);
 
 
@@ -257,13 +248,10 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
         overlay.setVisibility(VISIBLE);
         downloadButton.setImageDrawable(getContext().getDrawable(R.drawable.ic_download));
         sizeTextView.setVisibility(VISIBLE);
-        if(isLoading)
-        {
+        if (isLoading) {
             sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()) + " " +
                     getContext().getString(R.string.attachment_in_queue));
-        }
-        else
-        {
+        } else {
             sizeTextView.setText(AppStorage.getStringSize(attachment.getSize()));
         }
 
@@ -298,6 +286,10 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
 
     public boolean isAttached() {
         return isAttached;
+    }
+
+    public void setAttached(boolean attached) {
+        isAttached = attached;
     }
 
     @Override
@@ -350,10 +342,6 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
         prepareForAttachment(attachment, room, onReady);
 
         loadAttachmentFile(new File(fileInfo.getFilePath()));
-    }
-
-    public void setAttached(boolean attached) {
-        isAttached = attached;
     }
 
     @Override

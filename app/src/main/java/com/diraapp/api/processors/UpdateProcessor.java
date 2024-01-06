@@ -3,8 +3,6 @@ package com.diraapp.api.processors;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import com.diraapp.DiraApplication;
 import com.diraapp.api.SocketClient;
 import com.diraapp.api.processors.listeners.ProcessorListener;
@@ -34,8 +32,8 @@ import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.customclientdata.UnencryptedMessageClientData;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.exceptions.SingletonException;
 import com.diraapp.exceptions.UnablePerformRequestException;
@@ -43,7 +41,6 @@ import com.diraapp.notifications.Notifier;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
-import com.diraapp.storage.images.Callback;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.EncryptionUtil;
 import com.diraapp.utils.Logger;
@@ -245,7 +242,7 @@ public class UpdateProcessor {
             } else if (update.getUpdateType() == UpdateType.ATTACHMENT_LISTENED_UPDATE) {
                 roomUpdatesProcessor.updateRoom(update);
             } else if (update.getUpdateType() == UpdateType.PINNED_MESSAGE_ADDED_UPDATE ||
-                        update.getUpdateType() == UpdateType.PINNED_MESSAGE_REMOVED_UPDATE) {
+                    update.getUpdateType() == UpdateType.PINNED_MESSAGE_REMOVED_UPDATE) {
                 roomUpdatesProcessor.updateRoom(update);
             }
 

@@ -5,15 +5,15 @@ import android.graphics.Bitmap;
 import android.view.View;
 
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.ui.activities.DiraActivityListener;
-import com.diraapp.ui.adapters.messages.views.BalloonMessageMenu;
-import com.diraapp.ui.adapters.messages.views.viewholders.listenable.ListenableViewHolder;
-import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.ui.activities.PreparedActivity;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
+import com.diraapp.ui.adapters.messages.views.BalloonMessageMenu;
+import com.diraapp.ui.adapters.messages.views.viewholders.listenable.ListenableViewHolder;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
+import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.utils.CacheUtils;
 
 import java.io.File;
@@ -36,6 +36,7 @@ public interface MessageAdapterContract {
     Context getContext();
 
     MessageReplyListener getReplyListener();
+
     void runOnUiThread(Runnable runnable);
 
     void onFirstMessageScrolled(Message message, int index);
@@ -46,6 +47,7 @@ public interface MessageAdapterContract {
     PreparedActivity preparePreviewActivity(String filePath, boolean isVideo, Bitmap preview, View transitionSource);
 
     void attachVideoPlayer(DiraVideoPlayer player);
+
     void addListener(DiraActivityListener player);
 
     BalloonMessageMenu.BalloonMenuListener getBalloonMessageListener();
@@ -61,6 +63,8 @@ public interface MessageAdapterContract {
     boolean isCurrentListeningDisappeared(ListenableViewHolder viewHolder);
 
     void currentListenableStarted(ListenableViewHolder viewHolder, File file, float progress);
+
     void currentListenablePaused(ListenableViewHolder viewHolder);
+
     void currentListenableProgressChangedByUser(ListenableViewHolder viewHolder, File file, float progress);
 }

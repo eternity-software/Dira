@@ -87,9 +87,7 @@ public class WaterfallImageLoader {
 
                                                 if (imageView.getFileInfo().isImage()) {
                                                     bitmap = ImageRotationFix.handleSamplingAndRotationBitmap(activity, Uri.fromFile(new File(imageView.getFileInfo().getFilePath())));
-                                                }
-                                                else
-                                                {
+                                                } else {
                                                     bitmap = decodeFile(new File(imageView.getFileInfo().getFilePath()));
                                                 }
                                             }
@@ -131,13 +129,10 @@ public class WaterfallImageLoader {
                                                                 mediaGridItem.setSubtitle(subtitle);
                                                             }
                                                             if (imageView instanceof ImagePreview) {
-                                                                if (((ImagePreview) imageView).isAttached())
-                                                                {
+                                                                if (((ImagePreview) imageView).isAttached()) {
                                                                     ((ImagePreview) imageView).setImageBitmap(finalBitmap);
 
-                                                                }
-                                                                else
-                                                                {
+                                                                } else {
                                                                     waterfallCallback.onImageProcessedSuccess(imageView);
                                                                     finalBitmap.recycle();
                                                                     return;
