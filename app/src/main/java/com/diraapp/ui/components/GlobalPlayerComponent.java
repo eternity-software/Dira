@@ -1,5 +1,6 @@
 package com.diraapp.ui.components;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -8,10 +9,14 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
@@ -21,6 +26,7 @@ import com.diraapp.res.Theme;
 import com.diraapp.ui.components.dynamic.ThemeLinearLayout;
 import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayer;
 import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayerListener;
+import com.diraapp.utils.Logger;
 import com.diraapp.utils.android.DeviceUtils;
 
 import java.io.File;
@@ -30,6 +36,8 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
 
     private long currentMessageDuration = 0;
 
+    private final int dp40;
+
     private String currentMessageDurationString = "00:00";
 
     private TextView authorText;
@@ -38,18 +46,32 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
     private ImageView playButton;
     private ImageView closeButton;
 
-    private boolean isPlayButtonActive = false;
+    private boolean isPlayButtonActive = true;
     private int playButtonColor;
 
     private boolean isHidden = true;
 
-    public GlobalPlayerComponent(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs, 0);
-        init(context, attrs);
+    public GlobalPlayerComponent(Context context) {
+        super(context);
+        dp40 = DeviceUtils.dpToPx(40, getContext());
+        init(context);
     }
 
-    private void init(Context context, @Nullable AttributeSet attrs) {
-        inflate();
+    public GlobalPlayerComponent(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        dp40 = DeviceUtils.dpToPx(40, getContext());
+        init(context);
+    }
+
+    public GlobalPlayerComponent(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        dp40 = DeviceUtils.dpToPx(40, getContext());
+        init(context);
+    }
+
+
+    private void init(Context context) {
+        inflate(context);
 
         authorText = findViewById(R.id.author_name);
         timeView = findViewById(R.id.time_view);
@@ -64,7 +86,6 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
 
         closeButton.setOnClickListener((View v) -> {
             GlobalMediaPlayer.getInstance().onClose();
-            hide();
         });
 
         GlobalMediaPlayer.getInstance().registerListener(this);
@@ -73,20 +94,19 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
 
     }
 
-    private void inflate() {
-        int dp32 = DeviceUtils.dpToPx(32, this.getContext());
-        setPadding(dp32, 0 , 0, dp32);
+    private void inflate(Context context) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View root = inflater.inflate(R.layout.global_player_component, this);
 
-        setOrientation(HORIZONTAL);
+        setBackground(ContextCompat.getDrawable(context, R.color.dark));
+
+        setVisibility(GONE);
 
         LinearLayout.LayoutParams params = new
-                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp32);
+                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp40);
 
         params.gravity = Gravity.CENTER_VERTICAL;
         this.setLayoutParams(params);
-
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        inflater.inflate(R.layout.global_player_component, this);
     }
 
     public void setPlayButton() {
@@ -110,8 +130,23 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
     private void hide() {
         if (isHidden) return;
 
-        //anim
-        this.setVisibility(GONE);
+        ValueAnimator animator = ValueAnimator.ofInt(dp40, 0);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
+                if (!isHidden) return;
+
+                int value = (int) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams params = GlobalPlayerComponent.this.getLayoutParams();
+                params.height = value;
+                GlobalPlayerComponent.this.setLayoutParams(params);
+
+                if (value == 0) setVisibility(GONE);
+            }
+        });
+        animator.setInterpolator(new DecelerateInterpolator(2f));
+        animator.setDuration(150);
+        animator.start();
 
         isHidden = true;
     }
@@ -119,8 +154,23 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
     private void show() {
         if (!isHidden) return;
 
-        //anim
-        this.setVisibility(VISIBLE);
+        ValueAnimator animator = ValueAnimator.ofInt(0, dp40);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
+                if (isHidden) return;
+
+                int value = (int) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams params = GlobalPlayerComponent.this.getLayoutParams();
+                params.height = value;
+                GlobalPlayerComponent.this.setLayoutParams(params);
+            }
+        });
+        animator.setInterpolator(new DecelerateInterpolator(2f));
+        animator.setDuration(150);
+
+        setVisibility(VISIBLE);
+        animator.start();
 
         isHidden = false;
     }
@@ -146,9 +196,14 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
         long seconds = millis / 1000;
 
         long s = seconds % 60;
-        long m = (seconds / 60) % 60;
+        String st = String.valueOf(s);
+        if (st.length() == 1) st = "0" + st;
 
-        return m + ":" + s;
+        long m = (seconds / 60) % 60;
+        String mt = String.valueOf(m);
+        if (mt.length() == 1) mt = "0" + mt;
+
+        return mt + ":" + st;
     }
 
     private void fillTimeView(float currentProgress) {
@@ -199,6 +254,8 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
 
     @Override
     public void onGlobalMediaPlayerStart(Message message, File file) {
+        if (!GlobalMediaPlayer.getInstance().isActive()) return;
+
         setAuthorName(message);
         fillTimeView(0, file);
 
@@ -210,7 +267,6 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
     @Override
     public void onGlobalMediaPlayerProgressChanged(float progress, Message message) {
         show();
-        setPauseButton();
 
         fillTimeView(progress);
     }
@@ -224,5 +280,9 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
         fillTimeView(global.getCurrentProgress(), global.getCurrentFile());
 
         onGlobalMediaPlayerPauseClicked(global.isPaused(), global.getCurrentProgress());
+    }
+
+    public void release() {
+        GlobalMediaPlayer.getInstance().removeListener(this);
     }
 }

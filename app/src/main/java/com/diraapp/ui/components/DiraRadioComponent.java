@@ -50,7 +50,7 @@ public class DiraRadioComponent extends LinearLayout {
 
         item.setOnClickListener((View v) -> {
             if (currentSelected == finalI) return;
-            Logger.logDebug("dfdfdfd", "selected - " + finalI + " prev - " + currentSelected);
+            Logger.logDebug("DiraRatioComponent", "selected - " + finalI + " prev - " + currentSelected);
 
             views.get(currentSelected).setSelected(false);
 //            this.setSelected(true); I don't know why, but it doesn't work

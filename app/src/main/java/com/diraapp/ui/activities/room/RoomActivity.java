@@ -78,6 +78,7 @@ import com.diraapp.ui.adapters.messages.views.viewholders.factories.RoomViewHold
 import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
+import com.diraapp.ui.components.GlobalPlayerComponent;
 import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.ui.components.RecordComponentsController;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
@@ -418,6 +419,10 @@ public class RoomActivity extends DiraActivity
         UpdateProcessor.getInstance().removeProcessorListener(this);
         UserStatusHandler.getInstance().removeListener(this);
         GlobalMediaPlayer.getInstance().removeListener(this);
+
+        GlobalPlayerComponent component = findViewById(R.id.global_player);
+        component.release();
+
         System.gc();
     }
 

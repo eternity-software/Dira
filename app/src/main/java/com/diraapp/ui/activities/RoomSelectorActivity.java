@@ -48,6 +48,7 @@ import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.ui.adapters.RoomSelectorAdapter;
 import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.components.DiraPopup;
+import com.diraapp.ui.components.GlobalPlayerComponent;
 import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayer;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.KeyGenerator;
@@ -485,6 +486,9 @@ public class RoomSelectorActivity extends AppCompatActivity
         UserStatusHandler.getInstance().removeListener(this);
 
         GlobalMediaPlayer.getInstance().release();
+
+        GlobalPlayerComponent component = findViewById(R.id.global_player);
+        component.release();
     }
 
     @Override

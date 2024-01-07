@@ -87,7 +87,6 @@ public class DiraRadioComponentItem extends LinearLayout {
         this.isSelected = isSelected;
 
         if (isSelected) {
-            Logger.logDebug("hhh", "1");
             textView.setTextColor(Theme.getColor(getContext(), R.color.dira_radio_text_selected));
             this.getBackground().setColorFilter(Theme.getColor(getContext(),
                     R.color.dira_radio_layout_selected), PorterDuff.Mode.SRC_ATOP);
@@ -96,7 +95,6 @@ public class DiraRadioComponentItem extends LinearLayout {
             return;
         }
 
-        Logger.logDebug("hhh", "2");
         check.setVisibility(GONE);
         hide.setVisibility(VISIBLE);
         textView.setTextColor(Theme.getColor(getContext(), R.color.dira_radio_text));

@@ -124,6 +124,13 @@
 
         </androidx.appcompat.widget.Toolbar>
 
+        <com.diraapp.ui.components.GlobalPlayerComponent
+            android:id="@+id/global_player"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+
+            app:themeBackgroundColor="dark" />
+
 
     </com.google.android.material.appbar.AppBarLayout>
 

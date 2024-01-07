@@ -41,7 +41,6 @@ public class VoiceMessageView extends LinearLayout {
 
     private void initView() {
 
-
         try {
 
             LayoutInflater inflater = LayoutInflater.from(getContext());
