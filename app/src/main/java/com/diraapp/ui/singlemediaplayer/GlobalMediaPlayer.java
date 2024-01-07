@@ -31,6 +31,10 @@ public class GlobalMediaPlayer {
 
     private Message currentMessage = null;
 
+    /**
+     * Current progress is float -> [0, 10]
+     * Same progress values Waveform gives
+     */
     private float currentProgress = 0;
 
     private boolean isPaused = false;
@@ -45,6 +49,17 @@ public class GlobalMediaPlayer {
 
     public float getCurrentProgress() {
         return currentProgress;
+    }
+
+
+    public boolean setCurrentProgress(float currentProgress) {
+        if (!isActive()) return false;
+        if (currentProgress == this.currentProgress) return true;
+
+        this.currentProgress = currentProgress;
+        diraMediaPlayer.setProgress(currentProgress / 10);
+
+        return true;
     }
 
     public boolean isPaused() {
@@ -102,26 +117,7 @@ public class GlobalMediaPlayer {
                     }
                 }));
 
-                final String thisMessageId;
-                if (currentMessage == null) {
-                    thisMessageId = StringFormatter.EMPTY_STRING;
-                } else {
-                    thisMessageId = currentMessage.getId();
-                }
-                diraMediaPlayer.setOnCompletionListener((MediaPlayer mediaPlayer) -> {
-                    if (currentMessage != null && !thisMessageId.equals(StringFormatter.EMPTY_STRING)) {
-                        if (!currentMessage.getId().equals(thisMessageId)) return;
-                    }
-                    currentMessage = null;
-                    currentProgress = 0;
-                    isPaused = true;
-                    currentFile = null;
-                    diraMediaPlayer.stop();
-                    notifyClosed();
-                    diraMediaPlayer.setOnProgressTick(null);
-                    diraMediaPlayer.setOnCompletionListener(null);
-                });
-
+                setOnCompletionListener();
 
                 diraMediaPlayer.setProgress(currentProgress / 10);
                 diraMediaPlayer.start();
@@ -135,6 +131,10 @@ public class GlobalMediaPlayer {
     }
 
     public void onPaused() {
+        if (!isActive()) {
+            onClose();
+            return;
+        }
 
         if (diraMediaPlayer.isPlaying()) {
             diraMediaPlayer.stop();
@@ -167,6 +167,29 @@ public class GlobalMediaPlayer {
         return diraMediaPlayer.isPlaying();
     }
 
+    private void setOnCompletionListener() {
+        final String thisMessageId;
+        if (currentMessage == null) {
+            thisMessageId = StringFormatter.EMPTY_STRING;
+        } else {
+            thisMessageId = currentMessage.getId();
+        }
+        diraMediaPlayer.setOnCompletionListener((MediaPlayer mediaPlayer) -> {
+            if (currentMessage != null && !thisMessageId.equals(StringFormatter.EMPTY_STRING)) {
+                if (!currentMessage.getId().equals(thisMessageId)) return;
+            }
+            currentMessage = null;
+            currentProgress = 0;
+            isPaused = true;
+            currentFile = null;
+            diraMediaPlayer.stop();
+            diraMediaPlayer.setOnProgressTick(null);
+            diraMediaPlayer.setOnCompletionListener(null);
+            notifyClosed();
+
+            Logger.logDebug(GlobalMediaPlayer.class.getName(), "Listenable completed");
+        });
+    }
 
     private void notifyStarted() {
         for (GlobalMediaPlayerListener listener: listeners) {

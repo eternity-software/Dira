@@ -136,39 +136,6 @@ public class BubbleViewHolder extends ListenableViewHolder {
                 getMessageAdapterContract().currentListenableStarted(this, file, 0);
             }
         });
-
-//        bubblePlayer.setOnClickListener(v -> {
-//            sendMessageListened(message);
-//
-//            DiraMediaPlayer diraMediaPlayer = getViewHolderManagerContract().getDiraMediaPlayer();
-//
-//            if (BuildConfig.DEBUG) bubblePlayer.showDebugLog();
-//
-//            try {
-//                if (diraMediaPlayer.isPlaying()) {
-//                    diraMediaPlayer.stop();
-//                }
-//                diraMediaPlayer.reset();
-//                diraMediaPlayer.setDataSource(file.getPath());
-//
-//                diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                    @Override
-//                    public void onPrepared(MediaPlayer mp) {
-//
-//                        diraMediaPlayer.start();
-//                        //timeText.setText(AppStorage.getStringSize(attachment.getSize()));
-//                        ((DiraVideoPlayer) v).setSpeed(1f);
-//                        ((DiraVideoPlayer) v).setProgress(0);
-//                        diraMediaPlayer.setOnPreparedListener(null);
-//
-//                    }
-//                });
-//                diraMediaPlayer.prepareAsync();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//        });
     }
 
     @Override

@@ -262,7 +262,7 @@ public class ChatAppearanceActivity extends DiraActivity {
             }
 
             @Override
-            public void currentListenableProgressChangedByUser(ListenableViewHolder viewHolder, File file, float progress) {
+            public void currentListenableProgressChangedByUser(float progress, ListenableViewHolder viewHolder) {
 
             }
         };

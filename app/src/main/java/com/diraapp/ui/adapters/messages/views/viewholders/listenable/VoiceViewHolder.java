@@ -170,76 +170,15 @@ public class VoiceViewHolder extends ListenableViewHolder {
             public void onProgressChanged(@NonNull WaveformSeekBar waveformSeekBar, float v, boolean fromUser) {
                 if (!fromUser) return;
 
-                sendMessageListened(message);
-
-                if (getState() == ListenableViewHolderState.UNSELECTED) {
-
-                    getMessageAdapterContract().currentListenableStarted(
-                            VoiceViewHolder.this, file, v);
-                } else {
-                    getMessageAdapterContract().currentListenableProgressChangedByUser(
-                            VoiceViewHolder.this, file, v);
+                if (getState() != ListenableViewHolderState.UNSELECTED) {
+                    getMessageAdapterContract().currentListenableProgressChangedByUser(v, VoiceViewHolder.this);
+                    return;
                 }
+
+                waveformSeekBar.setProgress(0);
 
             }
         });
-
-
-//        playButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                sendMessageListened(message);
-//
-//                try {
-//                    DiraMediaPlayer diraMediaPlayer = getViewHolderManagerContract().getDiraMediaPlayer();
-//                    if (diraMediaPlayer.isPlaying()) {
-//                        diraMediaPlayer.stop();
-//                    }
-//                    diraMediaPlayer.reset();
-//                    diraMediaPlayer.setDataSource(file.getPath());
-//
-//                    diraMediaPlayer.prepareAsync();
-//
-//                    diraMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                        @Override
-//                        public void onPrepared(MediaPlayer mp) {
-//                            diraMediaPlayer.start();
-//                            waveformSeekBar.setOnProgressChanged(new SeekBarOnProgressChanged() {
-//                                @Override
-//                                public void onProgressChanged(@NonNull WaveformSeekBar waveformSeekBar, float v, boolean fromUser) {
-//                                    if (fromUser) {
-//                                        diraMediaPlayer.setProgress(v / 10);
-//                                    }
-//                                }
-//                            });
-//
-//                            diraMediaPlayer.setOnProgressTick(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            try {
-//                                                float progress = 10 * diraMediaPlayer.getProgress();
-//                                                waveformSeekBar.setProgress(progress);
-//
-//                                                attachment.setVoiceMessageStopProgress(progress);
-//                                            } catch (Exception ignored) {
-//                                            }
-//                                        }
-//                                    });
-//                                }
-//                            });
-//
-//
-//                        }
-//                    });
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
     }
 
     @Override

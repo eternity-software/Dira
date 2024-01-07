@@ -1371,12 +1371,11 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
-    public void currentListenableProgressChangedByUser(
-            ListenableViewHolder viewHolder, File file, float progress) {
-        currentListenableViewHolder = viewHolder;
+    public void currentListenableProgressChangedByUser(float progress, ListenableViewHolder viewHolder) {
 
-        GlobalMediaPlayer.getInstance().
-                changePlyingMessage(viewHolder.getCurrentMessage(), file, progress);
+        if (GlobalMediaPlayer.getInstance().setCurrentProgress(progress)) {
+            currentListenableViewHolder = viewHolder;
+        }
     }
 
     @Override

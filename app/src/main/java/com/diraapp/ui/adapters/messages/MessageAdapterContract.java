@@ -66,5 +66,5 @@ public interface MessageAdapterContract {
 
     void currentListenablePaused(ListenableViewHolder viewHolder);
 
-    void currentListenableProgressChangedByUser(ListenableViewHolder viewHolder, File file, float progress);
+    void currentListenableProgressChangedByUser(float progress, ListenableViewHolder viewHolder);
 }
