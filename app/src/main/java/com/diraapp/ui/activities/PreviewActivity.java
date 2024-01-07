@@ -12,14 +12,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
-import android.transition.Transition;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.app.SharedElementCallback;
@@ -53,7 +51,7 @@ public class PreviewActivity extends DiraActivity {
     private boolean isInTransition = false;
     private boolean isVideo = false;
     private TouchImageView touchImageView;
-    private boolean usesSharedTransition;;
+    private boolean usesSharedTransition;
     private String uri;
 
 
@@ -107,17 +105,13 @@ public class PreviewActivity extends DiraActivity {
 
 
         transitionBitmap = bitmapPool;
-        if(transitionBitmap != null)
+        if (transitionBitmap != null)
             usesSharedTransition = true;
         else {
             usesSharedTransition = false;
             isShown = true;
         }
         bitmapPool = null;
-
-
-
-
 
 
         final String transitionName = getString(R.string.transition_image_shared);
@@ -161,7 +155,7 @@ public class PreviewActivity extends DiraActivity {
                 }
                 super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
 
-                if(!isVideo)
+                if (!isVideo)
                     touchImageView.setImageBitmap(transitionBitmap);
                 isInTransition = false;
             }
@@ -224,7 +218,6 @@ public class PreviewActivity extends DiraActivity {
         sizeView.setText(AppStorage.getStringSize(new File(uri).length()));
 
 
-
         if (isVideo) {
             videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
                 @Override
@@ -270,23 +263,21 @@ public class PreviewActivity extends DiraActivity {
         super.onStart();
         DiraActivity.runGlobalBackground(() -> {
             Bitmap bitmap = AppStorage.getBitmapFromPath(uri);
-            if(isVideo) return;
+            if (isVideo) return;
             try {
-                if(usesSharedTransition)
+                if (usesSharedTransition)
                     // Wait for animation
                     Thread.sleep(500);
             } catch (InterruptedException e) {
 
             }
             runOnUiThread(() -> {
-                if(isDestroyed() | isInTransition ) return;
+                if (isDestroyed() | isInTransition) return;
                 try {
 
-                     PreviewActivity.this.currentBitmap = bitmap;
-                     touchImageView.setImageBitmap(bitmap);
-                }
-                catch (Exception e)
-                {
+                    PreviewActivity.this.currentBitmap = bitmap;
+                    touchImageView.setImageBitmap(bitmap);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -346,12 +337,11 @@ public class PreviewActivity extends DiraActivity {
     }
 
 
-
     @Override
     protected void onStop() {
         super.onStop();
         touchImageView.setImageBitmap(transitionBitmap);
-        if(currentBitmap != null)
+        if (currentBitmap != null)
             currentBitmap.recycle();
         currentBitmap = null;
     }

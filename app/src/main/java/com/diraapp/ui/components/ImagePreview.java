@@ -49,7 +49,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
     private DiraMediaInfo fileInfo;
     private Runnable onReady;
     private boolean isAttached = true;
-    private ExecutorService dummyThreadPool = Executors.newFixedThreadPool(2);
+    private final ExecutorService dummyThreadPool = Executors.newFixedThreadPool(2);
 
 
     public ImagePreview(Context context, AttributeSet attrs) {

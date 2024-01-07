@@ -59,7 +59,6 @@ public class ViewSwiper {
         int position = viewHolder.getAdapterPosition();
 
 
-
         if (focusedView != null && child != focusedView) focusedView.animate().x(0)
                 .setInterpolator(new DecelerateInterpolator(2f)).setDuration(200);
 

@@ -13,8 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
-import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.room.RoomActivity;
@@ -30,9 +30,8 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
 
     private final LayoutInflater layoutInflater;
     private final Activity context;
-    private List<Room> roomList = new ArrayList<>();
-
     private final SelectorAdapterContract contract;
+    private List<Room> roomList = new ArrayList<>();
 
 
     public RoomSelectorAdapter(Activity context, SelectorAdapterContract contract) {
@@ -61,6 +60,11 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
     @Override
     public int getItemCount() {
         return roomList.size();
+    }
+
+    public interface SelectorAdapterContract {
+
+        void onRoomOpen(String roomSecret);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -185,10 +189,5 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<RoomSelectorAdapte
                 e.printStackTrace();
             }
         }
-    }
-
-    public interface SelectorAdapterContract {
-
-        void onRoomOpen(String roomSecret);
     }
 }

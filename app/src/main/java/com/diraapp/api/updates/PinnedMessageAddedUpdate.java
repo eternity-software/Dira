@@ -1,7 +1,5 @@
 package com.diraapp.api.updates;
 
-import com.diraapp.api.requests.RequestType;
-
 public class PinnedMessageAddedUpdate extends Update {
 
     private String messageId;

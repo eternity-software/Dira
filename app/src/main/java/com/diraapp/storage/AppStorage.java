@@ -401,7 +401,7 @@ public class AppStorage {
             Logger.logDebug(AppStorage.class.toString(), "Attachment deleted successfully");
         } else {
             Logger.logDebug(AppStorage.class.toString(), "Attachment " +
-                    file.toString() + " doesn't exist");
+                    file + " doesn't exist");
         }
     }
 }

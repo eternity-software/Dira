@@ -21,11 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diraapp.R;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.DiraMediaInfo;
-import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.anim.BounceInterpolator;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.diraapp.ui.components.MediaGridItem;
+import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.utils.android.DiraVibrator;
 
 import java.util.ArrayList;
@@ -47,12 +47,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     private boolean multiSelect = false;
     private String currentBucket = "";
 
-    private List<SelectorFileInfo> selectedFiles = new ArrayList<>();
-    private HashMap<MediaGridItem, SelectorFileInfo> selectedViews = new HashMap<>();
+    private final List<SelectorFileInfo> selectedFiles = new ArrayList<>();
+    private final HashMap<MediaGridItem, SelectorFileInfo> selectedViews = new HashMap<>();
 
-    private List<String> buckets = new ArrayList<>();
+    private final List<String> buckets = new ArrayList<>();
 
-    private boolean isSelected = false;
+    private final boolean isSelected = false;
     private boolean isOnlyImages = true;
     private GalleryListener galleryListener;
 
@@ -75,10 +75,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         waterfallBalancer = new WaterfallBalancer(context);
 
 
-    }
-
-    public void setGalleryListener(GalleryListener galleryListener) {
-        this.galleryListener = galleryListener;
     }
 
     /**
@@ -121,6 +117,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     public MediaGridAdapter(final DiraActivity context, MediaGridItemListener itemClickListener, RecyclerView recyclerView,
                             boolean onlyImages) {
         this(context, itemClickListener, recyclerView, onlyImages, null);
+    }
+
+    public void setGalleryListener(GalleryListener galleryListener) {
+        this.galleryListener = galleryListener;
     }
 
     public void setMultiSelect(boolean multiSelect) {
@@ -266,9 +266,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
     @SuppressLint("Range")
     private ArrayList<SelectorFileInfo> loadGallery(Cursor cursor, @Nullable String specificBucket) {
-        if(currentBucket == null && specificBucket == null) return getMediaElements();
-        if(currentBucket != null)
-            if(currentBucket.equals(specificBucket)) return getMediaElements();
+        if (currentBucket == null && specificBucket == null) return getMediaElements();
+        if (currentBucket != null)
+            if (currentBucket.equals(specificBucket)) return getMediaElements();
 
         currentBucket = specificBucket;
 //            Uri uri;
@@ -388,6 +388,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         return cursorLoader;
     }
 
+    public interface GalleryListener {
+        void onGalleryReady(List<SelectorFileInfo> files, List<String> buckets);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public MediaGridItem fileParingImageView;
@@ -409,10 +413,5 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         public void onClick(View view) {
             onItemClick(view, getAdapterPosition());
         }
-    }
-
-
-    public interface GalleryListener {
-        void onGalleryReady(List<SelectorFileInfo> files, List<String> buckets);
     }
 }

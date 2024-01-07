@@ -23,13 +23,12 @@ import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
-import com.diraapp.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -189,7 +188,7 @@ public class RoomUpdatesProcessor {
                     newMessage = UpdateProcessor.getInstance().getClientMessageProcessor().
                             notifyRoomKeyGenerationStop(update, room);
                 } else if (update instanceof PinnedMessageAddedUpdate ||
-                            update instanceof PinnedMessageRemovedUpdate) {
+                        update instanceof PinnedMessageRemovedUpdate) {
                     onPinnedMessageUpdate(update, room);
                     newMessage = UpdateProcessor.getInstance().getClientMessageProcessor().
                             notifyPinnedMessageAdded(update, room);
@@ -348,7 +347,7 @@ public class RoomUpdatesProcessor {
             }
 
             MessageReading messageReading = null;
-            for (MessageReading mr: message.getMessageReadingList()) {
+            for (MessageReading mr : message.getMessageReadingList()) {
                 if (mr.getUserId().equals(update.getUserId())) {
                     messageReading = mr;
                     break;

@@ -54,9 +54,7 @@ public class CryptoUtils {
             inputStream.close();
             outputStream.close();
 
-        }
-        catch (BadPaddingException badPaddingException)
-        {
+        } catch (BadPaddingException badPaddingException) {
             inputFile.delete();
             outputFile.delete();
         } catch (Exception ex) {

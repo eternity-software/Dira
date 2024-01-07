@@ -63,7 +63,6 @@ public class ImageEdit extends DiraActivity {
     private float mScaleFactor = 1.f;
 
 
-
     public static void openForResult(Uri uri, Activity activity) {
         Intent intent = new Intent(activity, ImageEdit.class);
         intent.putExtra("uri", uri.getPath());

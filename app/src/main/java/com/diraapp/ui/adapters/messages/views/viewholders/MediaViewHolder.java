@@ -21,7 +21,6 @@ import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.ImagePreview;
 import com.diraapp.ui.components.RoomMediaMessage;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
-import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayerState;
 import com.diraapp.utils.StringFormatter;
 
 import java.io.File;
@@ -137,8 +136,10 @@ public class MediaViewHolder extends AttachmentViewHolder implements DiraActivit
         videoPlayer.reset();
         videoPlayer.setVisibility(View.GONE);
         previewImage.setVisibility(View.VISIBLE);
-        videoPlayer.setOnClickListener(v -> {});
-        previewImage.setOnClickListener(v -> {});
+        videoPlayer.setOnClickListener(v -> {
+        });
+        previewImage.setOnClickListener(v -> {
+        });
 
         Attachment attachment = message.getSingleAttachment();
         currentMediaFile = AttachmentDownloader.getFileFromAttachment(attachment,
@@ -148,7 +149,7 @@ public class MediaViewHolder extends AttachmentViewHolder implements DiraActivit
         currentAttachment = attachment;
         previewImage.setAttached(true);
         previewImage.prepareForAttachment(attachment, getMessageAdapterContract().getRoom(), () -> {
-            if (currentAttachment != attachment){
+            if (currentAttachment != attachment) {
                 return;
             }
 

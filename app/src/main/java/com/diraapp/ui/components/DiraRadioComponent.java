@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.diraapp.R;
@@ -15,9 +14,8 @@ import java.util.ArrayList;
 
 public class DiraRadioComponent extends LinearLayout {
 
-    private int currentSelected;
-
     private final ArrayList<DiraRadioComponentItem> views = new ArrayList<>();
+    private int currentSelected;
 
     public DiraRadioComponent(Context context, AttributeSet attrs) {
         super(context, attrs, 0);

@@ -44,10 +44,10 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder implements 
      */
     private boolean isVerticalLayout = false;
 
-    private List<ImagePreview> imagePreviewList = new ArrayList<>();
-    private List<ImagePreview> previewImagePool = new ArrayList<>();
+    private final List<ImagePreview> imagePreviewList = new ArrayList<>();
+    private final List<ImagePreview> previewImagePool = new ArrayList<>();
 
-    private HashMap<Attachment, AttachmentDownloadHandler> handlers = new HashMap<>();
+    private final HashMap<Attachment, AttachmentDownloadHandler> handlers = new HashMap<>();
 
     private int lastPickedPoolIndex = 0;
 

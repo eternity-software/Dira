@@ -9,9 +9,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,7 +24,6 @@ import com.diraapp.res.Theme;
 import com.diraapp.ui.components.dynamic.ThemeLinearLayout;
 import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayer;
 import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayerListener;
-import com.diraapp.utils.Logger;
 import com.diraapp.utils.android.DeviceUtils;
 
 import java.io.File;
@@ -34,10 +31,8 @@ import java.util.Objects;
 
 public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMediaPlayerListener {
 
-    private long currentMessageDuration = 0;
-
     private final int dp40;
-
+    private long currentMessageDuration = 0;
     private String currentMessageDurationString = "00:00";
 
     private TextView authorText;

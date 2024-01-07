@@ -11,14 +11,14 @@ import com.diraapp.exceptions.UnknownViewTypeException;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
-import com.diraapp.ui.adapters.messages.views.viewholders.listenable.BubbleViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.EmojiMessageViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.FileAttachmentViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.MediaViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.RoomUpdatesViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.TextMessageViewHolder;
-import com.diraapp.ui.adapters.messages.views.viewholders.listenable.VoiceViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.groups.AttachmentGroupViewHolder;
+import com.diraapp.ui.adapters.messages.views.viewholders.listenable.BubbleViewHolder;
+import com.diraapp.ui.adapters.messages.views.viewholders.listenable.VoiceViewHolder;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.StringFormatter;
 
@@ -29,7 +29,7 @@ import java.util.HashMap;
  */
 public class RoomViewHolderFactory implements BaseViewHolderFactory {
 
-    private HashMap<MessageHolderType, Integer> countMap = new HashMap<>();
+    private final HashMap<MessageHolderType, Integer> countMap = new HashMap<>();
 
     public RoomViewHolderFactory() {
         if (!BuildConfig.DEBUG) {

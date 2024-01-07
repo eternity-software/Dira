@@ -65,19 +65,19 @@ public class RecordComponentsController {
     private long lastTimeRecordButtonUp = 0;
     private boolean isRecordButtonVisible = true;
 
-    private View recordIndicator;
+    private final View recordIndicator;
     private RecordListener recordListener;
     private float lastScale = 1;
 
     private boolean isSaving = true;
 
-    private SlidrInterface slidrInterface;
+    private final SlidrInterface slidrInterface;
 
     private boolean isRecording = false;
     private boolean isPreparingCamera = true;
     private boolean isVoiceRecord = false;
 
-    private TextView recordingTipText;
+    private final TextView recordingTipText;
 
     private int secondsRecording = 0;
 

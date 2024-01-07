@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat;
 
 import com.diraapp.R;
 import com.diraapp.res.Theme;
-import com.diraapp.ui.components.dynamic.ThemeLinearLayout;
 import com.diraapp.utils.android.DeviceUtils;
 import com.masoudss.lib.WaveformSeekBar;
 

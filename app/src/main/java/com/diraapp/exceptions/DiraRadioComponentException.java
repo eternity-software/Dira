@@ -1,7 +1,7 @@
 package com.diraapp.exceptions;
 
-import com.diraapp.ui.components.DiraRadioComponentItem;
 import com.diraapp.ui.components.DiraRadioComponent;
+import com.diraapp.ui.components.DiraRadioComponentItem;
 
 public class DiraRadioComponentException extends RuntimeException {
 

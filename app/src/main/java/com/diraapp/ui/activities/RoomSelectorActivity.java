@@ -37,8 +37,8 @@ import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.daos.RoomDao;
-import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.exceptions.LanguageParsingException;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.res.Theme;
@@ -56,8 +56,6 @@ import com.diraapp.utils.Logger;
 import com.diraapp.utils.android.DeviceUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -496,7 +494,7 @@ public class RoomSelectorActivity extends AppCompatActivity
         if (update.getUpdateType() == UpdateType.NEW_MESSAGE_UPDATE) {
             updateRoom(((NewMessageUpdate) update).getMessage().getRoomSecret(), true);
         } else if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
-            updateRoom(((RoomUpdate) update).getRoomSecret(), false);
+            updateRoom(update.getRoomSecret(), false);
         } else if (update.getUpdateType() == UpdateType.SERVER_SYNC) {
             if (!((ServerSyncUpdate) update).getSupportedApis().contains(UpdateProcessor.API_VERSION)) {
                 runOnUiThread(new Runnable() {

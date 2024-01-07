@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
-import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -51,7 +50,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
     private boolean attachedRecycler = false;
     private View debugIndicator;
 
-    private List<String> debugLog = new ArrayList<>();
+    private final List<String> debugLog = new ArrayList<>();
 
 
     public DiraVideoPlayer(@NonNull Context context) {
@@ -457,7 +456,6 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
             if (mediaPlayer == null) mediaPlayer = new DiraMediaPlayer();
             //  if(state == DiraVideoPlayerState.PREPARING) return;
             mediaPlayer.setVolume(0, 0);
-
 
 
             mediaPlayer.setAudioStreamType(AudioManager.USE_DEFAULT_STREAM_TYPE);

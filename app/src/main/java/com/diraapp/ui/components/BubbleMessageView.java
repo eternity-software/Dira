@@ -18,7 +18,7 @@ public class BubbleMessageView extends CardView {
     public static final int BUBBLE_CONTAINER_ID = 642376;
     private boolean isInit = false;
 
-    private boolean isSelfMessage;
+    private final boolean isSelfMessage;
 
     public BubbleMessageView(@NonNull Context context, boolean isSelfMessage) {
         super(context);

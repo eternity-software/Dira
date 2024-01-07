@@ -14,8 +14,8 @@ import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.utils.CacheUtils;
@@ -44,6 +44,7 @@ public interface RoomActivityContract {
         void notifyAdapterItemChanged(int index);
 
         void notifyAdapterItemsDeleted(int start, int last);
+
         void notifyAdapterItemRemoved(int pos);
 
         void notifyViewHolderUpdateTimeAndPicture(int pos, Message message, Message previousMessage);
