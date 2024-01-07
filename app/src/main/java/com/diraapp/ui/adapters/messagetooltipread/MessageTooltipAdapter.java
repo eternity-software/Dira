@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
-import com.diraapp.db.entities.messages.MessageReading;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -23,9 +22,8 @@ public class MessageTooltipAdapter extends RecyclerView.Adapter<MessageTooltipAd
 
     private final LayoutInflater layoutInflater;
     private final Context context;
-    private List<UserReadMessage> users = new ArrayList<>();
-
     private final boolean isListenable;
+    private List<UserReadMessage> users = new ArrayList<>();
 
     public MessageTooltipAdapter(Context context, List<UserReadMessage> list, boolean isListenable) {
         this.context = context;

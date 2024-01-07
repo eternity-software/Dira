@@ -51,7 +51,7 @@ public class FilesUploader {
 
 
                 if (callback instanceof RoomActivityPresenter.AttachmentHandler) {
-                    ((RoomActivityPresenter.AttachmentHandler) callback).
+                    callback.
                             setWidthAndHeight(bitmap.getWidth(), bitmap.getHeight());
                 }
 
@@ -59,7 +59,7 @@ public class FilesUploader {
 
             } else if (callback instanceof RoomActivityPresenter.AttachmentHandler) {
                 RoomActivityPresenter.AttachmentHandler attachmentHandler =
-                        (RoomActivityPresenter.AttachmentHandler) callback;
+                        callback;
                 if (attachmentHandler.getAttachmentType() == AttachmentType.VIDEO) {
                     MediaMetadataRetriever retriever = new MediaMetadataRetriever();
                     retriever.setDataSource(sourceFileUri);

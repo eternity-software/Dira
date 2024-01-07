@@ -8,16 +8,12 @@ import androidx.annotation.NonNull;
 
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.media.DiraMediaPlayer;
-import com.diraapp.ui.adapters.messages.views.viewholders.listenable.ListenableViewHolder;
-import com.diraapp.ui.adapters.messages.views.viewholders.listenable.VoiceViewHolder;
-import com.diraapp.utils.KeyGenerator;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.StringFormatter;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class GlobalMediaPlayer {
 
@@ -192,25 +188,25 @@ public class GlobalMediaPlayer {
     }
 
     private void notifyStarted() {
-        for (GlobalMediaPlayerListener listener: listeners) {
+        for (GlobalMediaPlayerListener listener : listeners) {
             listener.onGlobalMediaPlayerStart(currentMessage, currentFile);
         }
     }
 
     private void notifyProgressChanged() {
-        for (GlobalMediaPlayerListener listener: listeners) {
+        for (GlobalMediaPlayerListener listener : listeners) {
             listener.onGlobalMediaPlayerProgressChanged(currentProgress, currentMessage);
         }
     }
 
     private void notifyClosed() {
-        for (GlobalMediaPlayerListener listener: listeners) {
+        for (GlobalMediaPlayerListener listener : listeners) {
             listener.onGlobalMediaPlayerClose();
         }
     }
 
     private void notifyPause() {
-        for (GlobalMediaPlayerListener listener: listeners) {
+        for (GlobalMediaPlayerListener listener : listeners) {
             listener.onGlobalMediaPlayerPauseClicked(isPaused, currentProgress);
         }
     }

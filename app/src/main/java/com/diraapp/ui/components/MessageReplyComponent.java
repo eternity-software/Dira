@@ -18,7 +18,6 @@ import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.db.entities.messages.customclientdata.UnencryptedMessageClientData;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
@@ -182,7 +181,7 @@ public class MessageReplyComponent extends FrameLayout {
         }
 
         if (isSelfMessage) {
-            ((ThemeImageView) this.findViewById(R.id.message_reply_line)).
+            this.findViewById(R.id.message_reply_line).
                     getBackground().setColorFilter(
                             Theme.getColor(this.getContext(), R.color.self_reply_color),
                             PorterDuff.Mode.SRC_IN);

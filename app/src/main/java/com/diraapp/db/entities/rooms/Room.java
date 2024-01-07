@@ -99,6 +99,10 @@ public class Room {
         return clientSecret;
     }
 
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
+    }
+
     public RoomType getRoomType() {
         return roomType;
     }
@@ -113,10 +117,6 @@ public class Room {
 
     public void setRoomStatusType(RoomStatusType roomStatusType) {
         this.roomStatusType = roomStatusType;
-    }
-
-    public void setClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
     }
 
     public String getServerAddress() {
@@ -231,16 +231,16 @@ public class Room {
         return unreadMessagesIds;
     }
 
+    public void setUnreadMessagesIds(ArrayList<String> unreadMessagesIds) {
+        this.unreadMessagesIds = unreadMessagesIds;
+    }
+
     public ArrayList<String> getPinnedMessagesIds() {
         return pinnedMessagesIds;
     }
 
     public void setPinnedMessagesIds(ArrayList<String> pinnedMessagesIds) {
         this.pinnedMessagesIds = pinnedMessagesIds;
-    }
-
-    public void setUnreadMessagesIds(ArrayList<String> unreadMessagesIds) {
-        this.unreadMessagesIds = unreadMessagesIds;
     }
 
     public boolean removeFromUnreadMessages(ArrayList<String> list) {
@@ -263,7 +263,7 @@ public class Room {
     }
 
     public String getFirstVisibleScrolledItemId() {
-        if(firstVisibleScrolledItemId == null) firstVisibleScrolledItemId = "null";
+        if (firstVisibleScrolledItemId == null) firstVisibleScrolledItemId = "null";
         return firstVisibleScrolledItemId;
     }
 

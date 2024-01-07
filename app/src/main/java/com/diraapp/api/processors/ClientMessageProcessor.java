@@ -12,7 +12,6 @@ import com.diraapp.api.updates.RenewingConfirmUpdate;
 import com.diraapp.api.updates.RoomUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.db.DiraRoomDatabase;
-import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
 import com.diraapp.db.entities.messages.customclientdata.KeyGenerateStartClientData;
@@ -22,6 +21,7 @@ import com.diraapp.db.entities.messages.customclientdata.RoomIconChangeClientDat
 import com.diraapp.db.entities.messages.customclientdata.RoomJoinClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameAndIconChangeClientData;
 import com.diraapp.db.entities.messages.customclientdata.RoomNameChangeClientData;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.notifications.Notifier;
 
 public class ClientMessageProcessor {

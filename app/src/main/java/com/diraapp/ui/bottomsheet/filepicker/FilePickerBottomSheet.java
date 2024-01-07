@@ -15,7 +15,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,13 +24,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.BuildConfig;
 import com.diraapp.R;
-import com.diraapp.ui.activities.room.RoomActivity;
-import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.ui.activities.DiraActivity;
+import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.ui.adapters.GridItemsSpacingDecorator;
 import com.diraapp.ui.adapters.MediaGridAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
-import com.diraapp.utils.Logger;
+import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.utils.android.DeviceUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -114,7 +112,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         mediaGridAdapter = new MediaGridAdapter((DiraActivity) getActivity(), onItemClickListener, recyclerView, onlyImages,
                 (files, buckets) -> {
 
-                    Spinner staticSpinner = (Spinner) view.findViewById(R.id.album_picker);
+                    Spinner staticSpinner = view.findViewById(R.id.album_picker);
                     buckets.add(0, getString(R.string.media_gallery));
 
                     for (int i = 0; i < buckets.size(); i++) {
@@ -328,6 +326,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
 
     }
+
     public interface MultiFilesListener {
         void onSelectedFilesSent(List<SelectorFileInfo> diraMediaInfoList, String messageText);
 

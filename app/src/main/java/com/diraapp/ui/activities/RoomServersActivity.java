@@ -40,7 +40,7 @@ public class RoomServersActivity extends DiraActivity {
             diraPopup.setCancellable(true);
             diraPopup.show(getString(R.string.room_servers_popup_mitm_title),
                     getString(R.string.room_servers_popup_mitm_text), null,
-                    null,() -> {
+                    null, () -> {
                         binding.serverAddress.setText("");
                         ArrayList<String> servers = AppStorage.getServerList(this);
                         if (!servers.contains(address)) {

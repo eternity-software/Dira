@@ -15,7 +15,7 @@ import com.diraapp.ui.components.dynamic.ThemeLinearLayout;
 
 public class FileAttachmentComponent extends FrameLayout {
     private boolean isInit = false;
-    private boolean isSelfMessage;
+    private final boolean isSelfMessage;
 
     public FileAttachmentComponent(@NonNull Context context, boolean isSelfMessage) {
         super(context);
@@ -31,14 +31,14 @@ public class FileAttachmentComponent extends FrameLayout {
         inflater.inflate(R.layout.message_file_attachment, this);
 
         if (isSelfMessage) {
-            ((ThemeLinearLayout) findViewById(R.id.message_file_attachment_icon_background)).
+            findViewById(R.id.message_file_attachment_icon_background).
                     getBackground().setColorFilter(
                             Theme.getColor(getContext(), R.color.self_message_file_background),
                             PorterDuff.Mode.SRC_IN);
 
             ((ThemeImageView) findViewById(R.id.message_file_attachment_icon)).setColorFilter(
-                            Theme.getColor(getContext(), R.color.self_message_file),
-                            PorterDuff.Mode.SRC_IN);
+                    Theme.getColor(getContext(), R.color.self_message_file),
+                    PorterDuff.Mode.SRC_IN);
 
             ((DynamicTextView) findViewById(R.id.message_file_attachment_name)).
                     setTextColor(Theme.getColor(getContext(), R.color.self_message_color));

@@ -11,13 +11,9 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 
-import com.diraapp.BuildConfig;
 import com.diraapp.R;
-import com.diraapp.api.processors.UpdateProcessor;
-import com.diraapp.api.requests.AttachmentListenedRequest;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
@@ -215,7 +211,8 @@ public class VoiceViewHolder extends ListenableViewHolder {
     }
 
     private void clearItem() {
-        playButton.setOnClickListener((View v) -> {});
+        playButton.setOnClickListener((View v) -> {
+        });
 
         clearProgress();
     }

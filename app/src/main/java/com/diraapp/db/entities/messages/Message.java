@@ -32,6 +32,7 @@ import java.util.HashMap;
         MessageReadingConverter.class})
 public class Message {
 
+    private static final HashMap<AttachmentType, Integer> attachmentTypeStringHashMap = new HashMap<>();
     @PrimaryKey
     @NotNull
     private String id;
@@ -44,20 +45,13 @@ public class Message {
     private CustomClientData customClientData = null;
     @ColumnInfo(defaultValue = "null")
     private String repliedMessageId;
-
     @Ignore
     private Message repliedMessage;
-
     @ColumnInfo(defaultValue = "true")
     private boolean isRead = true;
-
     @ColumnInfo(defaultValue = "0")
     private long lastTimeEncryptionKeyUpdated;
-
     private ArrayList<MessageReading> messageReadingList = new ArrayList<>();
-
-
-    private static HashMap<AttachmentType, Integer> attachmentTypeStringHashMap = new HashMap<>();
 
     @Ignore
     public Message(String authorId, String text, String authorNickname) {
@@ -92,6 +86,14 @@ public class Message {
         message.isRead = true;
         return message;
 
+    }
+
+    private static void initAttachmentTypesHashMap() {
+        attachmentTypeStringHashMap.put(AttachmentType.IMAGE, R.string.message_type_image);
+        attachmentTypeStringHashMap.put(AttachmentType.VIDEO, R.string.message_type_video);
+        attachmentTypeStringHashMap.put(AttachmentType.FILE, R.string.message_type_file);
+        attachmentTypeStringHashMap.put(AttachmentType.VOICE, R.string.message_type_voice);
+        attachmentTypeStringHashMap.put(AttachmentType.BUBBLE, R.string.message_type_bubble);
     }
 
     public Attachment getSingleAttachment() {
@@ -214,6 +216,10 @@ public class Message {
         return authorNickname;
     }
 
+    public void setAuthorNickname(String authorNickname) {
+        this.authorNickname = authorNickname;
+    }
+
     public String getShortAuthorNickname() {
 
         if (authorNickname.length() > 22) {
@@ -221,10 +227,6 @@ public class Message {
             return text;
         }
         return authorNickname;
-    }
-
-    public void setAuthorNickname(String authorNickname) {
-        this.authorNickname = authorNickname;
     }
 
     public boolean hasCustomClientData() {
@@ -327,14 +329,6 @@ public class Message {
         }
 
         return false;
-    }
-
-    private static void initAttachmentTypesHashMap() {
-        attachmentTypeStringHashMap.put(AttachmentType.IMAGE, R.string.message_type_image);
-        attachmentTypeStringHashMap.put(AttachmentType.VIDEO, R.string.message_type_video);
-        attachmentTypeStringHashMap.put(AttachmentType.FILE, R.string.message_type_file);
-        attachmentTypeStringHashMap.put(AttachmentType.VOICE, R.string.message_type_voice);
-        attachmentTypeStringHashMap.put(AttachmentType.BUBBLE, R.string.message_type_bubble);
     }
 
     @Override

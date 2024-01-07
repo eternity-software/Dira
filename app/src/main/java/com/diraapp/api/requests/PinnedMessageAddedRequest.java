@@ -1,7 +1,5 @@
 package com.diraapp.api.requests;
 
-import com.diraapp.R;
-
 public class PinnedMessageAddedRequest extends Request {
 
     private String messageId;

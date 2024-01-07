@@ -9,10 +9,10 @@ import java.util.List;
 
 public class MultiAttachmentLoader {
 
-    private String messageText;
-    private List<Attachment> attachments = new ArrayList<>();
+    private final String messageText;
+    private final List<Attachment> attachments = new ArrayList<>();
 
-    private RoomActivityContract.Presenter presenter;
+    private final RoomActivityContract.Presenter presenter;
 
     private int readySize = -1;
     private int uploadedCount = 0;

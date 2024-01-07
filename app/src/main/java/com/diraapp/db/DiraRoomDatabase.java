@@ -11,8 +11,8 @@ import com.diraapp.db.converters.UnreadIdsConverter;
 import com.diraapp.db.daos.MemberDao;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.migrations.RoomMigrationFrom17To18;
 import com.diraapp.db.migrations.RoomMigrationFrom21To22;
 

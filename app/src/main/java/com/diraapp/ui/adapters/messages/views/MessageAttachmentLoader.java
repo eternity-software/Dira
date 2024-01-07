@@ -5,8 +5,8 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.diraapp.db.entities.Attachment;
-import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.storage.attachments.SaveAttachmentTask;

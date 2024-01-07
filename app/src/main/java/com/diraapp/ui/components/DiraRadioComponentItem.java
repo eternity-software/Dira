@@ -15,7 +15,6 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.diraapp.R;
 import com.diraapp.res.Theme;
-import com.diraapp.utils.Logger;
 import com.diraapp.utils.android.DeviceUtils;
 
 public class DiraRadioComponentItem extends LinearLayout {

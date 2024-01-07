@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
-import android.inputmethodservice.Keyboard;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -50,8 +49,8 @@ import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.res.Theme;
@@ -73,8 +72,8 @@ import com.diraapp.ui.adapters.messages.MessagesAdapter;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
 import com.diraapp.ui.adapters.messages.views.BalloonMessageMenu;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
-import com.diraapp.ui.adapters.messages.views.viewholders.listenable.ListenableViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.RoomViewHolderFactory;
+import com.diraapp.ui.adapters.messages.views.viewholders.listenable.ListenableViewHolder;
 import com.diraapp.ui.appearance.BackgroundType;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
@@ -114,20 +113,11 @@ public class RoomActivity extends DiraActivity
     private static final int IS_ROOM_OPENING = -1;
 
     private final RecyclerView.RecycledViewPool recycledViewPool = new RecyclerView.RecycledViewPool();
+    private final HashSet<String> messagesToBlinkIds = new HashSet<>();
     private String roomSecret;
     private MessagesAdapter messagesAdapter;
     private FilePickerBottomSheet filePickerBottomSheet;
     private ActivityRoomBinding binding;
-
-    private boolean isArrowShowed = true;
-    private boolean isScrollIndicatorShown = true;
-    private boolean isLastPinnedShown = false;
-    private int currentPinnedShownPos = 0;
-
-    private int currentPinnedTapCount = 0;
-
-    private final HashSet<String> messagesToBlinkIds = new HashSet<>();
-
     private final MediaGridItemListener mediaGridItemListener = new MediaGridItemListener() {
         @Override
         public void onItemClick(int pos, final View view) {
@@ -141,6 +131,11 @@ public class RoomActivity extends DiraActivity
 
         }
     };
+    private boolean isArrowShowed = true;
+    private boolean isScrollIndicatorShown = true;
+    private boolean isLastPinnedShown = false;
+    private int currentPinnedShownPos = 0;
+    private int currentPinnedTapCount = 0;
     private RecordComponentsController recordComponentsController;
     private RoomActivityContract.Presenter presenter;
     private int lastVisiblePosition = 0;
@@ -436,7 +431,7 @@ public class RoomActivity extends DiraActivity
         int firstVisiblePos = layoutManager.findFirstVisibleItemPosition();
 
         Message message = presenter.getMessageByPosition(firstVisiblePos);
-        if(message != null)
+        if (message != null)
             getRoom().setFirstVisibleScrolledItemId(message.getId());
 
         getRoom().setUnsentText(binding.messageTextInput.getText().toString());
@@ -756,7 +751,7 @@ public class RoomActivity extends DiraActivity
         boolean showArrow = getRoom().getUnreadMessagesIds().size() > 1;
 
         boolean isMessagesIdsExist = getRoom().getFirstVisibleScrolledItemId() != null &&
-                                        getRoom().getLastMessageId() != null;
+                getRoom().getLastMessageId() != null;
 
         if (!showArrow && isMessagesIdsExist) {
             showArrow = !getRoom().getFirstVisibleScrolledItemId().equals(getRoom().getLastMessageId());
@@ -921,7 +916,8 @@ public class RoomActivity extends DiraActivity
     private void fillPinnedComponent(Message message) {
         runOnUiThread(() -> {
             if (message == null) {
-                binding.pinnedLayout.setOnClickListener((View v) -> {});
+                binding.pinnedLayout.setOnClickListener((View v) -> {
+                });
             } else {
                 currentPinnedTapCount = 0;
                 Logger.logDebug(RoomActivity.class.getName(), "New onClick (tapCount = " + currentPinnedTapCount + ")");
@@ -932,7 +928,8 @@ public class RoomActivity extends DiraActivity
                     presenter.scrollToMessage(message);
 
                     if (currentPinnedTapCount == 2) {
-                        binding.pinnedLayout.setOnClickListener((View v2) -> {});
+                        binding.pinnedLayout.setOnClickListener((View v2) -> {
+                        });
                         Logger.logDebug(RoomActivity.class.getName(), "showNext (tapCount = " + currentPinnedTapCount + ")");
                         showNextPinned();
                     }
@@ -940,7 +937,7 @@ public class RoomActivity extends DiraActivity
             }
 
             int px = Math.max(2 * DeviceUtils.dpToPx(8, this) + 2 * DeviceUtils.spToPx(12, this),
-                            DeviceUtils.dpToPx(8 + 8 + 40, this));
+                    DeviceUtils.dpToPx(8 + 8 + 40, this));
             Logger.logDebug("sdfdsfdsfsdf", "dddddd - " + px);
             fillViews(message, binding.pinnedAuthorName, binding.pinnedText, binding.pinnedImageCard,
                     binding.pinnedImage, px, binding.pinnedLayout);
@@ -985,7 +982,7 @@ public class RoomActivity extends DiraActivity
     public void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
@@ -1124,7 +1121,7 @@ public class RoomActivity extends DiraActivity
         notifyViewHolder(pos, (BaseMessageViewHolder holder) -> {
             holder.bindUserPicture(message, previousMessage);
             holder.fillDateAndTime(message, previousMessage);
-        } );
+        });
     }
 
     @Override
@@ -1296,7 +1293,7 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public BalloonMessageMenu.BalloonMenuListener getBalloonMessageListener() {
-        return (BalloonMessageMenu.BalloonMenuListener) this;
+        return this;
     }
 
     @Override

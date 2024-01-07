@@ -10,18 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
 import com.diraapp.R;
-import com.diraapp.api.processors.UpdateProcessor;
-import com.diraapp.api.requests.AttachmentListenedRequest;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayer;
-import com.diraapp.utils.Logger;
 
 import java.io.File;
 
@@ -48,7 +44,7 @@ public class BubbleViewHolder extends ListenableViewHolder {
         if (!isInitialized) return;
 
         clearItem();
-        if (getCurrentMessage() == null | currentMediaFile == null)  {
+        if (getCurrentMessage() == null | currentMediaFile == null) {
             return;
         }
 
@@ -58,7 +54,8 @@ public class BubbleViewHolder extends ListenableViewHolder {
 
     @Override
     public void setProgress(float progress) {
-        if (!isInitialized) return;
+        if (!isInitialized) {
+        }
 
         //bubblePlayer.setProgress(progress);
     }
@@ -132,7 +129,7 @@ public class BubbleViewHolder extends ListenableViewHolder {
             if (getState() == ListenableViewHolderState.PAUSED ||
                     getState() == ListenableViewHolderState.PLAYING) {
                 getMessageAdapterContract().currentListenablePaused(this);
-            }  else {
+            } else {
                 getMessageAdapterContract().currentListenableStarted(this, file, 0);
             }
         });

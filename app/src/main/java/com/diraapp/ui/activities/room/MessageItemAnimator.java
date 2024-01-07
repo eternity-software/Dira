@@ -1,14 +1,12 @@
 package com.diraapp.ui.activities.room;
 
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
-import com.diraapp.utils.android.DeviceUtils;
 
 public class MessageItemAnimator extends DefaultItemAnimator {
 

@@ -23,30 +23,29 @@ public class ImagesWorker {
         MediaStore.Images.Media.insertImage(activity.getContentResolver(), finalBitmap, fname, "DiraApp");
     }
 
-    public static Bitmap centerCropBitmap(Bitmap sourceBitmap)
-    {
+    public static Bitmap centerCropBitmap(Bitmap sourceBitmap) {
         Bitmap croppedBitmap;
-        if (sourceBitmap.getWidth() >= sourceBitmap.getHeight()){
+        if (sourceBitmap.getWidth() >= sourceBitmap.getHeight()) {
 
             croppedBitmap = Bitmap.createBitmap(
                     sourceBitmap,
-                    sourceBitmap.getWidth()/2 - sourceBitmap.getHeight()/2,
+                    sourceBitmap.getWidth() / 2 - sourceBitmap.getHeight() / 2,
                     0,
                     sourceBitmap.getHeight(),
                     sourceBitmap.getHeight()
             );
 
-        }else{
+        } else {
 
             croppedBitmap = Bitmap.createBitmap(
                     sourceBitmap,
                     0,
-                    sourceBitmap.getHeight()/2 - sourceBitmap.getWidth()/2,
+                    sourceBitmap.getHeight() / 2 - sourceBitmap.getWidth() / 2,
                     sourceBitmap.getWidth(),
                     sourceBitmap.getWidth()
             );
         }
-        if(sourceBitmap != croppedBitmap) sourceBitmap.recycle();
+        if (sourceBitmap != croppedBitmap) sourceBitmap.recycle();
         return croppedBitmap;
     }
 

@@ -7,7 +7,6 @@ import androidx.room.Ignore;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.messages.MessageType;
-import com.diraapp.utils.StringFormatter;
 
 @Entity
 public class RoomJoinClientData extends CustomClientData {

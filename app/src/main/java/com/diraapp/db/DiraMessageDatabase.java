@@ -14,10 +14,10 @@ import com.diraapp.db.daos.AttachmentDao;
 import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.migrations.MessageMigrationFrom17To18;
 import com.diraapp.db.migrations.MessageMigrationFrom21To22;
 

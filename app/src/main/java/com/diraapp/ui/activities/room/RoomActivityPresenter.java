@@ -30,9 +30,9 @@ import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
@@ -61,13 +61,10 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
 
     private static final int MAX_ADAPTER_MESSAGES_COUNT = 200;
-
-    private ArrayList<Message> pinnedMessages = new ArrayList<>();
-
-    private HashSet<String> pinnedIds = new HashSet<>();
     private final String roomSecret;
     private final String selfId;
-
+    private ArrayList<Message> pinnedMessages = new ArrayList<>();
+    private HashSet<String> pinnedIds = new HashSet<>();
     private List<Message> messageList = new ArrayList<>();
     private RoomActivityContract.View view;
     private UserStatus currentUserStatus;
@@ -168,7 +165,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     public void detachView() {
         view = null;
         UpdateProcessor.getInstance().removeUpdateListener(this);
-      //  this.view = null;
+        //  this.view = null;
     }
 
     @Override
@@ -377,7 +374,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
         MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
 
-        for (String id: room.getPinnedMessagesIds()) {
+        for (String id : room.getPinnedMessagesIds()) {
             Message message = messageDao.getMessageById(id);
 
             if (message == null) continue;
@@ -709,12 +706,12 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         Message finalThisMessage = thisMessage;
         view.notifyViewHolder(index, (BaseMessageViewHolder holder) -> {
             holder.updateListeningIndicator(finalThisMessage.getSingleAttachment());
-        } );
+        });
 
         if (isSelf) return;
 
         MessageReading messageReading = null;
-        for (MessageReading mr: thisMessage.getMessageReadingList()) {
+        for (MessageReading mr : thisMessage.getMessageReadingList()) {
             if (mr.getUserId().equals(listenedUpdate.getUserId())) {
                 messageReading = mr;
                 break;
@@ -764,7 +761,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
             });
 
-            for (Attachment attachment: message.getAttachments()) {
+            for (Attachment attachment : message.getAttachments()) {
                 AppStorage.deleteAttachment(context, attachment, message.getRoomSecret());
             }
 
@@ -817,7 +814,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 updateRoom = true;
 
                 removePinned(new PinnedMessageRemovedUpdate(
-                                roomSecret, messageId, message.getAuthorId()));
+                        roomSecret, messageId, message.getAuthorId()));
                 dbRoom.getPinnedMessagesIds().remove(messageId);
             }
 
@@ -869,7 +866,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         pinnedIds.remove(update.getMessageId());
 
         Message message = null;
-        for (Message m: pinnedMessages) {
+        for (Message m : pinnedMessages) {
             if (m.getId().equals(update.getMessageId())) {
                 message = m;
                 break;
@@ -1006,7 +1003,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     @Override
     public Message getMessageByPosition(int pos) {
         if (pos >= messageList.size()) return null;
-        if(pos == -1) return null;
+        if (pos == -1) return null;
         return messageList.get(pos);
     }
 
@@ -1035,7 +1032,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         private int width;
         private String fileUri;
         private long fileSize;
-        private AttachmentReadyListener attachmentReadyListener;
+        private final AttachmentReadyListener attachmentReadyListener;
 
         public AttachmentHandler(String fileUri, AttachmentReadyListener attachmentReadyListener, AttachmentType attachmentType) {
             this.fileUri = fileUri;
