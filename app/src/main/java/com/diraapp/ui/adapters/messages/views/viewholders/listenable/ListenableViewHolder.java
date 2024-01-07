@@ -12,7 +12,6 @@ import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.adapters.messages.views.viewholders.AttachmentViewHolder;
-import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayer;
 
 public abstract class ListenableViewHolder extends AttachmentViewHolder {
 

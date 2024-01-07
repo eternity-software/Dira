@@ -28,15 +28,15 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
 
-        android:clipChildren="true"
+        android:layout_marginVertical="-16dp"
 
+        android:clipChildren="true"
         android:clipToPadding="false"
         android:layoutAnimation="@anim/layout_items_animation"
         android:nestedScrollingEnabled="false"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 
-        android:layout_marginVertical="-16dp"
         android:paddingVertical="16dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -69,19 +69,19 @@
 
     <LinearLayout
         android:id="@+id/pinned_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_rounded"
+
+        android:backgroundTint="@color/dark_medium"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="8dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-
-        android:background="@drawable/bottom_rounded"
-        android:backgroundTint="@color/dark_medium"
-        android:paddingVertical="8dp"
-        android:paddingHorizontal="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/global_player"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone">
+        app:layout_constraintTop_toBottomOf="@+id/global_player">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/pinned_image_card"
@@ -145,11 +145,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:background="@drawable/rounded_background"
             android:orientation="horizontal"
-            app:themeBackgroundColor="gray"
             android:paddingHorizontal="10dp"
             android:paddingVertical="4dp"
-            android:background="@drawable/rounded_background">
+            app:themeBackgroundColor="gray">
 
             <com.diraapp.ui.components.dynamic.ThemeImageView
                 android:id="@+id/pins_icon"
@@ -164,10 +164,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:fontFamily="@font/montserratsemibold"
-                android:maxLines="1"
-
                 android:layout_marginStart="6dp"
+                android:fontFamily="@font/montserratsemibold"
+
+                android:maxLines="1"
 
                 android:text="10"
                 android:textColor="@color/white"
@@ -336,11 +336,11 @@
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="-16dp"
         android:background="@drawable/message_input"
         android:elevation="1dp"
-        android:orientation="vertical"
 
-        android:layout_marginTop="-16dp"
+        android:orientation="vertical"
 
         android:paddingHorizontal="8dp"
         android:paddingVertical="4dp"
@@ -559,8 +559,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:orientation="horizontal"
         android:layout_marginBottom="12dp"
+        android:orientation="horizontal"
 
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"

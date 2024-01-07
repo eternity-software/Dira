@@ -9,9 +9,9 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:gravity="center_vertical"
-        app:themeImageColor="dira_radio_text_selected"
+        android:src="@drawable/ic_check"
         android:visibility="gone"
-        android:src="@drawable/ic_check"/>
+        app:themeImageColor="dira_radio_text_selected" />
 
     <com.diraapp.ui.components.dynamic.ThemeImageView
         android:id="@+id/dira_radio_item_hide"
@@ -19,9 +19,9 @@
         android:layout_height="24dp"
         android:layout_margin="4dp"
         android:gravity="center_vertical"
-        app:themeImageColor="dira_radio_text"
+        android:src="@drawable/ic_hide"
         android:visibility="visible"
-        android:src="@drawable/ic_hide"/>
+        app:themeImageColor="dira_radio_text" />
 
     <com.diraapp.ui.components.dynamic.DynamicTextView
         android:id="@+id/dira_radio_item_text"
@@ -32,8 +32,8 @@
         android:fontFamily="@font/montserratbold"
         android:gravity="center_vertical"
         android:minWidth="15dp"
-        android:paddingEnd="24dp"
         android:paddingStart="4dp"
+        android:paddingEnd="24dp"
         android:text=""
         android:textSize="14sp"
         android:visibility="visible"

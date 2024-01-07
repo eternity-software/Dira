@@ -153,7 +153,7 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder implements 
             imagePreview.prepareForAttachment(attachment,
                     getMessageAdapterContract().getRoom(), null);
 
-            if (currentMediaFile == null  | AttachmentDownloader.isAttachmentSaving(attachment)) {
+            if (currentMediaFile == null | AttachmentDownloader.isAttachmentSaving(attachment)) {
                 AttachmentDownloadHandler attachmentDownloadHandler = progress -> {
                     onLoadPercentChanged(attachment, progress);
                 };
@@ -278,9 +278,8 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder implements 
     @Override
     public void onViewRecycled() {
         super.onViewRecycled();
-        if(!isInitialized) return;
-        for(ImagePreview imagePreview : imagePreviewList)
-        {
+        if (!isInitialized) return;
+        for (ImagePreview imagePreview : imagePreviewList) {
             imagePreview.detach();
         }
 
@@ -289,8 +288,7 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder implements 
     @Override
     public void onViewDetached() {
         super.onViewDetached();
-        for(ImagePreview imagePreview : imagePreviewList)
-        {
+        for (ImagePreview imagePreview : imagePreviewList) {
             imagePreview.detach();
         }
     }
@@ -298,16 +296,14 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder implements 
     @Override
     public void onViewAttached() {
         super.onViewAttached();
-        for(ImagePreview imagePreview : imagePreviewList)
-        {
+        for (ImagePreview imagePreview : imagePreviewList) {
             imagePreview.attach();
         }
     }
 
     @Override
     public void onDestroy() {
-        for(Attachment attachment : handlers.keySet())
-        {
+        for (Attachment attachment : handlers.keySet()) {
             AttachmentDownloader.removeAttachmentDownloadHandler(handlers.get(attachment), attachment);
         }
     }

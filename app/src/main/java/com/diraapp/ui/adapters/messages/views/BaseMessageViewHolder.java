@@ -48,9 +48,6 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     private final MessageAdapterContract messageAdapterContract;
     private final ViewHolderManagerContract viewHolderManagerContract;
     protected boolean isInitialized = false, isSelfMessage;
-
-    private Message currentMessage = null;
-
     /**
      * Indicates that message will be without background (ex. BubbleMessage)
      */
@@ -61,6 +58,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     protected TextView nicknameText;
     protected ImageView profilePicture;
     protected View profilePictureContainer;
+    private Message currentMessage = null;
     private TextView timeText;
     private TextView dateText;
 
