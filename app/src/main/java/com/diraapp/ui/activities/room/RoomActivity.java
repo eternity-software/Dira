@@ -1328,7 +1328,7 @@ public class RoomActivity extends DiraActivity
             currentListenableViewHolder = viewHolder;
             GlobalMediaPlayer player = GlobalMediaPlayer.getInstance();
 
-            currentListenableViewHolder.pause(player.isPaused(), player.getCurrentProgress());
+            currentListenableViewHolder.rebindPlaying(player.isPaused(), player.getCurrentProgress());
             Logger.logDebug("RoomActivity", "Current listenable has been found");
             return true;
         }

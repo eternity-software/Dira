@@ -218,12 +218,21 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
         play(new PlayingTask(source));
     }
 
+    @Deprecated
+    public void play(@NonNull String source, Runnable onStarted) {
+        play(new PlayingTask(source), onStarted);
+    }
+
     /**
      * Ask player to prepare media and play it as it ready
      *
      * @param source PlayingTask instance for single media file
      */
-    public void play(@Nullable PlayingTask source) {
+    public void play(@NonNull PlayingTask source) {
+        play(source, null);
+    }
+
+    public void play(@Nullable PlayingTask source, Runnable onStarted) {
         if (source == null) return;
         currentPlayingTask = source;
 
@@ -245,7 +254,9 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
                         @Override
                         public void onPrepared(MediaPlayer mediaPlayer) {
                             if (source != currentPlayingTask) return;
-                            play();
+
+                            if (onStarted == null) play();
+                            else play(onStarted);
                         }
                     });
 

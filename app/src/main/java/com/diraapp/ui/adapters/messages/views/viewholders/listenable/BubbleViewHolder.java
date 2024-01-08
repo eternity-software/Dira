@@ -18,6 +18,7 @@ import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.components.BubbleMessageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayer;
+import com.diraapp.utils.Logger;
 
 import java.io.File;
 
@@ -48,8 +49,8 @@ public class BubbleViewHolder extends ListenableViewHolder {
             return;
         }
 
-        bubblePlayer.setProgress(0);
         bubblePlayer.play(currentMediaFile.getPath());
+        bubblePlayer.setProgress(0);
     }
 
     @Override
@@ -92,17 +93,8 @@ public class BubbleViewHolder extends ListenableViewHolder {
 
         if (isPaused) {
             setState(ListenableViewHolderState.PAUSED);
-            bubblePlayer.pause();
-            bubblePlayer.setProgress(progress / 10);
         } else {
             setState(ListenableViewHolderState.PLAYING);
-            lastProgress = progress / 10;
-            bubblePlayer.play(() -> new Handler(Looper.getMainLooper()).post(() -> {
-                bubblePlayer.setSpeed(1f);
-                bubblePlayer.setProgress(lastProgress);
-                lastProgress = 0;
-            }));
-
         }
     }
 
@@ -110,9 +102,7 @@ public class BubbleViewHolder extends ListenableViewHolder {
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
         if (file == null) return;
 
-        if (getState() == ListenableViewHolderState.UNSELECTED) {
-            bubblePlayer.play(file.getPath());
-        }
+        checkIsCurrent();
 
         try {
             //loading.setVisibility(View.GONE);
@@ -155,7 +145,6 @@ public class BubbleViewHolder extends ListenableViewHolder {
     public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
         if (message.getAttachments().size() == 0) return;
-        if (getState() == ListenableViewHolderState.UNSELECTED) clearItem();
 
         updateListeningIndicator(message.getSingleAttachment());
 
@@ -174,7 +163,6 @@ public class BubbleViewHolder extends ListenableViewHolder {
         super.onViewRecycled();
         if (!isInitialized) return;
         bubblePlayer.stop();
-        lastProgress = 0;
     }
 
     @Override
@@ -182,17 +170,13 @@ public class BubbleViewHolder extends ListenableViewHolder {
         super.onViewDetached();
         if (!isInitialized) return;
         bubblePlayer.pause();
-        lastProgress = 0;
     }
 
     @Override
     public void onViewAttached() {
         super.onViewAttached();
         if (!isInitialized | currentMediaFile == null) return;
-        if (getState() == ListenableViewHolderState.UNSELECTED) {
-            clearProgress();
-            bubblePlayer.play(currentMediaFile.getPath());
-        }
+        checkIsCurrent();
     }
 
     @Override
@@ -209,7 +193,32 @@ public class BubbleViewHolder extends ListenableViewHolder {
 
     private void clearItem() {
         setState(ListenableViewHolderState.UNSELECTED);
-        lastProgress = 0;
         bubblePlayer.reset();
+    }
+
+    private void checkIsCurrent() {
+        if (!isInitialized | currentMediaFile == null) return;
+
+        switch (getState()) {
+            case UNSELECTED:
+                clearProgress();
+                break;
+            case PLAYING:
+                bubblePlayer.play(currentMediaFile.getPath(), () -> {
+                    bubblePlayer.setProgress(GlobalMediaPlayer.getInstance().getCurrentProgress() / 10);
+                    bubblePlayer.setSpeed(1f);
+                });
+                break;
+            case PAUSED:
+                bubblePlayer.play(currentMediaFile.getPath(), () -> {
+                    bubblePlayer.setProgress(GlobalMediaPlayer.getInstance().getCurrentProgress() / 10);
+                    bubblePlayer.setSpeed(1f);
+                    bubblePlayer.pause();
+                });
+                break;
+        }
+
+        Logger.logDebug(this.getClass().getName(), "Rebind with " + getState() +
+                " | " + getCurrentMessage().getId());
     }
 }
