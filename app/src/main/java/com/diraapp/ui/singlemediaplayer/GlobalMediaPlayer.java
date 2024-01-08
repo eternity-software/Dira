@@ -53,7 +53,9 @@ public class GlobalMediaPlayer {
         if (currentProgress == this.currentProgress) return true;
 
         this.currentProgress = currentProgress;
-        diraMediaPlayer.setProgress(currentProgress / 10);
+        if (isPlaying()) diraMediaPlayer.setProgress(currentProgress / 10);
+
+        notifyProgressChanged();
 
         return true;
     }

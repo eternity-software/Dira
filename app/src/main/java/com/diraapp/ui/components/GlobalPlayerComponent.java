@@ -261,8 +261,6 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
 
     @Override
     public void onGlobalMediaPlayerProgressChanged(float progress, Message message) {
-        show();
-
         fillTimeView(progress);
     }
 
