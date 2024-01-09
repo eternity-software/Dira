@@ -205,15 +205,15 @@ public class BubbleViewHolder extends ListenableViewHolder {
                 break;
             case PLAYING:
                 bubblePlayer.play(currentMediaFile.getPath(), () -> {
-                    bubblePlayer.setProgress(GlobalMediaPlayer.getInstance().getCurrentProgress() / 10);
                     bubblePlayer.setSpeed(1f);
+                    bubblePlayer.setProgress(GlobalMediaPlayer.getInstance().getCurrentProgress() / 10);
                 });
                 break;
             case PAUSED:
                 bubblePlayer.play(currentMediaFile.getPath(), () -> {
-                    bubblePlayer.setProgress(GlobalMediaPlayer.getInstance().getCurrentProgress() / 10);
                     bubblePlayer.setSpeed(1f);
                     bubblePlayer.pause();
+                    bubblePlayer.setProgress(GlobalMediaPlayer.getInstance().getCurrentProgress() / 10);
                 });
                 break;
         }

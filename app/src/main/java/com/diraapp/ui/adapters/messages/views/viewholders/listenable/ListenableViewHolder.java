@@ -66,7 +66,6 @@ public abstract class ListenableViewHolder extends AttachmentViewHolder {
     public void onViewAttached() {
         super.onViewAttached();
         if (!isInitialized || getCurrentMessage() == null) {
-            state = ListenableViewHolderState.UNSELECTED;
             return;
         }
 

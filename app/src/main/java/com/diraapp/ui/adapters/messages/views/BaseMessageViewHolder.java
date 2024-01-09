@@ -3,6 +3,7 @@ package com.diraapp.ui.adapters.messages.views;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
@@ -10,6 +11,7 @@ import android.graphics.PorterDuff;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,6 +37,7 @@ import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.TimeConverter;
 import com.diraapp.utils.android.DeviceUtils;
+import com.masoudss.lib.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -55,6 +58,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     protected TextView messageText;
     protected LinearLayout outerContainer, messageContainer, postInflatedViewsContainer;
     protected View messageBackground, rootView;
+    private ImageView readingIndicator;
     protected TextView nicknameText;
     protected ImageView profilePicture;
     protected View profilePictureContainer;
@@ -102,6 +106,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         outerContainer = find(R.id.bubble_view_container);
         messageContainer = find(R.id.message_container);
         messageBackground = find(R.id.message_background);
+        readingIndicator = find(R.id.read_indicator);
         postInflatedViewsContainer = find(R.id.views_container);
         outerReplyContainer = find(R.id.outer_reply_container);
 
@@ -284,46 +289,35 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     }
 
     public void updateMessageReading(Message message, boolean isAnimated) {
-        Logger.logDebug("ReadingDebug", "10");
         if (!isInitialized) return;
-        Logger.logDebug("ReadingDebug", "11");
         if (!message.hasAuthor()) return;
-        Logger.logDebug("ReadingDebug", "12");
         if (!isSelfMessage) return;
-        Logger.logDebug("ReadingDebug", "13");
-        if (message.getMessageReadingList() != null && messageBackground.getBackground() != null) {
+
+        if (message.getMessageReadingList() != null) {
             if (message.getMessageReadingList().size() == 0) {
-                messageBackground.getBackground().setColorFilter(
-                        Theme.getColor(itemView.getContext(),
-                                R.color.unread_message_background), PorterDuff.Mode.SRC_IN);
-                Logger.logDebug("ReadingDebug", "16");
+                readingIndicator.setVisibility(View.VISIBLE);
             } else {
-                if (!isAnimated) {
-                    messageBackground.getBackground().setColorFilter(
-                            Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
-                    Logger.logDebug("ReadingDebug", "14");
-                    return;
+
+                if (isAnimated) {
+                    int dp6 = DeviceUtils.dpToPx(6, itemView.getContext());
+                    ValueAnimator animator = ValueAnimator.ofInt(dp6, 0);
+                    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
+                            int value = (int) valueAnimator.getAnimatedValue();
+                            ViewGroup.LayoutParams params = readingIndicator.getLayoutParams();
+                            params.width = value;
+                            readingIndicator.setLayoutParams(params);
+                        }
+                    });
+
+                    animator.setInterpolator(new DecelerateInterpolator(2f));
+                    animator.setDuration(150);
+                    animator.start();
+                } else {
+                    readingIndicator.setVisibility(View.GONE);
                 }
 
-                if (messageBackgroundAnimator != null) {
-                    if (messageBackgroundAnimator.isRunning()) {
-                        messageBackgroundAnimator.end();
-                    }
-                }
-                int colorFrom = Theme.getColor(itemView.getContext(),
-                        R.color.unread_message_background);
-                int colorTo = Color.TRANSPARENT;
-
-                ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-                colorAnimation.setDuration(600); // milliseconds
-                colorAnimation.addUpdateListener((animator) -> {
-                    messageBackground.getBackground().setColorFilter((Integer)
-                            animator.getAnimatedValue(), PorterDuff.Mode.SRC_IN);
-                });
-
-                messageBackgroundAnimator = colorAnimation;
-                colorAnimation.start();
-                Logger.logDebug("ReadingDebug", "15");
             }
         }
     }

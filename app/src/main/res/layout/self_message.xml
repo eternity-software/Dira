@@ -56,26 +56,45 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.diraapp.ui.components.dynamic.DynamicTextView
-                android:id="@+id/time_view"
+            <com.diraapp.ui.components.dynamic.ThemeLinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-
-                android:layout_marginRight="8dp"
-                android:layout_weight="0"
                 android:background="@drawable/gray_rounded"
-                android:backgroundTint="@color/dark_message_attributes_background"
-                android:fontFamily="@font/montserratsemibold"
-                android:gravity="bottom"
+
                 android:paddingHorizontal="6dp"
                 android:paddingVertical="2dp"
-                android:text="00:00"
-                android:textColor="@color/attributes_text_color"
-                android:textSize="11sp"
 
-                app:themeColor="attributes_text_color"
-                app:themeColorBackground="dark_message_attributes_background" />
+                android:layout_marginEnd="8dp"
+
+                app:themeBackgroundColor="dark_message_attributes_background"
+                android:gravity="center_vertical"
+                android:layout_gravity="bottom|end">
+
+                <com.diraapp.ui.components.dynamic.ThemeImageView
+                    android:id="@+id/read_indicator"
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:layout_marginEnd="4dp"
+                    android:src="@drawable/color_circle"
+                    app:themeImageColor="attributes_text_color"/>
+
+                <com.diraapp.ui.components.dynamic.DynamicTextView
+                    android:id="@+id/time_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+
+                    android:layout_weight="0"
+                    android:fontFamily="@font/montserratsemibold"
+                    android:gravity="bottom"
+                    android:text="00:00"
+                    android:textColor="@color/attributes_text_color"
+                    android:textSize="11sp"
+
+                    app:themeColor="attributes_text_color" />
+
+            </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
+
 
             <com.diraapp.ui.components.dynamic.ThemeLinearLayout
                 android:id="@+id/message_container"

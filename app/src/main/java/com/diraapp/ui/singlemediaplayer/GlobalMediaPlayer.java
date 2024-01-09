@@ -147,7 +147,6 @@ public class GlobalMediaPlayer {
     }
 
     public void onClose() {
-        // only for bar now
         if (diraMediaPlayer.isPlaying()) {
             diraMediaPlayer.stop();
         }
