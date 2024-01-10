@@ -147,20 +147,23 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
             for (Message message : DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao().getAllMessages(roomSecret)) {
                 if (message.getAttachments() != null) {
                     if (message.getAttachments().size() > 0) {
-                        Attachment attachment = message.getAttachments().get(0);
-                        if (attachment.getAttachmentType() == AttachmentType.IMAGE ||
-                                attachment.getAttachmentType() == AttachmentType.VIDEO) {
-                            File file = AttachmentDownloader.getFileFromAttachment(attachment, getApplicationContext(), message.getRoomSecret());
 
-                            String mimeType = "image";
+                        for (Attachment attachment: message.getAttachments()) {
+                            if (attachment.getAttachmentType() == AttachmentType.IMAGE ||
+                                    attachment.getAttachmentType() == AttachmentType.VIDEO) {
+                                File file = AttachmentDownloader.getFileFromAttachment(attachment, getApplicationContext(), message.getRoomSecret());
 
-                            if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
-                                mimeType = "video";
+                                String mimeType = "image";
+
+                                if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
+                                    mimeType = "video";
+                                }
+
+                                if (file != null) {
+                                    attachments.add(new SelectorFileInfo(file.getName(), file.getPath(), mimeType));
+                                }
                             }
 
-                            if (file != null) {
-                                attachments.add(new SelectorFileInfo(file.getName(), file.getPath(), mimeType));
-                            }
                         }
                     }
                 }
