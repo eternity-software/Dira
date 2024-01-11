@@ -26,7 +26,6 @@ import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.GetUpdatesRequest;
 import com.diraapp.api.updates.MessageReadUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
-import com.diraapp.api.updates.RoomUpdate;
 import com.diraapp.api.updates.ServerSyncUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
@@ -38,6 +37,7 @@ import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.exceptions.LanguageParsingException;
 import com.diraapp.notifications.Notifier;
@@ -45,7 +45,11 @@ import com.diraapp.res.Theme;
 import com.diraapp.services.UpdaterService;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.room.RoomActivity;
-import com.diraapp.ui.adapters.RoomSelectorAdapter;
+import com.diraapp.ui.adapters.selector.RoomSelectorAdapter;
+import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
+import com.diraapp.ui.adapters.selector.SelectorAdapterContract;
+import com.diraapp.ui.adapters.selector.SelectorViewHolder;
+import com.diraapp.ui.adapters.selector.SelectorViewHolderNotifier;
 import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.components.DiraPopup;
 import com.diraapp.ui.components.GlobalPlayerComponent;
@@ -62,7 +66,7 @@ import java.util.Random;
 
 public class RoomSelectorActivity extends AppCompatActivity
         implements ProcessorListener, UpdateListener, UserStatusListener,
-        RoomSelectorAdapter.SelectorAdapterContract {
+        SelectorAdapterContract {
 
     public static final String PENDING_ROOM_SECRET = "pendingRoomSecret";
     public static final String PENDING_ROOM_NAME = "pendingRoomName";
@@ -281,6 +285,20 @@ public class RoomSelectorActivity extends AppCompatActivity
         updateRooms(false);
     }
 
+    private void notifyViewHolder(int pos, SelectorViewHolderNotifier notifier) {
+        SelectorViewHolder holder = (SelectorViewHolder) recyclerView.
+                findViewHolderForAdapterPosition(pos);
+
+        boolean notFound = holder == null;
+
+        if (notFound) {
+            roomSelectorAdapter.notifyItemChanged(pos);
+            return;
+        }
+
+        notifier.notifyViewHolder(holder);
+    }
+
     private void updateRooms(boolean updateRooms) {
         if (isRoomsUpdating) return;
         isRoomsUpdating = true;
@@ -402,14 +420,13 @@ public class RoomSelectorActivity extends AppCompatActivity
 
                 roomList.set(pos, room);
 
-                RoomSelectorAdapter.ViewHolder holder = (RoomSelectorAdapter.ViewHolder)
-                        recyclerView.findViewHolderForAdapterPosition(pos);
+                notifyViewHolder(pos, new SelectorViewHolderNotifier() {
+                    @Override
+                    public void notifyViewHolder(SelectorViewHolder holder) {
+                        holder.onBind(room);
+                    }
+                });
 
-                if (holder == null) {
-                    roomSelectorAdapter.notifyItemChanged(pos);
-                } else {
-                    holder.onBind(room);
-                }
 
 
             });
@@ -516,10 +533,47 @@ public class RoomSelectorActivity extends AppCompatActivity
             }
         } else if (update.getUpdateType() == UpdateType.READ_UPDATE) {
             MessageReadUpdate readUpdate = ((MessageReadUpdate) update);
-            updateRoom(readUpdate.getRoomSecret(), false,
-                    (Room room) -> readUpdate.getMessageId().equals(room.getLastMessageId()));
 
+           onReadUpdate(readUpdate);
         }
+    }
+
+    private void onReadUpdate(MessageReadUpdate update) {
+        Room currentRoom = null;
+        int position = 0;
+        for (int i = 0; i < roomList.size(); i++) {
+            Room room = roomList.get(i);
+            if (room.getSecretName().equals(update.getRoomSecret())) {
+                currentRoom = room;
+                position = i;
+                break;
+            }
+        }
+
+        if (currentRoom == null) {
+            updateRoom(update.getRoomSecret(), false,
+                    (Room room) -> update.getMessageId().equals(room.getLastMessageId()));
+            return;
+        }
+
+        Message message = currentRoom.getMessage();
+        MessageReading reading = new MessageReading(update.getUserId(), update.getReadTime());
+        message.addReadingIfAvailable(reading);
+
+        boolean isLastMessage = update.getMessageId().equals(currentRoom.getLastMessageId());
+
+        if (!isLastMessage) return;
+
+        int finalPosition = position;
+        runOnUiThread(() -> {
+            notifyViewHolder(finalPosition, new SelectorViewHolderNotifier() {
+                @Override
+                public void notifyViewHolder(SelectorViewHolder holder) {
+                    holder.bindReading(message);
+                }
+            });
+
+        });
     }
 
     @Override

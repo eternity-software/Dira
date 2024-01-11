@@ -662,11 +662,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 readTime);
         thisReading.setHasListened(isListened);
 
-        for (MessageReading reading : thisMessage.getMessageReadingList()) {
-            if (reading.getUserId().equals(thisReading.getUserId())) return;
-        }
+        thisMessage.addReadingIfAvailable(thisReading);
         Logger.logDebug("ReadingDebug", "5");
-        thisMessage.getMessageReadingList().add(thisReading);
 
         view.notifyRecyclerMessageRead(thisMessage, index);
     }

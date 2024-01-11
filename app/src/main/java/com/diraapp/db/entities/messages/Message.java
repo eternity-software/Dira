@@ -331,6 +331,17 @@ public class Message {
         return false;
     }
 
+    public boolean addReadingIfAvailable(MessageReading thisReading) {
+        if (thisReading.getUserId().equals(authorId)) return false;
+
+        for (MessageReading reading : this.getMessageReadingList()) {
+            if (reading.getUserId().equals(thisReading.getUserId())) return false;
+        }
+
+        getMessageReadingList().add(thisReading);
+        return true;
+    }
+
     @Override
     public String toString() {
         return "Message{" +

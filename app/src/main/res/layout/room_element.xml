@@ -99,6 +99,17 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+                <com.diraapp.ui.components.dynamic.ThemeImageView
+                    android:id="@+id/read_indicator"
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/color_circle"
+                    app:themeImageColor="accent"/>
+
                 <com.diraapp.ui.components.dynamic.DynamicTextView
                     android:id="@+id/author_text"
                     android:layout_width="wrap_content"
