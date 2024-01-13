@@ -147,7 +147,7 @@ public class RoomUpdatesProcessor {
                 room.setLastUpdateId(update.getUpdateId());
 
                 if (update instanceof RoomUpdate) {
-                    newMessage = onRoomUpdate(room, (RoomUpdate) update);
+                    newMessage = onRoomUpdate(room, (RoomUpdate) update, true);
                 } else if (update instanceof MemberUpdate) {
                     newMessage = updateMember(room, (MemberUpdate) update);
                 } else if (update instanceof MessageReadUpdate) {
@@ -258,7 +258,7 @@ public class RoomUpdatesProcessor {
                 room.setRoomStatusType(RoomStatusType.SECURE);
                 RoomUpdate update = new RoomUpdate(memberUpdate.getBase64pic(), memberUpdate.getNickname(), 0);
 
-                onRoomUpdate(room, update);
+                onRoomUpdate(room, update, false);
 
             } else if (size > 1) {
                 room.setRoomStatusType(RoomStatusType.UNSAFE);
@@ -274,7 +274,7 @@ public class RoomUpdatesProcessor {
         return null;
     }
 
-    private Message onRoomUpdate(Room room, RoomUpdate update) {
+    private Message onRoomUpdate(Room room, RoomUpdate update, boolean needNotify) {
         String oldName = room.getName();
         String newName = update.getName();
 
@@ -295,13 +295,13 @@ public class RoomUpdatesProcessor {
 
         if (!oldName.equals(newName) && path != null) {
             return UpdateProcessor.getInstance().getClientMessageProcessor()
-                        .notifyRoomMessageAndIconChange(update, oldName, path, room);
+                        .notifyRoomMessageAndIconChange(update, oldName, path, room, needNotify);
         } else if (!oldName.equals(newName)) {
              return UpdateProcessor.getInstance().getClientMessageProcessor()
-                        .notifyRoomNameChange(update, oldName, room);
+                        .notifyRoomNameChange(update, oldName, room, needNotify);
         } else if (path != null) {
              return UpdateProcessor.getInstance().getClientMessageProcessor()
-                        .notifyRoomIconChange(update, path, room);
+                        .notifyRoomIconChange(update, path, room, needNotify);
         }
 
         return null;

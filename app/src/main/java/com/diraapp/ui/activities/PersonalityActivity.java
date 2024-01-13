@@ -22,6 +22,7 @@ import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.bottomsheet.filepicker.FilePickerBottomSheet;
 import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.Logger;
 import com.diraapp.utils.SliderActivity;
 
 import java.util.ArrayList;
@@ -68,7 +69,13 @@ public class PersonalityActivity extends DiraActivity {
                     public void run() {
                         List<String> roomSecrets = new ArrayList<>();
 
-                        for (Room room : DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao().getAllRoomsByUpdatedTime()) {
+                        List<Room> roomList = DiraRoomDatabase.getDatabase(
+                                getApplicationContext()).getRoomDao().getAllRoomsByUpdatedTime();
+
+                        Logger.logDebug("PersonalityActivity", "Room count = " + roomList.size());
+
+                        for (Room room : roomList) {
+                            Logger.logDebug("PersonalityActivity", "Room: " + room.getName());
                             roomSecrets.add(room.getSecretName());
 
 

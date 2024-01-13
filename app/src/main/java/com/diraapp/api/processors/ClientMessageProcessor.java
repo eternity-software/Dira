@@ -39,21 +39,22 @@ public class ClientMessageProcessor {
         return notifyClientMessage(memberUpdate, joining, room);
     }
 
-    public Message notifyRoomNameChange(RoomUpdate roomUpdate, String oldName, Room room) {
+    public Message notifyRoomNameChange(RoomUpdate roomUpdate, String oldName, Room room, boolean needNotify) {
         RoomNameChangeClientData roomNameChange =
                 new RoomNameChangeClientData(roomUpdate.getName(), oldName);
-        return notifyClientMessage(roomUpdate, roomNameChange, room);
+        return notifyClientMessage(roomUpdate, roomNameChange, room, needNotify);
     }
 
-    public Message notifyRoomIconChange(RoomUpdate update, String path, Room room) {
+    public Message notifyRoomIconChange(RoomUpdate update, String path, Room room, boolean needNotify) {
         RoomIconChangeClientData roomIconChangeClientData = new RoomIconChangeClientData(path);
-        return notifyClientMessage(update, roomIconChangeClientData, room);
+        return notifyClientMessage(update, roomIconChangeClientData, room, needNotify);
     }
 
-    public Message notifyRoomMessageAndIconChange(RoomUpdate update, String oldNickname, String path, Room room) {
+    public Message notifyRoomMessageAndIconChange(RoomUpdate update, String oldNickname,
+                                                  String path, Room room, boolean needNotify) {
         RoomNameAndIconChangeClientData roomNameAndIconChangeClientData =
                 new RoomNameAndIconChangeClientData(update.getName(), oldNickname, path);
-        return notifyClientMessage(update, roomNameAndIconChangeClientData, room);
+        return notifyClientMessage(update, roomNameAndIconChangeClientData, room, needNotify);
     }
 
     public Message notifyRoomKeyGenerationStart(DhInitUpdate update, Room room) {
@@ -91,14 +92,20 @@ public class ClientMessageProcessor {
     }
 
     private Message notifyClientMessage(Update update, CustomClientData clientData, Room room) {
+        return notifyClientMessage(update, clientData, room, true);
+    }
+
+    private Message notifyClientMessage(Update update, CustomClientData clientData, Room room, boolean needNotify) {
 
         Message message = new Message(update.getRoomSecret(), clientData);
         NewMessageUpdate messageUpdate = new NewMessageUpdate(message);
 
-        if (DiraApplication.isBackgrounded()) {
-            Notifier.notifyMessage(message, room, context);
+        if (needNotify) {
+            if (DiraApplication.isBackgrounded()) {
+                Notifier.notifyMessage(message, room, context);
+            }
+            UpdateProcessor.getInstance().notifyUpdateListeners(messageUpdate);
         }
-        UpdateProcessor.getInstance().notifyUpdateListeners(messageUpdate);
 
         return message;
     }
