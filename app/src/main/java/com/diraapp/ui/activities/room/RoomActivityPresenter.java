@@ -33,6 +33,7 @@ import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.db.entities.rooms.Room;
+import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
@@ -123,6 +124,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             initRoomInfo();
         } else if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
             view.runBackground(this::initMembers);
+
+            if (room.getRoomType() == RoomType.PRIVATE) initRoomInfo();
         } else if (update.getUpdateType() == UpdateType.READ_UPDATE) {
             Logger.logDebug("ReadingDebug", "1");
             if (!update.getRoomSecret().equals(roomSecret)) return;

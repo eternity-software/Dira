@@ -9,6 +9,7 @@ import com.diraapp.api.updates.UpdateType;
 import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.rooms.Room;
+import com.diraapp.db.entities.rooms.RoomStatusType;
 import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.utils.KeyGenerator;
 
@@ -30,6 +31,7 @@ public class CreateRoomModel implements CreateRoomContract.Model {
         Room room = new Room(roomName, System.currentTimeMillis(), roomSecret,
                 serverAddress, true, new ArrayList<>(), new ArrayList<>(), roomType);
 
+        if (roomType == RoomType.PRIVATE) room.setRoomStatusType(RoomStatusType.EMPTY);
         room.setUpdateExpireSec(updateExpireSec);
         roomDao.insertAll(room);
 

@@ -26,12 +26,15 @@ import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.db.entities.rooms.Room;
+import com.diraapp.db.entities.rooms.RoomStatusType;
+import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class RoomUpdatesProcessor {
     private final RoomDao roomDao;
@@ -144,36 +147,9 @@ public class RoomUpdatesProcessor {
                 room.setLastUpdateId(update.getUpdateId());
 
                 if (update instanceof RoomUpdate) {
-                    String oldName = room.getName();
-                    String newName = ((RoomUpdate) update).getName();
-
-                    String path = null;
-
-                    if (((RoomUpdate) update).getRoomUpdateExpireSec() != 0) {
-                        room.setUpdateExpireSec(((RoomUpdate) update).getRoomUpdateExpireSec());
-                    }
-
-                    if (!oldName.equals(newName)) {
-                        room.setName(newName);
-                    }
-                    if (((RoomUpdate) update).getBase64Pic() != null) {
-                        Bitmap bitmap = AppStorage.getBitmapFromBase64(((RoomUpdate) update).getBase64Pic());
-                        path = AppStorage.saveToInternalStorage(bitmap, room.getSecretName(), room.getSecretName(), context);
-                        room.setImagePath(path);
-                    }
-
-                    if (!oldName.equals(newName) && path != null) {
-                        newMessage = UpdateProcessor.getInstance().getClientMessageProcessor().
-                                notifyRoomMessageAndIconChange((RoomUpdate) update, oldName, path, room);
-                    } else if (!oldName.equals(newName)) {
-                        newMessage = UpdateProcessor.getInstance().getClientMessageProcessor()
-                                .notifyRoomNameChange((RoomUpdate) update, oldName, room);
-                    } else if (path != null) {
-                        newMessage = UpdateProcessor.getInstance().getClientMessageProcessor()
-                                .notifyRoomIconChange((RoomUpdate) update, path, room);
-                    }
+                    newMessage = onRoomUpdate(room, (RoomUpdate) update);
                 } else if (update instanceof MemberUpdate) {
-                    newMessage = updateMember((MemberUpdate) update);
+                    newMessage = updateMember(room, (MemberUpdate) update);
                 } else if (update instanceof MessageReadUpdate) {
                     onReadUpdate((MessageReadUpdate) update, room);
                 } else if (update instanceof AttachmentListenedUpdate) {
@@ -238,7 +214,7 @@ public class RoomUpdatesProcessor {
      *
      * @param memberUpdate
      */
-    private Message updateMember(MemberUpdate memberUpdate) {
+    private Message updateMember(Room room, MemberUpdate memberUpdate) {
         if (memberUpdate.getId().equals(new CacheUtils(context).getString(CacheUtils.ID)))
             return null;
 
@@ -274,10 +250,60 @@ public class RoomUpdatesProcessor {
             memberDao.insertAll(member);
         }
 
+        if (room.getRoomType() == RoomType.PRIVATE) {
+            List<Member> members = memberDao.getMembersByRoomSecret(room.getSecretName());
+
+            int size = members.size();
+            if (size == 1) {
+                room.setRoomStatusType(RoomStatusType.SECURE);
+                RoomUpdate update = new RoomUpdate(memberUpdate.getBase64pic(), memberUpdate.getNickname(), 0);
+
+                onRoomUpdate(room, update);
+
+            } else if (size > 1) {
+                room.setRoomStatusType(RoomStatusType.UNSAFE);
+                roomDao.update(room);
+            }
+
+        }
+
         if (newMember) {
             return UpdateProcessor.getInstance().getClientMessageProcessor()
                     .notifyMemberAdded(memberUpdate, path);
         }
+        return null;
+    }
+
+    private Message onRoomUpdate(Room room, RoomUpdate update) {
+        String oldName = room.getName();
+        String newName = update.getName();
+
+        String path = null;
+
+        if (update.getRoomUpdateExpireSec() != 0) {
+            room.setUpdateExpireSec(update.getRoomUpdateExpireSec());
+        }
+
+        if (!oldName.equals(newName)) {
+            room.setName(newName);
+        }
+        if (update.getBase64Pic() != null) {
+            Bitmap bitmap = AppStorage.getBitmapFromBase64(update.getBase64Pic());
+            path = AppStorage.saveToInternalStorage(bitmap, room.getSecretName(), room.getSecretName(), context);
+            room.setImagePath(path);
+        }
+
+        if (!oldName.equals(newName) && path != null) {
+            return UpdateProcessor.getInstance().getClientMessageProcessor()
+                        .notifyRoomMessageAndIconChange(update, oldName, path, room);
+        } else if (!oldName.equals(newName)) {
+             return UpdateProcessor.getInstance().getClientMessageProcessor()
+                        .notifyRoomNameChange(update, oldName, room);
+        } else if (path != null) {
+             return UpdateProcessor.getInstance().getClientMessageProcessor()
+                        .notifyRoomIconChange(update, path, room);
+        }
+
         return null;
     }
 

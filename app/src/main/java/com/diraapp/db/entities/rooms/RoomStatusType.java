@@ -8,5 +8,8 @@ public enum RoomStatusType {
     SECURE,
 
     @SerializedName("2")
-    UNSAFE
+    UNSAFE,
+
+    @SerializedName("3")
+    EMPTY
 }

@@ -39,6 +39,7 @@ import com.diraapp.db.daos.RoomDao;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.messages.MessageReading;
 import com.diraapp.db.entities.rooms.Room;
+import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.exceptions.LanguageParsingException;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.res.Theme;
@@ -62,6 +63,7 @@ import com.diraapp.utils.android.DeviceUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class RoomSelectorActivity extends AppCompatActivity
@@ -428,7 +430,6 @@ public class RoomSelectorActivity extends AppCompatActivity
                 });
 
 
-
             });
         });
     }
@@ -534,7 +535,21 @@ public class RoomSelectorActivity extends AppCompatActivity
         } else if (update.getUpdateType() == UpdateType.READ_UPDATE) {
             MessageReadUpdate readUpdate = ((MessageReadUpdate) update);
 
-           onReadUpdate(readUpdate);
+            onReadUpdate(readUpdate);
+        } else if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
+            Room room = null;
+            for (Room r: roomList) {
+                if (r.getSecretName().equals(update.getRoomSecret())) {
+                    room = r;
+                    break;
+                }
+            }
+
+            if (room == null) return;
+
+            if (room.getRoomType() == RoomType.PRIVATE) {
+                updateRoom(update.getRoomSecret(), false);
+            }
         }
     }
 

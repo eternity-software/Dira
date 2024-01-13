@@ -288,6 +288,8 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
             if (isSelf) return;
 
             initInviteButton();
+
+            if (room.getRoomType() == RoomType.PRIVATE) loadData();
         } else if (update.getUpdateType() == UpdateType.NEW_MESSAGE_UPDATE) {
             NewMessageUpdate messageUpdate = (NewMessageUpdate) update;
 
