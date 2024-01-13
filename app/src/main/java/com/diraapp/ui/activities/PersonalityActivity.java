@@ -26,6 +26,7 @@ import com.diraapp.utils.Logger;
 import com.diraapp.utils.SliderActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class PersonalityActivity extends DiraActivity {
@@ -67,27 +68,44 @@ public class PersonalityActivity extends DiraActivity {
                 Thread save = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        List<String> roomSecrets = new ArrayList<>();
 
                         List<Room> roomList = DiraRoomDatabase.getDatabase(
                                 getApplicationContext()).getRoomDao().getAllRoomsByUpdatedTime();
 
                         Logger.logDebug("PersonalityActivity", "Room count = " + roomList.size());
 
+                        // ServerAddress - List<roomSecrets>
+                        HashMap<String, List<String>> roomSecretsMap = new HashMap<>();
+
                         for (Room room : roomList) {
                             Logger.logDebug("PersonalityActivity", "Room: " + room.getName());
-                            roomSecrets.add(room.getSecretName());
 
+                            List<String> roomSecrets = roomSecretsMap.get(room.getServerAddress());
+
+                            if (roomSecrets == null) {
+                                roomSecrets = new ArrayList<>();
+                                roomSecrets.add(room.getSecretName());
+
+                                roomSecretsMap.put(room.getServerAddress(), roomSecrets);
+                            } else {
+                                roomSecrets.add(room.getSecretName());
+                            }
+                        }
+
+                        for (String serverAddress: roomSecretsMap.keySet()) {
+                            List<String> roomSecrets = roomSecretsMap.get(serverAddress);
 
                             UpdateMemberRequest updateMemberRequest = new UpdateMemberRequest(nicknameText.getText().toString(),
                                     AppStorage.getBase64FromBitmap(userPicture), roomSecrets, idText.getText().toString(), System.currentTimeMillis());
 
                             try {
-                                UpdateProcessor.getInstance().sendRequest(updateMemberRequest, room.getServerAddress());
+                                UpdateProcessor.getInstance().sendRequest(updateMemberRequest, serverAddress);
                             } catch (UnablePerformRequestException e) {
                                 e.printStackTrace();
                             }
+
                         }
+
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
