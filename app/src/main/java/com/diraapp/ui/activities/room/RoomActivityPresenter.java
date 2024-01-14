@@ -85,6 +85,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     @Override
     public void onUpdate(Update update) {
+        Logger.logDebug("RoomActivityPresenter", "New update - " + update.getUpdateType());
+
         if (update.getUpdateType() == UpdateType.NEW_MESSAGE_UPDATE) {
             NewMessageUpdate newMessageUpdate = (NewMessageUpdate) update;
             if (!newMessageUpdate.getMessage().getRoomSecret().equals(roomSecret)) return;
@@ -121,13 +123,14 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
             }
         } else if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
+            if (!update.getRoomSecret().equals(roomSecret)) return;
             initRoomInfo();
         } else if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
+            if (!update.getRoomSecret().equals(roomSecret)) return;
             view.runBackground(this::initMembers);
 
             if (room.getRoomType() == RoomType.PRIVATE) initRoomInfo();
         } else if (update.getUpdateType() == UpdateType.READ_UPDATE) {
-            Logger.logDebug("ReadingDebug", "1");
             if (!update.getRoomSecret().equals(roomSecret)) return;
             Logger.logDebug("ReadingDebug", "2");
             MessageReadUpdate readUpdate = (MessageReadUpdate) update;
@@ -148,12 +151,15 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             onMessageRead(thisMessage, index, readUpdate.getUserId(),
                     readUpdate.getReadTime());
         } else if (update.getUpdateType() == UpdateType.ATTACHMENT_LISTENED_UPDATE) {
+            if (!update.getRoomSecret().equals(roomSecret)) return;
             AttachmentListenedUpdate listenedUpdate = (AttachmentListenedUpdate) update;
 
             onAttachmentListenedUpdate(listenedUpdate);
         } else if (update.getUpdateType() == UpdateType.PINNED_MESSAGE_ADDED_UPDATE) {
+            if (!update.getRoomSecret().equals(roomSecret)) return;
             addPinned((PinnedMessageAddedUpdate) update);
         } else if (update.getUpdateType() == UpdateType.PINNED_MESSAGE_REMOVED_UPDATE) {
+            if (!update.getRoomSecret().equals(roomSecret)) return;
             removePinned((PinnedMessageRemovedUpdate) update);
         }
     }
@@ -672,7 +678,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     }
 
     private void onAttachmentListenedUpdate(AttachmentListenedUpdate listenedUpdate) {
-        if (!listenedUpdate.getRoomSecret().equals(roomSecret)) return;
 
         Message thisMessage = null;
         int index = 0;
@@ -839,7 +844,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     @Override
     public void addPinned(PinnedMessageAddedUpdate update) {
-        if (!update.getRoomSecret().equals(roomSecret)) return;
         if (pinnedIds.contains(update.getMessageId())) return;
 
         pinnedIds.add(update.getMessageId());
@@ -860,7 +864,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     @Override
     public void removePinned(PinnedMessageRemovedUpdate update) {
-        if (!update.getRoomSecret().equals(roomSecret)) return;
         if (!pinnedIds.contains(update.getMessageId())) return;
 
         pinnedIds.remove(update.getMessageId());

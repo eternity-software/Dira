@@ -16,6 +16,7 @@ import com.diraapp.api.updates.RenewingCancelUpdate;
 import com.diraapp.api.updates.RenewingConfirmUpdate;
 import com.diraapp.api.updates.RoomUpdate;
 import com.diraapp.api.updates.Update;
+import com.diraapp.api.views.BaseMember;
 import com.diraapp.api.views.InviteRoom;
 import com.diraapp.api.views.RoomMember;
 import com.diraapp.db.daos.MemberDao;
@@ -67,11 +68,6 @@ public class RoomUpdatesProcessor {
                     inviteRoom.getSecretName(), serverAddress, true,
                     new ArrayList<>(), new ArrayList<>(), inviteRoom.getRoomType());
 
-            if (inviteRoom.getBase64pic() != null) {
-                Bitmap bitmap = AppStorage.getBitmapFromBase64(inviteRoom.getBase64pic());
-                room.setImagePath(AppStorage.saveToInternalStorage(bitmap, room.getSecretName(), room.getSecretName(), context));
-            }
-
             room.setLastUpdateId(0);
 
             for (RoomMember roomMember : inviteRoom.getMemberList()) {
@@ -90,7 +86,6 @@ public class RoomUpdatesProcessor {
                             imagePath, roomMember.getRoomSecret(), roomMember.getLastTimeUpdated());
                 }
 
-
                 member.setLastTimeUpdated(roomMember.getLastTimeUpdated());
                 member.setNickname(roomMember.getNickname());
 
@@ -107,6 +102,37 @@ public class RoomUpdatesProcessor {
                     memberDao.update(member);
                 }
 
+            }
+
+            // setting room image
+            if (room.getRoomType() == RoomType.PUBLIC) {
+                if (inviteRoom.getBase64pic() != null) {
+                    Bitmap bitmap = AppStorage.getBitmapFromBase64(inviteRoom.getBase64pic());
+                    room.setImagePath(AppStorage.saveToInternalStorage(bitmap, room.getSecretName(), room.getSecretName(), context));
+                }
+
+            // setting memberImage if PRIVATE, RoomStatusType
+            } else if (room.getRoomType() == RoomType.PRIVATE) {
+                if (inviteRoom.getMemberList().size() == 1) {
+                    room.setRoomStatusType(RoomStatusType.SECURE);
+
+                    RoomMember member = inviteRoom.getMemberList().get(0);
+                    room.setName(member.getNickname());
+
+                    String imagePath = null;
+                    if (member.getImageBase64() != null) {
+                        imagePath = AppStorage.saveToInternalStorage(
+                                AppStorage.getBitmapFromBase64(member.getImageBase64()), room.getSecretName(), context);
+                    }
+
+                    room.setImagePath(imagePath);
+
+                } else if (inviteRoom.getMemberList().size() == 0) {
+                    room.setRoomStatusType(RoomStatusType.EMPTY);
+
+                } else {
+                    room.setRoomStatusType(RoomStatusType.UNSAFE);
+                }
             }
 
             roomDao.insertAll(room);
@@ -193,7 +219,7 @@ public class RoomUpdatesProcessor {
                 roomDao.update(room);
             } else {
 
-                throw new OldUpdateException();
+                throw new OldUpdateException(room.getName(), roomSecret, update.getUpdateId(), room.getLastUpdateId());
             }
 
         }

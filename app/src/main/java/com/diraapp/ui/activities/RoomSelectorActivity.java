@@ -326,8 +326,8 @@ public class RoomSelectorActivity extends AppCompatActivity
                         for (String serverAddress : requests.keySet()) {
                             try {
                                 UpdateProcessor.getInstance().sendRequest(requests.get(serverAddress), serverAddress);
-                            } catch (Exception ignored) {
-                                ignored.printStackTrace();
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
                     }

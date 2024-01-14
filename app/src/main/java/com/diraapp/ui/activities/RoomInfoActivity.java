@@ -279,8 +279,10 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
     @Override
     public void onUpdate(Update update) {
         if (update.getUpdateType() == UpdateType.ROOM_UPDATE) {
+            if (!update.getRoomSecret().equals(roomSecret)) return;
             loadData();
         } else if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
+            if (!update.getRoomSecret().equals(roomSecret)) return;
             MemberUpdate memberUpdate = (MemberUpdate) update;
 
             boolean isSelf = memberUpdate.getId().equals(
@@ -292,6 +294,8 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
             if (room.getRoomType() == RoomType.PRIVATE) loadData();
         } else if (update.getUpdateType() == UpdateType.NEW_MESSAGE_UPDATE) {
             NewMessageUpdate messageUpdate = (NewMessageUpdate) update;
+
+            if (!messageUpdate.getMessage().getRoomSecret().equals(roomSecret)) return;
 
             boolean isSelf = new CacheUtils(this).getString(CacheUtils.ID).equals(
                     messageUpdate.getMessage().getAuthorId());
