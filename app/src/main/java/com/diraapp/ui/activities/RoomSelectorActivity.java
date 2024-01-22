@@ -125,6 +125,8 @@ public class RoomSelectorActivity extends AppCompatActivity
 
                 lastOpenedRoomId = getIntent().getExtras().getString(PENDING_ROOM_SECRET);
 
+
+
                 RoomActivity.putRoomExtrasInIntent(notificationIntent,
                         lastOpenedRoomId, getIntent().getExtras().getString(PENDING_ROOM_NAME));
                 startActivity(notificationIntent);
