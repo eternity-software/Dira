@@ -221,6 +221,7 @@ public class Message {
     }
 
     public String getShortAuthorNickname() {
+        if (authorNickname == null) return "Unknown";
 
         if (authorNickname.length() > 22) {
             String text = authorNickname.substring(0, 19) + "...";

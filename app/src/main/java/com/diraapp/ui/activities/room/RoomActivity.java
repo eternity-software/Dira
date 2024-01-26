@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -178,6 +179,8 @@ public class RoomActivity extends DiraActivity
 //        binding.recyclerView.getRecycledViewPool().setMaxRecycledViews(1, 4);
 //        binding.recyclerView.getRecycledViewPool().setMaxRecycledViews(21, 4);
 
+        this.getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         GlobalMediaPlayer.getInstance().registerListener(this);
 
@@ -987,6 +990,12 @@ public class RoomActivity extends DiraActivity
         }
     }
 
+    public boolean isKeyboardVisible() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        return imm.isAcceptingText();
+    }
+
     @Override
     public void fillRoomInfo(Bitmap picture, Room room) {
         runOnUiThread(() -> {
@@ -1393,7 +1402,11 @@ public class RoomActivity extends DiraActivity
 
     @Override
     public void onBalloonShown() {
-        //hideKeyboard();
+
+        if (isKeyboardVisible()) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        }
+
     }
 
     @Override

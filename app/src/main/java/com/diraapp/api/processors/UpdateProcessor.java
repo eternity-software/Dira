@@ -3,6 +3,7 @@ package com.diraapp.api.processors;
 import android.content.Context;
 import android.util.Log;
 
+import com.diraapp.BuildConfig;
 import com.diraapp.DiraApplication;
 import com.diraapp.api.SocketClient;
 import com.diraapp.api.processors.listeners.ProcessorListener;
@@ -510,11 +511,32 @@ public class UpdateProcessor {
     }
 
     public void notifyUpdateListeners(Update update) {
+        HashMap<String, Integer> listeners = null;
+        if (BuildConfig.DEBUG) {
+            listeners = new HashMap<>();
+        }
+
         for (UpdateListener updateListener : updateListeners) {
+
+            if (BuildConfig.DEBUG) {
+                Integer count = listeners.get(updateListener.getClass().getName());
+                if (count == null) count = 1;
+                else count++;
+
+                listeners.put(updateListener.getClass().getName(), count);
+            }
+
             try {
                 updateListener.onUpdate(update);
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        }
+
+        if (BuildConfig.DEBUG) {
+            Logger.logDebug("UpdateProcessor", "listeners count = " + updateListeners.size());
+            for (String name: listeners.keySet()) {
+                Logger.logDebug("UpdateProcessor", "listener - " + name + ", c = " + listeners.get(name));
             }
         }
     }

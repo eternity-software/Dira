@@ -35,6 +35,8 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
     private long currentMessageDuration = 0;
     private String currentMessageDurationString = "00:00";
 
+    private String lastTimeText = "00:00/00:00";
+
     private TextView authorText;
     private TextView timeView;
 
@@ -214,7 +216,11 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
 
         String time = s + " / " + currentMessageDurationString;
 
-        timeView.setText(time);
+        if (time.equals(lastTimeText)) return;
+
+        lastTimeText = time;
+
+        timeView.setText(lastTimeText);
     }
 
     private void setAuthorName(Message message) {

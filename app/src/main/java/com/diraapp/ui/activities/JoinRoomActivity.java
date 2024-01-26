@@ -11,8 +11,14 @@ import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.JoinRoomRequest;
 import com.diraapp.api.requests.UpdateMemberRequest;
+import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.updates.NewRoomUpdate;
+import com.diraapp.api.updates.RoomUpdate;
 import com.diraapp.api.updates.Update;
+import com.diraapp.api.updates.UpdateType;
+import com.diraapp.db.DiraRoomDatabase;
+import com.diraapp.db.daos.RoomDao;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.createroom.CreateRoomActivity;
@@ -57,61 +63,63 @@ public class JoinRoomActivity extends DiraActivity implements ServerSelectorBott
             }
         });
 
-        findViewById(R.id.button_join_room).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditText codeInput = findViewById(R.id.invite_code_input);
-                JoinRoomRequest joinRoomRequest = new JoinRoomRequest(codeInput.getText().toString());
+        findViewById(R.id.button_join_room).setOnClickListener((View v) -> {
+            EditText codeInput = findViewById(R.id.invite_code_input);
+            JoinRoomRequest joinRoomRequest = new JoinRoomRequest(codeInput.getText().toString());
 
-                try {
-                    UpdateProcessor.getInstance().sendRequest(joinRoomRequest, new UpdateListener() {
-                        @Override
-                        public void onUpdate(Update update) {
-                            if (update instanceof NewRoomUpdate) {
-                                UpdateProcessor.getInstance().sendSubscribeRequest();
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
+            try {
+                UpdateProcessor.getInstance().sendRequest(joinRoomRequest, new UpdateListener() {
+                    @Override
+                    public void onUpdate(Update update) {
+                        if (!(update instanceof NewRoomUpdate)) return;
 
-                                        CacheUtils cacheUtils = new CacheUtils(getApplicationContext());
+                        final NewRoomUpdate newRoomUpdate = (NewRoomUpdate) update;
 
-                                        String nickname = cacheUtils.getString(CacheUtils.NICKNAME);
-                                        String id = cacheUtils.getString(CacheUtils.ID);
-                                        String picturePath = cacheUtils.getString(CacheUtils.PICTURE);
+                        UpdateProcessor.getInstance().sendSubscribeRequest();
+                        runOnUiThread(() -> {
+                            CacheUtils cacheUtils = new CacheUtils(getApplicationContext());
 
-                                        String base64Pic = null;
+                            String nickname = cacheUtils.getString(CacheUtils.NICKNAME);
+                            String id = cacheUtils.getString(CacheUtils.ID);
+                            String picturePath = cacheUtils.getString(CacheUtils.PICTURE);
 
-                                        if (picturePath != null) {
-                                            base64Pic = AppStorage.getBase64FromBitmap(AppStorage.getBitmapFromPath(picturePath));
-                                        }
+                            String base64Pic = null;
 
-                                        UpdateMemberRequest updateMemberRequest = new UpdateMemberRequest(nickname, base64Pic,
-                                                Collections.singletonList(((NewRoomUpdate) update).getInviteRoom().getSecretName()), id, System.currentTimeMillis());
-                                        try {
-
-
-                                            UpdateProcessor.getInstance().sendRequest(updateMemberRequest, serverAddress);
-                                            UpdateProcessor.getInstance().reconnectSockets();
-                                            Thread thread = new Thread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    UpdateProcessor.getInstance().sendSubscribeRequest();
-                                                }
-                                            });
-                                            thread.start();
-
-                                        } catch (UnablePerformRequestException e) {
-                                            e.printStackTrace();
-                                        }
-                                        finish();
-                                    }
-                                });
+                            if (picturePath != null) {
+                                base64Pic = AppStorage.getBase64FromBitmap(AppStorage.getBitmapFromPath(picturePath));
                             }
-                        }
-                    }, serverAddress);
-                } catch (UnablePerformRequestException e) {
-                    e.printStackTrace();
-                }
+
+                            UpdateMemberRequest updateMemberRequest = new UpdateMemberRequest(nickname, base64Pic,
+                                    Collections.singletonList(newRoomUpdate.getInviteRoom().getSecretName()), id, System.currentTimeMillis());
+                            try {
+
+                                UpdateProcessor.getInstance().sendRequest(updateMemberRequest, (Update u) -> {
+                                    if (u.getUpdateType() != UpdateType.MEMBER_UPDATE) return;
+                                    if (!newRoomUpdate.getInviteRoom().getSecretName().equals(u.getRoomSecret()));
+
+                                    MemberUpdate memberUpdate = (MemberUpdate) u;
+                                    if (!id.equals(memberUpdate.getId())) return;
+
+                                    UpdateProcessor.getInstance().reconnectSockets();
+                                    Thread thread = new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            UpdateProcessor.getInstance().sendSubscribeRequest();
+                                        }
+                                    });
+                                    thread.start();
+
+                                } , serverAddress);
+
+                            } catch (UnablePerformRequestException e) {
+                                e.printStackTrace();
+                            }
+                            finish();
+                        });
+                    }
+                }, serverAddress);
+            } catch (UnablePerformRequestException e) {
+                e.printStackTrace();
             }
         });
     }

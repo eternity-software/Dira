@@ -363,14 +363,16 @@ public class RoomSelectorActivity extends AppCompatActivity
 
             Logger.logDebug(RoomSelectorActivity.class.getName(), "update room - " + roomSecret);
             Room room = roomDao.getRoomBySecretName(roomSecret);
-            if (onLoadedCallback != null) {
-                if (!onLoadedCallback.keepUpdate(room)) return;
-            }
 
             if (room == null) {
                 Logger.logDebug(RoomSelectorActivity.class.getName(), "room = null");
                 return;
             }
+
+            if (onLoadedCallback != null) {
+                if (!onLoadedCallback.keepUpdate(room)) return;
+            }
+
             Logger.logDebug(RoomSelectorActivity.class.getName(), "name - " + room.getName());
 
             Message message = messageDao.getMessageById(room.getLastMessageId());
@@ -394,6 +396,8 @@ public class RoomSelectorActivity extends AppCompatActivity
 
                     roomList.add(0, room);
                     roomSelectorAdapter.notifyItemInserted(0);
+
+                    recyclerView.scrollToPosition(0);
                     return;
                 }
 

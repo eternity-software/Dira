@@ -97,7 +97,7 @@ public class SelectorViewHolder extends RecyclerView.ViewHolder {
                 boolean hasMessageText = message.hasText();
 
                 if (message.isUserMessage()) {
-                    String authorPrefix = message.getAuthorNickname();
+                    String authorPrefix = message.getShortAuthorNickname();
                     if (authorPrefix.length() > 12) {
                         authorPrefix = authorPrefix.substring(0, 11) + "..";
                     }
