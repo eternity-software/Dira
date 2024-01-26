@@ -57,6 +57,8 @@
             android:orientation="horizontal">
 
             <com.diraapp.ui.components.dynamic.ThemeLinearLayout
+                android:id="@+id/time_container"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/gray_rounded"
@@ -70,13 +72,20 @@
                 android:gravity="center_vertical"
                 android:layout_gravity="bottom|end">
 
-                <com.diraapp.ui.components.dynamic.ThemeImageView
+                <FrameLayout
                     android:id="@+id/read_indicator"
-                    android:layout_width="6dp"
-                    android:layout_height="6dp"
-                    android:layout_marginEnd="4dp"
-                    android:src="@drawable/color_circle"
-                    app:themeImageColor="attributes_text_color"/>
+                    android:layout_width="10dp"
+                    android:layout_height="10dp">
+
+                    <com.diraapp.ui.components.dynamic.ThemeImageView
+                        android:layout_width="6dp"
+                        android:layout_height="6dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/color_circle"
+                        app:themeImageColor="attributes_text_color"/>
+
+                </FrameLayout>
+
 
                 <com.diraapp.ui.components.dynamic.DynamicTextView
                     android:id="@+id/time_view"

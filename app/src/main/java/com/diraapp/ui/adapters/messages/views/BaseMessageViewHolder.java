@@ -8,10 +8,12 @@ import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -56,9 +58,9 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
      */
     protected boolean isOuterContainer = false;
     protected TextView messageText;
-    protected LinearLayout outerContainer, messageContainer, postInflatedViewsContainer;
+    protected LinearLayout outerContainer, messageContainer, postInflatedViewsContainer, timeContainer;
     protected View messageBackground, rootView;
-    private ImageView readingIndicator;
+    private FrameLayout readingIndicator;
     protected TextView nicknameText;
     protected ImageView profilePicture;
     protected View profilePictureContainer;
@@ -104,6 +106,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         profilePicture = find(R.id.profile_picture);
         profilePictureContainer = find(R.id.picture_container);
         outerContainer = find(R.id.bubble_view_container);
+        timeContainer = find(R.id.time_container);
         messageContainer = find(R.id.message_container);
         messageBackground = find(R.id.message_background);
         readingIndicator = find(R.id.read_indicator);
@@ -293,32 +296,68 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         if (!message.hasAuthor()) return;
         if (!isSelfMessage) return;
 
-        if (message.getMessageReadingList() != null) {
-            if (message.getMessageReadingList().size() == 0) {
-                readingIndicator.setVisibility(View.VISIBLE);
+        int endTimeMargin = DeviceUtils.dpToPx(8, this.itemView.getContext());
+        if (message.getMessageReadingList() == null) return;
+
+        // Just set default margins (no readings) (indicator is shown)
+        if (message.getMessageReadingList().size() == 0) {
+            readingIndicator.setVisibility(View.VISIBLE);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.gravity = Gravity.BOTTOM;
+
+            params.setMargins(0, 0, endTimeMargin, 0);
+
+            timeContainer.setLayoutParams(params);
+
+        } else {
+            int dp10 = DeviceUtils.dpToPx(10, itemView.getContext());
+
+            // Process animation to hide indicator
+            if (isAnimated) {
+                ValueAnimator animator = ValueAnimator.ofInt(dp10, 0);
+                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
+                        int value = (int) valueAnimator.getAnimatedValue();
+                        ViewGroup.LayoutParams params = readingIndicator.getLayoutParams();
+                        params.width = value;
+                        readingIndicator.setLayoutParams(params);
+
+                        LinearLayout.LayoutParams timeParams = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT
+                        );
+                        timeParams.gravity = Gravity.BOTTOM;
+
+                        timeParams.setMargins(dp10 - value, 0, endTimeMargin, 0);
+
+                        timeContainer.setLayoutParams(timeParams);
+                    }
+                });
+
+                animator.setInterpolator(new DecelerateInterpolator(2f));
+                animator.setDuration(150);
+                animator.start();
+
+            // Hide indicator without animation
             } else {
+                readingIndicator.setVisibility(View.GONE);
 
-                if (isAnimated) {
-                    int dp6 = DeviceUtils.dpToPx(6, itemView.getContext());
-                    ValueAnimator animator = ValueAnimator.ofInt(dp6, 0);
-                    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                        @Override
-                        public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
-                            int value = (int) valueAnimator.getAnimatedValue();
-                            ViewGroup.LayoutParams params = readingIndicator.getLayoutParams();
-                            params.width = value;
-                            readingIndicator.setLayoutParams(params);
-                        }
-                    });
+                LinearLayout.LayoutParams timeParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                timeParams.gravity = Gravity.BOTTOM;
 
-                    animator.setInterpolator(new DecelerateInterpolator(2f));
-                    animator.setDuration(150);
-                    animator.start();
-                } else {
-                    readingIndicator.setVisibility(View.GONE);
-                }
+                timeParams.setMargins(dp10, 0, endTimeMargin, 0);
 
+                timeContainer.setLayoutParams(timeParams);
             }
+
         }
     }
 
@@ -365,7 +404,6 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         String selfId = getSelfId();
         if (!message.isReadable()) return;
         if (message.getAuthorId().equals(selfId)) return;
-
 
         MessageReadRequest request = new MessageReadRequest(selfId, System.currentTimeMillis(),
                 message.getId(), message.getRoomSecret());
