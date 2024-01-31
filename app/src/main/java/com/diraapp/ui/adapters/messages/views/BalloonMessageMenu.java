@@ -84,6 +84,8 @@ public class BalloonMessageMenu {
 
 
         RadiusLayout layout = (RadiusLayout) balloon.getContentView();
+        layout.setFocusable(false);
+
         layout.setBackground(ContextCompat.getDrawable(context, R.drawable.tooltip_drawable));
         LinearLayout replyRow = layout.findViewById(R.id.reply_row);
         LinearLayout copyRow = layout.findViewById(R.id.copy_row);

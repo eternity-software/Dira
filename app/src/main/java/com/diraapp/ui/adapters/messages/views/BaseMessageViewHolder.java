@@ -196,48 +196,49 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         if (!isInitialized) return;
         if (profilePicture != null)
             profilePicture.setImageBitmap(null);
-        if (!isSelfMessage) {
+        if (isSelfMessage) {
+            updateMessageReading(message, false);
+            return;
+        }
 
-            boolean showProfilePicture = isProfilePictureRequired(message, previousMessage);
+        boolean showProfilePicture = isProfilePictureRequired(message, previousMessage);
 
-            if (!showProfilePicture) {
-                profilePictureContainer.setVisibility(View.INVISIBLE);
-                profilePicture.setVisibility(View.GONE);
-                nicknameText.setVisibility(View.GONE);
-            }
+        if (!showProfilePicture) {
+            profilePictureContainer.setVisibility(View.INVISIBLE);
+            profilePicture.setVisibility(View.GONE);
+            nicknameText.setVisibility(View.GONE);
+            return;
+        }
 
-            HashMap<String, Member> members = messageAdapterContract.getMembers();
-            if (message.hasAuthor()) {
-                Member member = members.get(message.getAuthorId());
-                if (member != null) {
-                    nicknameText.setText(member.getNickname());
-                    if (showProfilePicture) {
-                        if (member.getImagePath() != null) {
+        if (!message.hasAuthor()) return;
 
-                            int imageSize = DeviceUtils.dpToPx(40, itemView.getContext());
-                            Picasso.get().load(new File(member.getImagePath()))
-                                    .resize(imageSize, imageSize)
-                                    .into(profilePicture);
-                        } else {
-                            profilePicture.setImageResource(R.drawable.placeholder);
-                        }
-                        profilePicture.setVisibility(View.VISIBLE);
-                        profilePictureContainer.setVisibility(View.VISIBLE);
-                        nicknameText.setText(message.getAuthorNickname());
-                        nicknameText.setVisibility(View.VISIBLE);
-                    }
-                } else if (showProfilePicture) {
-                    profilePicture.setVisibility(View.VISIBLE);
-                    profilePicture.setImageDrawable(itemView.getContext().
-                            getDrawable(R.drawable.placeholder));
-                    profilePictureContainer.setVisibility(View.VISIBLE);
-                    nicknameText.setText(message.getAuthorNickname());
-                    nicknameText.setVisibility(View.VISIBLE);
-                }
+        HashMap<String, Member> members = messageAdapterContract.getMembers();
+        Member member = members.get(message.getAuthorId());
+        String nickName = null;
+
+        if (member != null) {
+            nickName = member.getNickname();
+            if (member.getImagePath() != null) {
+
+                int imageSize = DeviceUtils.dpToPx(40, itemView.getContext());
+                Picasso.get().load(new File(member.getImagePath()))
+                        .resize(imageSize, imageSize)
+                        .into(profilePicture);
+            } else {
+                profilePicture.setImageResource(R.drawable.placeholder);
             }
         } else {
-            updateMessageReading(message, false);
+            profilePicture.setImageDrawable(itemView.getContext().
+                    getDrawable(R.drawable.placeholder));
+
         }
+
+        profilePicture.setVisibility(View.VISIBLE);
+        profilePictureContainer.setVisibility(View.VISIBLE);
+
+        if (nickName == null) nickName = message.getAuthorNickname();
+        nicknameText.setText(nickName);
+        nicknameText.setVisibility(View.VISIBLE);
     }
 
     private boolean isProfilePictureRequired(@NonNull Message message, @Nullable Message previousMessage) {

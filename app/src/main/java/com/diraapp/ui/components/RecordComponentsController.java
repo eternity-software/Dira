@@ -270,7 +270,7 @@ public class RecordComponentsController {
                         slidrInterface.unlock();
                         isSaving = false;
                         int colorFrom = Theme.getColor(context, R.color.accent);
-                        recordButton.getAnimation().cancel();
+                        if (recordButton.getAnimation() != null) recordButton.getAnimation().cancel();
                         recordButton.getBackground().setColorFilter(colorFrom, PorterDuff.Mode.SRC_ATOP);
                         lastTimeRecordButtonDown = 0;
                         lastTimeRecordButtonUp = 0;

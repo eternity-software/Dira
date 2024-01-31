@@ -5,6 +5,8 @@
     android:layout_height="wrap_content"
     android:background="@drawable/tooltip_drawable"
     android:orientation="vertical"
+
+    android:focusable="false"
    >
 
     <LinearLayout

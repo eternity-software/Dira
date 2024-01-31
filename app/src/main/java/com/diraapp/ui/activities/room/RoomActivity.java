@@ -35,6 +35,7 @@ import com.abedelazizshe.lightcompressorlibrary.VideoCompressor;
 import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
 import com.abedelazizshe.lightcompressorlibrary.config.AppSpecificStorageConfiguration;
 import com.abedelazizshe.lightcompressorlibrary.config.Configuration;
+import com.diraapp.BuildConfig;
 import com.diraapp.DiraApplication;
 import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
@@ -499,6 +500,16 @@ public class RoomActivity extends DiraActivity
 
             }
         });
+
+        if (BuildConfig.DEBUG) {
+            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    Logger.logDebug("RoomActivity", "EditText focus changed - " + b);
+                }
+            });
+        }
+
     }
 
     @Override
