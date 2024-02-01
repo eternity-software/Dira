@@ -78,6 +78,7 @@
     <string name="no_encryption">No encryption</string>
     <string name="room_encrypted">Encrypted room</string>
     <string name="waiting_person">waiting person to join</string>
+    <string name="no_media">Nobody sent media\nin this room</string>
 
     <!-- Pinned messages activity -->
     <string name="pinned_messages_title">Pinned messages</string>

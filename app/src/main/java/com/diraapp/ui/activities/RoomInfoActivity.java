@@ -48,6 +48,7 @@ import com.diraapp.ui.components.DiraPopup;
 import com.diraapp.ui.components.FadingImageView;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.SliderActivity;
+import com.diraapp.utils.StringFormatter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -175,6 +176,9 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
                     gallery.setAdapter(mediaGridAdapter);
                     mediaGridAdapter.notifyDataSetChanged();
 
+                    if (attachments.size() > 0) {
+                        findViewById(R.id.no_media_indicator).setVisibility(View.GONE);
+                    }
 
                 }
             });
@@ -231,15 +235,16 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
                             memberImage_2.setImageBitmap(AppStorage.getBitmapFromPath(members.get(1).getImagePath()));
                         }
 
+                        roomName.setText(room.getName());
+
                         initInviteButton();
                         initOptionsButton();
+                        initStatuses();
 
-                        roomName.setText(room.getName());
                         membersCount.setText(getString(R.string.members_count).replace("%s", String.valueOf(members.size() + 1)));
 
                     }
                 });
-
 
             }
         });
@@ -333,6 +338,42 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
                     showInviteButton, room.getName(), room.getImagePath(), room.isNotificationsEnabled(), this);
             bottomSheet.show(getSupportFragmentManager(), "Options bottom sheet");
         });
+    }
+
+    private void initStatuses() {
+
+        boolean noKey = room.getEncryptionKey().equals(StringFormatter.EMPTY_STRING);
+        if (noKey) {
+            findViewById(R.id.room_info_room_not_encrypted).setVisibility(View.VISIBLE);
+            findViewById(R.id.room_info_room_encrypted).setVisibility(View.GONE);
+        }
+
+        boolean isEmptyPrivate = room.getRoomType() == RoomType.PRIVATE && members.size() == 0;
+        if (isEmptyPrivate) {
+            findViewById(R.id.room_info_empty_private_room).setVisibility(View.VISIBLE);
+            ((TextView) findViewById(R.id.room_name)).setText(getText(R.string.room_type_private));
+        }
+
+        boolean showEncryptionButton = room.getRoomType() == RoomType.PRIVATE && members.size() > 0;
+        if (showEncryptionButton) {
+            showEncryptionButton();
+        }
+
+        boolean isPrivate = room.getRoomType() == RoomType.PRIVATE;
+        if (isPrivate) {
+            findViewById(R.id.public_room_panel).setVisibility(View.GONE);
+        }
+    }
+
+    private void showInviteButton() {
+        findViewById(R.id.encryption_button).setVisibility(View.GONE);
+        findViewById(R.id.icon_invite).setVisibility(View.VISIBLE);
+
+    }
+
+    private void showEncryptionButton() {
+        findViewById(R.id.icon_invite).setVisibility(View.GONE);
+        findViewById(R.id.encryption_button).setVisibility(View.VISIBLE);
     }
 
     @Override
