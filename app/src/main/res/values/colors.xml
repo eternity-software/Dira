@@ -13,9 +13,10 @@
     <color name="medium_light_light_gray">#B7B7B7</color>
     <color name="medium_light_medium_light_gray">#A0A0A0</color>
     <color name="gray">#424242</color>
+    <color name="medium_gray">#303030</color>
     <color name="gray_trans">#81202020</color>
     <color name="white">#FFFFFF</color>
-    <color name="yellow">#FFEB3B</color>
+    <color name="yellow">#EFBA00</color>
     <color name="red">#FC6240</color>
     <color name="black">#000000</color>
 

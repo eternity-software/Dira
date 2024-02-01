@@ -173,4 +173,7 @@
     <string name="room_update_remove_pinned_user">%s открепил сообщение</string>
     <string name="encryption_options">Настройки шифрования</string>
     <string name="delete_room">Удалить комнату</string>
+    <string name="no_encryption">Нет шифрования</string>
+    <string name="room_encrypted">Комната зашифрована</string>
+    <string name="waiting_person">Вы одни в этой комнате</string>
 </resources>

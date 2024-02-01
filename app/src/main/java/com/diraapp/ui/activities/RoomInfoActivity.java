@@ -78,37 +78,7 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
             }
         });
 
-        findViewById(R.id.leave_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DiraPopup diraPopup = new DiraPopup(RoomInfoActivity.this);
-                diraPopup.show(getString(R.string.delete_room_title),
-                        getString(R.string.delete_room_text),
-                        null,
-                        null, new Runnable() {
-                            @Override
-                            public void run() {
-                                Thread deletionThread = new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        UpdateProcessor.getInstance(getApplicationContext()).deleteRoom(room);
 
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Intent intent = new Intent(RoomInfoActivity.this, RoomSelectorActivity.class);
-                                                intent.putExtra(RoomSelectorActivity.CAN_BE_BACK_PRESSED, false);
-                                                startActivity(intent);
-                                            }
-                                        });
-                                    }
-                                });
-                                deletionThread.start();
-
-                            }
-                        });
-            }
-        });
 
         findViewById(R.id.edit_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -444,5 +414,34 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener, In
                 }
             }
         });
+    }
+
+    public void onRoomDeletion() {
+        DiraPopup diraPopup = new DiraPopup(RoomInfoActivity.this);
+        diraPopup.show(getString(R.string.delete_room_title),
+                getString(R.string.delete_room_text),
+                null,
+                null, new Runnable() {
+                    @Override
+                    public void run() {
+                        Thread deletionThread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                UpdateProcessor.getInstance(getApplicationContext()).deleteRoom(room);
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent intent = new Intent(RoomInfoActivity.this, RoomSelectorActivity.class);
+                                        intent.putExtra(RoomSelectorActivity.CAN_BE_BACK_PRESSED, false);
+                                        startActivity(intent);
+                                    }
+                                });
+                            }
+                        });
+                        deletionThread.start();
+
+                    }
+                });
     }
 }

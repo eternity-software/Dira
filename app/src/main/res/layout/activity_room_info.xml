@@ -11,34 +11,21 @@
     tools:context=".ui.activities.RoomInfoActivity">
 
 
-    <ImageView
-        android:id="@+id/encryption_button"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/dark_rect"
-        android:padding="8dp"
-        android:src="@drawable/ic_encryption"
-        app:layout_constraintBottom_toBottomOf="@+id/button_back"
-        app:layout_constraintEnd_toStartOf="@+id/edit_button"
+<!--    <ImageView-->
+<!--        android:id="@+id/search"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:layout_gravity="center_vertical"-->
+<!--        android:layout_marginEnd="8dp"-->
+<!--        android:padding="8dp"-->
+<!--        android:src="@drawable/ic_encryption"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/button_back"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
 
-        app:layout_constraintTop_toTopOf="@+id/button_back"
-        app:tint="@color/white" />
+<!--        app:layout_constraintTop_toTopOf="@+id/button_back"-->
+<!--        app:tint="@color/white"-->
+<!--        android:visibility="gone"/>-->
 
-    <ImageView
-        android:id="@+id/edit_button"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="18dp"
-        android:background="@drawable/dark_rect"
-        android:padding="8dp"
-        android:src="@drawable/ic_edit"
-        app:layout_constraintBottom_toBottomOf="@+id/button_back"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/button_back"
-        app:tint="@color/white" />
 
 
     <androidx.core.widget.NestedScrollView
@@ -48,7 +35,7 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_back">
+        app:layout_constraintTop_toBottomOf="@+id/top_bar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -61,202 +48,359 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="18dp"
+                android:background="@drawable/high_bottom_rounded"
+                android:backgroundTint="@color/medium_gray"
+                android:paddingHorizontal="22dp"
+                android:paddingBottom="26dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:orientation="vertical">
 
-
-                <LinearLayout
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                <com.diraapp.ui.components.dynamic.ThemeImageView
+                    android:id="@+id/button_back"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_marginTop="20dp"
-                    android:clipChildren="false"
-                    android:clipToPadding="false">
-
-                    <com.diraapp.ui.components.FadingImageView
-                        android:id="@+id/blurred_picture"
-                        android:layout_width="300dp"
-                        android:layout_height="300dp"
-                        android:layout_gravity="center"
-
-                        android:layout_marginLeft="-100dp"
-                        android:clipToOutline="false"
-
-                        android:padding="30dp" />
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/room_picture_container"
-                        android:layout_width="100dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="-200dp"
-
-                        app:cardBackgroundColor="@android:color/transparent"
-
-                        app:cardCornerRadius="120dp"
-                        app:cardElevation="0dp">
-
-                        <ImageView
-                            android:id="@+id/room_picture"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/placeholder"
-                            android:transitionName="icon" />
-                    </androidx.cardview.widget.CardView>
-                </LinearLayout>
-
-
-                <TextView
-                    android:id="@+id/room_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="24dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/montserratbold"
-                    android:text="@string/room_name"
-                    android:textColor="@color/white"
-                    android:textSize="24sp"
-                    android:transitionName="name" />
+                    android:layout_marginStart="6dp"
+                    android:background="?actionBarItemBackground"
+                    android:src="@drawable/ic_back"
+                    app:themeImageColor="accent_image_button_color" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="34dp"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/members_button"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:clipChildren="false"
+                        android:clipToPadding="false">
+
+                        <com.diraapp.ui.components.FadingImageView
+                            android:id="@+id/blurred_picture"
+                            android:layout_width="300dp"
+                            android:layout_height="300dp"
+                            android:layout_gravity="center"
+
+                            android:layout_marginLeft="-90dp"
+                            android:clipToOutline="false"
+
+                            android:padding="20dp"/>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/room_picture_container"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:layout_marginLeft="-210dp"
+                            android:background="#24FFFFFF"
+
+                            app:cardCornerRadius="60dp"
+                            app:cardElevation="0dp">
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="114dp"
+                                android:layout_height="114dp"
+                                android:background="#24FFFFFF"
+                                android:layout_gravity="center"
+
+                                app:cardCornerRadius="57dp"
+                                app:cardElevation="0dp">
+
+                                <ImageView
+                                    android:id="@+id/room_picture"
+                                    android:layout_width="114dp"
+                                    android:layout_height="114dp"
+                                    android:src="@drawable/placeholder"
+                                    android:background="#24FFFFFF"
+                                    android:transitionName="icon" />
+
+                            </androidx.cardview.widget.CardView>
+
+                        </androidx.cardview.widget.CardView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="54dp"
-                        android:layout_marginRight="4dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/medium_round_square"
-                        android:gravity="center"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="12dp">
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="22dp"
+                        android:paddingVertical="4dp"
+                        android:orientation="vertical">
 
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-
-                            app:cardBackgroundColor="@color/dark"
-                            app:cardCornerRadius="120dp"
-                            app:cardElevation="0dp">
+                        <LinearLayout
+                            android:id="@+id/room_info_room_not_encrypted"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone">
 
                             <ImageView
-                                android:id="@+id/icon_user_1"
-                                android:layout_width="match_parent"
+                                android:layout_width="14dp"
+                                android:layout_height="14dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_room_no_encryption"
+                                app:tint="@color/red"/>
 
-                                android:layout_height="match_parent"
-                                android:src="@drawable/placeholder" />
-                        </androidx.cardview.widget.CardView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/montserratsemibold"
+                                android:text="@string/no_encryption"
+                                android:textColor="@color/red"
+                                android:textSize="12sp"
+                                android:transitionName="name" />
 
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginLeft="-12dp"
-                            app:cardBackgroundColor="@color/dark"
-                            app:cardCornerRadius="120dp"
-                            app:cardElevation="0dp">
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/room_info_room_encrypted"
+                            android:layout_width="match_parent"
+                            android:layout_gravity="top"
+                            android:layout_height="wrap_content">
 
                             <ImageView
-                                android:id="@+id/icon_user_2"
-                                android:layout_width="match_parent"
+                                android:layout_width="12dp"
+                                android:layout_height="12dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_encrypted"
+                                app:tint="@color/white"
+                                android:alpha="0.75"/>
 
-                                android:layout_height="match_parent"
-                                android:src="@drawable/placeholder" />
-                        </androidx.cardview.widget.CardView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/montserratsemibold"
+                                android:text="@string/room_encrypted"
+                                android:textColor="@color/white"
+                                android:textSize="12sp"
+                                android:transitionName="name"
+                                android:alpha="0.75"/>
+
+                        </LinearLayout>
 
                         <TextView
-                            android:id="@+id/members_count"
+                            android:id="@+id/room_name"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight="1"
-                            android:ellipsize="marquee"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="2dp"
                             android:fontFamily="@font/montserratbold"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="8dp"
-                            android:singleLine="true"
-                            android:text="@string/members_count"
+                            android:text="@string/room_name"
                             android:textColor="@color/white"
-                            android:textSize="14sp"
+                            android:textSize="24sp"
                             android:transitionName="name" />
+
+                        <LinearLayout
+                            android:id="@+id/room_info_empty_private_room"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:layout_width="14dp"
+                                android:layout_height="14dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_warning"
+                                app:tint="@color/yellow"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/montserratsemibold"
+                                android:text="@string/waiting_person"
+                                android:textColor="@color/yellow"
+                                android:textSize="12sp"
+                                android:transitionName="name"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/public_room_panel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:id="@+id/members_button"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:layout_weight="1"
+                                android:layout_marginRight="4dp"
+                                android:background="@drawable/medium_rounded_translucent_square"
+                                android:gravity="center"
+                                android:paddingHorizontal="14dp"
+                                android:paddingVertical="10dp">
+
+                                <androidx.cardview.widget.CardView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+
+                                    app:cardBackgroundColor="@color/dark"
+                                    app:cardCornerRadius="120dp"
+                                    app:cardElevation="0dp">
+
+                                    <ImageView
+                                        android:id="@+id/icon_user_1"
+                                        android:layout_width="match_parent"
+
+                                        android:layout_height="match_parent"
+                                        android:src="@drawable/placeholder" />
+                                </androidx.cardview.widget.CardView>
+
+                                <androidx.cardview.widget.CardView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_marginLeft="-12dp"
+                                    app:cardBackgroundColor="@color/dark"
+                                    app:cardCornerRadius="120dp"
+                                    app:cardElevation="0dp">
+
+                                    <ImageView
+                                        android:id="@+id/icon_user_2"
+                                        android:layout_width="match_parent"
+
+                                        android:layout_height="match_parent"
+                                        android:src="@drawable/placeholder" />
+                                </androidx.cardview.widget.CardView>
+
+                                <TextView
+                                    android:id="@+id/members_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_weight="1"
+                                    android:ellipsize="marquee"
+                                    android:fontFamily="@font/montserratbold"
+                                    android:gravity="center_vertical"
+                                    android:paddingHorizontal="8dp"
+                                    android:singleLine="true"
+                                    android:text="@string/members_count"
+                                    android:textColor="@color/white"
+                                    android:textSize="12sp"
+                                    android:transitionName="name" />
+
+                                <ProgressBar
+                                    android:id="@+id/progress_circular"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_gravity="center_vertical"
+                                    android:indeterminateTint="@color/accent"
+                                    android:visibility="gone" />
+
+
+                            </LinearLayout>
+
+                            <ImageView
+                                android:id="@+id/edit_button"
+                                android:layout_width="52dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="0"
+                                android:background="@drawable/medium_rounded_translucent_square"
+                                android:gravity="center"
+                                android:src="@drawable/ic_edit_room"
+                                android:paddingHorizontal="18dp"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/rounded_translucent_square"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:id="@+id/icon_invite"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:layout_gravity="center"
-                            android:background="?actionBarItemBackground"
-                            android:padding="6dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:paddingVertical="14dp"
+                            android:layout_gravity="center_horizontal"
                             android:src="@drawable/ic_invite"
+                            android:visibility="visible"
                             app:tint="@color/white" />
 
-                        <ProgressBar
-                            android:id="@+id/progress_circular"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_gravity="center_vertical"
-                            android:indeterminateTint="@color/accent"
-                            android:visibility="gone" />
-
+                        <ImageView
+                            android:id="@+id/encryption_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/ic_encryption"
+                            android:visibility="gone"
+                            app:tint="@color/white" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/notification_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="54dp"
-                        android:layout_marginHorizontal="4dp"
-                        android:layout_weight="0"
-                        android:background="@drawable/medium_round_square"
-                        android:gravity="center"
-                        android:paddingHorizontal="16dp"
-                        android:paddingVertical="12dp">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:id="@+id/notification_enabled_icon"
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:paddingVertical="14dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_notification_enabled"
-                            android:visibility="visible"
+                            android:visibility="gone"
                             app:tint="@color/white" />
 
                         <ImageView
                             android:id="@+id/notification_disabled_icon"
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:paddingVertical="14dp"
+                            android:layout_gravity="center_horizontal"
                             android:src="@drawable/ic_notification_disabled"
-                            android:visibility="gone"
+                            android:visibility="visible"
                             app:tint="@color/white" />
 
-
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/leave_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="54dp"
-                        android:layout_marginLeft="4dp"
-                        android:layout_weight="0"
-                        android:background="@drawable/medium_round_square"
-                        android:gravity="center"
-                        android:paddingHorizontal="16dp"
-                        android:paddingVertical="12dp">
+                    <FrameLayout
+                        android:id="@+id/room_options_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
 
                         <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_trash"
-                            app:tint="@color/red" />
+                            android:layout_width="28dp"
+                            android:layout_height="52dp"
+                            android:paddingVertical="14dp"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@drawable/ic_options"
+                            android:visibility="visible"
+                            app:tint="@color/white" />
 
+                    </FrameLayout>
 
-                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
@@ -308,16 +452,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/shadow_gradient" />
 
-    <com.diraapp.ui.components.dynamic.ThemeImageView
-        android:id="@+id/button_back"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:background="?actionBarItemBackground"
-        android:padding="10dp"
+    <FrameLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/medium_gray"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:themeImageColor="accent_image_button_color" />
+        android:visibility="gone">
+
+        <com.diraapp.ui.components.dynamic.ThemeImageView
+            android:id="@+id/button_back_bar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:background="?actionBarItemBackground"
+            android:padding="10dp"
+            android:src="@drawable/ic_back"
+            app:themeImageColor="accent_image_button_color" />
+
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

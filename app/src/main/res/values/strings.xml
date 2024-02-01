@@ -75,6 +75,9 @@
     <string name="media_gallery">Gallery</string>
 
     <!-- Room info -->
+    <string name="no_encryption">No encryption</string>
+    <string name="room_encrypted">Encrypted room</string>
+    <string name="waiting_person">waiting person to join</string>
 
     <!-- Pinned messages activity -->
     <string name="pinned_messages_title">Pinned messages</string>
