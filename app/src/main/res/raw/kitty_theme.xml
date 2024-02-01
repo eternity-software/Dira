@@ -2,6 +2,7 @@
 <resources>
     <!-- Main colors !-->
     <color name="accent">#8978FA</color>
+    <color name="accent_trans">#478978FA</color>
     <color name="accent_dark">#3B3562</color>
     <color name="accent_medium">#474169</color>
     <color name="unread_message_background">#368978FA</color>

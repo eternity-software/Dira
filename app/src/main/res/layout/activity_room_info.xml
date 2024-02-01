@@ -198,7 +198,8 @@
                             android:text="@string/room_name"
                             android:textColor="@color/white"
                             android:textSize="20sp"
-                            android:gravity="bottom"
+                            android:layout_marginTop="4dp"
+                            android:gravity="top"
                             android:transitionName="name" />
 
                         <LinearLayout
@@ -407,6 +408,147 @@
 
                 </LinearLayout>
             </LinearLayout>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingVertical="8dp"
+                android:paddingHorizontal="12dp"
+                android:clipToPadding="false"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.diraapp.ui.components.dynamic.ThemeLinearLayout
+                        android:id="@+id/type_media"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_background"
+                        android:paddingVertical="4dp"
+                        android:paddingHorizontal="10dp"
+                        android:gravity="center_vertical"
+                        app:themeBackgroundColor="accent_trans"
+                        android:layout_marginEnd="6dp">
+
+                        <com.diraapp.ui.components.dynamic.ThemeImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:padding="2dp"
+                            android:src="@drawable/ic_image"
+                            app:themeImageColor="accent"/>
+
+                        <com.diraapp.ui.components.dynamic.DynamicTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="2dp"
+                            android:fontFamily="@font/montserratsemibold"
+                            android:text="@string/media"
+                            app:themeColor="accent"
+                            android:textSize="14sp"
+                            android:gravity="center_vertical"
+                            android:transitionName="name"/>
+
+                    </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
+
+                    <com.diraapp.ui.components.dynamic.ThemeLinearLayout
+                        android:id="@+id/type_voice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_background"
+                        android:paddingVertical="4dp"
+                        android:paddingHorizontal="10dp"
+                        android:gravity="center_vertical"
+                        app:themeBackgroundColor="dark_lighter"
+                        android:layout_marginEnd="6dp">
+
+                        <com.diraapp.ui.components.dynamic.ThemeImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:padding="2dp"
+                            android:src="@drawable/ic_mic"
+                            app:themeImageColor="light_gray"/>
+
+                        <com.diraapp.ui.components.dynamic.DynamicTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="2dp"
+                            android:fontFamily="@font/montserratsemibold"
+                            android:text="@string/voice"
+                            app:themeColor="light_gray"
+                            android:textSize="14sp"
+                            android:gravity="center_vertical"
+                            android:transitionName="name"/>
+
+                    </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
+
+                    <com.diraapp.ui.components.dynamic.ThemeLinearLayout
+                        android:id="@+id/type_links"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_background"
+                        android:paddingVertical="4dp"
+                        android:paddingHorizontal="10dp"
+                        android:gravity="center_vertical"
+                        app:themeBackgroundColor="dark_lighter"
+                        android:layout_marginEnd="6dp">
+
+                        <com.diraapp.ui.components.dynamic.ThemeImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:padding="4dp"
+                            android:src="@drawable/ic_link"
+                            app:themeImageColor="light_gray"/>
+
+                        <com.diraapp.ui.components.dynamic.DynamicTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="2dp"
+                            android:fontFamily="@font/montserratsemibold"
+                            android:text="@string/links"
+                            app:themeColor="light_gray"
+                            android:textSize="14sp"
+                            android:gravity="center_vertical"
+                            android:transitionName="name"/>
+
+                    </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
+
+                    <com.diraapp.ui.components.dynamic.ThemeLinearLayout
+                        android:id="@+id/type_documents"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_background"
+                        android:paddingVertical="4dp"
+                        android:paddingHorizontal="10dp"
+                        android:gravity="center_vertical"
+                        app:themeBackgroundColor="dark_lighter"
+                        android:layout_marginEnd="6dp">
+
+                        <com.diraapp.ui.components.dynamic.ThemeImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:padding="4dp"
+                            android:src="@drawable/ic_documents"
+                            app:themeImageColor="light_gray"/>
+
+                        <com.diraapp.ui.components.dynamic.DynamicTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="2dp"
+                            android:fontFamily="@font/montserratsemibold"
+                            android:text="@string/documents"
+                            app:themeColor="light_gray"
+                            android:textSize="14sp"
+                            android:gravity="center_vertical"
+                            android:transitionName="name"/>
+
+                    </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"

@@ -3,6 +3,7 @@ package com.diraapp.ui.bottomsheet.roomoptions;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,9 +77,8 @@ public class RoomOptionsBottomSheet extends BottomSheetDialogFragment {
 
     public void initButtons() {
         if (!isNotificationsEnabled) {
-            binding.notificationButtonIcon.setBackground(ContextCompat.getDrawable(
+            binding.notificationButtonIcon.setImageDrawable(ContextCompat.getDrawable(
                     binding.getRoot().getContext(), R.drawable.ic_notification_enabled));
-            binding.notificationButtonIcon.setColorFilter(R.color.white);
             binding.notificationButtonText.setText(
                     binding.getRoot().getContext().getString(R.string.enable_notification));
         }
