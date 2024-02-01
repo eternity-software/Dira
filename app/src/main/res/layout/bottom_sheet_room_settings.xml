@@ -24,19 +24,31 @@
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:backgroundTint="#24FFFFFF"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
+            app:cardBackgroundColor="#24FFFFFF"
 
             app:cardElevation="0dp"
-            app:cardCornerRadius="20dp">
+            app:cardCornerRadius="29dp">
 
-            <ImageView
-                android:id="@+id/room_image"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+            <androidx.cardview.widget.CardView
                 android:layout_gravity="center"
-                android:src="@drawable/placeholder"/>
+                app:cardBackgroundColor="#24FFFFFF"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+
+                app:cardElevation="0dp"
+                app:cardCornerRadius="26dp">
+
+                <ImageView
+                    android:id="@+id/room_image"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/placeholder" />
+
+            </androidx.cardview.widget.CardView>
+
 
         </androidx.cardview.widget.CardView>
 
@@ -50,7 +62,7 @@
             android:fontFamily="@font/montserratbold"
             android:text="@string/room_name"
             android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:transitionName="name" />
 
     </LinearLayout>
@@ -68,12 +80,12 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:gravity="center_vertical"
-            android:layout_height="48dp">
+            android:layout_height="64dp">
 
             <com.diraapp.ui.components.dynamic.ThemeImageView
                 android:id="@+id/notification_button_icon"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_marginHorizontal="14dp"
                 android:src="@drawable/ic_notification_disabled"/>
 
@@ -86,7 +98,7 @@
                 android:fontFamily="@font/montserratsemibold"
                 android:text="@string/disable_notification"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:transitionName="name" />
 
         </LinearLayout>
@@ -96,11 +108,11 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:gravity="center_vertical"
-            android:layout_height="48dp">
+            android:layout_height="64dp">
 
             <com.diraapp.ui.components.dynamic.ThemeImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_marginHorizontal="14dp"
                 android:src="@drawable/ic_invite"/>
 
@@ -112,7 +124,7 @@
                 android:fontFamily="@font/montserratsemibold"
                 android:text="@string/invite_member"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:transitionName="name" />
 
         </LinearLayout>
@@ -122,11 +134,11 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:gravity="center_vertical"
-            android:layout_height="48dp">
+            android:layout_height="64dp">
 
             <com.diraapp.ui.components.dynamic.ThemeImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_marginHorizontal="14dp"
                 android:src="@drawable/ic_encryption"/>
 
@@ -138,7 +150,7 @@
                 android:fontFamily="@font/montserratsemibold"
                 android:text="@string/encryption_options"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:transitionName="name" />
 
         </LinearLayout>
@@ -148,11 +160,11 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:gravity="center_vertical"
-            android:layout_height="48dp">
+            android:layout_height="64dp">
 
             <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_marginHorizontal="14dp"
                 android:src="@drawable/ic_trash"
                 app:tint="@color/red" />
@@ -165,7 +177,7 @@
                 android:fontFamily="@font/montserratsemibold"
                 android:text="@string/delete_room"
                 android:textColor="@color/red"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:transitionName="name" />
 
         </LinearLayout>
