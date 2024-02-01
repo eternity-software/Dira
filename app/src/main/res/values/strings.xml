@@ -165,6 +165,14 @@
     <string name="room_encryption_cancel">Renewing has been cancelled</string>
 
 
+    <!-- Room info bottom sheet -->
+    <string name="disable_notification">Disable notifications</string>
+    <string name="enable_notification">Enable notifications</string>
+    <string name="invite_member">Invite member</string>
+    <string name="encryption_options">Encryption options</string>
+    <string name="delete_room">Delete room</string>
+
+
     <!-- Room updates -->
     <string name="room_update_picture_change">Room picture changed</string>
     <string name="room_update_name_change">Room name changed</string>
