@@ -63,25 +63,28 @@
                     <TextView
                         android:gravity="center_vertical"
                         android:id="@+id/room_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="22dp"
-                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
                         android:fontFamily="@font/montserratbold"
                         android:maxLines="1"
-                        android:text=".."
+                        android:includeFontPadding="true"
+
+                        android:text="..111"
                         android:textColor="@color/white"
 
-                        android:textSize="18sp" />
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/time_text"
-                    android:layout_width="match_parent"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0"
 
                     android:layout_height="18dp"
                     android:layout_marginLeft="4dp"
+                    android:paddingRight="8dp"
                     android:layout_marginTop="2dp"
                     android:fontFamily="@font/montserratsemibold"
                     android:layout_gravity="end"
@@ -97,6 +100,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <com.diraapp.ui.components.dynamic.ThemeImageView
@@ -104,22 +109,20 @@
                     android:layout_width="8dp"
                     android:layout_height="8dp"
 
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_gravity="bottom"
+                    android:scaleType="centerInside"
+
                     android:src="@drawable/color_circle"
                     app:themeImageColor="accent"/>
 
                 <com.diraapp.ui.components.dynamic.DynamicTextView
                     android:id="@+id/author_text"
                     android:layout_width="wrap_content"
-
-                    android:layout_height="18dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginTop="2dp"
                     android:fontFamily="@font/montserratsemibold"
                     android:gravity="center_vertical"
-                    android:text=""
+
                     android:textColor="@color/accent"
                     android:textSize="14sp"
                     app:themeColor="accent" />
@@ -127,12 +130,13 @@
                 <TextView
                     android:id="@+id/message_text"
                     android:layout_width="wrap_content"
-                    android:layout_height="22dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginLeft="2dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/montserratsemibold"
                     android:gravity="center_vertical"
+                    android:paddingRight="8dp"
                     android:maxLines="1"
                     android:text="@string/no_messages"
                     android:textColor="@color/white"
@@ -141,20 +145,19 @@
                 <com.diraapp.ui.components.dynamic.DynamicTextView
                     android:id="@+id/unread_messages_count"
                     android:layout_width="wrap_content"
-                    android:layout_height="18dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginRight="8dp"
 
                     android:background="@drawable/rounded_accent_rectangle"
                     android:fontFamily="@font/montserratbold"
                     android:gravity="center_vertical|right"
                     android:minWidth="12dp"
                     android:paddingHorizontal="6dp"
-                    android:text=""
+                    android:text="1"
                     android:textColor="@color/gray"
                     android:textSize="12sp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:themeColor="accent_button_text_color"
                     app:themeColorBackground="accent_button_background" />
             </LinearLayout>

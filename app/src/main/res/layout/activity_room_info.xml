@@ -50,8 +50,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/high_bottom_rounded"
                 android:backgroundTint="@color/medium_gray"
-                android:paddingHorizontal="22dp"
-                android:paddingBottom="26dp"
+                android:paddingHorizontal="18dp"
+                android:paddingBottom="18dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:orientation="vertical">
@@ -70,13 +70,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="34dp"
+                    android:layout_gravity="center_vertical"
                     android:clipChildren="false"
                     android:clipToPadding="false"
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center_vertical"
                         android:clipChildren="false"
                         android:clipToPadding="false">
 
@@ -93,8 +95,8 @@
 
                         <androidx.cardview.widget.CardView
                             android:id="@+id/room_picture_container"
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
                             android:layout_marginLeft="-210dp"
                             android:background="#24FFFFFF"
 
@@ -102,8 +104,8 @@
                             app:cardElevation="0dp">
 
                             <androidx.cardview.widget.CardView
-                                android:layout_width="110dp"
-                                android:layout_height="110dp"
+                                android:layout_width="94dp"
+                                android:layout_height="94dp"
                                 android:background="#24FFFFFF"
                                 android:layout_gravity="center"
 
@@ -112,8 +114,8 @@
 
                                 <ImageView
                                     android:id="@+id/room_picture"
-                                    android:layout_width="110dp"
-                                    android:layout_height="110dp"
+                                    android:layout_width="94dp"
+                                    android:layout_height="94dp"
                                     android:src="@drawable/placeholder"
                                     android:transitionName="icon" />
 
@@ -125,9 +127,9 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="22dp"
-                        android:paddingVertical="4dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_gravity="center_vertical"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -191,15 +193,16 @@
                         <TextView
                             android:id="@+id/room_name"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginBottom="2dp"
+
                             android:fontFamily="@font/montserratbold"
                             android:text="@string/room_name"
                             android:textColor="@color/white"
+                            android:gravity="center_vertical"
                             android:textSize="20sp"
-                            android:layout_marginTop="4dp"
-                            android:gravity="top"
+                            android:layout_marginVertical="8dp"
+
                             android:transitionName="name" />
 
                         <LinearLayout
@@ -232,21 +235,21 @@
                         <LinearLayout
                             android:id="@+id/public_room_panel"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1.1"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
                             android:gravity="bottom"
                             android:orientation="horizontal">
 
                             <LinearLayout
                                 android:id="@+id/members_button"
                                 android:layout_width="match_parent"
-                                android:layout_height="40dp"
+                                android:layout_height="36dp"
                                 android:layout_weight="1"
                                 android:layout_marginRight="4dp"
                                 android:background="@drawable/medium_rounded_translucent_square"
                                 android:gravity="center"
-                                android:paddingHorizontal="14dp"
-                                android:paddingVertical="10dp">
+                                android:paddingHorizontal="8dp"
+                               >
 
                                 <androidx.cardview.widget.CardView
                                     android:layout_width="20dp"
@@ -287,13 +290,13 @@
                                     android:layout_gravity="center_vertical"
                                     android:layout_weight="1"
                                     android:ellipsize="marquee"
-                                    android:fontFamily="@font/montserratbold"
+                                    android:fontFamily="@font/montserratsemibold"
                                     android:gravity="center_vertical"
                                     android:paddingHorizontal="8dp"
                                     android:singleLine="true"
                                     android:text="@string/members_count"
                                     android:textColor="@color/white"
-                                    android:textSize="12sp"
+                                    android:textSize="14sp"
                                     android:transitionName="name" />
 
 
@@ -302,7 +305,7 @@
                             <ImageView
                                 android:id="@+id/edit_button"
                                 android:layout_width="52dp"
-                                android:layout_height="40dp"
+                                android:layout_height="36dp"
                                 android:layout_weight="0"
                                 android:background="@drawable/medium_rounded_translucent_square"
                                 android:gravity="center"
@@ -318,8 +321,8 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/rounded_translucent_square"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
@@ -333,8 +336,8 @@
                         <ImageView
                             android:id="@+id/icon_invite"
                             android:layout_width="match_parent"
-                            android:layout_height="52dp"
-                            android:paddingVertical="14dp"
+                            android:layout_height="match_parent"
+                            android:paddingVertical="12dp"
                             android:layout_gravity="center_horizontal"
                             android:src="@drawable/ic_invite"
                             android:visibility="visible"
@@ -343,7 +346,7 @@
                         <ImageView
                             android:id="@+id/encryption_button"
                             android:layout_width="match_parent"
-                            android:layout_height="52dp"
+                            android:layout_height="match_parent"
                             android:layout_gravity="center_horizontal"
                             android:src="@drawable/ic_encryption"
                             android:visibility="gone"
@@ -352,7 +355,7 @@
                         <ProgressBar
                             android:id="@+id/progress_circular"
                             android:layout_width="match_parent"
-                            android:layout_height="52dp"
+                            android:layout_height="match_parent"
                             android:paddingVertical="13dp"
                             android:layout_gravity="center_vertical"
                             android:indeterminateTint="@color/white"
@@ -370,7 +373,7 @@
                         <ImageView
                             android:id="@+id/notification_enabled_icon"
                             android:layout_width="match_parent"
-                            android:layout_height="52dp"
+                            android:layout_height="match_parent"
                             android:paddingVertical="14dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_notification_enabled"
@@ -380,8 +383,8 @@
                         <ImageView
                             android:id="@+id/notification_disabled_icon"
                             android:layout_width="match_parent"
-                            android:layout_height="52dp"
-                            android:paddingVertical="14dp"
+                            android:layout_height="match_parent"
+                            android:paddingVertical="12dp"
                             android:layout_gravity="center_horizontal"
                             android:src="@drawable/ic_notification_disabled"
                             android:visibility="visible"
@@ -392,12 +395,12 @@
                     <FrameLayout
                         android:id="@+id/room_options_button"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="1">
 
                         <ImageView
                             android:layout_width="28dp"
-                            android:layout_height="52dp"
+                            android:layout_height="match_parent"
                             android:paddingVertical="14dp"
                             android:layout_gravity="center_horizontal"
                             android:src="@drawable/ic_options"
@@ -574,11 +577,11 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="8dp"
                         android:fontFamily="@font/montserratsemibold"
                         android:text="@string/no_media"
                         android:textColor="@color/light_gray"
-                        android:textSize="22sp"
+                        android:textSize="16sp"
                         android:gravity="center_horizontal"
                         android:transitionName="name" />
 
