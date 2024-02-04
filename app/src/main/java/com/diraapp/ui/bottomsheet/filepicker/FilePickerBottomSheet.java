@@ -1,18 +1,24 @@
 package com.diraapp.ui.bottomsheet.filepicker;
 
+
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -61,6 +67,10 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
     private String messageText;
 
+    private int inputHeight = 0;
+
+    private boolean isInputContainerShown = false;
+
 
     public ArrayList<SelectorFileInfo> getMedia() {
         return mediaGridAdapter.getMediaElements();
@@ -100,7 +110,21 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         messageInput = view.findViewById(R.id.message_box);
         if (messageText != null)
             messageInput.setText(messageText);
+
         inputContainer = view.findViewById(R.id.linearLayout3);
+
+        // calc inputContainer height
+        ViewTreeObserver vto = inputContainer.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                inputContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                inputHeight = inputContainer.getMeasuredHeight();
+
+                inputContainer.getLayoutParams().height = 0;
+                inputContainer.requestLayout();
+            }
+        });
 
 
         view.findViewById(R.id.sendButton).setOnClickListener(v -> {
@@ -216,11 +240,14 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
             public void onItemSelected(SelectorFileInfo diraMediaInfo,
                                        List<SelectorFileInfo> diraMediaInfoList) {
                 if (diraMediaInfoList.size() == 0) {
-                    inputContainer.setVisibility(View.GONE);
+                    inputHeight = inputContainer.getHeight();
+                    hideEditText();
+//                    inputContainer.setVisibility(View.GONE);
                 } else {
 
                     if (multiFilesListener != null) {
-                        inputContainer.setVisibility(View.VISIBLE);
+                        showEditText();
+                        //inputContainer.setVisibility(View.VISIBLE);
                         BottomSheetBehavior.from(bottomSheet)
                                 .setState(BottomSheetBehavior.STATE_EXPANDED);
                     }
@@ -325,6 +352,29 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         if (onDismiss != null) onDismiss.run();
 
 
+    }
+
+    private void showEditText() {
+        if (isInputContainerShown) return;
+
+        if (getActivity() == null) return;
+
+        ((DiraActivity) getActivity()).performHeightAnimation(0, inputHeight, inputContainer);
+        isInputContainerShown = true;
+    }
+
+    private void hideEditText() {
+        if (!isInputContainerShown) return;
+
+        if (getActivity() == null) return;
+
+        ((DiraActivity) getActivity()).performHeightAnimation(inputHeight, 0, inputContainer);
+        isInputContainerShown = false;
+
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     public interface MultiFilesListener {
