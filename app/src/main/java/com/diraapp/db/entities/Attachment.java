@@ -17,6 +17,9 @@ public class Attachment {
     @PrimaryKey(autoGenerate = true)
     private long id;
 
+    @ColumnInfo(defaultValue = "", name = "message_id")
+    private String messageId;
+
     private String fileUrl;
     private long fileCreatedTime;
     private String fileName;
@@ -91,6 +94,14 @@ public class Attachment {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 
     public String getFileUrl() {
@@ -171,10 +182,12 @@ public class Attachment {
     public String toString() {
         return "Attachment{" +
                 "id=" + id +
+                ", message_id='" + messageId + '\'' +
                 ", fileUrl='" + fileUrl + '\'' +
                 ", fileCreatedTime=" + fileCreatedTime +
                 ", fileName='" + fileName + '\'' +
                 ", size=" + size +
+                ", isListener=" + isListened +
                 ", attachmentType=" + attachmentType +
                 ", height=" + height +
                 ", width=" + width +

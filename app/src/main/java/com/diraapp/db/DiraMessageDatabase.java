@@ -1,5 +1,7 @@
 package com.diraapp.db;
 
+import static com.diraapp.db.migrations.MessageMigrationFrom28to29.MIGRATION_FROM_28_TO_29;
+
 import android.content.Context;
 
 import androidx.room.AutoMigration;
@@ -46,7 +48,7 @@ import com.diraapp.db.migrations.MessageMigrationFrom21To22;
                 @AutoMigration(from = 26, to = 27),
                 @AutoMigration(from = 27, to = 28)
         },
-        version = 28,
+        version = 29,
         exportSchema = true)
 @TypeConverters({AttachmentConverter.class, CustomClientDataConverter.class,
         MessageReadingConverter.class})
@@ -57,7 +59,9 @@ public abstract class DiraMessageDatabase extends RoomDatabase {
 
     public static DiraMessageDatabase getDatabase(Context applicationContext) {
         if (db == null) db = androidx.room.Room.databaseBuilder(applicationContext,
-                DiraMessageDatabase.class, DB_NAME).enableMultiInstanceInvalidation().build();
+                DiraMessageDatabase.class, DB_NAME)
+                .addMigrations(MIGRATION_FROM_28_TO_29)
+                .enableMultiInstanceInvalidation().build();
         return db;
     }
 

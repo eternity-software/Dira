@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
 
+    id 'androidx.room'
 }
 
 android {
@@ -21,14 +22,22 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
-            }
-        }
+//        javaCompileOptions {
+//            annotationProcessorOptions {
+//                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+//            }
+//        }
         vectorDrawables {
             useSupportLibrary true
         }
+    }
+
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 
 
@@ -65,6 +74,9 @@ android {
     }
 }
 
+room {
+    schemaDirectory "$projectDir/schemas"
+}
 
 dependencies {
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
@@ -101,6 +113,7 @@ dependencies {
     def room_version = "2.6.0"
 
     implementation "androidx.room:room-runtime:$room_version"
+    androidTestImplementation "androidx.room:room-testing:$room_version"
 
     implementation 'com.squareup.picasso:picasso:2.8'
 
@@ -116,11 +129,13 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.10.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation "com.github.skydoves:balloon:1.5.2"
 
 
+    androidTestImplementation "androidx.test:core:1.5.0"
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'androidx.test:monitor:1.6.1'
 }
