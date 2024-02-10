@@ -28,6 +28,7 @@ import com.diraapp.api.views.BaseMember;
 import com.diraapp.api.views.RoomInfo;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
+import com.diraapp.db.daos.AttachmentDao;
 import com.diraapp.db.daos.MemberDao;
 import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.daos.RoomDao;
@@ -109,7 +110,8 @@ public class UpdateProcessor {
 
         keyProtocolProcessor = new DiraKeyProtocolProcessor(roomDao, memberDao, new CacheUtils(context));
         MessageDao messageDao = DiraMessageDatabase.getDatabase(context).getMessageDao();
-        roomUpdatesProcessor = new RoomUpdatesProcessor(roomDao, memberDao, messageDao, context);
+        AttachmentDao attachmentDao = DiraMessageDatabase.getDatabase(context).getAttachmentDao();
+        roomUpdatesProcessor = new RoomUpdatesProcessor(roomDao, memberDao, messageDao, attachmentDao, context);
         clientMessageProcessor = new ClientMessageProcessor(context);
 
     }

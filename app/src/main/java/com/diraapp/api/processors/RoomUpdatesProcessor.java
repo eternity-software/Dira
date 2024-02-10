@@ -19,6 +19,7 @@ import com.diraapp.api.updates.Update;
 import com.diraapp.api.views.BaseMember;
 import com.diraapp.api.views.InviteRoom;
 import com.diraapp.api.views.RoomMember;
+import com.diraapp.db.daos.AttachmentDao;
 import com.diraapp.db.daos.MemberDao;
 import com.diraapp.db.daos.MessageDao;
 import com.diraapp.db.daos.RoomDao;
@@ -41,16 +42,18 @@ public class RoomUpdatesProcessor {
     private final RoomDao roomDao;
     private final MemberDao memberDao;
     private final MessageDao messageDao;
+    private final AttachmentDao attachmentDao;
     private final Context context;
 
     private final CacheUtils cacheUtils;
 
     private final HashMap<Request, String> retMessages = new HashMap<>(30);
 
-    public RoomUpdatesProcessor(RoomDao roomDao, MemberDao memberDao, MessageDao messageDao, Context context) {
+    public RoomUpdatesProcessor(RoomDao roomDao, MemberDao memberDao, MessageDao messageDao, AttachmentDao attachmentDao, Context context) {
         this.roomDao = roomDao;
         this.memberDao = memberDao;
         this.messageDao = messageDao;
+        this.attachmentDao = attachmentDao;
         this.context = context;
 
         cacheUtils = new CacheUtils(context);
@@ -156,13 +159,6 @@ public class RoomUpdatesProcessor {
         if (update instanceof NewMessageUpdate) {
             newMessage = ((NewMessageUpdate) update).getMessage();
             roomSecret = ((NewMessageUpdate) update).getMessage().getRoomSecret();
-
-            if (newMessage.getRepliedMessageId() != null) {
-                Message repliedMessage = messageDao.
-                        getMessageById(newMessage.getRepliedMessageId());
-
-                newMessage.setRepliedMessage(repliedMessage);
-            }
         }
 
         Room room = roomDao.getRoomBySecretName(roomSecret);
@@ -215,6 +211,13 @@ public class RoomUpdatesProcessor {
                     if (!newMessage.hasAuthor())
                         newMessage.setAuthorId("Dira");
                     messageDao.insertAll(newMessage);
+
+                    Attachment[] attachmentArray = new Attachment[newMessage.getAttachments().size()];
+                    for (int i = 0; i < attachmentArray.length; i++) {
+                        attachmentArray[i] = newMessage.getAttachments().get(i);
+                    }
+                    attachmentDao.insertAll(attachmentArray);
+
                 }
                 roomDao.update(room);
             } else {
@@ -382,12 +385,13 @@ public class RoomUpdatesProcessor {
         Message message = messageDao.getMessageById(update.getMessageId());
 
         if (message == null) return;
+        List<Attachment> attachmentList = attachmentDao.getAttachmentsByMessageId(message.getId());
 
         if (!message.hasAuthor()) return;
         if (message.getAuthorId().equals(update.getUserId())) return;
-        if (message.getAttachments().size() == 0) return;
+        if (attachmentList.size() == 0) return;
 
-        Attachment attachment = message.getSingleAttachment();
+        Attachment attachment = attachmentList.get(0);
 
         String selfId = new CacheUtils(context).getString(CacheUtils.ID);
         if (update.getUserId().equals(selfId)) {

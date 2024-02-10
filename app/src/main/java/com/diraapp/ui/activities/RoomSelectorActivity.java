@@ -317,7 +317,7 @@ public class RoomSelectorActivity extends AppCompatActivity
 
                     for (Room room : new ArrayList<>(roomList)) {
                         Logger.logDebug(room.getName(), "" + room.getLastUpdatedTime());
-                        Message message = messageDao.getMessageById(room.getLastMessageId());
+                        Message message = messageDao.getMessageAndAttachmentsById(room.getLastMessageId());
                         room.setMessage(message);
                     }
 
@@ -375,7 +375,7 @@ public class RoomSelectorActivity extends AppCompatActivity
 
             Logger.logDebug(RoomSelectorActivity.class.getName(), "name - " + room.getName());
 
-            Message message = messageDao.getMessageById(room.getLastMessageId());
+            Message message = messageDao.getMessageAndAttachmentsById(room.getLastMessageId());
             room.setMessage(message);
 
             runOnUiThread(() -> {

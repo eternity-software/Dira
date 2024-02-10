@@ -8,6 +8,8 @@ import androidx.room.Update;
 
 import com.diraapp.db.entities.Attachment;
 
+import java.util.List;
+
 @Dao
 public interface AttachmentDao {
 
@@ -23,5 +25,8 @@ public interface AttachmentDao {
 
     @Query("SELECT * FROM attachment WHERE id = :id")
     Attachment getAttachmentById(long id);
+
+    @Query("SELECT * FROM attachment WHERE message_id = :messageId")
+    List<Attachment> getAttachmentsByMessageId(String messageId);
 
 }

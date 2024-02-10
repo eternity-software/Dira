@@ -9,7 +9,6 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.diraapp.R;
-import com.diraapp.db.converters.AttachmentConverter;
 import com.diraapp.db.converters.CustomClientDataConverter;
 import com.diraapp.db.converters.MessageReadingConverter;
 import com.diraapp.db.entities.Attachment;
@@ -28,7 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 @Entity
-@TypeConverters({AttachmentConverter.class, CustomClientDataConverter.class,
+@TypeConverters({CustomClientDataConverter.class,
         MessageReadingConverter.class})
 public class Message {
 
@@ -41,6 +40,8 @@ public class Message {
     private String text;
     private String authorNickname;
     private long time;
+
+    @Ignore
     private ArrayList<Attachment> attachments = new ArrayList<>();
     private CustomClientData customClientData = null;
     @ColumnInfo(defaultValue = "null")

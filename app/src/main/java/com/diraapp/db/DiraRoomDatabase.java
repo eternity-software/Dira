@@ -15,6 +15,7 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.migrations.RoomMigrationFrom17To18;
 import com.diraapp.db.migrations.RoomMigrationFrom21To22;
+import com.diraapp.db.migrations.RoomMigrationFrom29To30;
 
 @Database(entities = {Room.class, Message.class, Member.class},
         autoMigrations = {@AutoMigration(from = 6, to = 7),
@@ -39,9 +40,10 @@ import com.diraapp.db.migrations.RoomMigrationFrom21To22;
                 @AutoMigration(from = 25, to = 26),
                 @AutoMigration(from = 26, to = 27),
                 @AutoMigration(from = 27, to = 28),
-                @AutoMigration(from = 28, to = 29)
+                @AutoMigration(from = 28, to = 29),
+                @AutoMigration(from = 29, to = 30, spec = RoomMigrationFrom29To30.class)
         },
-        version = 29,
+        version = 30,
         exportSchema = true)
 @TypeConverters({UnreadIdsConverter.class})
 public abstract class DiraRoomDatabase extends RoomDatabase {

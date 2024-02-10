@@ -9,7 +9,6 @@ import androidx.room.Database;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-import com.diraapp.db.converters.AttachmentConverter;
 import com.diraapp.db.converters.CustomClientDataConverter;
 import com.diraapp.db.converters.MessageReadingConverter;
 import com.diraapp.db.daos.AttachmentDao;
@@ -22,6 +21,8 @@ import com.diraapp.db.entities.messages.customclientdata.CustomClientData;
 import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.migrations.MessageMigrationFrom17To18;
 import com.diraapp.db.migrations.MessageMigrationFrom21To22;
+import com.diraapp.db.migrations.MessageMigrationFrom29To30;
+import com.diraapp.db.migrations.RoomMigrationFrom29To30;
 
 
 @Database(entities = {Message.class, Room.class, Member.class, Attachment.class,
@@ -46,11 +47,12 @@ import com.diraapp.db.migrations.MessageMigrationFrom21To22;
                 @AutoMigration(from = 24, to = 25),
                 @AutoMigration(from = 25, to = 26),
                 @AutoMigration(from = 26, to = 27),
-                @AutoMigration(from = 27, to = 28)
+                @AutoMigration(from = 27, to = 28),
+                @AutoMigration(from = 29, to = 30, spec = MessageMigrationFrom29To30.class)
         },
-        version = 29,
+        version = 30,
         exportSchema = true)
-@TypeConverters({AttachmentConverter.class, CustomClientDataConverter.class,
+@TypeConverters({CustomClientDataConverter.class,
         MessageReadingConverter.class})
 public abstract class DiraMessageDatabase extends RoomDatabase {
 

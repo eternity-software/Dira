@@ -384,7 +384,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
 
         for (String id : room.getPinnedMessagesIds()) {
-            Message message = messageDao.getMessageById(id);
+            Message message = messageDao.getMessageAndAttachmentsById(id);
 
             if (message == null) continue;
 
@@ -509,7 +509,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             repliedMessage = messageHashMap.get(message.getRepliedMessageId());
 
             if (repliedMessage == null) {
-                repliedMessage = messageDao.getMessageById(
+                repliedMessage = messageDao.getMessageAndAttachmentsById(
                         message.getRepliedMessageId());
             }
 
@@ -846,11 +846,13 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     public void addPinned(PinnedMessageAddedUpdate update) {
         if (pinnedIds.contains(update.getMessageId())) return;
 
-        pinnedIds.add(update.getMessageId());
 
         view.runBackground(() -> {
             Message message = view.getMessagesDatabase().getMessageDao().
-                    getMessageById(update.getMessageId());
+                    getMessageAndAttachmentsById(update.getMessageId());
+
+            if (message == null) return;
+            pinnedIds.add(update.getMessageId());
 
             pinnedMessages.add(message);
 
@@ -934,7 +936,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 }
 
                 if (position == START_VAL) {
-                    lastReadMessage = messageDao.getMessageById(lastReadMessageId);
+                    lastReadMessage = messageDao.getMessageAndAttachmentsById(lastReadMessageId);
                     if (lastReadMessageId == null) {
                         Logger.logDebug("Scroll arrow",
                                 "Can't find last read message in database");
