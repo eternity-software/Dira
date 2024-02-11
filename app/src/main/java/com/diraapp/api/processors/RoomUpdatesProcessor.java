@@ -214,7 +214,9 @@ public class RoomUpdatesProcessor {
 
                     Attachment[] attachmentArray = new Attachment[newMessage.getAttachments().size()];
                     for (int i = 0; i < attachmentArray.length; i++) {
-                        attachmentArray[i] = newMessage.getAttachments().get(i);
+                        Attachment attachment = newMessage.getAttachments().get(i);
+                        attachmentArray[i] = attachment;
+                        attachment.setMessageId(newMessage.getId());
                     }
                     attachmentDao.insertAll(attachmentArray);
 
