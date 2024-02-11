@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.diraapp.ui.components.dynamic.ThemeImageView
+        android:id="@+id/image_view"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:padding="2dp"
+        android:src="@drawable/ic_image"
+        app:themeImageColor="accent"/>
+
+    <com.diraapp.ui.components.dynamic.DynamicTextView
+        android:id="@+id/text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:fontFamily="@font/montserratsemibold"
+        android:text="@string/media"
+        app:themeColor="accent"
+        android:textSize="14sp"
+        android:gravity="center_vertical"
+        android:transitionName="name"/>
+
+</merge>

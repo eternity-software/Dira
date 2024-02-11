@@ -421,135 +421,36 @@
                 android:clipToPadding="false"
                 android:scrollbars="none">
 
-                <LinearLayout
+                <com.diraapp.ui.components.mediatypeselector.MediaTypeSelector
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent"
+                    app:selected="0">
 
-                    <com.diraapp.ui.components.dynamic.ThemeLinearLayout
-                        android:id="@+id/type_media"
+                    <com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorItem
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/rounded_background"
-                        android:paddingVertical="4dp"
-                        android:paddingHorizontal="10dp"
-                        android:gravity="center_vertical"
-                        app:themeBackgroundColor="accent_trans"
-                        android:layout_marginEnd="6dp">
+                        app:itemIcon="@drawable/ic_image"
+                        app:itemText="@string/media"/>
 
-                        <com.diraapp.ui.components.dynamic.ThemeImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:padding="2dp"
-                            android:src="@drawable/ic_image"
-                            app:themeImageColor="accent"/>
-
-                        <com.diraapp.ui.components.dynamic.DynamicTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="2dp"
-                            android:fontFamily="@font/montserratsemibold"
-                            android:text="@string/media"
-                            app:themeColor="accent"
-                            android:textSize="14sp"
-                            android:gravity="center_vertical"
-                            android:transitionName="name"/>
-
-                    </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
-
-                    <com.diraapp.ui.components.dynamic.ThemeLinearLayout
-                        android:id="@+id/type_voice"
+                    <com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorItem
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/rounded_background"
-                        android:paddingVertical="4dp"
-                        android:paddingHorizontal="10dp"
-                        android:gravity="center_vertical"
-                        app:themeBackgroundColor="dark_lighter"
-                        android:layout_marginEnd="6dp">
+                        app:itemIcon="@drawable/ic_mic"
+                        app:itemText="@string/voice"/>
 
-                        <com.diraapp.ui.components.dynamic.ThemeImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:padding="2dp"
-                            android:src="@drawable/ic_mic"
-                            app:themeImageColor="light_gray"/>
-
-                        <com.diraapp.ui.components.dynamic.DynamicTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="2dp"
-                            android:fontFamily="@font/montserratsemibold"
-                            android:text="@string/voice"
-                            app:themeColor="light_gray"
-                            android:textSize="14sp"
-                            android:gravity="center_vertical"
-                            android:transitionName="name"/>
-
-                    </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
-
-                    <com.diraapp.ui.components.dynamic.ThemeLinearLayout
-                        android:id="@+id/type_links"
+                    <com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorItem
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/rounded_background"
-                        android:paddingVertical="4dp"
-                        android:paddingHorizontal="10dp"
-                        android:gravity="center_vertical"
-                        app:themeBackgroundColor="dark_lighter"
-                        android:layout_marginEnd="6dp">
+                        app:itemIcon="@drawable/ic_link"
+                        app:itemText="@string/links"/>
 
-                        <com.diraapp.ui.components.dynamic.ThemeImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:padding="4dp"
-                            android:src="@drawable/ic_link"
-                            app:themeImageColor="light_gray"/>
-
-                        <com.diraapp.ui.components.dynamic.DynamicTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="2dp"
-                            android:fontFamily="@font/montserratsemibold"
-                            android:text="@string/links"
-                            app:themeColor="light_gray"
-                            android:textSize="14sp"
-                            android:gravity="center_vertical"
-                            android:transitionName="name"/>
-
-                    </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
-
-                    <com.diraapp.ui.components.dynamic.ThemeLinearLayout
-                        android:id="@+id/type_documents"
+                    <com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorItem
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/rounded_background"
-                        android:paddingVertical="4dp"
-                        android:paddingHorizontal="10dp"
-                        android:gravity="center_vertical"
-                        app:themeBackgroundColor="dark_lighter"
-                        android:layout_marginEnd="6dp">
+                        app:itemIcon="@drawable/ic_documents"
+                        app:itemText="@string/documents"/>
 
-                        <com.diraapp.ui.components.dynamic.ThemeImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:padding="4dp"
-                            android:src="@drawable/ic_documents"
-                            app:themeImageColor="light_gray"/>
-
-                        <com.diraapp.ui.components.dynamic.DynamicTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="2dp"
-                            android:fontFamily="@font/montserratsemibold"
-                            android:text="@string/documents"
-                            app:themeColor="light_gray"
-                            android:textSize="14sp"
-                            android:gravity="center_vertical"
-                            android:transitionName="name"/>
-
-                    </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
-
-                </LinearLayout>
+                </com.diraapp.ui.components.mediatypeselector.MediaTypeSelector>
 
             </HorizontalScrollView>
 

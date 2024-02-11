@@ -44,4 +44,11 @@
     </declare-styleable>
     <declare-styleable name="GlobalPlayerComponent">
     </declare-styleable>
+    <declare-styleable name="MediaTypeSelector">
+        <attr name="selected" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="MediaTypeSelectorItem">
+        <attr name="itemIcon" format="reference" />
+        <attr name="itemText" format="reference" />
+    </declare-styleable>
 </resources>
