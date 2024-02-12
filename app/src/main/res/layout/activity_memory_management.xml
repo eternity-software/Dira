@@ -72,6 +72,8 @@
             </LinearLayout>
 
 
+
+
             <LinearLayout
                 android:id="@+id/button_delete_images"
                 android:layout_width="match_parent"
@@ -131,6 +133,74 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/montserratsemibold"
+                    android:text="@string/memory_management_loading"
+                    android:textColor="@color/light_gray"
+                    android:textSize="14sp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/button_delete_unknown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/gray_rounded"
+                android:orientation="vertical"
+                android:paddingHorizontal="18dp"
+                android:paddingVertical="14dp">
+
+                <com.diraapp.ui.components.dynamic.DynamicTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserratsemibold"
+
+                    android:text="@string/memory_management_delete_unknown"
+                    android:textColor="@color/accent"
+                    android:textSize="18sp"
+                    app:themeColor="accent_text" />
+
+                <TextView
+
+                    android:id="@+id/unknown_size_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/montserratsemibold"
+                    android:text="@string/memory_management_loading"
+                    android:textColor="@color/light_gray"
+                    android:textSize="14sp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/button_delete_profile_pics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/gray_rounded"
+                android:orientation="vertical"
+                android:paddingHorizontal="18dp"
+                android:paddingVertical="14dp">
+
+                <com.diraapp.ui.components.dynamic.DynamicTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserratsemibold"
+                    android:text="@string/memory_management_delete_profile_pics"
+                    android:textColor="@color/accent"
+                    android:textSize="18sp"
+                    app:themeColor="accent_text" />
+
+                <TextView
+
+                    android:id="@+id/profile_pic_size_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:fontFamily="@font/montserratsemibold"
                     android:text="@string/memory_management_loading"

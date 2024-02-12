@@ -1239,6 +1239,7 @@ public class RoomActivity extends DiraActivity
                     public void onSuccess(int i, long l, @Nullable String path) {
                         if (path != null) {
                             try {
+
                                 FilesUploader.uploadFile(path,
                                         callback.setFileUri(path),
                                         RoomActivity.this, true,

@@ -111,9 +111,12 @@
     <string name="memory_management_total_used">%s of storage used by Dira</string>
     <string name="memory_management_delete_videos">Delete videos</string>
     <string name="memory_management_delete_images">Delete images</string>
+    <string name="memory_management_delete_profile_pics">Delete profile pics</string>
+    <string name="memory_management_delete_unknown">Delete unknown files</string>
     <string name="memory_management_delete_messages">Delete messages</string>
     <string name="memory_management_delete_rooms">Delete all rooms</string>
     <string name="memory_management_loading">Calculating size...</string>
+    <string name="memory_management_deleting">Cleaning up...</string>
 
     <!-- Settings and appearance -->
     <string name="settings_title">Settings and appearance</string>

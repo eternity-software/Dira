@@ -37,6 +37,7 @@ public class FilesUploader {
 
         try {
 
+            String originalFileUri = sourceFileUri;
             callback.setFileUri(sourceFileUri);
 
             if (FileClassifier.isImageFile(sourceFileUri)) {
@@ -82,8 +83,18 @@ public class FilesUploader {
             }
 
 
+            String ext = ".vid";
+
+            if (FileClassifier.isImageFile(sourceFileUri)) {
+                ext = ".img";
+            }
+
+            new File(sourceFileUri).renameTo(new File(sourceFileUri + ext));
+
+            sourceFileUri = sourceFileUri + ext;
+
             RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                    .addFormDataPart("file", "file", RequestBody.create(new File(sourceFileUri),
+                    .addFormDataPart("file", ext, RequestBody.create(new File(sourceFileUri),
                             MultipartBody.FORM))
                     .build();
 
@@ -101,12 +112,14 @@ public class FilesUploader {
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     e.printStackTrace();
                     if (finalIsCopied) new File(finalSourceFileUri).delete();
+                    if (finalIsCopied) new File(originalFileUri).delete();
                     callback.onFailure(call, e);
                 }
 
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     if (finalIsCopied) new File(finalSourceFileUri).delete();
+                    if (finalIsCopied) new File(originalFileUri).delete();
                     callback.onResponse(call, response);
                 }
             });
