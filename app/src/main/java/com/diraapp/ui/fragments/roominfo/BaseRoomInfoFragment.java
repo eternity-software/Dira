@@ -67,65 +67,42 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
     @Override
     public void onTopScrolled() {
         diraActivity.runBackground(() -> {
-            boolean success = attachmentLoader.loadNewerAttachments(pairs.get(0).getAttachment().getId());
-
-            Logger.logDebug(BaseRoomInfoFragment.class.getSimpleName(), "Top loaded with success = " + success);
+            attachmentLoader.loadNewerAttachments(pairs.get(0).getAttachment().getId());
         });
     }
 
     @Override
     public void onBottomScrolled() {
         diraActivity.runBackground(() -> {
-            boolean success = attachmentLoader.loadOlderAttachments(
+            attachmentLoader.loadOlderAttachments(
                     pairs.get(pairs.size() - 1).getAttachment().getId());
-
-            Logger.logDebug(BaseRoomInfoFragment.class.getSimpleName(), "Bottom loaded with success = " + success);
-
         });
     }
 
     public void loadLatest() {
         diraActivity.runBackground(() -> {
-            boolean success = attachmentLoader.loadLatestAttachments();
-
-            setRecyclerVisibility(success);
+            attachmentLoader.loadLatestAttachments();
         });
     }
 
     @Override
     public void notifyItemsInserted(int from, int count) {
-        new Handler(Looper.getMainLooper()).post(() -> {
-            adapter.notifyItemRangeChanged(from, count);
-        });
+        adapter.notifyItemRangeChanged(from, count);
     }
 
     @Override
     public void notifyItemsRemoved(int from, int count) {
-        new Handler(Looper.getMainLooper()).post(() -> {
-            adapter.notifyItemRangeRemoved(from, count);
-        });
+        adapter.notifyItemRangeRemoved(from, count);
     }
 
     @Override
     public void notifyDataSetChanged() {
-        diraActivity.runOnUiThread(() -> {
-            Logger.logDebug(BaseRoomInfoFragment.class.getSimpleName(), "Recycler changed data set");
+        Logger.logDebug(BaseRoomInfoFragment.class.getSimpleName(), "Recycler changed data set");
 
-            adapter.notifyDataSetChanged();
-        });
-    }
+        adapter.notifyDataSetChanged();
 
-    public void setRecyclerVisibility(boolean isVisible) {
-        diraActivity.runOnUiThread(() -> {
-            Logger.logDebug(BaseRoomInfoFragment.class.getSimpleName(), "Recycler visibility = " + isVisible);
-            if (isVisible) {
-                recycler.setVisibility(View.VISIBLE);
-                noMediaView.setVisibility(View.GONE);
-            } else {
-                recycler.setVisibility(View.GONE);
-                noMediaView.setVisibility(View.VISIBLE);
-            }
-        });
+        recycler.setVisibility(View.VISIBLE);
+        noMediaView.setVisibility(View.GONE);
     }
 
 }

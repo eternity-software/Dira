@@ -9,6 +9,7 @@
         android:id="@+id/no_media_indicator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
         android:orientation="vertical"
         android:gravity="center">
 
@@ -32,6 +33,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/grid_view"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="600dp"
         android:gravity="center"

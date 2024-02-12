@@ -178,7 +178,7 @@
     <string name="no_encryption">Нет шифрования</string>
     <string name="room_encrypted">Комната зашифрована</string>
     <string name="waiting_person">Вы одни в этой комнате</string>
-    <string name="no_media">Никто не отправлял\nкартинки</string>
+    <string name="no_media">Никто не отправлял\nмедиа</string>
     <string name="media">Медиа</string>
     <string name="voice">Голосовые</string>
     <string name="documents">Документы</string>

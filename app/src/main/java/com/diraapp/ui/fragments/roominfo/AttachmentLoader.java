@@ -1,6 +1,8 @@
 package com.diraapp.ui.fragments.roominfo;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.daos.AttachmentDao;
@@ -32,6 +34,7 @@ public class AttachmentLoader<ConvertedType> {
     // Fragments listening for results of db requests
     private AttachmentLoaderListener listener;
 
+    // Use only if it's necessary
     private AttachmentDataConverter<ConvertedType> converter;
 
     private final boolean useConverter;
@@ -42,6 +45,7 @@ public class AttachmentLoader<ConvertedType> {
 
     private boolean isOldestLoaded = false;
 
+    // without converter
     public AttachmentLoader(Context context,
                             List<AttachmentMessagePair> pairs,
                             String roomSecret, AttachmentType[] types,
@@ -79,95 +83,99 @@ public class AttachmentLoader<ConvertedType> {
         return pairs.get(i);
     }
 
-    public boolean loadNewerAttachments(long newestId) {
-        if (isNewestLoaded) return false;
+    public void loadNewerAttachments(long newestId) {
+        if (isNewestLoaded) return;
 
         List<AttachmentMessagePair> answer = attachmentDao.getNewerAttachments
                 (roomSecret, newestId, types);
 
-        int insertedCount = answer.size();
+        new Handler(Looper.getMainLooper()).post(() -> {
 
-        boolean success = answer.size() != 0;
-        if (!success) {
-            isNewestLoaded = true;
-            return false;
-        }
+            int insertedCount = answer.size();
 
-        Collections.reverse(answer);
-
-        if (useConverter) {
-            List<ConvertedType> attachmentList = convertList(answer);
-
-            attachments.addAll(0, attachmentList);
-        }
-
-        pairs.addAll(0, answer);
-        listener.notifyItemsInserted(0, insertedCount);
-
-        if (pairs.size() > MAX_ATTACHMENTS_COUNT) {
-            if (useConverter) {
-                attachments.subList(attachments.size() - AttachmentDao.ATTACHMENT_LOAD_COUNT,
-                        attachments.size()).clear();
+            boolean success = answer.size() != 0;
+            if (!success) {
+                isNewestLoaded = true;
+                return;
             }
 
-            isOldestLoaded = false;
+            Collections.reverse(answer);
 
-            pairs.subList(pairs.size() - AttachmentDao.ATTACHMENT_LOAD_COUNT,
-                    pairs.size()).clear();
-            listener.notifyItemsRemoved(
-                    pairs.size() - AttachmentDao.ATTACHMENT_LOAD_COUNT,
-                    AttachmentDao.ATTACHMENT_LOAD_COUNT);
-        }
+            if (useConverter) {
+                List<ConvertedType> attachmentList = convertList(answer);
 
-        return true;
+                attachments.addAll(0, attachmentList);
+            }
+
+            pairs.addAll(0, answer);
+            listener.notifyItemsInserted(0, insertedCount);
+
+            if (pairs.size() > MAX_ATTACHMENTS_COUNT) {
+                if (useConverter) {
+                    attachments.subList(pairs.size() - AttachmentDao.ATTACHMENT_LOAD_COUNT,
+                            pairs.size()).clear();
+                }
+                pairs.subList(pairs.size() - AttachmentDao.ATTACHMENT_LOAD_COUNT,
+                        pairs.size()).clear();
+
+                isOldestLoaded = false;
+
+                listener.notifyItemsRemoved(
+                        pairs.size() - AttachmentDao.ATTACHMENT_LOAD_COUNT,
+                        AttachmentDao.ATTACHMENT_LOAD_COUNT);
+            }
+        });
+
     }
 
-    public boolean loadOlderAttachments(long oldestId) {
-        if (isOldestLoaded) return false;
+    public void loadOlderAttachments(long oldestId) {
+        if (isOldestLoaded) return;
 
         List<AttachmentMessagePair> answer = attachmentDao.
                 getOlderAttachments(roomSecret, oldestId, types);
 
-        int insertedCount = answer.size();
+        new Handler(Looper.getMainLooper()).post(() -> {
+            int insertedCount = answer.size();
 
-        boolean success = answer.size() != 0;
-        if (!success) {
-            isOldestLoaded = true;
-            return false;
-        }
+            boolean success = answer.size() != 0;
+            if (!success) {
+                isOldestLoaded = true;
+                return;
+            }
 
-        if (useConverter) {
-            List<ConvertedType> attachmentList = convertList(answer);
+            if (useConverter) {
+                List<ConvertedType> attachmentList = convertList(answer);
 
-            attachments.addAll(attachmentList);
-        }
+                attachments.addAll(attachmentList);
+            }
 
-        pairs.addAll(answer);
-        listener.notifyItemsInserted(pairs.size() - insertedCount, insertedCount);
+            pairs.addAll(answer);
+            listener.notifyItemsInserted(pairs.size() - insertedCount, insertedCount);
 
-        boolean withRemoving = pairs.size() > MAX_ATTACHMENTS_COUNT;
-        if (withRemoving) {
-            if (useConverter) attachments.subList(0, AttachmentDao.ATTACHMENT_LOAD_COUNT).clear();
+            boolean withRemoving = pairs.size() > MAX_ATTACHMENTS_COUNT;
+            if (withRemoving) {
+                if (useConverter) attachments.subList(0, AttachmentDao.ATTACHMENT_LOAD_COUNT).clear();
+                pairs.subList(0, AttachmentDao.ATTACHMENT_LOAD_COUNT).clear();
 
-            isNewestLoaded = false;
+                isNewestLoaded = false;
 
-            pairs.subList(0, AttachmentDao.ATTACHMENT_LOAD_COUNT).clear();
-            listener.notifyItemsRemoved(0, AttachmentDao.ATTACHMENT_LOAD_COUNT);
-        }
-
-        return true;
+                listener.notifyItemsRemoved(0, AttachmentDao.ATTACHMENT_LOAD_COUNT);
+            }
+        });
     }
 
-    public boolean loadLatestAttachments() {
+    public void loadLatestAttachments() {
         List<AttachmentMessagePair> answer = attachmentDao.getLatestAttachments(roomSecret, types);
 
-        if (useConverter) attachments.addAll(convertList(answer));
+        if (answer.size() == 0) return;
 
-        pairs.addAll(answer);
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (useConverter) attachments.addAll(convertList(answer));
 
-        listener.notifyDataSetChanged();
+            pairs.addAll(answer);
 
-        return pairs.size() != 0;
+            listener.notifyDataSetChanged();
+        });
     }
 
     private List<ConvertedType> convertList(List<AttachmentMessagePair> attachmentList) {
