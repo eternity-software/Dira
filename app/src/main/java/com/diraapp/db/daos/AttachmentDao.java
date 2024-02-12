@@ -35,8 +35,10 @@ public interface AttachmentDao {
 
     @Transaction
     @Query("SELECT * FROM attachment WHERE " +
+
             "(SELECT roomSecret FROM message WHERE id = message_id) = :roomSecret AND " +
             "attachmentType IN (:types) AND " +
+
             "id > :newestId ORDER BY id LIMIT " + ATTACHMENT_LOAD_COUNT)
     List<Attachment> getNewerAttachments(String roomSecret, long newestId, AttachmentType[] types);
 
