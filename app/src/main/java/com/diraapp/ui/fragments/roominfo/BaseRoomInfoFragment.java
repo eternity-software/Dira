@@ -19,13 +19,12 @@ import com.diraapp.utils.Logger;
 import java.util.List;
 
 public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolder,
-                                            convertedType extends AttachmentInfo,
-                                            dbType> extends Fragment
+                                            ConvertedType extends AttachmentInfo> extends Fragment
         implements ScrollPositionListener, AttachmentLoader.AttachmentLoaderListener {
 
-    private AttachmentLoader<convertedType, dbType> attachmentLoader;
+    private AttachmentLoader<ConvertedType> attachmentLoader;
 
-    private List<convertedType> attachmentList;
+    private List<ConvertedType> attachmentList;
 
     private RecyclerView.Adapter<Holder> adapter;
 
@@ -53,11 +52,11 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
         diraActivity = null;
     }
 
-    public void setAttachmentLoader(AttachmentLoader<convertedType, dbType> attachmentLoader) {
+    public void setAttachmentLoader(AttachmentLoader<ConvertedType> attachmentLoader) {
         this.attachmentLoader = attachmentLoader;
     }
 
-    public void setAttachmentList(List<convertedType> attachmentList) {
+    public void setAttachmentList(List<ConvertedType> attachmentList) {
         this.attachmentList = attachmentList;
     }
 

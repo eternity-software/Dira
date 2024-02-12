@@ -16,7 +16,7 @@ import com.diraapp.R;
 import com.diraapp.databinding.FragmentMediaRoominfoBinding;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.daos.AttachmentDao;
-import com.diraapp.db.entities.Attachment;
+import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.storage.attachments.AttachmentDownloader;
@@ -32,11 +32,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MediaRoomInfoFragment extends BaseRoomInfoFragment<MediaGridAdapter.ViewHolder, SelectorFileInfo, Attachment> {
+public class MediaRoomInfoFragment extends BaseRoomInfoFragment<MediaGridAdapter.ViewHolder, SelectorFileInfo> {
 
     private FragmentMediaRoominfoBinding binding;
 
-    private List<SelectorFileInfo> list = new ArrayList<>();
+    private final List<SelectorFileInfo> list = new ArrayList<>();
+
+    private final List<AttachmentMessagePair> pairs = new ArrayList<>();
 
     private String roomSecret;
 
@@ -58,7 +60,7 @@ public class MediaRoomInfoFragment extends BaseRoomInfoFragment<MediaGridAdapter
 
         roomSecret = requireArguments().getString(ROOM_SECRET_EXTRA);
 
-        AttachmentLoader<SelectorFileInfo, Attachment> loader = getLoader(types);
+        AttachmentLoader<SelectorFileInfo> loader = getLoader(types);
 
         MediaGridItemListener itemListener = new MediaGridItemListener() {
             @Override
@@ -101,41 +103,26 @@ public class MediaRoomInfoFragment extends BaseRoomInfoFragment<MediaGridAdapter
         release();
     }
 
-    private AttachmentLoader<SelectorFileInfo, Attachment> getLoader(AttachmentType[] types) {
+    private AttachmentLoader<SelectorFileInfo> getLoader(AttachmentType[] types) {
         AttachmentDao attachmentDao = DiraMessageDatabase.getDatabase(getContext()).getAttachmentDao();
         return new AttachmentLoader<>(
-                getContext(), list, this,
-                new AttachmentLoader.AttachmentDataHelper<SelectorFileInfo, Attachment>() {
+                getContext(), list, pairs, roomSecret, types, this,
+                new AttachmentLoader.AttachmentDataConverter<SelectorFileInfo>() {
                     @Override
-                    public SelectorFileInfo convert(Attachment attachment) {
-                        File file = AttachmentDownloader.getFileFromAttachment(attachment, getContext(), roomSecret);
+                    public SelectorFileInfo convert(AttachmentMessagePair pair) {
+                        File file = AttachmentDownloader.getFileFromAttachment(pair.getAttachment(), getContext(), roomSecret);
 
                         String mimeType = "image";
 
-                        if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
+                        if (pair.getAttachment().getAttachmentType() == AttachmentType.VIDEO) {
                             mimeType = "video";
                         }
 
                         if (file != null) {
                             return new SelectorFileInfo(file.getName(), file.getPath(), mimeType,
-                                    attachment.getId(), attachment.getMessageId());
+                                    pair.getAttachment().getId(), pair.getAttachment().getMessageId());
                         }
                         return null;
-                    }
-
-                    @Override
-                    public List<Attachment> getLatest() {
-                        return attachmentDao.getLatestAttachments(roomSecret, types);
-                    }
-
-                    @Override
-                    public List<Attachment> getNewer(long id) {
-                        return attachmentDao.getNewerAttachments(roomSecret, id, types);
-                    }
-
-                    @Override
-                    public List<Attachment> getOlder(long id) {
-                        return attachmentDao.getOlderAttachments(roomSecret, id, types);
                     }
                 });
     }
