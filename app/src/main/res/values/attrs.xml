@@ -42,8 +42,7 @@
     <declare-styleable name="DiraRadioComponent">
         <attr name="default_selected" format="integer" />
     </declare-styleable>
-    <declare-styleable name="GlobalPlayerComponent">
-    </declare-styleable>
+    <declare-styleable name="GlobalPlayerComponent"></declare-styleable>
     <declare-styleable name="MediaTypeSelector">
         <attr name="selected" format="integer" />
     </declare-styleable>

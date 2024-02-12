@@ -4,8 +4,8 @@
     android:id="@+id/message_file_attachment_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="16dp"
     android:layout_marginVertical="8dp"
+    android:layout_marginEnd="16dp"
     android:layout_weight="1">
 
     <com.diraapp.ui.components.dynamic.ThemeLinearLayout
@@ -13,33 +13,33 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
-        android:padding="10dp"
         android:background="@drawable/color_circle"
+        android:padding="10dp"
         app:themeBackgroundColor="message_file_background">
 
         <com.diraapp.ui.components.dynamic.ThemeImageView
             android:id="@+id/message_file_attachment_icon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:themeImageColor="message_file"
+            android:src="@drawable/ic_file_attachment"
 
-            android:src="@drawable/ic_file_attachment"/>
+            app:themeImageColor="message_file" />
 
         <ProgressBar
             android:id="@+id/progress_circular"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="-28dp"
-            android:indeterminateTint="@color/black"
-            android:alpha="0.3" />
+            android:alpha="0.3"
+            android:indeterminateTint="@color/black" />
     </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_marginStart="8dp"
-        android:orientation="vertical"
-        android:layout_gravity="center_vertical">
+        android:orientation="vertical">
 
         <com.diraapp.ui.components.dynamic.DynamicTextView
             android:id="@+id/message_file_attachment_name"
@@ -49,10 +49,10 @@
             android:autoLink="all"
 
             android:fontFamily="@font/montserratsemibold"
+            android:maxLines="1"
             android:padding="0dp"
             android:text="@string/unknown"
             android:textSize="15sp"
-            android:maxLines="1"
 
             app:themeColor="message_color" />
 
@@ -60,10 +60,10 @@
             android:id="@+id/message_file_attachment_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:autoLink="all"
-
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="12dp"
+
+            android:autoLink="all"
             android:fontFamily="@font/montserratsemibold"
             android:padding="0dp"
             android:text="@string/unknown"

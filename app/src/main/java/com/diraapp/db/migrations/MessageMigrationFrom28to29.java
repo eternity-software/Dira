@@ -10,7 +10,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
-import com.diraapp.db.entities.messages.Message;
 import com.diraapp.utils.Logger;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -46,9 +45,8 @@ public class MessageMigrationFrom28to29 extends Migration {
                 Logger.logDebug("MessageMigration", messageId + " - 0 attachments");
                 continue;
             }
-            for (Attachment attachment: attachments) {
-                if(attachment != null)
-                {
+            for (Attachment attachment : attachments) {
+                if (attachment != null) {
                     attachment.setMessageId(messageId);
                     insertAttachment(attachment, db);
                     Logger.logDebug("MessageMigration", "Insert attachment " + attachment.getId() + " | " + attachment.getFileName());
@@ -108,15 +106,22 @@ public class MessageMigrationFrom28to29 extends Migration {
     }
 
     private String __AttachmentType_enumToString(@NonNull final AttachmentType _value) {
-        if(_value == null) return "IMAGE";
+        if (_value == null) return "IMAGE";
         switch (_value) {
-            case IMAGE: return "IMAGE";
-            case VOICE: return "VOICE";
-            case AUDIO: return "AUDIO";
-            case FILE: return "FILE";
-            case VIDEO: return "VIDEO";
-            case BUBBLE: return "BUBBLE";
-            default: throw new IllegalArgumentException("Can't convert enum to string, unknown enum value: " + _value);
+            case IMAGE:
+                return "IMAGE";
+            case VOICE:
+                return "VOICE";
+            case AUDIO:
+                return "AUDIO";
+            case FILE:
+                return "FILE";
+            case VIDEO:
+                return "VIDEO";
+            case BUBBLE:
+                return "BUBBLE";
+            default:
+                throw new IllegalArgumentException("Can't convert enum to string, unknown enum value: " + _value);
         }
     }
 }

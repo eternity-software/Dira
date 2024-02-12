@@ -5,17 +5,17 @@
     android:id="@+id/checkbox_component_layout"
     android:layout_width="40dp"
     android:layout_height="40dp"
-    android:visibility="visible"
-    android:orientation="horizontal"
     android:background="@drawable/rounded_dark_background"
+    android:orientation="horizontal"
     android:padding="4dp"
+    android:visibility="visible"
     app:themeBackgroundColor="gray">
 
     <com.diraapp.ui.components.dynamic.ThemeImageView
         android:id="@+id/checkbox_component_check"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:themeImageColor="accent"
-        android:src="@drawable/ic_check"/>
+        android:src="@drawable/ic_check"
+        app:themeImageColor="accent" />
 
 </com.diraapp.ui.components.dynamic.ThemeLinearLayout>

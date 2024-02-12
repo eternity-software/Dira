@@ -72,8 +72,6 @@
             </LinearLayout>
 
 
-
-
             <LinearLayout
                 android:id="@+id/button_delete_images"
                 android:layout_width="match_parent"

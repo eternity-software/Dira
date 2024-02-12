@@ -22,7 +22,6 @@ import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.migrations.MessageMigrationFrom17To18;
 import com.diraapp.db.migrations.MessageMigrationFrom21To22;
 import com.diraapp.db.migrations.MessageMigrationFrom29To30;
-import com.diraapp.db.migrations.RoomMigrationFrom29To30;
 
 
 @Database(entities = {Message.class, Room.class, Member.class, Attachment.class,
@@ -61,7 +60,7 @@ public abstract class DiraMessageDatabase extends RoomDatabase {
 
     public static DiraMessageDatabase getDatabase(Context applicationContext) {
         if (db == null) db = androidx.room.Room.databaseBuilder(applicationContext,
-                DiraMessageDatabase.class, DB_NAME)
+                        DiraMessageDatabase.class, DB_NAME)
                 .addMigrations(MIGRATION_FROM_28_TO_29)
                 .enableMultiInstanceInvalidation().build();
         return db;

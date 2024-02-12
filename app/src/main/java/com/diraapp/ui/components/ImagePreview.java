@@ -34,6 +34,7 @@ import java.util.concurrent.Executors;
 public class ImagePreview extends RelativeLayout implements WaterfallImageView, DiraActivityListener {
 
     private static int bitmapCounter = 0;
+    private final ExecutorService dummyThreadPool = Executors.newFixedThreadPool(2);
     private View rootView;
     private ImageView imageView;
     private TextView sizeTextView;
@@ -49,7 +50,6 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
     private DiraMediaInfo fileInfo;
     private Runnable onReady;
     private boolean isAttached = true;
-    private final ExecutorService dummyThreadPool = Executors.newFixedThreadPool(2);
 
 
     public ImagePreview(Context context, AttributeSet attrs) {

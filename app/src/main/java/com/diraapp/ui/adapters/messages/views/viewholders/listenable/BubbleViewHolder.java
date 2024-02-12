@@ -1,7 +1,5 @@
 package com.diraapp.ui.adapters.messages.views.viewholders.listenable;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;

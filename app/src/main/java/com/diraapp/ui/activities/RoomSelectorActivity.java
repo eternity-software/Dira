@@ -47,7 +47,6 @@ import com.diraapp.services.UpdaterService;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.ui.adapters.selector.RoomSelectorAdapter;
-import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.adapters.selector.SelectorAdapterContract;
 import com.diraapp.ui.adapters.selector.SelectorViewHolder;
 import com.diraapp.ui.adapters.selector.SelectorViewHolderNotifier;
@@ -63,7 +62,6 @@ import com.diraapp.utils.android.DeviceUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 public class RoomSelectorActivity extends AppCompatActivity
@@ -124,7 +122,6 @@ public class RoomSelectorActivity extends AppCompatActivity
                 Intent notificationIntent = new Intent(this, RoomActivity.class);
 
                 lastOpenedRoomId = getIntent().getExtras().getString(PENDING_ROOM_SECRET);
-
 
 
                 RoomActivity.putRoomExtrasInIntent(notificationIntent,
@@ -544,7 +541,7 @@ public class RoomSelectorActivity extends AppCompatActivity
             onReadUpdate(readUpdate);
         } else if (update.getUpdateType() == UpdateType.MEMBER_UPDATE) {
             Room room = null;
-            for (Room r: roomList) {
+            for (Room r : roomList) {
                 if (r.getSecretName().equals(update.getRoomSecret())) {
                     room = r;
                     break;

@@ -11,21 +11,20 @@
     tools:context=".ui.activities.RoomInfoActivity">
 
 
-<!--    <ImageView-->
-<!--        android:id="@+id/search"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="40dp"-->
-<!--        android:layout_gravity="center_vertical"-->
-<!--        android:layout_marginEnd="8dp"-->
-<!--        android:padding="8dp"-->
-<!--        android:src="@drawable/ic_encryption"-->
-<!--        app:layout_constraintBottom_toBottomOf="@+id/button_back"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--    <ImageView-->
+    <!--        android:id="@+id/search"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="40dp"-->
+    <!--        android:layout_gravity="center_vertical"-->
+    <!--        android:layout_marginEnd="8dp"-->
+    <!--        android:padding="8dp"-->
+    <!--        android:src="@drawable/ic_encryption"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@+id/button_back"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
 
-<!--        app:layout_constraintTop_toTopOf="@+id/button_back"-->
-<!--        app:tint="@color/white"-->
-<!--        android:visibility="gone"/>-->
-
+    <!--        app:layout_constraintTop_toTopOf="@+id/button_back"-->
+    <!--        app:tint="@color/white"-->
+    <!--        android:visibility="gone"/>-->
 
 
     <androidx.core.widget.NestedScrollView
@@ -50,18 +49,18 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/high_bottom_rounded"
                 android:backgroundTint="@color/medium_gray"
-                android:paddingHorizontal="18dp"
-                android:paddingBottom="18dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingHorizontal="18dp"
+                android:paddingBottom="18dp">
 
                 <com.diraapp.ui.components.dynamic.ThemeImageView
                     android:id="@+id/button_back"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginTop="20dp"
                     android:layout_marginStart="6dp"
+                    android:layout_marginTop="20dp"
                     android:background="?actionBarItemBackground"
                     android:src="@drawable/ic_back"
                     app:themeImageColor="accent_image_button_color" />
@@ -69,8 +68,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="34dp"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginTop="34dp"
                     android:clipChildren="false"
                     android:clipToPadding="false"
                     android:orientation="horizontal">
@@ -91,7 +90,7 @@
                             android:layout_marginLeft="-90dp"
                             android:clipToOutline="false"
 
-                            android:padding="20dp"/>
+                            android:padding="20dp" />
 
                         <androidx.cardview.widget.CardView
                             android:id="@+id/room_picture_container"
@@ -106,8 +105,8 @@
                             <androidx.cardview.widget.CardView
                                 android:layout_width="94dp"
                                 android:layout_height="94dp"
-                                android:background="#24FFFFFF"
                                 android:layout_gravity="center"
+                                android:background="#24FFFFFF"
 
                                 app:cardCornerRadius="55dp"
                                 app:cardElevation="0dp">
@@ -128,8 +127,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginStart="16dp"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -144,13 +143,13 @@
                                 android:layout_height="14dp"
                                 android:layout_gravity="center_vertical"
                                 android:src="@drawable/ic_room_no_encryption"
-                                app:tint="@color/red"/>
+                                app:tint="@color/red" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
                                 android:layout_gravity="center_vertical"
+                                android:layout_marginStart="4dp"
                                 android:layout_weight="1"
                                 android:fontFamily="@font/montserratsemibold"
                                 android:text="@string/no_encryption"
@@ -163,30 +162,30 @@
                         <LinearLayout
                             android:id="@+id/room_info_room_encrypted"
                             android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="top"
-                            android:layout_weight="0"
-                            android:layout_height="wrap_content">
+                            android:layout_weight="0">
 
                             <ImageView
                                 android:layout_width="12dp"
                                 android:layout_height="12dp"
                                 android:layout_gravity="center_vertical"
+                                android:alpha="0.75"
                                 android:src="@drawable/ic_encrypted"
-                                app:tint="@color/white"
-                                android:alpha="0.75"/>
+                                app:tint="@color/white" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
                                 android:layout_gravity="center_vertical"
+                                android:layout_marginStart="4dp"
                                 android:layout_weight="1"
+                                android:alpha="0.75"
                                 android:fontFamily="@font/montserratsemibold"
                                 android:text="@string/room_encrypted"
                                 android:textColor="@color/white"
                                 android:textSize="12sp"
-                                android:transitionName="name"
-                                android:alpha="0.75"/>
+                                android:transitionName="name" />
 
                         </LinearLayout>
 
@@ -194,14 +193,14 @@
                             android:id="@+id/room_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_marginVertical="8dp"
 
+                            android:layout_weight="1"
                             android:fontFamily="@font/montserratbold"
+                            android:gravity="center_vertical"
                             android:text="@string/room_name"
                             android:textColor="@color/white"
-                            android:gravity="center_vertical"
                             android:textSize="20sp"
-                            android:layout_marginVertical="8dp"
 
                             android:transitionName="name" />
 
@@ -217,7 +216,7 @@
                                 android:layout_width="14dp"
                                 android:layout_height="14dp"
                                 android:src="@drawable/ic_warning"
-                                app:tint="@color/yellow"/>
+                                app:tint="@color/yellow" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -228,7 +227,7 @@
                                 android:text="@string/waiting_person"
                                 android:textColor="@color/yellow"
                                 android:textSize="12sp"
-                                android:transitionName="name"/>
+                                android:transitionName="name" />
 
                         </LinearLayout>
 
@@ -244,12 +243,11 @@
                                 android:id="@+id/members_button"
                                 android:layout_width="match_parent"
                                 android:layout_height="36dp"
-                                android:layout_weight="1"
                                 android:layout_marginRight="4dp"
+                                android:layout_weight="1"
                                 android:background="@drawable/medium_rounded_translucent_square"
                                 android:gravity="center"
-                                android:paddingHorizontal="8dp"
-                               >
+                                android:paddingHorizontal="8dp">
 
                                 <androidx.cardview.widget.CardView
                                     android:layout_width="20dp"
@@ -309,8 +307,8 @@
                                 android:layout_weight="0"
                                 android:background="@drawable/medium_rounded_translucent_square"
                                 android:gravity="center"
-                                android:src="@drawable/ic_edit_room"
-                                android:paddingHorizontal="18dp"/>
+                                android:paddingHorizontal="18dp"
+                                android:src="@drawable/ic_edit_room" />
 
                         </LinearLayout>
 
@@ -337,8 +335,8 @@
                             android:id="@+id/icon_invite"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:paddingVertical="12dp"
                             android:layout_gravity="center_horizontal"
+                            android:paddingVertical="12dp"
                             android:src="@drawable/ic_invite"
                             android:visibility="visible"
                             app:tint="@color/white" />
@@ -356,9 +354,9 @@
                             android:id="@+id/progress_circular"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:paddingVertical="13dp"
                             android:layout_gravity="center_vertical"
                             android:indeterminateTint="@color/white"
+                            android:paddingVertical="13dp"
                             android:visibility="gone" />
 
                     </LinearLayout>
@@ -374,8 +372,8 @@
                             android:id="@+id/notification_enabled_icon"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:paddingVertical="14dp"
                             android:layout_gravity="center"
+                            android:paddingVertical="14dp"
                             android:src="@drawable/ic_notification_enabled"
                             android:visibility="gone"
                             app:tint="@color/white" />
@@ -384,8 +382,8 @@
                             android:id="@+id/notification_disabled_icon"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:paddingVertical="12dp"
                             android:layout_gravity="center_horizontal"
+                            android:paddingVertical="12dp"
                             android:src="@drawable/ic_notification_disabled"
                             android:visibility="visible"
                             app:tint="@color/white" />
@@ -401,8 +399,8 @@
                         <ImageView
                             android:layout_width="28dp"
                             android:layout_height="match_parent"
-                            android:paddingVertical="14dp"
                             android:layout_gravity="center_horizontal"
+                            android:paddingVertical="14dp"
                             android:src="@drawable/ic_options"
                             android:visibility="visible"
                             app:tint="@color/white" />
@@ -415,10 +413,10 @@
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingVertical="8dp"
-                android:paddingHorizontal="12dp"
                 android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp"
                 android:scrollbars="none">
 
                 <com.diraapp.ui.components.mediatypeselector.MediaTypeSelector
@@ -430,25 +428,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:itemIcon="@drawable/ic_image"
-                        app:itemText="@string/media"/>
+                        app:itemText="@string/media" />
 
                     <com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorItem
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:itemIcon="@drawable/ic_mic"
-                        app:itemText="@string/voice"/>
+                        app:itemText="@string/voice" />
 
                     <com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorItem
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:itemIcon="@drawable/ic_link"
-                        app:itemText="@string/links"/>
+                        app:itemText="@string/links" />
 
                     <com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorItem
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:itemIcon="@drawable/ic_documents"
-                        app:itemText="@string/documents"/>
+                        app:itemText="@string/documents" />
 
                 </com.diraapp.ui.components.mediatypeselector.MediaTypeSelector>
 
@@ -465,7 +463,7 @@
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/fragment_container_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent" />
 
             </androidx.cardview.widget.CardView>
 
@@ -501,9 +499,9 @@
         android:layout_height="wrap_content"
         android:background="@color/medium_gray"
         android:src="@drawable/ic_back"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.diraapp.ui.components.dynamic.ThemeImageView
             android:id="@+id/button_back_bar"

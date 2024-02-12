@@ -42,6 +42,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     private static ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(1);
     private final List<DiraVideoPlayerListener> diraVideoPlayerListenerList = new ArrayList<>();
+    private final List<String> debugLog = new ArrayList<>();
     private DiraMediaPlayer mediaPlayer = new DiraMediaPlayer();
     private Surface surface = null;
     private DiraVideoPlayerState state = DiraVideoPlayerState.RESET;
@@ -49,8 +50,6 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
     private boolean attachedActivity = false;
     private boolean attachedRecycler = false;
     private View debugIndicator;
-
-    private final List<String> debugLog = new ArrayList<>();
 
 
     public DiraVideoPlayer(@NonNull Context context) {

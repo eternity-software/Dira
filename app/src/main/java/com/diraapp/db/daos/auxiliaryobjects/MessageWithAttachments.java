@@ -20,18 +20,18 @@ public class MessageWithAttachments {
     )
     private List<Attachment> attachments;
 
-    public Message getMessage() {
-        message.setAttachments(new ArrayList<>(attachments));
-        return message;
-    }
-
     public static List<Message> convertList(List<MessageWithAttachments> withAttachmentsList) {
         ArrayList<Message> messages = new ArrayList<>(withAttachmentsList.size());
 
-        for (MessageWithAttachments withAttachments: withAttachmentsList) {
+        for (MessageWithAttachments withAttachments : withAttachmentsList) {
             messages.add(withAttachments.getMessage());
         }
         return messages;
+    }
+
+    public Message getMessage() {
+        message.setAttachments(new ArrayList<>(attachments));
+        return message;
     }
 
     public void setMessage(Message message) {

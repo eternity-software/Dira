@@ -7,59 +7,59 @@
         android:id="@+id/play_button"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:src="@drawable/ic_play"
-        app:themeImageColor="accent"
-
         android:layout_gravity="center_vertical"
+        android:layout_marginStart="32dp"
 
-        android:layout_marginStart="32dp"/>
+        android:src="@drawable/ic_play"
+
+        app:themeImageColor="accent" />
 
     <com.diraapp.ui.components.dynamic.DynamicTextView
         android:id="@+id/author_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/montserratsemibold"
-        android:maxLines="1"
-
         android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
 
+        android:fontFamily="@font/montserratsemibold"
+
+        android:maxLines="1"
         android:text="author name"
         android:textColor="@color/white"
         android:textSize="13sp"
         android:transitionName="name"
-        app:themeColor="self_message_color"
 
-        android:layout_marginStart="8dp"/>
+        app:themeColor="self_message_color" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical|end"
+        android:layout_marginEnd="32dp"
 
-        android:layout_marginEnd="32dp">
+        android:gravity="center_vertical|end">
 
         <com.diraapp.ui.components.dynamic.DynamicTextView
             android:id="@+id/time_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+
             android:fontFamily="@font/montserratsemibold"
             android:maxLines="1"
-
             android:text="0:56 / 1:08"
             android:textColor="@color/white"
             android:textSize="11sp"
-            android:transitionName="name"
-            app:themeColor="self_message_color"
 
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"/>
+            android:transitionName="name"
+            app:themeColor="self_message_color" />
 
         <com.diraapp.ui.components.dynamic.ThemeImageView
             android:id="@+id/close_button"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_close"
-            app:themeImageColor="accent"/>
+            app:themeImageColor="accent" />
 
     </LinearLayout>
 

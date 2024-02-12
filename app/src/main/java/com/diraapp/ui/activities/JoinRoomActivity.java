@@ -13,12 +13,8 @@ import com.diraapp.api.requests.JoinRoomRequest;
 import com.diraapp.api.requests.UpdateMemberRequest;
 import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.updates.NewRoomUpdate;
-import com.diraapp.api.updates.RoomUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
-import com.diraapp.db.DiraRoomDatabase;
-import com.diraapp.db.daos.RoomDao;
-import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.createroom.CreateRoomActivity;
@@ -95,7 +91,8 @@ public class JoinRoomActivity extends DiraActivity implements ServerSelectorBott
 
                                 UpdateProcessor.getInstance().sendRequest(updateMemberRequest, (Update u) -> {
                                     if (u.getUpdateType() != UpdateType.MEMBER_UPDATE) return;
-                                    if (!newRoomUpdate.getInviteRoom().getSecretName().equals(u.getRoomSecret()));
+                                    if (!newRoomUpdate.getInviteRoom().getSecretName().equals(u.getRoomSecret()))
+                                        ;
 
                                     MemberUpdate memberUpdate = (MemberUpdate) u;
                                     if (!id.equals(memberUpdate.getId())) return;
@@ -109,7 +106,7 @@ public class JoinRoomActivity extends DiraActivity implements ServerSelectorBott
                                     });
                                     thread.start();
 
-                                } , serverAddress);
+                                }, serverAddress);
 
                             } catch (UnablePerformRequestException e) {
                                 e.printStackTrace();

@@ -16,7 +16,6 @@ import com.diraapp.api.updates.RenewingCancelUpdate;
 import com.diraapp.api.updates.RenewingConfirmUpdate;
 import com.diraapp.api.updates.RoomUpdate;
 import com.diraapp.api.updates.Update;
-import com.diraapp.api.views.BaseMember;
 import com.diraapp.api.views.InviteRoom;
 import com.diraapp.api.views.RoomMember;
 import com.diraapp.db.daos.AttachmentDao;
@@ -114,7 +113,7 @@ public class RoomUpdatesProcessor {
                     room.setImagePath(AppStorage.saveToInternalStorage(bitmap, room.getSecretName(), room.getSecretName(), context));
                 }
 
-            // setting memberImage if PRIVATE, RoomStatusType
+                // setting memberImage if PRIVATE, RoomStatusType
             } else if (room.getRoomType() == RoomType.PRIVATE) {
                 if (inviteRoom.getMemberList().size() == 1) {
                     room.setRoomStatusType(RoomStatusType.SECURE);
@@ -326,13 +325,13 @@ public class RoomUpdatesProcessor {
 
         if (!oldName.equals(newName) && path != null) {
             return UpdateProcessor.getInstance().getClientMessageProcessor()
-                        .notifyRoomMessageAndIconChange(update, oldName, path, room, needNotify);
+                    .notifyRoomMessageAndIconChange(update, oldName, path, room, needNotify);
         } else if (!oldName.equals(newName)) {
-             return UpdateProcessor.getInstance().getClientMessageProcessor()
-                        .notifyRoomNameChange(update, oldName, room, needNotify);
+            return UpdateProcessor.getInstance().getClientMessageProcessor()
+                    .notifyRoomNameChange(update, oldName, room, needNotify);
         } else if (path != null) {
-             return UpdateProcessor.getInstance().getClientMessageProcessor()
-                        .notifyRoomIconChange(update, path, room, needNotify);
+            return UpdateProcessor.getInstance().getClientMessageProcessor()
+                    .notifyRoomIconChange(update, path, room, needNotify);
         }
 
         return null;

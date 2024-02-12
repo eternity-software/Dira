@@ -54,7 +54,7 @@ public class FileClassifier {
 
             String mimeType = getMimeType(Uri.fromFile(new File(path)), context);
             System.out.println(mimeType + " " + path);
-            if(mimeType == null) if (path.endsWith(EXT_VIDEO)) return true;
+            if (mimeType == null) if (path.endsWith(EXT_VIDEO)) return true;
             return mimeType != null && mimeType.startsWith("video");
         } catch (Exception e) {
             return false;

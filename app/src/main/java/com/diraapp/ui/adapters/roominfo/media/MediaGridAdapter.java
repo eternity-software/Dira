@@ -43,18 +43,14 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     private final WaterfallBalancer waterfallBalancer;
     private final DiraActivity context;
     private final MediaGridItemListener itemClickListener;
-    private List<SelectorFileInfo> mediaElements = new ArrayList<>();
-    private Runnable transitionReenter;
-
-    private boolean multiSelect = false;
-    private String currentBucket = "";
-
     private final List<SelectorFileInfo> selectedFiles = new ArrayList<>();
     private final HashMap<MediaGridItem, SelectorFileInfo> selectedViews = new HashMap<>();
-
     private final List<String> buckets = new ArrayList<>();
-
     private final boolean isSelected = false;
+    private List<SelectorFileInfo> mediaElements = new ArrayList<>();
+    private Runnable transitionReenter;
+    private boolean multiSelect = false;
+    private String currentBucket = "";
     private boolean isOnlyImages = true;
     private GalleryListener galleryListener;
 

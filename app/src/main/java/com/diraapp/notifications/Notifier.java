@@ -24,7 +24,6 @@ import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.ui.activities.RoomSelectorActivity;
 import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.utils.CacheUtils;
-import com.diraapp.utils.Logger;
 
 public class Notifier {
 
@@ -87,12 +86,11 @@ public class Notifier {
             RoomActivity.putRoomExtrasInIntent(notificationIntent, room.getSecretName(), room.getName());
 
 
-
             PendingIntent intent;
 
             intent = PendingIntent.getActivity(context, 0,
                     notificationIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-            
+
             builder.setContentIntent(intent);
         }
 

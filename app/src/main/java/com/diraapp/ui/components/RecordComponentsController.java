@@ -60,25 +60,19 @@ public class RecordComponentsController {
     private final View recordingStatusBar;
     private final CardView bubbleContainer;
     private final TextView recordingStatusText;
+    private final View recordIndicator;
+    private final SlidrInterface slidrInterface;
+    private final TextView recordingTipText;
     private SoundRecorder soundRecorder;
     private long lastTimeRecordButtonDown = 0;
     private long lastTimeRecordButtonUp = 0;
     private boolean isRecordButtonVisible = true;
-
-    private final View recordIndicator;
     private RecordListener recordListener;
     private float lastScale = 1;
-
     private boolean isSaving = true;
-
-    private final SlidrInterface slidrInterface;
-
     private boolean isRecording = false;
     private boolean isPreparingCamera = true;
     private boolean isVoiceRecord = false;
-
-    private final TextView recordingTipText;
-
     private int secondsRecording = 0;
 
     public RecordComponentsController(ImageView recordButton,
@@ -270,7 +264,8 @@ public class RecordComponentsController {
                         slidrInterface.unlock();
                         isSaving = false;
                         int colorFrom = Theme.getColor(context, R.color.accent);
-                        if (recordButton.getAnimation() != null) recordButton.getAnimation().cancel();
+                        if (recordButton.getAnimation() != null)
+                            recordButton.getAnimation().cancel();
                         recordButton.getBackground().setColorFilter(colorFrom, PorterDuff.Mode.SRC_ATOP);
                         lastTimeRecordButtonDown = 0;
                         lastTimeRecordButtonUp = 0;

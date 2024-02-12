@@ -71,7 +71,6 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
         });
 
 
-
         findViewById(R.id.edit_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

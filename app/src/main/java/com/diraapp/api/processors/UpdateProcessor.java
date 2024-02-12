@@ -537,7 +537,7 @@ public class UpdateProcessor {
 
         if (BuildConfig.DEBUG) {
             Logger.logDebug("UpdateProcessor", "listeners count = " + updateListeners.size());
-            for (String name: listeners.keySet()) {
+            for (String name : listeners.keySet()) {
                 Logger.logDebug("UpdateProcessor", "listener - " + name + ", c = " + listeners.get(name));
             }
         }
