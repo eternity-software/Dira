@@ -1,4 +1,4 @@
-package com.diraapp.ui.fragments.roominfo;
+package com.diraapp.ui.fragments.roominfo.media;
 
 import static com.diraapp.ui.activities.RoomInfoActivity.ROOM_SECRET_EXTRA;
 
@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.diraapp.R;
 import com.diraapp.databinding.FragmentMediaRoominfoBinding;
-import com.diraapp.db.entities.Attachment;
+import com.diraapp.db.DiraMessageDatabase;
+import com.diraapp.db.daos.AttachmentDao;
+import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.storage.attachments.AttachmentDownloader;
@@ -23,6 +25,8 @@ import com.diraapp.ui.activities.PreviewActivity;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.adapters.roominfo.MediaGridAdapter;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
+import com.diraapp.ui.fragments.roominfo.AttachmentLoader;
+import com.diraapp.ui.fragments.roominfo.BaseRoomInfoFragment;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,7 +36,9 @@ public class MediaRoomInfoFragment extends BaseRoomInfoFragment<MediaGridAdapter
 
     private FragmentMediaRoominfoBinding binding;
 
-    private List<SelectorFileInfo> list = new ArrayList<>();
+    private final List<SelectorFileInfo> list = new ArrayList<>();
+
+    private final List<AttachmentMessagePair> pairs = new ArrayList<>();
 
     private String roomSecret;
 
@@ -54,26 +60,7 @@ public class MediaRoomInfoFragment extends BaseRoomInfoFragment<MediaGridAdapter
 
         roomSecret = requireArguments().getString(ROOM_SECRET_EXTRA);
 
-        AttachmentLoader<SelectorFileInfo> loader = new AttachmentLoader<>(
-                getContext(), types, roomSecret, list, this,
-                new AttachmentLoader.AttachmentConverter<SelectorFileInfo>() {
-            @Override
-            public SelectorFileInfo convert(Attachment attachment) {
-                File file = AttachmentDownloader.getFileFromAttachment(attachment, getContext(), roomSecret);
-
-                String mimeType = "image";
-
-                if (attachment.getAttachmentType() == AttachmentType.VIDEO) {
-                    mimeType = "video";
-                }
-
-                if (file != null) {
-                    return new SelectorFileInfo(file.getName(), file.getPath(), mimeType,
-                            attachment.getId(), attachment.getMessageId());
-                }
-                return null;
-            }
-        });
+        AttachmentLoader<SelectorFileInfo> loader = getLoader(types);
 
         MediaGridItemListener itemListener = new MediaGridItemListener() {
             @Override
@@ -114,5 +101,29 @@ public class MediaRoomInfoFragment extends BaseRoomInfoFragment<MediaGridAdapter
 
         binding = null;
         release();
+    }
+
+    private AttachmentLoader<SelectorFileInfo> getLoader(AttachmentType[] types) {
+        AttachmentDao attachmentDao = DiraMessageDatabase.getDatabase(getContext()).getAttachmentDao();
+        return new AttachmentLoader<>(
+                getContext(), list, pairs, roomSecret, types, this,
+                new AttachmentLoader.AttachmentDataConverter<SelectorFileInfo>() {
+                    @Override
+                    public SelectorFileInfo convert(AttachmentMessagePair pair) {
+                        File file = AttachmentDownloader.getFileFromAttachment(pair.getAttachment(), getContext(), roomSecret);
+
+                        String mimeType = "image";
+
+                        if (pair.getAttachment().getAttachmentType() == AttachmentType.VIDEO) {
+                            mimeType = "video";
+                        }
+
+                        if (file != null) {
+                            return new SelectorFileInfo(file.getName(), file.getPath(), mimeType,
+                                    pair.getAttachment().getId(), pair.getAttachment().getMessageId());
+                        }
+                        return null;
+                    }
+                });
     }
 }
