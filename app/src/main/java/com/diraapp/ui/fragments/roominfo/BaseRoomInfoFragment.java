@@ -18,14 +18,16 @@ import com.diraapp.utils.Logger;
 
 import java.util.List;
 
-public abstract class BaseRoomInfoFragment<T extends RecyclerView.ViewHolder, C extends AttachmentInfo> extends Fragment
+public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolder,
+                                            convertedType extends AttachmentInfo,
+                                            dbType> extends Fragment
         implements ScrollPositionListener, AttachmentLoader.AttachmentLoaderListener {
 
-    private AttachmentLoader<C> attachmentLoader;
+    private AttachmentLoader<convertedType, dbType> attachmentLoader;
 
-    private List<C> attachmentList;
+    private List<convertedType> attachmentList;
 
-    private RecyclerView.Adapter<T> adapter;
+    private RecyclerView.Adapter<Holder> adapter;
 
     private DiraActivity diraActivity;
 
@@ -51,15 +53,15 @@ public abstract class BaseRoomInfoFragment<T extends RecyclerView.ViewHolder, C 
         diraActivity = null;
     }
 
-    public void setAttachmentLoader(AttachmentLoader<C> attachmentLoader) {
+    public void setAttachmentLoader(AttachmentLoader<convertedType, dbType> attachmentLoader) {
         this.attachmentLoader = attachmentLoader;
     }
 
-    public void setAttachmentList(List<C> attachmentList) {
+    public void setAttachmentList(List<convertedType> attachmentList) {
         this.attachmentList = attachmentList;
     }
 
-    public void setAdapter(RecyclerView.Adapter<T> adapter) {
+    public void setAdapter(RecyclerView.Adapter<Holder> adapter) {
         this.adapter = adapter;
     }
 
@@ -110,14 +112,6 @@ public abstract class BaseRoomInfoFragment<T extends RecyclerView.ViewHolder, C 
     public void notifyItemsRemoved(int from, int count) {
         new Handler(Looper.getMainLooper()).post(() -> {
             adapter.notifyItemRangeRemoved(from, count);
-        });
-    }
-
-    @Override
-    public void notifyItemsInsertedAndRemoved(int fromI, int countI, int fromR, int countR) {
-        new Handler(Looper.getMainLooper()).post(() -> {
-            adapter.notifyItemRangeChanged(fromI, countI);
-            adapter.notifyItemRangeRemoved(fromR, countR);
         });
     }
 

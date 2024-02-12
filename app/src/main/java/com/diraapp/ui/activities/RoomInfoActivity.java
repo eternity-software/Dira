@@ -34,7 +34,7 @@ import com.diraapp.ui.bottomsheet.roomoptions.RoomOptionsBottomSheet;
 import com.diraapp.ui.bottomsheet.roomoptions.RoomOptionsBottomSheetListener;
 import com.diraapp.ui.components.DiraPopup;
 import com.diraapp.ui.components.FadingImageView;
-import com.diraapp.ui.fragments.roominfo.MediaRoomInfoFragment;
+import com.diraapp.ui.fragments.roominfo.media.MediaRoomInfoFragment;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.SliderActivity;
 import com.diraapp.utils.StringFormatter;

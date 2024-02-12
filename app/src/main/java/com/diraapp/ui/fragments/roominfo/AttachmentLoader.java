@@ -2,53 +2,40 @@ package com.diraapp.ui.fragments.roominfo;
 
 import android.content.Context;
 
-import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.daos.AttachmentDao;
-import com.diraapp.db.entities.Attachment;
-import com.diraapp.db.entities.AttachmentType;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class AttachmentLoader<T> {
+public class AttachmentLoader<ConvertedType, DbType> {
 
     private static final int MAX_ATTACHMENTS_COUNT = 240;
 
     private Context context;
 
-    private AttachmentType[] attachmentTypes;
-
-    private AttachmentDao attachmentDao;
-
-    private String roomSecret;
-
-    private final List<T> attachments;
+    private final List<ConvertedType> attachments;
 
     private AttachmentLoaderListener listener;
 
-    private AttachmentConverter<T> converter;
+    private AttachmentDataHelper<ConvertedType, DbType> converter;
 
     boolean isNewestLoaded = true;
 
     boolean isOldestLoaded = false;
 
-    public AttachmentLoader(Context context, AttachmentType[] attachmentType,
-                            String roomSecret, List<T> attachments,
-                            AttachmentLoaderListener listener, AttachmentConverter<T> converter) {
+    public AttachmentLoader(Context context, List<ConvertedType> attachments,
+                            AttachmentLoaderListener listener,
+                            AttachmentDataHelper<ConvertedType, DbType> converter) {
         this.context = context;
-        this.attachmentTypes = attachmentType;
-        this.roomSecret = roomSecret;
         this.attachments = attachments;
         this.listener = listener;
         this.converter = converter;
-
-        attachmentDao = DiraMessageDatabase.getDatabase(context).getAttachmentDao();
     }
 
     public boolean loadNewerAttachments(long newestId) {
         if (isNewestLoaded) return false;
-        List<T> attachmentList = convertList(attachmentDao.getNewerAttachments(roomSecret, newestId, attachmentTypes));
+        List<ConvertedType> attachmentList = convertList(converter.getNewer(newestId));
         int insertedCount = attachmentList.size();
 
         boolean success = attachmentList.size() != 0;
@@ -77,7 +64,7 @@ public class AttachmentLoader<T> {
 
     public boolean loadOlderAttachments(long oldestId) {
         if (isOldestLoaded) return false;
-        List<T> attachmentList = convertList(attachmentDao.getOlderAttachments(roomSecret, oldestId, attachmentTypes));
+        List<ConvertedType> attachmentList = convertList(converter.getOlder(oldestId));
         int insertedCount = attachmentList.size();
 
         boolean success = attachmentList.size() != 0;
@@ -102,18 +89,18 @@ public class AttachmentLoader<T> {
 
     public boolean loadLatestAttachments() {
         attachments.addAll(
-                convertList(attachmentDao.getLatestAttachments(roomSecret, attachmentTypes)));
+                convertList(converter.getLatest()));
 
         listener.notifyDataSetChanged();
 
         return attachments.size() != 0;
     }
 
-    private List<T> convertList(List<Attachment> attachmentList) {
-        List<T> tList = new ArrayList<>(attachmentList.size());
+    private List<ConvertedType> convertList(List<DbType> attachmentList) {
+        List<ConvertedType> tList = new ArrayList<>(attachmentList.size());
 
-        for (Attachment attachment: attachmentList) {
-            T element = converter.convert(attachment);
+        for (DbType attachment: attachmentList) {
+            ConvertedType element = converter.convert(attachment);
             if (element == null) continue;
 
             tList.add(element);
@@ -128,14 +115,18 @@ public class AttachmentLoader<T> {
 
         void notifyItemsRemoved(int from, int count);
 
-        void notifyItemsInsertedAndRemoved(int fromI, int countI, int fromR, int countR);
-
         void notifyDataSetChanged();
     }
 
-    public interface AttachmentConverter<T> {
+    public interface AttachmentDataHelper<T, dbType> {
 
-        T convert(Attachment attachment);
+        T convert(dbType data);
+
+        List<dbType> getLatest();
+
+        List<dbType> getNewer(long id);
+
+        List<dbType> getOlder(long id);
 
     }
 }

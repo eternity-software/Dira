@@ -26,10 +26,8 @@ import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.anim.BounceInterpolator;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.diraapp.ui.components.MediaGridItem;
-import com.diraapp.ui.fragments.roominfo.MediaRoomInfoFragment;
 import com.diraapp.ui.fragments.roominfo.ScrollPositionListener;
 import com.diraapp.ui.waterfalls.WaterfallBalancer;
-import com.diraapp.utils.Logger;
 import com.diraapp.utils.android.DiraVibrator;
 
 import java.util.ArrayList;
