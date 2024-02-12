@@ -47,9 +47,13 @@ public class MessageMigrationFrom28to29 extends Migration {
                 continue;
             }
             for (Attachment attachment: attachments) {
-                attachment.setMessageId(messageId);
-                insertAttachment(attachment, db);
-                Logger.logDebug("MessageMigration", "Insert attachment " + attachment.getId() + " | " + attachment.getFileName());
+                if(attachment != null)
+                {
+                    attachment.setMessageId(messageId);
+                    insertAttachment(attachment, db);
+                    Logger.logDebug("MessageMigration", "Insert attachment " + attachment.getId() + " | " + attachment.getFileName());
+                }
+
             }
 
         }
@@ -104,6 +108,7 @@ public class MessageMigrationFrom28to29 extends Migration {
     }
 
     private String __AttachmentType_enumToString(@NonNull final AttachmentType _value) {
+        if(_value == null) return "IMAGE";
         switch (_value) {
             case IMAGE: return "IMAGE";
             case VOICE: return "VOICE";

@@ -15,7 +15,7 @@ import java.util.List;
 @Dao
 public interface AttachmentDao {
 
-    public static final int ATTACHMENT_LOAD_COUNT = 60;
+    int ATTACHMENT_LOAD_COUNT = 60;
 
 
     @Insert
