@@ -26,7 +26,10 @@ import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.anim.BounceInterpolator;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.diraapp.ui.components.MediaGridItem;
+import com.diraapp.ui.fragments.roominfo.MediaRoomInfoFragment;
+import com.diraapp.ui.fragments.roominfo.ScrollPositionListener;
 import com.diraapp.ui.waterfalls.WaterfallBalancer;
+import com.diraapp.utils.Logger;
 import com.diraapp.utils.android.DiraVibrator;
 
 import java.util.ArrayList;
@@ -42,7 +45,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     private final WaterfallBalancer waterfallBalancer;
     private final DiraActivity context;
     private final MediaGridItemListener itemClickListener;
-    private ArrayList<SelectorFileInfo> mediaElements = new ArrayList<>();
+    private List<SelectorFileInfo> mediaElements = new ArrayList<>();
     private Runnable transitionReenter;
 
     private boolean multiSelect = false;
@@ -57,6 +60,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     private boolean isOnlyImages = true;
     private GalleryListener galleryListener;
 
+    private ScrollPositionListener scrollPositionListener;
+
     /**
      * Constructor for custom files arrays
      *
@@ -64,7 +69,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
      * @param itemClickListener
      * @param recyclerView
      */
-    public MediaGridAdapter(final DiraActivity context, ArrayList<SelectorFileInfo> mediaElements, MediaGridItemListener itemClickListener, RecyclerView recyclerView) {
+    public MediaGridAdapter(final DiraActivity context, List<SelectorFileInfo> mediaElements,
+                            MediaGridItemListener itemClickListener, RecyclerView recyclerView,
+                            ScrollPositionListener scrollPositionListener) {
         this.mInflater = LayoutInflater.from(context);
         this.itemClickListener = itemClickListener;
         this.context = context;
@@ -75,7 +82,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
         waterfallBalancer = new WaterfallBalancer(context);
 
-
+        this.scrollPositionListener = scrollPositionListener;
     }
 
     /**
@@ -157,6 +164,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         SelectorFileInfo diraMediaInfo = mediaElements.get(position);
         picturesView.setFileInfo(diraMediaInfo);
 
+        notifyScrollListener(position);
 
         waterfallBalancer.remove(picturesView);
         try {
@@ -222,7 +230,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         return mediaElements.size();
     }
 
-    public ArrayList<SelectorFileInfo> getMediaElements() {
+    public List<SelectorFileInfo> getMediaElements() {
         return mediaElements;
     }
 
@@ -266,7 +274,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     }
 
     @SuppressLint("Range")
-    private ArrayList<SelectorFileInfo> loadGallery(Cursor cursor, @Nullable String specificBucket) {
+    private List<SelectorFileInfo> loadGallery(Cursor cursor, @Nullable String specificBucket) {
         if (currentBucket == null && specificBucket == null) return getMediaElements();
         if (currentBucket != null)
             if (currentBucket.equals(specificBucket)) return getMediaElements();
@@ -305,7 +313,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 //        cursor.close();
 
 
-        ArrayList<SelectorFileInfo> listOfAllMedia = new ArrayList<SelectorFileInfo>();
+        ArrayList<SelectorFileInfo> listOfAllMedia = new ArrayList<>();
         while (cursor.moveToNext()) {
             String absolutePathOfImage = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
             String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE));
@@ -321,7 +329,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
             }
 
             if ((mimeType.startsWith("image") || mimeType.startsWith("video")) && isBucketAllowed) {
-                SelectorFileInfo selectorFileInfo = new SelectorFileInfo(title, absolutePathOfImage, mimeType);
+                SelectorFileInfo selectorFileInfo = new SelectorFileInfo(title, absolutePathOfImage, mimeType, 0, "");
                 selectorFileInfo.setBucketName(bucketName);
                 listOfAllMedia.add(selectorFileInfo);
             }
@@ -387,6 +395,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
         );
 
         return cursorLoader;
+    }
+
+    private void notifyScrollListener(int pos) {
+        if (scrollPositionListener == null) return;
+        if (pos == 0) {
+            scrollPositionListener.onTopScrolled();
+        } else if (pos == mediaElements.size() - 1) {
+            scrollPositionListener.onBottomScrolled();
+        }
     }
 
     public interface GalleryListener {

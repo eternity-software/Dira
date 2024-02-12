@@ -70,7 +70,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
     private boolean isInputContainerShown = false;
 
 
-    public ArrayList<SelectorFileInfo> getMedia() {
+    public List<SelectorFileInfo> getMedia() {
         return mediaGridAdapter.getMediaElements();
     }
 

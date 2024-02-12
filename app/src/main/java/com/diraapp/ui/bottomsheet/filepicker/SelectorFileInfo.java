@@ -8,8 +8,8 @@ public class SelectorFileInfo extends DiraMediaInfo {
 
     private String bucketName;
 
-    public SelectorFileInfo(String name, String filePath, String mimeType) {
-        super(name, filePath, mimeType);
+    public SelectorFileInfo(String name, String filePath, String mimeType, long id, String messageId) {
+        super(name, filePath, mimeType, id, messageId);
     }
 
     public String getBucketName() {

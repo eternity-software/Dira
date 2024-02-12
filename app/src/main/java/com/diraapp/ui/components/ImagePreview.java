@@ -120,7 +120,7 @@ public class ImagePreview extends RelativeLayout implements WaterfallImageView, 
                 type = DiraMediaInfo.MIME_TYPE_VIDEO;
             fileInfo = new DiraMediaInfo("",
                     mediaFile.getPath(),
-                    type);
+                    type, attachment.getId(), attachment.getMessageId());
             waterfallBalancer.add(this);
         } else {
             Logger.logDebug("ImagePreview", "No waterfallBalancer");

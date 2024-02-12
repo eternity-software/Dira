@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.diraapp.db.entities.Attachment;
@@ -32,22 +33,25 @@ public interface AttachmentDao {
     @Query("SELECT * FROM attachment WHERE message_id = :messageId")
     List<Attachment> getAttachmentsByMessageId(String messageId);
 
+    @Transaction
     @Query("SELECT * FROM attachment WHERE " +
-            "(SELECT roomSecret FROM message WHERE id = message_id) AND " +
-            "attachmentType = :type AND " +
+            "(SELECT roomSecret FROM message WHERE id = message_id) = :roomSecret AND " +
+            "attachmentType IN (:types) AND " +
             "id > :newestId ORDER BY id LIMIT " + ATTACHMENT_LOAD_COUNT)
-    List<Attachment> getNewerAttachments(String roomSecret, long newestId, AttachmentType type);
+    List<Attachment> getNewerAttachments(String roomSecret, long newestId, AttachmentType[] types);
 
+    @Transaction
     @Query("SELECT * FROM attachment WHERE " +
-            "(SELECT roomSecret FROM message WHERE id = message_id) AND " +
-            "attachmentType = :type AND " +
+            "(SELECT roomSecret FROM message WHERE id = message_id) = :roomSecret AND " +
+            "attachmentType IN (:types) AND " +
             "id < :oldestId ORDER BY id DESC LIMIT " + ATTACHMENT_LOAD_COUNT)
-    List<Attachment> getOlderAttachments(String roomSecret, long oldestId, AttachmentType type);
+    List<Attachment> getOlderAttachments(String roomSecret, long oldestId, AttachmentType[] types);
 
+    @Transaction
     @Query("SELECT * FROM attachment WHERE " +
-            "(SELECT roomSecret FROM message WHERE id = message_id) AND " +
-            "attachmentType = :type " +
+            "(SELECT roomSecret FROM message WHERE id = message_id) = :roomSecret AND " +
+            "attachmentType IN (:types) " +
             "ORDER BY id DESC LIMIT " + ATTACHMENT_LOAD_COUNT)
-    List<Attachment> getLatestAttachments(String roomSecret, AttachmentType type);
+    List<Attachment> getLatestAttachments(String roomSecret, AttachmentType[] types);
 
 }
