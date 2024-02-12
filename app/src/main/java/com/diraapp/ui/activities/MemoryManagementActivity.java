@@ -11,11 +11,16 @@ import com.diraapp.storage.FileClassifier;
 import com.diraapp.utils.SliderActivity;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MemoryManagementActivity extends DiraActivity {
 
     private long imagesSize = 0;
     private long videosSize = 0;
+    private long unknownTypeSize = 0;
+    private long profilePicSize = 0;
+    private long totalSize = 0;
 
     private ActivityMemoryManagementBinding binding;
 
@@ -27,15 +32,23 @@ public class MemoryManagementActivity extends DiraActivity {
         setContentView(binding.getRoot());
 
         binding.buttonBack.setOnClickListener((View v) -> {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
         });
 
         binding.buttonDeleteImages.setOnClickListener((View v) -> {
-            delete(AttachmentType.IMAGE, v);
+            delete(StoredFileType.IMAGE, v);
         });
 
         binding.buttonDeleteVideos.setOnClickListener((View v) -> {
-            delete(AttachmentType.VIDEO, v);
+            delete(StoredFileType.VIDEO, v);
+        });
+
+        binding.buttonDeleteProfilePics.setOnClickListener((View v) -> {
+            delete(StoredFileType.PROFILE_PIC, v);
+        });
+
+        binding.buttonDeleteUnknown.setOnClickListener((View v) -> {
+            delete(StoredFileType.UNKNOWN, v);
         });
 
         SliderActivity sliderActivity = new SliderActivity();
@@ -50,52 +63,105 @@ public class MemoryManagementActivity extends DiraActivity {
 
         videosSize = 0;
         imagesSize = 0;
+        profilePicSize = 0;
+        unknownTypeSize = 0;
+        totalSize = 0;
+
 
         Thread calculatingThread = new Thread(() -> {
-            for (File file : getExternalCacheDir().listFiles()) {
-                if (file.isFile()) {
 
-                    if (FileClassifier.isImageFile(file.getPath())) {
-                        imagesSize += file.length();
-                    } else {
-                        videosSize += file.length();
-                    }
-                }
-            }
+
+            parseDataDirs(null);
+
+
 
             runOnUiThread(() -> {
                 binding.progressCircular.setVisibility(View.GONE);
 
                 binding.imageSizeText.setText(AppStorage.getStringSize(imagesSize));
                 binding.videoSizeText.setText(AppStorage.getStringSize(videosSize));
+                binding.profilePicSizeText.setText(AppStorage.getStringSize(profilePicSize));
+                binding.unknownSizeText.setText(AppStorage.getStringSize(unknownTypeSize));
                 binding.totalUsedText.setText(getString(R.string.memory_management_total_used)
-                        .replace("%s", AppStorage.getStringSize(videosSize + imagesSize)));
+                        .replace("%s", AppStorage.getStringSize(totalSize)));
             });
         });
         calculatingThread.start();
     }
 
-    private void delete(AttachmentType attachmentType, View buttonLayout) {
+    public void parseDataDirs(StoredFileType deleteAttachmentType)
+    {
+        List<File> cacheLocations = new ArrayList<>();
+
+        cacheLocations.add(getCacheDir());
+        cacheLocations.add(getExternalCacheDir());
+        cacheLocations.add(new File(getApplicationInfo().dataDir));
+
+
+        for (File cacheDir : cacheLocations) {
+            totalSize += parseDataDir(cacheDir, deleteAttachmentType);
+        }
+    }
+
+    public long parseDataDir(File dir, StoredFileType deleteAttachmentType) {
+        long size = 0;
+        if (dir == null) return 0;
+        for (File file : dir.listFiles()) {
+            if (file != null && file.isDirectory()) {
+                size += parseDataDir(file, deleteAttachmentType);
+            } else if (file != null && file.isFile()) {
+                size += file.length();
+                if (FileClassifier.isImageFile(file.getPath())) {
+
+
+                    boolean isProfilePic = getExternalCacheDir().getAbsolutePath().equals(file.getParentFile().getAbsolutePath());
+                    if((deleteAttachmentType == StoredFileType.IMAGE && !isProfilePic) ||
+                            (deleteAttachmentType == StoredFileType.PROFILE_PIC && isProfilePic))
+                    {
+                        file.delete();
+                    }
+
+                    if(isProfilePic)
+                    {
+                        profilePicSize += file.length();
+                    }
+                    else
+                    {
+                        imagesSize += file.length();
+                    }
+
+                } else {
+                    if(FileClassifier.isVideoFile(file.getPath(), getApplicationContext()))
+                    {
+                        if(deleteAttachmentType == StoredFileType.VIDEO)
+                        {
+                            file.delete();
+                        }
+                        videosSize += file.length();
+                    }
+                    else if(FileClassifier.isDiraUnknownType(file.getPath()))
+                    {
+                        if(deleteAttachmentType == StoredFileType.UNKNOWN)
+                        {
+                            file.delete();
+                        }
+                        unknownTypeSize += file.length();
+                    }
+
+
+
+                }
+            }
+        }
+        return size;
+    }
+
+    private void delete(StoredFileType attachmentType, View buttonLayout) {
         buttonLayout.setEnabled(false);
         buttonLayout.setAlpha(0.5f);
 
         Thread deletingThread = new Thread(() -> {
-
-            for (File file : getExternalCacheDir().listFiles()) {
-                if (file.isFile()) {
-
-                    if (FileClassifier.isImageFile(file.getPath())) {
-                        if (attachmentType == AttachmentType.IMAGE) {
-                            file.delete();
-                        }
-                    } else {
-                        if (attachmentType == AttachmentType.VIDEO) {
-                            file.delete();
-                        }
-                    }
-                }
-
-            }
+            parseDataDirs(attachmentType);
 
             runOnUiThread(() -> {
                 calculateUsedSpace();
@@ -105,5 +171,13 @@ public class MemoryManagementActivity extends DiraActivity {
         });
 
         deletingThread.start();
+    }
+
+    public enum StoredFileType
+    {
+        VIDEO,
+        IMAGE,
+        PROFILE_PIC,
+        UNKNOWN
     }
 }

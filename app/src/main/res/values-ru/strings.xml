@@ -83,6 +83,8 @@
     <string name="memory_management_delete_images">Удалить изображения</string>
     <string name="memory_management_delete_messages">Удалить все сообщения</string>
     <string name="memory_management_delete_rooms">Удалить все комнаты</string>
+    <string name="memory_management_delete_profile_pics">Удалить аватары</string>
+    <string name="memory_management_delete_unknown">Удалить неизвестные файлы</string>
     <string name="memory_management_loading">Расчёт размера...</string>
     <string name="settings_memory_managment">Управление пямятью</string>
     <string name="settings_room_servers">Сервера комнат</string>
@@ -181,4 +183,5 @@
     <string name="voice">Голосовые</string>
     <string name="documents">Документы</string>
     <string name="links">Ссылки</string>
+    <string name="memory_management_deleting">Очистка...</string>
 </resources>
