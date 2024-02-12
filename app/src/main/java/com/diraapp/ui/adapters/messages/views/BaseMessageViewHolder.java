@@ -3,7 +3,6 @@ package com.diraapp.ui.adapters.messages.views;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
@@ -39,7 +38,6 @@ import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.TimeConverter;
 import com.diraapp.utils.android.DeviceUtils;
-import com.masoudss.lib.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -60,10 +58,10 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     protected TextView messageText;
     protected LinearLayout outerContainer, messageContainer, postInflatedViewsContainer, timeContainer;
     protected View messageBackground, rootView;
-    private FrameLayout readingIndicator;
     protected TextView nicknameText;
     protected ImageView profilePicture;
     protected View profilePictureContainer;
+    private FrameLayout readingIndicator;
     private Message currentMessage = null;
     private TextView timeText;
     private TextView dateText;
@@ -344,7 +342,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
                 animator.setDuration(150);
                 animator.start();
 
-            // Hide indicator without animation
+                // Hide indicator without animation
             } else {
                 readingIndicator.setVisibility(View.GONE);
 

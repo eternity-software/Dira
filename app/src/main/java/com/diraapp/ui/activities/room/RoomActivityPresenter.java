@@ -1033,11 +1033,11 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     public class AttachmentHandler implements Callback {
         private final AttachmentType attachmentType;
+        private final AttachmentReadyListener attachmentReadyListener;
         private int height;
         private int width;
         private String fileUri;
         private long fileSize;
-        private final AttachmentReadyListener attachmentReadyListener;
 
         public AttachmentHandler(String fileUri, AttachmentReadyListener attachmentReadyListener, AttachmentType attachmentType) {
             this.fileUri = fileUri;

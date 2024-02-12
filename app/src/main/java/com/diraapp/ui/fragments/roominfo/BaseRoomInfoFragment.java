@@ -13,14 +13,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
-import com.diraapp.storage.AttachmentInfo;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.utils.Logger;
 
 import java.util.List;
 
 public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolder,
-                                            ConvertedType> extends Fragment
+        ConvertedType> extends Fragment
         implements ScrollPositionListener, AttachmentLoader.AttachmentLoaderListener {
 
     private AttachmentLoader<ConvertedType> attachmentLoader;

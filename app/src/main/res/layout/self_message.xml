@@ -61,16 +61,16 @@
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/gray_rounded"
+
+                android:gravity="center_vertical"
 
                 android:paddingHorizontal="6dp"
                 android:paddingVertical="2dp"
-
-                android:layout_marginEnd="8dp"
-
-                app:themeBackgroundColor="dark_message_attributes_background"
-                android:gravity="center_vertical"
-                android:layout_gravity="bottom|end">
+                app:themeBackgroundColor="dark_message_attributes_background">
 
                 <FrameLayout
                     android:id="@+id/read_indicator"
@@ -82,7 +82,7 @@
                         android:layout_height="6dp"
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/color_circle"
-                        app:themeImageColor="attributes_text_color"/>
+                        app:themeImageColor="attributes_text_color" />
 
                 </FrameLayout>
 
@@ -168,7 +168,6 @@
 
 
     </LinearLayout>
-
 
 
 </LinearLayout>

@@ -4,25 +4,24 @@
     android:layout_width="240dp"
     android:layout_height="wrap_content"
     android:background="@drawable/tooltip_drawable"
-    android:orientation="vertical"
-
     android:focusable="false"
-   >
+
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/reply_row"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:paddingHorizontal="16dp"
         android:background="?selectableItemBackground"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp">
 
         <com.diraapp.ui.components.dynamic.ThemeImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_round_reply"
-            app:tint="@color/white"
-            app:themeImageColor="white"/>
+            app:themeImageColor="white"
+            app:tint="@color/white" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -41,9 +40,9 @@
         android:id="@+id/copy_row"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:paddingHorizontal="16dp"
         android:background="?selectableItemBackground"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp">
 
         <ImageView
             android:layout_width="24dp"
@@ -67,9 +66,9 @@
         android:id="@+id/pin_row"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:paddingHorizontal="16dp"
         android:background="?selectableItemBackground"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp">
 
         <ImageView
             android:id="@+id/pin_row_image"
@@ -96,16 +95,16 @@
         android:id="@+id/delete_row"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:paddingHorizontal="16dp"
         android:background="?selectableItemBackground"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp">
 
         <com.diraapp.ui.components.dynamic.ThemeImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_trash"
-            app:tint="@color/white"
-            app:themeImageColor="white"/>
+            app:themeImageColor="white"
+            app:tint="@color/white" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -126,8 +125,8 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:gravity="center_vertical"
-        android:paddingHorizontal="16dp"
         android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
         android:visibility="gone">
 
         <ImageView
@@ -157,8 +156,8 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="?selectableItemBackground"
-        android:paddingHorizontal="16dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_view_1"

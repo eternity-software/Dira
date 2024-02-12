@@ -36,14 +36,14 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.diraapp.ui.components.TouchImageView
-                app:strokeColor="@null"
                 android:id="@+id/image_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 android:src="@drawable/full_placeholder"
-                android:transitionName="@string/transition_image_shared" />
+                android:transitionName="@string/transition_image_shared"
+                app:strokeColor="@null" />
         </androidx.cardview.widget.CardView>
 
 

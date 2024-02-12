@@ -1,6 +1,5 @@
 package com.diraapp.db.migrations;
 
-import androidx.room.Delete;
 import androidx.room.DeleteColumn;
 import androidx.room.migration.AutoMigrationSpec;
 

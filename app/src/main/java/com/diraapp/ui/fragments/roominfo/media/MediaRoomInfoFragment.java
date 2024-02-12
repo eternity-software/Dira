@@ -32,12 +32,9 @@ import java.util.List;
 
 public class MediaRoomInfoFragment extends BaseRoomInfoFragment<MediaGridAdapter.ViewHolder, SelectorFileInfo> {
 
-    private FragmentMediaRoominfoBinding binding;
-
     private final List<SelectorFileInfo> list = new ArrayList<>();
-
     private final List<AttachmentMessagePair> pairs = new ArrayList<>();
-
+    private FragmentMediaRoominfoBinding binding;
     private String roomSecret;
 
     public MediaRoomInfoFragment() {

@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/no_media_indicator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ImageView
             android:layout_width="130dp"
             android:layout_height="130dp"
-            android:src="@drawable/ic_moon_face"/>
+            android:src="@drawable/ic_moon_face" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/montserratsemibold"
+            android:gravity="center_horizontal"
             android:text="@string/no_media"
             android:textColor="@color/light_gray"
             android:textSize="16sp"
-            android:gravity="center_horizontal"
             android:transitionName="name" />
 
     </LinearLayout>

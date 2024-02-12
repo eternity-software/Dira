@@ -1,27 +1,15 @@
 package com.diraapp.ui.adapters.selector;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
-import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.rooms.Room;
-import com.diraapp.db.entities.rooms.RoomType;
-import com.diraapp.storage.AppStorage;
-import com.diraapp.ui.activities.room.RoomActivity;
-import com.diraapp.ui.components.dynamic.ThemeImageView;
 import com.diraapp.utils.CacheUtils;
-import com.diraapp.utils.StringFormatter;
-import com.diraapp.utils.TimeConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +20,8 @@ public class RoomSelectorAdapter extends RecyclerView.Adapter<SelectorViewHolder
     private final LayoutInflater layoutInflater;
     private final Activity context;
     private final SelectorAdapterContract contract;
-    private List<Room> roomList = new ArrayList<>();
-
     private final CacheUtils cacheUtils;
+    private List<Room> roomList = new ArrayList<>();
 
 
     public RoomSelectorAdapter(Activity context, SelectorAdapterContract contract) {

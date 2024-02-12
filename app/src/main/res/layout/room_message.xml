@@ -4,8 +4,8 @@
     android:id="@+id/message_back"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:focusable="false"
+    android:orientation="vertical"
     android:paddingVertical="2dp">
 
     <com.diraapp.ui.components.dynamic.DynamicTextView
@@ -46,8 +46,8 @@
             android:layout_width="38dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            app:cardCornerRadius="32dp"
             app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="32dp"
             app:cardElevation="0dp">
 
             <ImageView
@@ -73,10 +73,10 @@
                 android:layout_weight="0"
 
                 android:fontFamily="@font/montserratbold"
+                android:gravity="top"
                 android:paddingRight="3dp"
                 android:paddingBottom="5dp"
                 android:text="Author"
-                android:gravity="top"
                 android:textColor="@color/author_color"
                 android:textSize="12sp"
 
@@ -162,12 +162,12 @@
                     android:layout_marginLeft="4dp"
 
                     android:layout_weight="0"
-                    android:background="@drawable/gray_rounded"
+                    android:alpha="0.8"
 
+                    android:background="@drawable/gray_rounded"
                     android:backgroundTint="@color/gray_trans"
                     android:fontFamily="@font/montserratsemibold"
                     android:gravity="center"
-                    android:alpha="0.8"
                     android:maxLines="1"
                     android:minWidth="20dp"
                     android:paddingHorizontal="6dp"
@@ -179,7 +179,6 @@
                     app:themeColorBackground="dark_message_attributes_background" />
 
             </LinearLayout>
-
 
 
         </LinearLayout>

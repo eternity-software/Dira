@@ -45,30 +45,30 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_gravity="center_vertical"
                     android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1">
 
                     <com.diraapp.ui.components.dynamic.ThemeImageView
-                        android:gravity="center_vertical"
                         android:id="@+id/public_room_indicator"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
-                        android:src="@drawable/ic_people"
-                        app:themeImageColor="white"
                         android:layout_marginEnd="6dp"
-                        android:visibility="visible"/>
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_people"
+                        android:visibility="visible"
+                        app:themeImageColor="white" />
 
                     <TextView
-                        android:gravity="center_vertical"
                         android:id="@+id/room_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:fontFamily="@font/montserratbold"
-                        android:maxLines="1"
+
+                        android:gravity="center_vertical"
                         android:includeFontPadding="true"
+                        android:maxLines="1"
 
                         android:text="..111"
                         android:textColor="@color/white"
@@ -80,14 +80,14 @@
                 <TextView
                     android:id="@+id/time_text"
                     android:layout_width="wrap_content"
-                    android:layout_weight="0"
-
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="4dp"
-                    android:paddingRight="8dp"
-                    android:fontFamily="@font/montserratsemibold"
+
                     android:layout_gravity="end"
+                    android:layout_marginLeft="4dp"
+                    android:layout_weight="0"
+                    android:fontFamily="@font/montserratsemibold"
                     android:gravity="center_vertical|end"
+                    android:paddingRight="8dp"
                     android:text="11:00"
                     android:textColor="@color/light_gray"
                     android:textSize="12sp" />
@@ -111,14 +111,14 @@
                     android:scaleType="centerInside"
 
                     android:src="@drawable/color_circle"
-                    app:themeImageColor="accent"/>
+                    app:themeImageColor="accent" />
 
                 <com.diraapp.ui.components.dynamic.DynamicTextView
                     android:id="@+id/author_text"
                     android:layout_width="wrap_content"
-                    android:layout_marginLeft="4dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="4dp"
                     android:fontFamily="@font/montserratsemibold"
                     android:gravity="center_vertical"
 
@@ -135,8 +135,8 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/montserratsemibold"
                     android:gravity="center_vertical"
-                    android:paddingRight="8dp"
                     android:maxLines="1"
+                    android:paddingRight="8dp"
                     android:text="@string/no_messages"
                     android:textColor="@color/white"
                     android:textSize="14sp" />
