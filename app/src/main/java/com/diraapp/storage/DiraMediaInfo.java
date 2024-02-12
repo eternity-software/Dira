@@ -9,7 +9,7 @@ import android.provider.MediaStore;
 
 import java.util.concurrent.TimeUnit;
 
-public class DiraMediaInfo extends AttachmentInfo {
+public class DiraMediaInfo {
 
     public static final String MIME_TYPE_IMAGE = "image";
     public static final String MIME_TYPE_VIDEO = "video";
@@ -18,8 +18,7 @@ public class DiraMediaInfo extends AttachmentInfo {
     private final String mimeType;
 
 
-    public DiraMediaInfo(String name, String filePath, String mimeType, long id, String messageId) {
-        super(id, messageId);
+    public DiraMediaInfo(String name, String filePath, String mimeType) {
         this.name = name;
         this.filePath = filePath;
         this.mimeType = mimeType;

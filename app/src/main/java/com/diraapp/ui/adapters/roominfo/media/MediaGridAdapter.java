@@ -1,4 +1,4 @@
-package com.diraapp.ui.adapters.roominfo;
+package com.diraapp.ui.adapters.roominfo.media;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
@@ -327,7 +327,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
             }
 
             if ((mimeType.startsWith("image") || mimeType.startsWith("video")) && isBucketAllowed) {
-                SelectorFileInfo selectorFileInfo = new SelectorFileInfo(title, absolutePathOfImage, mimeType, 0, "");
+                SelectorFileInfo selectorFileInfo = new SelectorFileInfo(title, absolutePathOfImage, mimeType);
                 selectorFileInfo.setBucketName(bucketName);
                 listOfAllMedia.add(selectorFileInfo);
             }

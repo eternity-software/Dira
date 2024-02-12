@@ -31,7 +31,7 @@ import com.diraapp.R;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.ui.adapters.GridItemsSpacingDecorator;
-import com.diraapp.ui.adapters.roominfo.MediaGridAdapter;
+import com.diraapp.ui.adapters.roominfo.media.MediaGridAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.utils.android.DeviceUtils;
@@ -99,7 +99,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
         view = v2;
 
 
-        RecyclerView recyclerView = view.findViewById(R.id.gridView);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler);
 
         recyclerView.setRecycledViewPool(recycledViewPool);
         recyclerView.addItemDecoration(new GridItemsSpacingDecorator(

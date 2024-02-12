@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.storage.AttachmentInfo;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.utils.Logger;
@@ -19,12 +20,12 @@ import com.diraapp.utils.Logger;
 import java.util.List;
 
 public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolder,
-                                            ConvertedType extends AttachmentInfo> extends Fragment
+                                            ConvertedType> extends Fragment
         implements ScrollPositionListener, AttachmentLoader.AttachmentLoaderListener {
 
     private AttachmentLoader<ConvertedType> attachmentLoader;
 
-    private List<ConvertedType> attachmentList;
+    private List<AttachmentMessagePair> pairs;
 
     private RecyclerView.Adapter<Holder> adapter;
 
@@ -52,30 +53,21 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
         diraActivity = null;
     }
 
-    public void setAttachmentLoader(AttachmentLoader<ConvertedType> attachmentLoader) {
+    public void setupFragment(AttachmentLoader<ConvertedType> attachmentLoader,
+                              RecyclerView.Adapter<Holder> adapter,
+                              List<AttachmentMessagePair> pairs,
+                              View recycler, View noMediaView) {
         this.attachmentLoader = attachmentLoader;
-    }
-
-    public void setAttachmentList(List<ConvertedType> attachmentList) {
-        this.attachmentList = attachmentList;
-    }
-
-    public void setAdapter(RecyclerView.Adapter<Holder> adapter) {
         this.adapter = adapter;
-    }
-
-    public void setRecycler(View recycler) {
+        this.pairs = pairs;
         this.recycler = recycler;
-    }
-
-    public void setNoMediaView(View noMediaView) {
         this.noMediaView = noMediaView;
     }
 
     @Override
     public void onTopScrolled() {
         diraActivity.runBackground(() -> {
-            boolean success = attachmentLoader.loadNewerAttachments(attachmentList.get(0).getId());
+            boolean success = attachmentLoader.loadNewerAttachments(pairs.get(0).getAttachment().getId());
 
             Logger.logDebug(BaseRoomInfoFragment.class.getSimpleName(), "Top loaded with success = " + success);
         });
@@ -85,7 +77,7 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
     public void onBottomScrolled() {
         diraActivity.runBackground(() -> {
             boolean success = attachmentLoader.loadOlderAttachments(
-                    attachmentList.get(attachmentList.size() - 1).getId());
+                    pairs.get(pairs.size() - 1).getAttachment().getId());
 
             Logger.logDebug(BaseRoomInfoFragment.class.getSimpleName(), "Bottom loaded with success = " + success);
 

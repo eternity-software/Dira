@@ -116,7 +116,7 @@
                 app:cardElevation="0dp">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/gridView"
+                    android:id="@+id/recycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"

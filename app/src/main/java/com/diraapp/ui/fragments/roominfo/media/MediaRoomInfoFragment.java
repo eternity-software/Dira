@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.diraapp.R;
 import com.diraapp.databinding.FragmentMediaRoominfoBinding;
-import com.diraapp.db.DiraMessageDatabase;
-import com.diraapp.db.daos.AttachmentDao;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.storage.DiraMediaInfo;
@@ -23,7 +21,7 @@ import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.PreviewActivity;
 import com.diraapp.ui.adapters.MediaGridItemListener;
-import com.diraapp.ui.adapters.roominfo.MediaGridAdapter;
+import com.diraapp.ui.adapters.roominfo.media.MediaGridAdapter;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.diraapp.ui.fragments.roominfo.AttachmentLoader;
 import com.diraapp.ui.fragments.roominfo.BaseRoomInfoFragment;
@@ -54,13 +52,9 @@ public class MediaRoomInfoFragment extends BaseRoomInfoFragment<MediaGridAdapter
         binding = FragmentMediaRoominfoBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
 
-        AttachmentType[] types = new AttachmentType[2];
-        types[0] = AttachmentType.IMAGE;
-        types[1] = AttachmentType.VIDEO;
-
         roomSecret = requireArguments().getString(ROOM_SECRET_EXTRA);
 
-        AttachmentLoader<SelectorFileInfo> loader = getLoader(types);
+        AttachmentLoader<SelectorFileInfo> loader = getLoader();
 
         MediaGridItemListener itemListener = new MediaGridItemListener() {
             @Override
@@ -81,11 +75,7 @@ public class MediaRoomInfoFragment extends BaseRoomInfoFragment<MediaGridAdapter
         MediaGridAdapter adapter = new MediaGridAdapter((DiraActivity) getActivity(), list,
                 itemListener, binding.gridView, this);
 
-        super.setAdapter(adapter);
-        super.setAttachmentList(list);
-        super.setAttachmentLoader(loader);
-        super.setRecycler(binding.gridView);
-        super.setNoMediaView(binding.noMediaIndicator);
+        super.setupFragment(loader, adapter, pairs, binding.gridView, binding.noMediaIndicator);
 
         binding.gridView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         binding.gridView.setAdapter(adapter);
@@ -103,8 +93,11 @@ public class MediaRoomInfoFragment extends BaseRoomInfoFragment<MediaGridAdapter
         release();
     }
 
-    private AttachmentLoader<SelectorFileInfo> getLoader(AttachmentType[] types) {
-        AttachmentDao attachmentDao = DiraMessageDatabase.getDatabase(getContext()).getAttachmentDao();
+    private AttachmentLoader<SelectorFileInfo> getLoader() {
+        AttachmentType[] types = new AttachmentType[2];
+        types[0] = AttachmentType.IMAGE;
+        types[1] = AttachmentType.VIDEO;
+
         return new AttachmentLoader<>(
                 getContext(), list, pairs, roomSecret, types, this,
                 new AttachmentLoader.AttachmentDataConverter<SelectorFileInfo>() {
@@ -119,8 +112,7 @@ public class MediaRoomInfoFragment extends BaseRoomInfoFragment<MediaGridAdapter
                         }
 
                         if (file != null) {
-                            return new SelectorFileInfo(file.getName(), file.getPath(), mimeType,
-                                    pair.getAttachment().getId(), pair.getAttachment().getMessageId());
+                            return new SelectorFileInfo(file.getName(), file.getPath(), mimeType);
                         }
                         return null;
                     }
