@@ -16,9 +16,8 @@ import com.diraapp.utils.android.DeviceUtils;
 public class BubbleMessageView extends CardView {
 
     public static final int BUBBLE_CONTAINER_ID = 642376;
-    private boolean isInit = false;
-
     private final boolean isSelfMessage;
+    private boolean isInit = false;
 
     public BubbleMessageView(@NonNull Context context, boolean isSelfMessage) {
         super(context);

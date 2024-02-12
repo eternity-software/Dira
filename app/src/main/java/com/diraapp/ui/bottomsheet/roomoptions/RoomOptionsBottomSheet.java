@@ -1,22 +1,15 @@
 package com.diraapp.ui.bottomsheet.roomoptions;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.diraapp.R;
 import com.diraapp.databinding.BottomSheetRoomSettingsBinding;
-import com.diraapp.utils.android.DeviceUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.squareup.picasso.Picasso;
 

@@ -92,7 +92,7 @@ public class PersonalityActivity extends DiraActivity {
                             }
                         }
 
-                        for (String serverAddress: roomSecretsMap.keySet()) {
+                        for (String serverAddress : roomSecretsMap.keySet()) {
                             List<String> roomSecrets = roomSecretsMap.get(serverAddress);
 
                             UpdateMemberRequest updateMemberRequest = new UpdateMemberRequest(nicknameText.getText().toString(),

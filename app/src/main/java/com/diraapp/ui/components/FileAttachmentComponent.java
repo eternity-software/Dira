@@ -11,11 +11,10 @@ import com.diraapp.R;
 import com.diraapp.res.Theme;
 import com.diraapp.ui.components.dynamic.DynamicTextView;
 import com.diraapp.ui.components.dynamic.ThemeImageView;
-import com.diraapp.ui.components.dynamic.ThemeLinearLayout;
 
 public class FileAttachmentComponent extends FrameLayout {
-    private boolean isInit = false;
     private final boolean isSelfMessage;
+    private boolean isInit = false;
 
     public FileAttachmentComponent(@NonNull Context context, boolean isSelfMessage) {
         super(context);

@@ -6,7 +6,6 @@ import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.daos.AttachmentDao;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.AttachmentType;
-import com.diraapp.db.entities.messages.Message;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,27 +14,18 @@ import java.util.List;
 public class AttachmentLoader<ConvertedType> {
 
     private static final int MAX_ATTACHMENTS_COUNT = 240;
-
-    private Context context;
-
-    private String roomSecret;
-
-    // Types searching for in db requests
-    private AttachmentType[] types;
-
-    // Specific data type for adapter (in use only if it needs (use right constructor))
-    private List<ConvertedType> attachments;
-
     // Pairs contain fully loaded Attachment and Message objects
     private final List<AttachmentMessagePair> pairs;
-
+    private final boolean useConverter;
+    private Context context;
+    private String roomSecret;
+    // Types searching for in db requests
+    private AttachmentType[] types;
+    // Specific data type for adapter (in use only if it needs (use right constructor))
+    private List<ConvertedType> attachments;
     // Fragments listening for results of db requests
     private AttachmentLoaderListener listener;
-
     private AttachmentDataConverter<ConvertedType> converter;
-
-    private final boolean useConverter;
-
     private AttachmentDao attachmentDao;
 
     private boolean isNewestLoaded = true;
@@ -173,7 +163,7 @@ public class AttachmentLoader<ConvertedType> {
     private List<ConvertedType> convertList(List<AttachmentMessagePair> attachmentList) {
         List<ConvertedType> tList = new ArrayList<>(attachmentList.size());
 
-        for (AttachmentMessagePair attachment: attachmentList) {
+        for (AttachmentMessagePair attachment : attachmentList) {
             ConvertedType element = converter.convert(attachment);
             if (element == null) continue;
 

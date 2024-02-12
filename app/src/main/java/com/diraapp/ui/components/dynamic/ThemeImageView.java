@@ -13,9 +13,8 @@ import com.diraapp.res.Theme;
 public class ThemeImageView extends androidx.appcompat.widget.AppCompatImageView {
 
 
-    private CharSequence localId;
-
     private final Boolean isPreviewLoading = false;
+    private CharSequence localId;
 
     public ThemeImageView(Context context) {
         super(context);

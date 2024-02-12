@@ -10,7 +10,7 @@
         android:layout_height="24dp"
         android:padding="2dp"
         android:src="@drawable/ic_image"
-        app:themeImageColor="accent"/>
+        app:themeImageColor="accent" />
 
     <com.diraapp.ui.components.dynamic.DynamicTextView
         android:id="@+id/text_view"
@@ -18,10 +18,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
         android:fontFamily="@font/montserratsemibold"
-        android:text="@string/media"
-        app:themeColor="accent"
-        android:textSize="14sp"
         android:gravity="center_vertical"
-        android:transitionName="name"/>
+        android:text="@string/media"
+        android:textSize="14sp"
+        android:transitionName="name"
+        app:themeColor="accent" />
 
 </merge>

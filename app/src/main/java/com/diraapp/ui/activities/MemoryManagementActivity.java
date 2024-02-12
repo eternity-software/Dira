@@ -5,7 +5,6 @@ import android.view.View;
 
 import com.diraapp.R;
 import com.diraapp.databinding.ActivityMemoryManagementBinding;
-import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
 import com.diraapp.utils.SliderActivity;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MemoryManagementActivity extends DiraActivity {
+
 
     private long imagesSize = 0;
     private long videosSize = 0;
@@ -74,7 +74,6 @@ public class MemoryManagementActivity extends DiraActivity {
             parseDataDirs(null);
 
 
-
             runOnUiThread(() -> {
                 binding.progressCircular.setVisibility(View.GONE);
 
@@ -89,8 +88,7 @@ public class MemoryManagementActivity extends DiraActivity {
         calculatingThread.start();
     }
 
-    public void parseDataDirs(StoredFileType deleteAttachmentType)
-    {
+    public void parseDataDirs(StoredFileType deleteAttachmentType) {
         List<File> cacheLocations = new ArrayList<>();
 
         cacheLocations.add(getCacheDir());
@@ -113,41 +111,32 @@ public class MemoryManagementActivity extends DiraActivity {
                 size += file.length();
                 if (FileClassifier.isImageFile(file.getPath())) {
 
-
+                    // Profile pictures stored at root directory
                     boolean isProfilePic = getExternalCacheDir().getAbsolutePath().equals(file.getParentFile().getAbsolutePath());
-                    if((deleteAttachmentType == StoredFileType.IMAGE && !isProfilePic) ||
-                            (deleteAttachmentType == StoredFileType.PROFILE_PIC && isProfilePic))
-                    {
+
+                    if ((deleteAttachmentType == StoredFileType.IMAGE && !isProfilePic) ||
+                            (deleteAttachmentType == StoredFileType.PROFILE_PIC && isProfilePic)) {
                         file.delete();
                     }
 
-                    if(isProfilePic)
-                    {
+                    if (isProfilePic) {
                         profilePicSize += file.length();
-                    }
-                    else
-                    {
+                    } else {
                         imagesSize += file.length();
                     }
 
                 } else {
-                    if(FileClassifier.isVideoFile(file.getPath(), getApplicationContext()))
-                    {
-                        if(deleteAttachmentType == StoredFileType.VIDEO)
-                        {
+                    if (FileClassifier.isVideoFile(file.getPath(), getApplicationContext())) {
+                        if (deleteAttachmentType == StoredFileType.VIDEO) {
                             file.delete();
                         }
                         videosSize += file.length();
-                    }
-                    else if(FileClassifier.isDiraUnknownType(file.getPath()))
-                    {
-                        if(deleteAttachmentType == StoredFileType.UNKNOWN)
-                        {
+                    } else if (FileClassifier.isDiraUnknownType(file.getPath())) {
+                        if (deleteAttachmentType == StoredFileType.UNKNOWN) {
                             file.delete();
                         }
                         unknownTypeSize += file.length();
                     }
-
 
 
                 }
@@ -173,8 +162,7 @@ public class MemoryManagementActivity extends DiraActivity {
         deletingThread.start();
     }
 
-    public enum StoredFileType
-    {
+    public enum StoredFileType {
         VIDEO,
         IMAGE,
         PROFILE_PIC,

@@ -23,7 +23,6 @@ import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.viewholders.factories.MessageHolderType;
 import com.diraapp.ui.components.dynamic.DynamicTextView;
-import com.diraapp.ui.components.dynamic.ThemeImageView;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.StringFormatter;
 import com.diraapp.utils.android.DeviceUtils;

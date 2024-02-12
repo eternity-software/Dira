@@ -17,7 +17,6 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.ui.components.dynamic.ThemeImageView;
 import com.diraapp.utils.CacheUtils;
-import com.diraapp.utils.Logger;
 import com.diraapp.utils.StringFormatter;
 import com.diraapp.utils.TimeConverter;
 
