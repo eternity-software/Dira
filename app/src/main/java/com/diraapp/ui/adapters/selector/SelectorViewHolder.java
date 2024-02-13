@@ -1,6 +1,7 @@
 package com.diraapp.ui.adapters.selector;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -135,9 +136,10 @@ public class SelectorViewHolder extends RecyclerView.ViewHolder {
             }
 
             bindReading(message);
+            Bitmap bitmap = AppStorage.getBitmapFromPath(room.getImagePath(), itemView.getContext());
+            if (room.getImagePath() != null && bitmap != null) {
 
-            if (room.getImagePath() != null) {
-                roomPicture.setImageBitmap(AppStorage.getBitmapFromPath(room.getImagePath()));
+                roomPicture.setImageBitmap(bitmap);
             } else {
                 roomPicture.setImageDrawable(
                         itemView.getContext().getResources().getDrawable(R.drawable.placeholder));
