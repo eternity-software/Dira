@@ -156,6 +156,13 @@ public class DiraActivity extends AppCompatActivity {
             listener.onDestroy();
 
         activityListenerList.clear();
+        overridePendingTransition(R.anim.activity_exit_anim, R.anim.activity_exit_anim);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.activity_exit_anim, R.anim.activity_exit_anim);
     }
 
     @Override

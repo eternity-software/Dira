@@ -77,6 +77,7 @@ public class PreviewActivity extends DiraActivity {
             @Override
             public void onResume() {
                 transitionSource.setClipBounds(null);
+                transitionSource.setTransitionName(null);
                 from.removeListener(this);
             }
         });
