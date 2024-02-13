@@ -58,7 +58,7 @@
                 android:layout_height="match_parent"
                 android:background="?actionBarItemBackground"
                 android:padding="6dp"
-                android:src="@drawable/ic_hide"
+                android:src="@drawable/ic_trash"
                 app:tint="@color/white" />
 
         </LinearLayout>

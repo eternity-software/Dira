@@ -69,14 +69,14 @@
         android:layout_marginVertical="7dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/gray_rounded"
+        android:background="@drawable/dark_rounded"
         android:elevation="8dp"
         android:onClick="editImageButtonClick"
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/imageContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_add_image"
-        app:tint="@color/light_gray" />
+        app:tint="@color/white" />
 
     <TextView
 

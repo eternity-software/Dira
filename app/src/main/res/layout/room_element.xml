@@ -89,7 +89,7 @@
                     android:gravity="center_vertical|end"
                     android:paddingRight="8dp"
                     android:text="11:00"
-                    android:textColor="@color/light_gray"
+                    android:textColor="@color/light_text"
                     android:textSize="12sp" />
 
 

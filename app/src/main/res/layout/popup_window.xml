@@ -82,7 +82,7 @@
 
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="12dp"
-                    android:background="@drawable/gray_rounded"
+                    android:background="@drawable/dark_rounded"
                     android:fontFamily="@font/montserratmedium"
                     android:gravity="center"
                     android:inputType="textEmailAddress"
@@ -113,7 +113,7 @@
                 android:layout_gravity="center"
 
 
-                android:background="@drawable/gray_rounded"
+                android:background="@drawable/dark_rounded"
                 android:fontFamily="@font/montserratsemibold"
                 android:gravity="center"
                 android:paddingHorizontal="24dp"

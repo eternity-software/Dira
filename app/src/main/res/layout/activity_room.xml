@@ -361,7 +361,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginVertical="8dp"
                 android:layout_marginStart="4dp"
-                android:background="@drawable/gray_rounded"
+                android:background="@drawable/dark_rounded"
                 app:themeBackgroundTint="self_reply_color" />
 
             <androidx.cardview.widget.CardView
@@ -454,7 +454,7 @@
                 android:maxLength="600"
                 android:paddingVertical="12dp"
                 android:textColor="@color/white"
-                android:textColorHint="@color/light_gray"
+                android:textColorHint="@color/light_text"
                 android:textSize="16sp" />
 
             <ImageView
@@ -467,7 +467,7 @@
                 android:background="@drawable/light_round"
                 android:padding="12dp"
                 android:src="@drawable/ic_attach"
-                app:tint="@color/light_gray" />
+                app:tint="@color/white" />
 
             <com.diraapp.ui.components.dynamic.ThemeImageView
                 android:id="@+id/send_button"

@@ -76,6 +76,10 @@ public class Theme {
         String colorHex = stringsRepository.getValue(name);
 
 
+        if(colorHex.startsWith("@"))
+        {
+            return getColor(colorHex);
+        }
         if (colorHex.startsWith("#")) {
             try {
                 return Color.parseColor(colorHex);
@@ -85,8 +89,8 @@ public class Theme {
                 e.printStackTrace();
                 return Color.RED;
             }
-
-        } else {
+        }
+        else {
             return getColor(colorHex);
         }
 

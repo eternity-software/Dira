@@ -73,7 +73,7 @@
                 android:maxLines="1"
                 android:paddingHorizontal="8dp"
                 android:textColor="@color/white"
-                android:textColorHint="@color/light_gray" />
+                android:textColorHint="@color/light_text" />
 
             <TextView
 
@@ -100,7 +100,7 @@
                 android:maxLines="1"
                 android:paddingHorizontal="8dp"
                 android:textColor="@color/white"
-                android:textColorHint="@color/light_gray"
+                android:textColorHint="@color/light_text"
                 android:textSize="18sp" />
 
             <TextView
@@ -206,7 +206,7 @@
 
                     android:fontFamily="@font/montserratsemibold"
                     android:text="deD87w******************"
-                    android:textColor="@color/light_gray"
+                    android:textColor="@color/light_text"
                     android:textSize="18sp" />
 
                 <ImageView

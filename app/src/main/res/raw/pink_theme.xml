@@ -1,40 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Main colors !-->
     <color name="accent">#A54A7A</color>
     <color name="accent_trans">#47A54A7A</color>
     <color name="accent_dark">#5C2F47</color>
     <color name="accent_medium">#693651</color>
     <color name="unread_message_background">#AD2F242A</color>
-    <color name="dark">#2C2026</color>
-    <color name="dark_medium">#262626</color>
-    <color name="dark_lighter">#2F2F2F</color>
-    <color name="light_gray">#CDCDCD</color>
-    <color name="medium_light_gray">#533444</color>
-    <color name="medium_light_light_gray">#B7B7B7</color>
-    <color name="gray">#47323E</color>
-    <color name="gray_trans">#C6202020</color>
-    <color name="white">#FFFFFF</color>
-    <color name="yellow">#FFEB3B</color>
-    <color name="red">#FC6240</color>
-    <color name="black">#000000</color>
-
-    <color name="kitty_accent">#5A4BB9</color>
-    <color name="pink_accent">#693651</color>
-    <color name="kitty_message">#474169</color>
-    <color name="unread_message_background_kitty">#433F5F</color>
-
-    <color name="blue_accent">#388BD7</color>
-    <color name="blue_message">#424242</color>
-    <color name="unread_message_background_blue">#374B5E</color>
-
-    <color name="rock_accent">#C26734</color>
-    <color name="rock_message">#424242</color>
-    <color name="unread_message_background_rock">#756155</color>
-
-    <color name="green_accent">#0D4A43</color>
-    <color name="green_message">#1A796E</color>
-    <color name="unread_message_background_green">#3D4C4A</color>
 
     <!-- Theme colors colors !-->
 
