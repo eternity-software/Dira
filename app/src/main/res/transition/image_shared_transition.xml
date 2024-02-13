@@ -9,11 +9,11 @@
          view. -->
     <changeClipBounds />
 
-    <fade android:duration="1000000" />
+
 
     <changeTransform />
     <changeBounds />
-    <changeBounds />
+
 
     <changeImageTransform />
 

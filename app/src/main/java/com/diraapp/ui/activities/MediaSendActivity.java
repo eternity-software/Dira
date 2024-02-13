@@ -153,14 +153,17 @@ public class MediaSendActivity extends AppCompatActivity {
 
         DiraActivity.runGlobalBackground(() -> {
             try {
-                Thread.sleep(1000); //wait for animation
+                Thread.sleep(500); //wait for animation
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             Bitmap fullBitmap = AppStorage.getBitmapFromPath(finalImageUri, getApplicationContext());
             if (fullBitmap == null) return;
             runOnUiThread(() -> {
-                if (!isDestroyed()) imageView.setImageBitmap(fullBitmap);
+                if (!isDestroyed()) {
+                    imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    imageView.setImageBitmap(fullBitmap);
+                }
             });
         });
 
@@ -230,7 +233,7 @@ public class MediaSendActivity extends AppCompatActivity {
                             Bitmap fullsizeBitmap = AppStorage.getBitmapFromPath(finalImageUri, getApplicationContext());
                             if (fullsizeBitmap != null) {
                                 runOnUiThread(() -> {
-                                    imageView.setImageBitmap(fullsizeBitmap);
+                                   // imageView.setImageBitmap(fullsizeBitmap);
                                 });
                             }
                         });
@@ -354,6 +357,7 @@ public class MediaSendActivity extends AppCompatActivity {
             super.onBackPressed();
 
             if (imageBuffer != null) {
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 imageView.setImageBitmap(imageBuffer);
             }
 
