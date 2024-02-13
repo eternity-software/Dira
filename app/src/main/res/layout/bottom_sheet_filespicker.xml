@@ -54,8 +54,8 @@
                     android:paddingHorizontal="8dp"
                     android:visibility="gone"
                     app:srcCompat="@drawable/ic_camera"
-                    app:themeBackgroundTint="gray"
-                    app:themeImageColor="light_gray" />
+                    app:themeBackgroundTint="white_10"
+                    app:themeImageColor="white" />
 
                 <com.diraapp.ui.components.dynamic.ThemeLinearLayout
                     android:layout_width="wrap_content"
@@ -64,7 +64,7 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:paddingHorizontal="12dp"
-                    app:themeBackgroundColor="gray">
+                    app:themeBackgroundColor="white_10">
 
                     <com.diraapp.ui.components.dynamic.ThemeImageView
 
@@ -75,8 +75,8 @@
                         android:adjustViewBounds="true"
                         android:paddingVertical="12dp"
                         app:srcCompat="@drawable/ic_image"
-                        app:themeBackgroundTint="gray"
-                        app:themeImageColor="light_gray" />
+                        app:themeBackgroundTint="white_10"
+                        app:themeImageColor="white" />
 
                     <Spinner
                         android:id="@+id/album_picker"
@@ -103,8 +103,8 @@
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="12dp"
                     app:srcCompat="@drawable/ic_file"
-                    app:themeBackgroundTint="gray"
-                    app:themeImageColor="light_gray" />
+                    app:themeBackgroundTint="white_10"
+                    app:themeImageColor="white" />
             </LinearLayout>
 
 

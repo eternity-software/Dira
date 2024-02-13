@@ -99,7 +99,7 @@ public class MediaSendActivity extends AppCompatActivity {
 
 
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(from, pairs.toArray(new Pair[pairs.size()]));
-        ActivityCompat.startActivity(from, intent, options.toBundle());
+        from.startActivityForResult(intent, CODE, options.toBundle());
 
     }
 

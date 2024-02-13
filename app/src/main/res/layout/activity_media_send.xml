@@ -80,7 +80,7 @@
             android:inputType="textMultiLine|textCapSentences"
             android:maxHeight="150dp"
             android:textColor="@color/white"
-            android:textColorHint="@color/light_gray"
+            android:textColorHint="@color/light_text"
 
 
             android:textSize="15sp" />
@@ -97,9 +97,10 @@
             android:onClick="editImageButtonClick"
             android:padding="8dp"
             app:srcCompat="@drawable/ic_brush"
-            app:themeBackgroundTint="gray"
 
-            app:themeImageColor="accent_image_button_color" />
+            app:themeBackgroundTint="white_10"
+
+            app:themeImageColor="white" />
 
         <com.diraapp.ui.components.dynamic.ThemeImageView
             android:id="@+id/sendButton"
