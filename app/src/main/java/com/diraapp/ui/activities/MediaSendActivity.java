@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.core.app.SharedElementCallback;
 
@@ -95,7 +96,6 @@ public class MediaSendActivity extends DiraActivity {
         videoPlayer = findViewById(R.id.videoView);
         editText.setText(getIntent().getExtras().getString("text"));
         finalImageUri = imageUri;
-        Bitmap bitmap = getIntent().getParcelableExtra("bitmap");
 
         if (!type.startsWith("image")) {
             editButton.setEnabled(false);
@@ -113,9 +113,21 @@ public class MediaSendActivity extends DiraActivity {
 
         if (imageBuffer != null) {
             imageView.setImageBitmap(imageBuffer);
-
-
         }
+
+
+        runBackground(() -> {
+            try {
+                Thread.sleep(1000); //wait for animation
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Bitmap fullBitmap = AppStorage.getBitmapFromPath(finalImageUri, getApplicationContext());
+            if (fullBitmap == null) return;
+            runOnMainThread(() -> {
+                if (!isDestroyed()) imageView.setImageBitmap(fullBitmap);
+            });
+        });
 
         imageView.setActionsListener(new TouchImageView.ImageActionsListener() {
 
@@ -277,6 +289,8 @@ public class MediaSendActivity extends DiraActivity {
         // overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
     }
 
+
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -306,6 +320,10 @@ public class MediaSendActivity extends DiraActivity {
     public void onBackPressed() {
         if (!imageView.isZoomed()) {
             super.onBackPressed();
+
+            if (imageBuffer != null) {
+                imageView.setImageBitmap(imageBuffer);
+            }
 
 
             if (isVideo) {
