@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,8 +15,10 @@ import com.diraapp.R;
 import com.diraapp.databinding.FragmentMediaRoominfoBinding;
 import com.diraapp.databinding.FragmentVoiceRoominfoBinding;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
+import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.roominfo.voice.VoiceAttachmentAdapter;
 import com.diraapp.ui.adapters.roominfo.voice.VoiceAttachmentViewHolder;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
@@ -23,6 +26,7 @@ import com.diraapp.ui.fragments.roominfo.AttachmentLoader;
 import com.diraapp.ui.fragments.roominfo.BaseRoomInfoFragment;
 import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayer;
 import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayerListener;
+import com.diraapp.utils.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,13 +59,15 @@ public class VoiceRoomInfoFragment extends
         AttachmentLoader<AttachmentMessagePair> loader = createLoader();
 
         VoiceAttachmentAdapter adapter = new VoiceAttachmentAdapter(
-                getContext(), pairs, this, this);
+                getContext(), pairs, this, this, this);
 
         super.setupFragment(loader, adapter, pairs, binding.recycler, binding.noVoiceIndicator);
 
         binding.recycler.setAdapter(adapter);
 
         loadLatest();
+
+        GlobalMediaPlayer.getInstance().registerListener(this);
 
         return view;
     }
@@ -71,6 +77,7 @@ public class VoiceRoomInfoFragment extends
         super.onDestroyView();
 
         binding = null;
+        GlobalMediaPlayer.getInstance().removeListener(this);
         release();
     }
 
@@ -85,6 +92,8 @@ public class VoiceRoomInfoFragment extends
     @Override
     public void onAttached(VoiceAttachmentViewHolder holder) {
         if (holder.getPair() == null) return;
+
+        if (!GlobalMediaPlayer.getInstance().isActive()) return;
 
         if (!holder.getPair().getMessage().getId().equals(
                 GlobalMediaPlayer.getInstance().getCurrentMessage().getId())) return;
@@ -108,6 +117,8 @@ public class VoiceRoomInfoFragment extends
 
         if (holder.getPair() == null) return;
 
+        if (!GlobalMediaPlayer.getInstance().isActive()) return;
+
         if (!holder.getPair().getMessage().getId().equals(
                 GlobalMediaPlayer.getInstance().getCurrentMessage().getId())) return;
 
@@ -126,12 +137,26 @@ public class VoiceRoomInfoFragment extends
         AttachmentMessagePair pair = holder.getPair();
 
         String fileURL = pair.getAttachment().getFileUrl();
+        Logger.logDebug(VoiceRoomInfoFragment.class.getSimpleName(), "FileUrl = " + fileURL);
 
         if (fileURL == null) return;
 
-        File file = new File(fileURL);
+        if (AttachmentDownloader.isAttachmentSaving(pair.getAttachment())) return;
 
-        if (!file.exists()) return;
+        File file = AttachmentDownloader.getFileFromAttachment(pair.getAttachment(),
+                getContext(), roomSecret);
+
+        if (file == null) {
+            Logger.logDebug(VoiceRoomInfoFragment.class.getSimpleName(), "File doesn't exist");
+            Toast.makeText(getContext(),
+                    getContext().getString(R.string.no_such_file), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        ArrayList<Attachment> attachments = new ArrayList<>(1);
+        attachments.add(pair.getAttachment());
+
+        pair.getMessage().setAttachments(attachments);
 
         GlobalMediaPlayer.getInstance().changePlyingMessage(pair.getMessage(), file, 0);
     }
@@ -157,6 +182,7 @@ public class VoiceRoomInfoFragment extends
 
     @Override
     public void onGlobalMediaPlayerStart(Message message, File file) {
+        Logger.logDebug(VoiceRoomInfoFragment.class.getSimpleName(), "Started | " + (currentViewHolder == null));
         if (currentViewHolder == null) return;
 
         currentViewHolder.start();

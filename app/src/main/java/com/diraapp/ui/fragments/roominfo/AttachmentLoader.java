@@ -9,6 +9,7 @@ import com.diraapp.db.daos.AttachmentDao;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -89,6 +90,8 @@ public class AttachmentLoader<ConvertedType> {
         List<AttachmentMessagePair> answer = attachmentDao.getNewerAttachments
                 (roomSecret, newestId, types);
 
+        Logger.logDebug(AttachmentLoader.class.getSimpleName(), "Loaded newer - " + answer.size());
+
         new Handler(Looper.getMainLooper()).post(() -> {
 
             int insertedCount = answer.size();
@@ -134,6 +137,8 @@ public class AttachmentLoader<ConvertedType> {
         List<AttachmentMessagePair> answer = attachmentDao.
                 getOlderAttachments(roomSecret, oldestId, types);
 
+        Logger.logDebug(AttachmentLoader.class.getSimpleName(), "Loaded older - " + answer.size());
+
         new Handler(Looper.getMainLooper()).post(() -> {
             int insertedCount = answer.size();
 
@@ -166,6 +171,8 @@ public class AttachmentLoader<ConvertedType> {
 
     public void loadLatestAttachments() {
         List<AttachmentMessagePair> answer = attachmentDao.getLatestAttachments(roomSecret, types);
+
+        Logger.logDebug(AttachmentLoader.class.getSimpleName(), "Loaded latest - " + answer.size());
 
         if (answer.size() == 0) return;
 

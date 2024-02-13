@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diraapp.R;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
+import com.diraapp.ui.fragments.roominfo.ScrollPositionListener;
 import com.diraapp.ui.fragments.roominfo.voice.VoiceFragmentAdapterContract;
+import com.diraapp.utils.Logger;
 
 import java.util.List;
 
@@ -29,13 +31,17 @@ public class VoiceAttachmentAdapter extends RecyclerView.Adapter<VoiceAttachment
 
     private final List<AttachmentMessagePair> pairs;
 
+    private final ScrollPositionListener scrollPositionListener;
+
     public VoiceAttachmentAdapter(Context context, List<AttachmentMessagePair> pairs,
                                   VoiceFragmentAdapterContract.ViewBindListener listener,
-                                  VoiceFragmentAdapterContract.ViewClickListener viewClickListener) {
+                                  VoiceFragmentAdapterContract.ViewClickListener viewClickListener,
+                                  ScrollPositionListener scrollPositionListener) {
         this.context = context;
         this.pairs = pairs;
         this.listener = listener;
         this.viewClickListener = viewClickListener;
+        this.scrollPositionListener = scrollPositionListener;
 
         this.inflater = LayoutInflater.from(context);
     }
@@ -52,14 +58,25 @@ public class VoiceAttachmentAdapter extends RecyclerView.Adapter<VoiceAttachment
     public void onBindViewHolder(@NonNull VoiceAttachmentViewHolder holder, int position) {
         AttachmentMessagePair pair = pairs.get(position);
 
+        notifyScrollListener(position);
+
         holder.bind(pair);
 
         listener.onAttached(holder);
     }
 
+    private void notifyScrollListener(int pos) {
+        if (scrollPositionListener == null) return;
+        if (pos == 0) {
+            scrollPositionListener.onTopScrolled();
+        } else if (pos == pairs.size() - 1) {
+            scrollPositionListener.onBottomScrolled();
+        }
+    }
+
     @Override
     public int getItemCount() {
-        return 0;
+        return pairs.size();
     }
 
     @Override

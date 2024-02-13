@@ -14,7 +14,9 @@ import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.res.Theme;
 import com.diraapp.ui.adapters.messages.views.viewholders.listenable.ListenableViewHolderState;
+import com.diraapp.ui.components.dynamic.ThemeLinearLayout;
 import com.diraapp.ui.fragments.roominfo.voice.VoiceFragmentAdapterContract;
+import com.diraapp.utils.Logger;
 
 public class VoiceAttachmentViewHolder extends RecyclerView.ViewHolder {
 
@@ -24,7 +26,7 @@ public class VoiceAttachmentViewHolder extends RecyclerView.ViewHolder {
 
     public ImageView playButton;
 
-    public ImageView playBackground;
+    public ThemeLinearLayout playBackground;
 
     public ImageView watchButton;
 
@@ -71,7 +73,7 @@ public class VoiceAttachmentViewHolder extends RecyclerView.ViewHolder {
             typeText.setText(type.name());
         }
 
-        playButton.setOnClickListener((View v) -> {
+        playBackground.setOnClickListener((View v) -> {
             if (state == ListenableViewHolderState.UNSELECTED) {
                 viewClickListener.onViewStartClicked(this);
             } else {
@@ -100,26 +102,31 @@ public class VoiceAttachmentViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void start() {
+        Logger.logDebug(VoiceAttachmentViewHolder.class.getSimpleName(), "Started");
         state = ListenableViewHolderState.PLAYING;
         setPauseButton();
     }
 
     public void pause(boolean isPaused) {
         if (isPaused) {
+            Logger.logDebug(VoiceAttachmentViewHolder.class.getSimpleName(), "Paused");
             state = ListenableViewHolderState.PAUSED;
             setPlayButton();
         } else {
+            Logger.logDebug(VoiceAttachmentViewHolder.class.getSimpleName(), "Continued");
             state = ListenableViewHolderState.PLAYING;
             setPauseButton();
         }
     }
 
     public void close() {
+        Logger.logDebug(VoiceAttachmentViewHolder.class.getSimpleName(), "Closed");
         setPlayButton();
         state = ListenableViewHolderState.UNSELECTED;
     }
 
     public void onResume(boolean isPaused) {
+        Logger.logDebug(VoiceAttachmentViewHolder.class.getSimpleName(), "Resumed");
         pause(isPaused);
     }
 

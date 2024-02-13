@@ -9,6 +9,7 @@
         android:id="@+id/no_voice_indicator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
         android:orientation="vertical"
         android:gravity="center">
 
@@ -34,12 +35,11 @@
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="600dp"
-        android:gravity="center"
-        android:stretchMode="columnWidth"
+        android:paddingHorizontal="12dp"
 
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        android:paddingBottom="20dp"
+        android:clipToPadding="true"
 
-        app:layout_scrollFlags="scroll|enterAlways"
-        app:spanCount="4" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
 </LinearLayout>
