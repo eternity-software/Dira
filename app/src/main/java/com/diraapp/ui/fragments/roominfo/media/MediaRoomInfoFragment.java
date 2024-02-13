@@ -51,7 +51,7 @@ public class MediaRoomInfoFragment extends BaseRoomInfoFragment<MediaGridAdapter
 
         roomSecret = requireArguments().getString(ROOM_SECRET_EXTRA);
 
-        AttachmentLoader<SelectorFileInfo> loader = getLoader();
+        AttachmentLoader<SelectorFileInfo> loader = createLoader();
 
         MediaGridItemListener itemListener = new MediaGridItemListener() {
             @Override
@@ -90,7 +90,7 @@ public class MediaRoomInfoFragment extends BaseRoomInfoFragment<MediaGridAdapter
         release();
     }
 
-    private AttachmentLoader<SelectorFileInfo> getLoader() {
+    private AttachmentLoader<SelectorFileInfo> createLoader() {
         AttachmentType[] types = new AttachmentType[2];
         types[0] = AttachmentType.IMAGE;
         types[1] = AttachmentType.VIDEO;

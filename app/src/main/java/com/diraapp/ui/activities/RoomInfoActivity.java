@@ -28,13 +28,17 @@ import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.images.ImagesWorker;
+import com.diraapp.ui.adapters.roominfo.voice.VoiceAttachmentAdapter;
 import com.diraapp.ui.bottomsheet.InvitationCodeBottomSheet;
 import com.diraapp.ui.bottomsheet.RoomEncryptionBottomSheet;
 import com.diraapp.ui.bottomsheet.roomoptions.RoomOptionsBottomSheet;
 import com.diraapp.ui.bottomsheet.roomoptions.RoomOptionsBottomSheetListener;
 import com.diraapp.ui.components.DiraPopup;
 import com.diraapp.ui.components.FadingImageView;
+import com.diraapp.ui.components.mediatypeselector.MediaTypeSelector;
+import com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorListener;
 import com.diraapp.ui.fragments.roominfo.media.MediaRoomInfoFragment;
+import com.diraapp.ui.fragments.roominfo.voice.VoiceRoomInfoFragment;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.SliderActivity;
 import com.diraapp.utils.StringFormatter;
@@ -45,7 +49,8 @@ import java.util.List;
 import jp.wasabeef.blurry.Blurry;
 
 public class RoomInfoActivity extends DiraActivity implements UpdateListener,
-        InvitationCodeBottomSheet.BottomSheetListener, RoomOptionsBottomSheetListener {
+        InvitationCodeBottomSheet.BottomSheetListener, RoomOptionsBottomSheetListener,
+        MediaTypeSelectorListener {
 
     public static final String ROOM_SECRET_EXTRA = "roomSecret";
 
@@ -89,6 +94,9 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
         initMemberButton();
         UpdateProcessor.getInstance().addUpdateListener(this);
 
+        MediaTypeSelector selector = (MediaTypeSelector) findViewById(R.id.media_type_selector);
+        selector.setListener(this);
+
     }
 
     @Override
@@ -102,7 +110,6 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
         bundle.putString(ROOM_SECRET_EXTRA, roomSecret);
 
         getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
                 .add(R.id.fragment_container_view, MediaRoomInfoFragment.class, bundle)
                 .commit();
     }
@@ -451,5 +458,23 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
 
                     }
                 });
+    }
+
+    @Override
+    public void onSelected(int position) {
+        Bundle bundle = new Bundle();
+        bundle.putString(ROOM_SECRET_EXTRA, roomSecret);
+        switch (position) {
+            case 0:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container_view, MediaRoomInfoFragment.class, bundle)
+                        .commit();
+                break;
+            case 1:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container_view, VoiceRoomInfoFragment.class, bundle)
+                        .commit();
+                break;
+        }
     }
 }
