@@ -137,26 +137,27 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
                         if (room.getImagePath() != null) {
                             ImageView roomPicture = findViewById(R.id.room_picture);
                             Bitmap bitmap = AppStorage.getBitmapFromPath(room.getImagePath(), getApplicationContext());
-                            roomPicture.setImageBitmap(bitmap);
+                            if(bitmap != null) {
+                                roomPicture.setImageBitmap(bitmap);
 
-                            FadingImageView blurryBackground = findViewById(R.id.blurred_picture);
-                            blurryBackground.setEdgeLength(200);
-                            blurryBackground.setFadeTop(true);
-                            blurryBackground.setFadeBottom(true);
-                            blurryBackground.setFadeLeft(true);
-                            blurryBackground.setFadeRight(true);
+                                FadingImageView blurryBackground = findViewById(R.id.blurred_picture);
+                                blurryBackground.setEdgeLength(200);
+                                blurryBackground.setFadeTop(true);
+                                blurryBackground.setFadeBottom(true);
+                                blurryBackground.setFadeLeft(true);
+                                blurryBackground.setFadeRight(true);
 
-                            Bitmap bitmap1 = bitmap.copy(Bitmap.Config.ARGB_8888, false);
+                                Bitmap bitmap1 = bitmap.copy(Bitmap.Config.ARGB_8888, false);
 
-                            blurryBackground.setImageBitmap(bitmap1);
-
-
-                            Blurry.with(getApplicationContext()).radius(8)
-                                    .sampling(8).from(ImagesWorker.getRoundedCroppedBitmap(bitmap1))
-
-                                    .into(blurryBackground);
+                                blurryBackground.setImageBitmap(bitmap1);
 
 
+                                Blurry.with(getApplicationContext()).radius(8)
+                                        .sampling(8).from(ImagesWorker.getRoundedCroppedBitmap(bitmap1))
+
+                                        .into(blurryBackground);
+
+                            }
                         }
 
                         TextView roomName = findViewById(R.id.room_name);
