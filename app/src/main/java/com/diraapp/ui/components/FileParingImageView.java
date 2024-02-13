@@ -2,9 +2,14 @@ package com.diraapp.ui.components;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
+
+import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.DiraMediaInfo;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -30,6 +35,8 @@ public class FileParingImageView extends androidx.appcompat.widget.AppCompatImag
     public FileParingImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
+
+
 
     @Override
     public void setImageBitmap(Bitmap bm) {

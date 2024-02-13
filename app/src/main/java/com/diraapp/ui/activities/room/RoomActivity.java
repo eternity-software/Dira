@@ -126,6 +126,9 @@ public class RoomActivity extends DiraActivity
             MediaSendActivity.open(RoomActivity.this, filePickerBottomSheet.getMedia().get(pos).getFilePath(),
                     binding.messageTextInput.getText().toString(),
                     (MediaGridItem) view, MediaSendActivity.IMAGE_PURPOSE_MESSAGE);
+
+        /*    PreviewActivity.open(RoomActivity.this,  filePickerBottomSheet.getMedia().get(pos).getFilePath(),
+                    AppStorage.getBitmapFromPath(filePickerBottomSheet.getMedia().get(pos).getFilePath()), false, view);*/
         }
 
         @Override

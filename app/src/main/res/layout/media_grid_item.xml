@@ -9,12 +9,12 @@
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:transitionName="@string/transition_image_shared"
 
-        android:adjustViewBounds="true"
+
         android:background="@color/dark"
         android:scaleType="centerCrop"
-        app:shapeAppearanceOverlay="@style/RoundedCornersTheme"
+
         app:srcCompat="@drawable/ic_camera" />
 
     <RelativeLayout
