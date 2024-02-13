@@ -73,6 +73,8 @@ public class PreviewActivity extends DiraActivity {
         bitmapPool = previewImage;
 
 
+
+
         from.addListener(new DiraActivityListener() {
             @Override
             public void onResume() {
