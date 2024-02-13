@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.app.SharedElementCallback;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 import com.diraapp.exceptions.VideoPlayerException;
@@ -56,16 +57,31 @@ public class PreviewActivity extends DiraActivity {
 
 
     public static void open(final DiraActivity from, String filePath, Bitmap previewImage, boolean isVideo, View transitionSource) {
-        prepareActivity(from, filePath, previewImage, isVideo, transitionSource).start();
+        prepareActivity(from, filePath, previewImage, null, isVideo, transitionSource).start();
     }
 
-    public static PreparedActivity prepareActivity(final DiraActivity from, String filePath, Bitmap previewImage, boolean isVideo, View transitionSource) {
+    public static PreparedActivity prepareActivity(final DiraActivity from, String filePath, Bitmap previewImage, RecyclerView transitionRecyclerView, boolean isVideo, View transitionSource) {
         Intent intent = new Intent(from, PreviewActivity.class);
         intent.putExtra(PreviewActivity.URI, filePath);
         intent.putExtra(PreviewActivity.IS_VIDEO, isVideo);
 
+
+        if(transitionRecyclerView != null)
+        {
+            // This is a simplest way to make proper clipping in transition
+            transitionRecyclerView.setClipToPadding(true);
+        }
         Rect localVisibleRect = new Rect();
         transitionSource.getLocalVisibleRect(localVisibleRect);
+
+
+        if(transitionRecyclerView != null)
+        {
+            transitionRecyclerView.setClipToPadding(false);
+        }
+       /* localVisibleRect.top += DeviceUtils.dpToPx(12, from);
+        localVisibleRect.bottom -= DeviceUtils.dpToPx(12, from);*/
+
         transitionSource.setClipBounds(localVisibleRect);
         transitionSource.setTransitionName(from.getString(R.string.transition_image_shared));
         intent.putExtra(PreviewActivity.EXTRA_CLIP_RECT, localVisibleRect);

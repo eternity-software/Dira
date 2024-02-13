@@ -738,6 +738,7 @@ public class RoomActivity extends DiraActivity
             layout.setVisibility(View.VISIBLE);
             performHeightAnimation(0, px, layout);
         }
+        layout.requestLayout();
     }
 
     @Override
@@ -1306,7 +1307,7 @@ public class RoomActivity extends DiraActivity
     @Override
     public PreparedActivity preparePreviewActivity(String filePath, boolean isVideo, Bitmap preview, View transitionSource) {
         return PreviewActivity.prepareActivity(this, filePath, preview,
-                isVideo, transitionSource);
+                binding.recyclerView, isVideo, transitionSource);
     }
 
     @Override

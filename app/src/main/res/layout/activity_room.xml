@@ -68,118 +68,7 @@
         app:layout_constraintTop_toBottomOf="@+id/room_info_pan"
         app:themeBackgroundColor="dark" />
 
-    <LinearLayout
-        android:id="@+id/pinned_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bottom_rounded"
 
-        android:backgroundTint="@color/dark_medium"
-        android:orientation="horizontal"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="8dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/global_player">
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/pinned_image_card"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="8dp"
-            android:layout_weight="0"
-            android:visibility="visible"
-            app:cardBackgroundColor="@android:color/transparent"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="0dp">
-
-            <ImageView
-                android:id="@+id/pinned_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
-
-        </androidx.cardview.widget.CardView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-
-            <com.diraapp.ui.components.dynamic.DynamicTextView
-                android:id="@+id/pinned_author_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:fontFamily="@font/montserratbold"
-                android:maxLines="1"
-
-                android:text="Author"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                android:transitionName="name"
-                app:themeColor="self_reply_color" />
-
-            <com.diraapp.ui.components.dynamic.DynamicTextView
-                android:id="@+id/pinned_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:fontFamily="@font/montserratsemibold"
-                android:maxLines="1"
-
-                android:text="Message text"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                android:transitionName="name"
-                app:themeColor="self_message_color" />
-
-        </LinearLayout>
-
-        <com.diraapp.ui.components.dynamic.ThemeLinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/rounded_background"
-            android:orientation="horizontal"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="4dp"
-            app:themeBackgroundColor="gray">
-
-            <com.diraapp.ui.components.dynamic.ThemeImageView
-                android:id="@+id/pins_icon"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_pinned"
-                app:themeImageColor="medium_light_medium_light_gray" />
-
-            <com.diraapp.ui.components.dynamic.DynamicTextView
-                android:id="@+id/pinned_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="6dp"
-                android:fontFamily="@font/montserratsemibold"
-
-                android:maxLines="1"
-
-                android:text="10"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:transitionName="name"
-                app:themeColor="self_message_color" />
-
-        </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
-
-
-    </LinearLayout>
 
     <LinearLayout
 
@@ -188,7 +77,6 @@
         android:layout_height="68dp"
         android:background="@drawable/room_header_clickable"
         android:backgroundTint="@color/dark"
-        android:elevation="2dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -332,6 +220,9 @@
         app:themeBackgroundTint="accent_button_background"
         app:themeImageColor="accent_button_color"
         app:tint="@color/dark" />
+
+
+
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -669,4 +560,118 @@
 
 
     </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
+
+    <LinearLayout
+        android:id="@+id/pinned_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="@drawable/bottom_rounded"
+        android:backgroundTint="@color/dark_medium"
+        android:orientation="horizontal"
+
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/global_player">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/pinned_image_card"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0"
+            android:visibility="visible"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:id="@+id/pinned_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/placeholder"
+                android:scaleType="centerCrop" />
+
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <com.diraapp.ui.components.dynamic.DynamicTextView
+                android:id="@+id/pinned_author_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/montserratbold"
+                android:maxLines="1"
+
+                android:text="Author"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:transitionName="name"
+                app:themeColor="self_reply_color" />
+
+            <com.diraapp.ui.components.dynamic.DynamicTextView
+                android:id="@+id/pinned_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/montserratsemibold"
+                android:maxLines="1"
+                android:layout_marginTop="2dp"
+
+                android:text="Message text"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:transitionName="name"
+                app:themeColor="self_message_color" />
+
+        </LinearLayout>
+
+        <com.diraapp.ui.components.dynamic.ThemeLinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/rounded_background"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            app:themeBackgroundColor="white_10">
+
+            <com.diraapp.ui.components.dynamic.ThemeImageView
+                android:id="@+id/pins_icon"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_pinned"
+                app:themeImageColor="medium_light_medium_light_gray" />
+
+            <com.diraapp.ui.components.dynamic.DynamicTextView
+                android:id="@+id/pinned_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="6dp"
+                android:fontFamily="@font/montserratsemibold"
+
+                android:maxLines="1"
+
+                android:text="10"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:transitionName="name"
+                app:themeColor="self_message_color" />
+
+        </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
+
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
