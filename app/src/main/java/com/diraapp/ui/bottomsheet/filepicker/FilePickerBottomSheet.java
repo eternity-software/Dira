@@ -32,7 +32,7 @@ import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.ui.adapters.GridItemsSpacingDecorator;
 import com.diraapp.ui.adapters.MediaGridItemListener;
-import com.diraapp.ui.adapters.roominfo.media.MediaGridAdapter;
+import com.diraapp.ui.adapters.MediaGridAdapter;
 import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.utils.android.DeviceUtils;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;

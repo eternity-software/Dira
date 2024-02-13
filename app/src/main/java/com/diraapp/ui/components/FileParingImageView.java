@@ -3,17 +3,18 @@ package com.diraapp.ui.components;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
+import android.widget.ImageView;
 
 import com.diraapp.storage.DiraMediaInfo;
 import com.google.android.material.imageview.ShapeableImageView;
 
 /**
- * ImageView with rounded corners and that can be
+ * ImageView that can be
  * associated with many file types (as image, video etc)
  *
  * @author Mikhail Karlov
  */
-public class FileParingImageView extends ShapeableImageView {
+public class FileParingImageView extends androidx.appcompat.widget.AppCompatImageView {
 
     private DiraMediaInfo diraMediaInfo;
     private Bitmap bitmap;

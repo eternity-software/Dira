@@ -1,4 +1,4 @@
-package com.diraapp.ui.adapters.roominfo.media;
+package com.diraapp.ui.adapters;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
@@ -22,7 +22,6 @@ import com.diraapp.R;
 import com.diraapp.res.Theme;
 import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.ui.activities.DiraActivity;
-import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.anim.BounceInterpolator;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.diraapp.ui.components.MediaGridItem;
