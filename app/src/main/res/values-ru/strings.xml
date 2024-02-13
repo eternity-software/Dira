@@ -184,4 +184,5 @@
     <string name="documents">Документы</string>
     <string name="links">Ссылки</string>
     <string name="memory_management_deleting">Очистка...</string>
+    <string name="no_voice">Никто не отправлял голосовые сообщения в этой комнате</string>
 </resources>

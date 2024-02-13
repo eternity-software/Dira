@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:layout_marginVertical="4dp"
+    android:paddingHorizontal="10dp"
+    android:background="@drawable/rounded_background"
+    android:backgroundTint="@color/dark_lighter"
+    android:gravity="center_vertical">
+
+    <com.diraapp.ui.components.dynamic.ThemeLinearLayout
+        android:id="@+id/play_background"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:padding="4dp"
+        android:background="@drawable/circle"
+        app:themeBackgroundColor="message_voice_play_background">
+
+        <com.diraapp.ui.components.dynamic.ThemeImageView
+            android:id="@+id/play_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_play"
+            app:themeImageColor="message_voice_play"/>
+
+    </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <com.diraapp.ui.components.dynamic.DynamicTextView
+            android:id="@+id/main_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserratsemibold"
+            android:padding="0dp"
+            android:text="dreestoon, 01.09.2024 at 22:03"
+            android:textSize="13sp"
+
+            app:themeColor="white" />
+
+        <com.diraapp.ui.components.dynamic.DynamicTextView
+            android:id="@+id/type_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserratsemibold"
+            android:padding="0dp"
+            android:text="Voice message"
+            android:textSize="12sp"
+
+            app:themeColor="medium_light_medium_light_gray" />
+
+    </LinearLayout>
+
+    <com.diraapp.ui.components.dynamic.ThemeImageView
+        android:id="@+id/watch"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="6dp"
+        android:layout_weight="0"
+        android:src="@drawable/ic_eye"
+        app:themeImageColor="white"/>
+
+</LinearLayout>
