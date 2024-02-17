@@ -31,6 +31,10 @@ public class MediaTypeSelector extends LinearLayout {
         this.listener = listener;
     }
 
+    public void setPosition(int position) {
+        onChildClicked(position);
+    }
+
     private void init(Context context, AttributeSet attrs) {
         checkAttrs(context, attrs);
 
@@ -56,14 +60,7 @@ public class MediaTypeSelector extends LinearLayout {
         item.setSelected(finalI == currentSelected);
 
         item.setOnClickListener((View v) -> {
-            if (currentSelected == finalI) return;
-            Logger.logDebug("DiraSelector", "selected - " + finalI + " prev - " + currentSelected);
-
-            views.get(currentSelected).setSelected(false);
-            views.get(finalI).setSelected(true);
-            currentSelected = finalI;
-
-            if (listener != null) listener.onSelected(currentSelected);
+            onChildClicked(finalI);
         });
     }
 
@@ -82,5 +79,16 @@ public class MediaTypeSelector extends LinearLayout {
             if (typedArray != null) typedArray.recycle();
             e.printStackTrace();
         }
+    }
+
+    private void onChildClicked(int position) {
+        if (currentSelected == position) return;
+        Logger.logDebug("DiraSelector", "selected - " + position + " prev - " + currentSelected);
+
+        views.get(currentSelected).setSelected(false);
+        views.get(position).setSelected(true);
+        currentSelected = position;
+
+        if (listener != null) listener.onSelected(currentSelected);
     }
 }

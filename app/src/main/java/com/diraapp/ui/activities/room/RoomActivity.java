@@ -1,5 +1,8 @@
 package com.diraapp.ui.activities.room;
 
+import static com.diraapp.ui.activities.RoomInfoActivity.MESSAGE_TO_SCROLL_ID;
+import static com.diraapp.ui.activities.RoomInfoActivity.MESSAGE_TO_SCROLL_TIME;
+
 import android.Manifest;
 import android.animation.Animator;
 import android.content.Context;
@@ -225,7 +228,7 @@ public class RoomActivity extends DiraActivity
 
                 // ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(RoomActivity.this, p1);
 
-                startActivity(intent);
+                startActivityForResult(intent, RoomInfoActivity.RESULT_CODE_SCROLL_TO_MESSAGE);
             }
         });
 
@@ -351,6 +354,17 @@ public class RoomActivity extends DiraActivity
                 };
 
                 presenter.uploadAttachment(AttachmentType.FILE, attachmentReadyListener, path);
+            } else if (requestCode == RoomInfoActivity.RESULT_CODE_SCROLL_TO_MESSAGE) {
+                final Bundle extras = data.getExtras();
+
+                if (extras != null) {
+                    long messageTime = extras.getLong(MESSAGE_TO_SCROLL_TIME);
+                    String messageId = extras.getString(MESSAGE_TO_SCROLL_ID);
+
+                    if (messageTime != 0L) {
+                        presenter.scrollToMessage(messageId, messageTime);
+                    }
+                }
             }
 
             if (resultCode == MediaSendActivity.CODE) {
@@ -939,7 +953,7 @@ public class RoomActivity extends DiraActivity
                 binding.pinnedLayout.setOnClickListener((View v) -> {
                     currentPinnedTapCount++;
                     Logger.logDebug(RoomActivity.class.getName(), "click! (tapCount = " + currentPinnedTapCount + ")");
-                    presenter.scrollToMessage(message);
+                    presenter.scrollToMessage(message.getId(), message.getTime());
 
                     if (currentPinnedTapCount == 2) {
                         binding.pinnedLayout.setOnClickListener((View v2) -> {

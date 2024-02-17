@@ -451,23 +451,23 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     }
 
     @Override
-    public void scrollToMessage(Message message) {
-        if (message == null) return;
-        int messageIndex = getMessagePos(message);
+    public void scrollToMessage(String messageId, long messageTime) {
+        if (messageId == null) return;
+        int messageIndex = getMessagePos(messageId);
 
         if (messageIndex != -1) {
             if (view.isMessageVisible(messageIndex)) {
                 view.blinkViewHolder(messageIndex);
             } else {
-                view.addMessageToBlinkId(message.getId());
+                view.addMessageToBlinkId(messageId);
             }
 
             view.scrollToAndStop(messageIndex);
             return;
         }
 
-        view.addMessageToBlinkId(message.getId());
-        loadMessagesNearByTime(message.getTime(), true);
+        view.addMessageToBlinkId(messageId);
+        loadMessagesNearByTime(messageTime, true);
     }
 
 
@@ -481,12 +481,12 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 //        }
     }
 
-    private int getMessagePos(Message message) {
+    private int getMessagePos(String messageId) {
         int messageIndex = -1;
 
         for (int i = 0; i < messageList.size(); i++) {
             Message m = messageList.get(i);
-            if (m.getId().equals(message.getId())) {
+            if (m.getId().equals(messageId)) {
                 messageIndex = i;
                 break;
             }
@@ -997,7 +997,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     @Override
     public void onReplyClicked(Message message) {
-        scrollToMessage(message);
+        scrollToMessage(message.getId(), message.getTime());
     }
 
     @Override

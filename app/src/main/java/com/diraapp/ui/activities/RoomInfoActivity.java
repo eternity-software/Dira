@@ -10,6 +10,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.UpdateListener;
@@ -28,7 +30,7 @@ import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.images.ImagesWorker;
-import com.diraapp.ui.adapters.roominfo.voice.VoiceAttachmentAdapter;
+import com.diraapp.ui.adapters.roominfo.RoomInfoPagerAdapter;
 import com.diraapp.ui.bottomsheet.InvitationCodeBottomSheet;
 import com.diraapp.ui.bottomsheet.RoomEncryptionBottomSheet;
 import com.diraapp.ui.bottomsheet.roomoptions.RoomOptionsBottomSheet;
@@ -53,10 +55,20 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
         MediaTypeSelectorListener {
 
     public static final String ROOM_SECRET_EXTRA = "roomSecret";
+    public static final String MESSAGE_TO_SCROLL_TIME = "messageToScrollTime";
+    public static final String MESSAGE_TO_SCROLL_ID = "messageToScrollId";
+
+    public static final int RESULT_CODE_SCROLL_TO_MESSAGE = 99;
 
     private String roomSecret;
     private Room room;
     private List<Member> members;
+
+    private ViewPager2 viewPager2;
+
+    private RoomInfoPagerAdapter pagerAdapter;
+
+    private MediaTypeSelector selector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,12 +102,12 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
             onEncryptionButtonClicked();
         });
 
-        initFragments();
         initMemberButton();
         UpdateProcessor.getInstance().addUpdateListener(this);
 
-        MediaTypeSelector selector = (MediaTypeSelector) findViewById(R.id.media_type_selector);
+        selector = findViewById(R.id.media_type_selector);
         selector.setListener(this);
+        initFragments();
 
     }
 
@@ -106,12 +118,23 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
     }
 
     private void initFragments() {
+        viewPager2 = findViewById(R.id.pager);
         Bundle bundle = new Bundle();
         bundle.putString(ROOM_SECRET_EXTRA, roomSecret);
 
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container_view, MediaRoomInfoFragment.class, bundle)
-                .commit();
+        pagerAdapter = new RoomInfoPagerAdapter(getSupportFragmentManager(),
+                getLifecycle(), roomSecret);
+
+        viewPager2.setAdapter(pagerAdapter);
+
+        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+
+                selector.setPosition(position);
+            }
+        });
     }
 
     private void initMemberButton() {
@@ -463,19 +486,7 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
 
     @Override
     public void onSelected(int position) {
-        Bundle bundle = new Bundle();
-        bundle.putString(ROOM_SECRET_EXTRA, roomSecret);
-        switch (position) {
-            case 0:
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container_view, MediaRoomInfoFragment.class, bundle)
-                        .commit();
-                break;
-            case 1:
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container_view, VoiceRoomInfoFragment.class, bundle)
-                        .commit();
-                break;
-        }
+
+        viewPager2.setCurrentItem(position);
     }
 }

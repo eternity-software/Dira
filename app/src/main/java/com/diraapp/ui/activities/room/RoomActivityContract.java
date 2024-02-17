@@ -143,7 +143,7 @@ public interface RoomActivityContract {
 
         void loadMessagesNearByTime(long time, boolean needBlink);
 
-        void scrollToMessage(Message message);
+        void scrollToMessage(String messageId, long messageTime);
 
         void blinkMessage(Message message);
 
