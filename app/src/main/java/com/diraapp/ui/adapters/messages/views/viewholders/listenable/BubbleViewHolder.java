@@ -100,13 +100,10 @@ public class BubbleViewHolder extends ListenableViewHolder {
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
         if (file == null) return;
 
-        checkIsCurrent();
+        currentMediaFile = file;
+        setCurrentMessage(message);
 
-        try {
-            //loading.setVisibility(View.GONE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        checkIsCurrent();
 
         bubblePlayer.setOnClickListener((View v) -> {
 
@@ -151,9 +148,7 @@ public class BubbleViewHolder extends ListenableViewHolder {
                 itemView.getContext(), message.getRoomSecret());
 
         if (!AttachmentDownloader.isAttachmentSaving(bubbleAttachment))
-            onAttachmentLoaded(bubbleAttachment,
-                    currentMediaFile, message);
-        //
+            onAttachmentLoaded(bubbleAttachment, currentMediaFile, message);
     }
 
     @Override
