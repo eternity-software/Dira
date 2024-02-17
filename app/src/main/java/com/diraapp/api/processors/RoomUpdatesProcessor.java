@@ -398,9 +398,11 @@ public class RoomUpdatesProcessor {
         if (update.getUserId().equals(selfId)) {
             attachment.setListened(true);
             messageDao.update(message);
+            attachmentDao.update(attachment);
         } else {
             if (message.getAuthorId().equals(selfId)) {
                 attachment.setListened(true);
+                attachmentDao.update(attachment);
             }
 
             MessageReading messageReading = null;
