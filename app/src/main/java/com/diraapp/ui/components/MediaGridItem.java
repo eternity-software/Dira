@@ -30,6 +30,11 @@ public class MediaGridItem extends RelativeLayout implements WaterfallImageView 
         initComponent();
     }
 
+    public MediaGridItem(Context context) {
+        super(context);
+        initComponent();
+    }
+
     public void initComponent() {
 
         if (!isInitialized) {
@@ -78,7 +83,7 @@ public class MediaGridItem extends RelativeLayout implements WaterfallImageView 
     }
 
     public FileParingImageView getFileParingImageView() {
-        initComponent();
+        //initComponent();
         return fileParingImageView;
     }
 

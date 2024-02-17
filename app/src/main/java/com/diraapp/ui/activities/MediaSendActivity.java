@@ -1,6 +1,7 @@
 package com.diraapp.ui.activities;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -11,8 +12,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.transition.Transition;
+
+import android.transition.TransitionInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -24,7 +28,11 @@ import android.widget.LinearLayout;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.app.SharedElementCallback;
+import androidx.core.util.Pair;
 
 import com.diraapp.R;
 import com.diraapp.storage.AppStorage;
@@ -38,7 +46,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class MediaSendActivity extends DiraActivity {
+public class MediaSendActivity extends AppCompatActivity {
 
     public static final int CODE = 11;
     public static final int IMAGE_PURPOSE_SELECT = 1;
@@ -56,30 +64,64 @@ public class MediaSendActivity extends DiraActivity {
         MediaSendActivity.imageBuffer = imageBuffer;
     }
 
-    public static void open(final Activity from, String imageUri, String text, final MediaGridItem fileParingImageView, int purpose) {
+    public static void open(final Activity from, String imageUri, String text, final MediaGridItem mediaGridItem, int purpose) {
         Intent intent = new Intent(from, MediaSendActivity.class);
         intent.putExtra("uri", imageUri);
         intent.putExtra("text", text);
         intent.putExtra("purpose", purpose);
-        intent.putExtra("type", fileParingImageView.getFileInfo().getMimeType());
+        intent.putExtra("type", mediaGridItem.getFileInfo().getMimeType());
 
-        if (fileParingImageView.getFileInfo().isImage()) {
-            setImageBuffer(fileParingImageView.getFileParingImageView().getBitmap());
+        if (mediaGridItem.getFileInfo().isImage()) {
+            setImageBuffer(mediaGridItem.getFileParingImageView().getBitmap());
         } else {
-            setImageBuffer(fileParingImageView.getFileInfo().getVideoThumbnail());
+            setImageBuffer(mediaGridItem.getFileInfo().getVideoThumbnail());
+        }
+
+    /*    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
+                from,
+                Pair.create(mediaGridItem, from.getString(R.string.transition_image_shared)));
+
+        from.startActivityForResult(intent, CODE,
+                options.toBundle());*/
+
+        Window window = from.getWindow();
+        View decor = window.getDecorView();
+        View navigationBarStartView = decor.findViewById(android.R.id.navigationBarBackground);
+
+        List<Pair<View, String>> pairs = new ArrayList<>();
+        pairs.add(Pair.create(mediaGridItem, from.getString(R.string.transition_image_shared)));
+
+
+        if (navigationBarStartView != null) {
+            pairs.add(Pair.create(navigationBarStartView, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME));
         }
 
 
-        from.startActivityForResult(intent, CODE,
-                Transitions.makeOneViewTransition(fileParingImageView.getFileParingImageView(), from, intent, from.getResources().getString(R.string.transition_image_prepare)));
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(from, pairs.toArray(new Pair[pairs.size()]));
+        from.startActivityForResult(intent, CODE, options.toBundle());
 
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         imageUri = getIntent().getExtras().getString("uri");
         setContentView(R.layout.activity_media_send);
+        imageView = findViewById(R.id.fileImageView);
+        imageView.setImageContainer(findViewById(R.id.imageContainer));
+
+
+        if (imageBuffer != null) {
+            imageView.setImageBitmap(imageBuffer);
+        }
+
+        Transition sharedElementEnterTransition = TransitionInflater.from(this).inflateTransition(R.transition.image_shared_transition);
+
+// Set the shared element enter transition
+        getWindow().setSharedElementEnterTransition(sharedElementEnterTransition);
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         final String type = getIntent().getExtras().getString("type");
         final int imagePurpose = getIntent().getExtras().getInt("purpose");
@@ -96,7 +138,6 @@ public class MediaSendActivity extends DiraActivity {
         videoPlayer = findViewById(R.id.videoView);
         editText.setText(getIntent().getExtras().getString("text"));
         finalImageUri = imageUri;
-
         if (!type.startsWith("image")) {
             editButton.setEnabled(false);
             isVideo = true;
@@ -107,25 +148,22 @@ public class MediaSendActivity extends DiraActivity {
             videoPlayer.setVisibility(View.INVISIBLE);
         }
 
-        imageView = findViewById(R.id.fileImageView);
-        imageView.setImageContainer(findViewById(R.id.imageContainer));
 
 
-        if (imageBuffer != null) {
-            imageView.setImageBitmap(imageBuffer);
-        }
 
-
-        runBackground(() -> {
+        DiraActivity.runGlobalBackground(() -> {
             try {
-                Thread.sleep(1000); //wait for animation
+                Thread.sleep(500); //wait for animation
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             Bitmap fullBitmap = AppStorage.getBitmapFromPath(finalImageUri, getApplicationContext());
             if (fullBitmap == null) return;
-            runOnMainThread(() -> {
-                if (!isDestroyed()) imageView.setImageBitmap(fullBitmap);
+            runOnUiThread(() -> {
+                if (!isDestroyed()) {
+                    imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    imageView.setImageBitmap(fullBitmap);
+                }
             });
         });
 
@@ -167,92 +205,89 @@ public class MediaSendActivity extends DiraActivity {
             }
         });
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().getSharedElementEnterTransition().setDuration(300);
 
-            LinearLayout layout = findViewById(R.id.linearLayout3);
-            layout.setVisibility(View.INVISIBLE);
+        getWindow().getSharedElementEnterTransition().setDuration(300);
+
+        LinearLayout layout = findViewById(R.id.linearLayout3);
+        layout.setVisibility(View.INVISIBLE);
 
 
-            getWindow().getSharedElementEnterTransition().setInterpolator(new DecelerateInterpolator(2f));
-            getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener() {
-                @Override
-                public void onTransitionStart(Transition transition) {
+        getWindow().getSharedElementEnterTransition().setInterpolator(new DecelerateInterpolator(2f));
+        getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {
 
-                }
+            }
 
-                @Override
-                public void onTransitionEnd(Transition transition) {
+            @Override
+            public void onTransitionEnd(Transition transition) {
 
-                    if (isShown) return;
-                    isShown = true;
-                    showBottomBar();
-                    try {
-                        videoPlayer.play(imageUri);
-                        videoPlayer.setVolume(1);
-                        if (type.startsWith("image")) {
-                            DiraActivity.runGlobalBackground(() -> {
-                                Bitmap fullsizeBitmap = AppStorage.getBitmapFromPath(finalImageUri, getApplicationContext());
-                                if (fullsizeBitmap != null) {
-                                    runOnMainThread(() -> {
-                                        imageView.setImageBitmap(fullsizeBitmap);
-                                    });
+                if (isShown) return;
+                isShown = true;
+                showBottomBar();
+                try {
+                    videoPlayer.play(imageUri);
+                    videoPlayer.setVolume(1);
+                    if (type.startsWith("image")) {
+                        DiraActivity.runGlobalBackground(() -> {
+                            Bitmap fullsizeBitmap = AppStorage.getBitmapFromPath(finalImageUri, getApplicationContext());
+                            if (fullsizeBitmap != null) {
+                                runOnUiThread(() -> {
+                                   // imageView.setImageBitmap(fullsizeBitmap);
+                                });
+                            }
+                        });
+                    } else {
+
+                        videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
+                            @Override
+                            public void onStarted() {
+                                //   imageView.setVisibility(View.INVISIBLE);
+                            }
+
+                            @Override
+                            public void onPaused() {
+
+                            }
+
+                            @Override
+                            public void onReleased() {
+                                imageView.setVisibility(View.VISIBLE);
+                            }
+
+                            @Override
+                            public void onReady(int width, int height) {
+                                try {
+                                    videoPlayer.play(imageUri);
+                                    videoPlayer.setVolume(1);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                            });
-                        } else {
+                            }
+                        });
 
-                            videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
-                                @Override
-                                public void onStarted() {
-                                    //   imageView.setVisibility(View.INVISIBLE);
-                                }
-
-                                @Override
-                                public void onPaused() {
-
-                                }
-
-                                @Override
-                                public void onReleased() {
-                                    imageView.setVisibility(View.VISIBLE);
-                                }
-
-                                @Override
-                                public void onReady(int width, int height) {
-                                    try {
-                                        videoPlayer.play(imageUri);
-                                        videoPlayer.setVolume(1);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+            }
 
-                @Override
-                public void onTransitionCancel(Transition transition) {
+            @Override
+            public void onTransitionCancel(Transition transition) {
 
-                }
+            }
 
-                @Override
-                public void onTransitionPause(Transition transition) {
+            @Override
+            public void onTransitionPause(Transition transition) {
 
-                }
+            }
 
-                @Override
-                public void onTransitionResume(Transition transition) {
+            @Override
+            public void onTransitionResume(Transition transition) {
 
-                }
-            });
-        } else {
-            showBottomBar();
-        }
+            }
+        });
 
         setExitSharedElementCallback(new SharedElementCallback() {
             @Override
@@ -322,6 +357,7 @@ public class MediaSendActivity extends DiraActivity {
             super.onBackPressed();
 
             if (imageBuffer != null) {
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 imageView.setImageBitmap(imageBuffer);
             }
 

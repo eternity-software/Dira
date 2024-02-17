@@ -9,17 +9,19 @@
     <color name="dark">#202020</color>
     <color name="dark_medium">#262626</color>
     <color name="dark_lighter">#2F2F2F</color>
-    <color name="light_gray">#CDCDCD</color>
+    <color name="light_gray">#575757</color>
+    <color name="light_text">#E6E6E6</color>
     <color name="medium_light_gray">#6D6D6D</color>
     <color name="medium_light_light_gray">#B7B7B7</color>
     <color name="medium_light_medium_light_gray">#A0A0A0</color>
-    <color name="gray">#424242</color>
+    <color name="gray">#303030</color>
     <color name="medium_gray">#303030</color>
     <color name="gray_trans">#81202020</color>
     <color name="white">#FFFFFF</color>
     <color name="yellow">#EFBA00</color>
     <color name="red">#FC6240</color>
     <color name="black">#000000</color>
+    <color name="white_10">#1AFFFFFF</color>
 
     <color name="pink_accent">#BE5DE0</color>
     <color name="kitty_accent">#8978FA</color>
@@ -38,7 +40,7 @@
     <color name="green_message">#1A796E</color>
     <color name="unread_message_background_green">#3D4C4A</color>
 
-    <!-- Theme colors colors !-->
+    <!-- Theme colors !-->
 
     <color name="background">@color/dark</color>
 

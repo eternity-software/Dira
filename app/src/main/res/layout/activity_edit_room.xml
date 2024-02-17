@@ -123,7 +123,7 @@
                 android:maxLines="1"
                 android:paddingHorizontal="8dp"
                 android:textColor="@color/white"
-                android:textColorHint="@color/light_gray" />
+                android:textColorHint="@color/light_text" />
 
             <TextView
 

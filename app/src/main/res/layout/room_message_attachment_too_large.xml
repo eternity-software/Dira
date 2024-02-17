@@ -48,7 +48,7 @@
 
         android:layout_marginHorizontal="10dp"
         android:layout_marginVertical="10dp"
-        android:background="@drawable/gray_rounded"
+        android:background="@drawable/dark_rounded"
         android:backgroundTint="@color/dark"
         android:fontFamily="@font/montserratsemibold"
         android:gravity="center"

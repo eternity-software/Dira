@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="4dp"
-        android:background="@drawable/gray_rounded"
+        android:background="@drawable/dark_rounded"
         android:backgroundTint="@color/gray_trans"
         android:fontFamily="@font/montserratsemibold"
         android:gravity="center"
@@ -164,7 +164,7 @@
                     android:layout_weight="0"
                     android:alpha="0.8"
 
-                    android:background="@drawable/gray_rounded"
+                    android:background="@drawable/dark_rounded"
                     android:backgroundTint="@color/gray_trans"
                     android:fontFamily="@font/montserratsemibold"
                     android:gravity="center"

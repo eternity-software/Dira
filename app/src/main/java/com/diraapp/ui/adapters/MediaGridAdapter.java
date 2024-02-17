@@ -153,6 +153,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
         MediaGridItem picturesView = holder.fileParingImageView;
         SelectorFileInfo diraMediaInfo = mediaElements.get(position);
         picturesView.setFileInfo(diraMediaInfo);
