@@ -16,6 +16,7 @@ import com.diraapp.R;
 import com.diraapp.databinding.FragmentMediaRoominfoBinding;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.AttachmentType;
+import com.diraapp.db.entities.Member;
 import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.activities.DiraActivity;
@@ -28,6 +29,7 @@ import com.diraapp.ui.fragments.roominfo.BaseRoomInfoFragment;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MediaRoomInfoFragment extends BaseRoomInfoFragment<MediaGridAdapter.ViewHolder, SelectorFileInfo> {
@@ -37,8 +39,8 @@ public class MediaRoomInfoFragment extends BaseRoomInfoFragment<MediaGridAdapter
     private FragmentMediaRoominfoBinding binding;
     private String roomSecret;
 
-    public MediaRoomInfoFragment() {
-        super(R.layout.fragment_media_roominfo);
+    public MediaRoomInfoFragment(HashMap<String, Member> members) {
+        super(R.layout.fragment_media_roominfo, members);
     }
 
     @Nullable

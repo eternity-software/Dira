@@ -108,7 +108,6 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
 
         selector = findViewById(R.id.media_type_selector);
         selector.setListener(this);
-        initFragments();
 
     }
 
@@ -124,7 +123,7 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
         bundle.putString(ROOM_SECRET_EXTRA, roomSecret);
 
         pagerAdapter = new RoomInfoPagerAdapter(getSupportFragmentManager(),
-                getLifecycle(), roomSecret);
+                getLifecycle(), roomSecret, members);
 
         viewPager2.setAdapter(pagerAdapter);
 
@@ -210,6 +209,8 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
                         initStatuses();
 
                         membersCount.setText(getString(R.string.members_count).replace("%s", String.valueOf(members.size() + 1)));
+
+                        initFragments();
 
                     }
                 });

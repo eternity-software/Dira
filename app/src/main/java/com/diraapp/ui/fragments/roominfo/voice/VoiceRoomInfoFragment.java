@@ -17,6 +17,7 @@ import com.diraapp.databinding.FragmentVoiceRoominfoBinding;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
+import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.roominfo.voice.VoiceAttachmentAdapter;
@@ -30,6 +31,7 @@ import com.diraapp.utils.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class VoiceRoomInfoFragment extends
@@ -44,8 +46,8 @@ public class VoiceRoomInfoFragment extends
 
     private VoiceAttachmentViewHolder currentViewHolder;
 
-    public VoiceRoomInfoFragment() {
-        super(R.layout.fragment_voice_roominfo);
+    public VoiceRoomInfoFragment(HashMap<String, Member> members) {
+        super(R.layout.fragment_voice_roominfo, members);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,

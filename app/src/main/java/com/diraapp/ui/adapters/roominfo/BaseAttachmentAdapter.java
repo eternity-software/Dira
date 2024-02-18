@@ -4,9 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
-import com.diraapp.ui.adapters.roominfo.voice.VoiceAttachmentViewHolder;
+import com.diraapp.db.entities.Member;
 import com.diraapp.ui.fragments.roominfo.AttachmentAdaptersListener;
 
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class BaseAttachmentAdapter<Holder extends BaseAttachmentViewHolder>
@@ -34,6 +35,10 @@ public abstract class BaseAttachmentAdapter<Holder extends BaseAttachmentViewHol
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         notifyScrollListener(position);
+
+        AttachmentMessagePair pair = pairs.get(position);
+
+        holder.bind(pair);
     }
 
     @Override

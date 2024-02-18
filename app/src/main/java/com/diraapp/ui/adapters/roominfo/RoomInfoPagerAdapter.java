@@ -11,18 +11,29 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.diraapp.R;
+import com.diraapp.db.entities.Member;
 import com.diraapp.ui.fragments.roominfo.media.MediaRoomInfoFragment;
 import com.diraapp.ui.fragments.roominfo.voice.VoiceRoomInfoFragment;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class RoomInfoPagerAdapter extends FragmentStateAdapter {
 
     private String roomSecret;
 
+    private HashMap<String, Member> members;
+
     public RoomInfoPagerAdapter(@NonNull FragmentManager fragmentManager,
                                 @NonNull Lifecycle lifecycle,
-                                String roomSecret) {
+                                String roomSecret, List<Member> memberList) {
         super(fragmentManager, lifecycle);
         this.roomSecret = roomSecret;
+
+        members = new HashMap<>(memberList.size());
+        for (Member member: memberList) {
+            members.put(member.getId(), member);
+        }
     }
 
     @NonNull
@@ -35,11 +46,11 @@ public class RoomInfoPagerAdapter extends FragmentStateAdapter {
 
         switch (position) {
             case 1:
-                fragment = new VoiceRoomInfoFragment();
+                fragment = new VoiceRoomInfoFragment(members);
                 break;
 
             default:
-                fragment = new MediaRoomInfoFragment();
+                fragment = new MediaRoomInfoFragment(members);
         }
 
         fragment.setArguments(bundle);

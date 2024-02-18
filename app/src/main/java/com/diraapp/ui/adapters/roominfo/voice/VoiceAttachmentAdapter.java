@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
@@ -26,14 +25,14 @@ public class VoiceAttachmentAdapter extends BaseAttachmentAdapter<VoiceAttachmen
 
     private final VoiceFragmentAdapterContract.ViewClickListener viewClickListener;
 
-    private final BaseAttachmentViewHolder.ScrollToMessageButtonListener
+    private final BaseAttachmentViewHolder.FragmentViewHolderContract
             scrollToMessageButtonListener;
 
     public VoiceAttachmentAdapter(Context context, List<AttachmentMessagePair> pairs,
                                   VoiceFragmentAdapterContract.ViewBindListener viewBindListener,
                                   VoiceFragmentAdapterContract.ViewClickListener viewClickListener,
                                   AttachmentAdaptersListener adaptersListener,
-                                  BaseAttachmentViewHolder.ScrollToMessageButtonListener
+                                  BaseAttachmentViewHolder.FragmentViewHolderContract
                                           scrollToMessageButtonListener) {
         super(adaptersListener, pairs);
         this.context = context;
@@ -55,9 +54,6 @@ public class VoiceAttachmentAdapter extends BaseAttachmentAdapter<VoiceAttachmen
     @Override
     public void onBindViewHolder(@NonNull VoiceAttachmentViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
-        AttachmentMessagePair pair = pairs.get(position);
-
-        holder.bind(pair);
 
         listener.onAttached(holder);
     }

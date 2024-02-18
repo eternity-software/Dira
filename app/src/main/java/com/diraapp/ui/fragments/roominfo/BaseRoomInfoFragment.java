@@ -10,23 +10,28 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.diraapp.R;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
+import com.diraapp.db.entities.Member;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.roominfo.BaseAttachmentViewHolder;
 import com.diraapp.utils.Logger;
 
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolder,
         ConvertedType> extends Fragment
         implements AttachmentAdaptersListener, AttachmentLoader.AttachmentLoaderListener,
-            BaseAttachmentViewHolder.ScrollToMessageButtonListener {
+        BaseAttachmentViewHolder.FragmentViewHolderContract {
 
     private AttachmentLoader<ConvertedType> attachmentLoader;
 
     private List<AttachmentMessagePair> pairs;
 
     private RecyclerView.Adapter<Holder> adapter;
+
+    protected HashMap<String, Member> members;
 
     private DiraActivity diraActivity;
 
@@ -36,8 +41,9 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
 
     private View noMediaView;
 
-    public BaseRoomInfoFragment(int layoutId) {
+    public BaseRoomInfoFragment(int layoutId, HashMap<String, Member> members) {
         super(layoutId);
+        this.members = members;
     }
 
     @Override
@@ -111,6 +117,17 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
     public void callScrollToMessage(String messageId, long messageTime) {
         if (listener == null) return;
         listener.scrollToMessage(messageId, messageTime);
+    }
+
+    @Override
+    public String getMemberName(String memberID) {
+        Member member = members.get(memberID);
+
+        if (member == null) {
+            return getContext().getString(R.string.unknown);
+        }
+
+        return member.getNickname();
     }
 
     public interface RoomInfoFragmentListener {

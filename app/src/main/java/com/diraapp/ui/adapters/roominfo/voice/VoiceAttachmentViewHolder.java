@@ -1,13 +1,11 @@
 package com.diraapp.ui.adapters.roominfo.voice;
 
-import android.graphics.ColorFilter;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
@@ -44,7 +42,7 @@ public class VoiceAttachmentViewHolder extends BaseAttachmentViewHolder {
 
     public VoiceAttachmentViewHolder(@NonNull View itemView,
                                      VoiceFragmentAdapterContract.ViewClickListener viewClickListener,
-                                     ScrollToMessageButtonListener scrollToMessageButtonListener) {
+                                     FragmentViewHolderContract scrollToMessageButtonListener) {
         super(itemView, scrollToMessageButtonListener);
 
         mainText = itemView.findViewById(R.id.main_text);
@@ -62,6 +60,7 @@ public class VoiceAttachmentViewHolder extends BaseAttachmentViewHolder {
         return pair;
     }
 
+    @Override
     public void bind(AttachmentMessagePair attachmentMessagePair) {
         pair = attachmentMessagePair;
 
@@ -94,10 +93,10 @@ public class VoiceAttachmentViewHolder extends BaseAttachmentViewHolder {
 
         String text = itemView.getContext().getString(R.string.voice_item_text);
 
-        String name = pair.getMessage().getShortAuthorNickname();
+        String name = contract.getMemberName(pair.getMessage().getAuthorId());
 
         long messageTime = pair.getMessage().getTime();
-        String date = DeviceUtils.getDateFromTimestamp(messageTime, true);
+        String date = DeviceUtils.getShortDateFromTimestamp(messageTime);
         String time = DeviceUtils.getTimeFromTimestamp(messageTime);
 
         mainText.setText(text.replace("%n", name).

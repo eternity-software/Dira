@@ -46,6 +46,11 @@ public class DeviceUtils {
         return DateFormat.format(format, timestamp).toString();
     }
 
+    public static String getShortDateFromTimestamp(long timestamp) {
+        String format = "dd.mm.yyyy";
+        return DateFormat.format(format, timestamp).toString();
+    }
+
     public static String getDurationTimeMS(long millis) {
         long seconds = millis / 1000;
 
