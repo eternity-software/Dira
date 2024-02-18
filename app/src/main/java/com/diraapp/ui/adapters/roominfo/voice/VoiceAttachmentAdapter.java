@@ -2,24 +2,21 @@ package com.diraapp.ui.adapters.roominfo.voice;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
-import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
-import com.diraapp.ui.fragments.roominfo.ScrollPositionListener;
+import com.diraapp.ui.adapters.roominfo.BaseAttachmentAdapter;
+import com.diraapp.ui.adapters.roominfo.BaseAttachmentViewHolder;
+import com.diraapp.ui.fragments.roominfo.AttachmentAdaptersListener;
 import com.diraapp.ui.fragments.roominfo.voice.VoiceFragmentAdapterContract;
-import com.diraapp.utils.Logger;
 
 import java.util.List;
 
-public class VoiceAttachmentAdapter extends RecyclerView.Adapter<VoiceAttachmentViewHolder> {
+public class VoiceAttachmentAdapter extends BaseAttachmentAdapter<VoiceAttachmentViewHolder> {
 
     private final Context context;
 
@@ -29,19 +26,20 @@ public class VoiceAttachmentAdapter extends RecyclerView.Adapter<VoiceAttachment
 
     private final VoiceFragmentAdapterContract.ViewClickListener viewClickListener;
 
-    private final List<AttachmentMessagePair> pairs;
-
-    private final ScrollPositionListener scrollPositionListener;
+    private final BaseAttachmentViewHolder.ScrollToMessageButtonListener
+            scrollToMessageButtonListener;
 
     public VoiceAttachmentAdapter(Context context, List<AttachmentMessagePair> pairs,
-                                  VoiceFragmentAdapterContract.ViewBindListener listener,
+                                  VoiceFragmentAdapterContract.ViewBindListener viewBindListener,
                                   VoiceFragmentAdapterContract.ViewClickListener viewClickListener,
-                                  ScrollPositionListener scrollPositionListener) {
+                                  AttachmentAdaptersListener adaptersListener,
+                                  BaseAttachmentViewHolder.ScrollToMessageButtonListener
+                                          scrollToMessageButtonListener) {
+        super(adaptersListener, pairs);
         this.context = context;
-        this.pairs = pairs;
-        this.listener = listener;
+        this.listener = viewBindListener;
         this.viewClickListener = viewClickListener;
-        this.scrollPositionListener = scrollPositionListener;
+        this.scrollToMessageButtonListener = scrollToMessageButtonListener;
 
         this.inflater = LayoutInflater.from(context);
     }
@@ -51,32 +49,17 @@ public class VoiceAttachmentAdapter extends RecyclerView.Adapter<VoiceAttachment
     public VoiceAttachmentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new VoiceAttachmentViewHolder(
                 inflater.inflate(R.layout.listenable_attachment_element, parent, false),
-                viewClickListener);
+                viewClickListener, scrollToMessageButtonListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull VoiceAttachmentViewHolder holder, int position) {
+        super.onBindViewHolder(holder, position);
         AttachmentMessagePair pair = pairs.get(position);
-
-        notifyScrollListener(position);
 
         holder.bind(pair);
 
         listener.onAttached(holder);
-    }
-
-    private void notifyScrollListener(int pos) {
-        if (scrollPositionListener == null) return;
-        if (pos == 0) {
-            scrollPositionListener.onTopScrolled();
-        } else if (pos == pairs.size() - 1) {
-            scrollPositionListener.onBottomScrolled();
-        }
-    }
-
-    @Override
-    public int getItemCount() {
-        return pairs.size();
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.diraapp.ui.fragments.roominfo;
 
-public interface ScrollPositionListener {
+public interface AttachmentAdaptersListener {
 
     void onTopScrolled();
 

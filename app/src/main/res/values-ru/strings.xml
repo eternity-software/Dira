@@ -73,6 +73,7 @@
     <string name="recording_tip_send">Отпустите для отправки</string>
     <string name="attachment_in_queue">(В очереди)</string>
     <string name="media_gallery">Галерея</string>
+    <string name="voice_item_text">%n, %d в %t</string>
     <string name="pinned_messages_title">Закреплённые сообщения</string>
     <string name="members_title">Участники</string>
     <string name="delete_member_title">Забыть участника</string>

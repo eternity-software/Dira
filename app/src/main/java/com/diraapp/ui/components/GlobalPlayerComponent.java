@@ -186,21 +186,7 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
             currentMessageDuration = 60_000;
         }
 
-        currentMessageDurationString = getTimeString(currentMessageDuration);
-    }
-
-    private String getTimeString(long millis) {
-        long seconds = millis / 1000;
-
-        long s = seconds % 60;
-        String st = String.valueOf(s);
-        if (st.length() == 1) st = "0" + st;
-
-        long m = (seconds / 60) % 60;
-        String mt = String.valueOf(m);
-        if (mt.length() == 1) mt = "0" + mt;
-
-        return mt + ":" + st;
+        currentMessageDurationString = DeviceUtils.getDurationTimeMS(currentMessageDuration);
     }
 
     private void fillTimeView(float currentProgress) {
@@ -210,7 +196,7 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
     private void fillTimeView(float currentProgress, File file) {
         currentProgress = currentProgress / 10;
 
-        String s = getTimeString((long) (currentMessageDuration * currentProgress));
+        String s = DeviceUtils.getDurationTimeMS((long) (currentMessageDuration * currentProgress));
 
         if (file != null) readDuration(file);
 

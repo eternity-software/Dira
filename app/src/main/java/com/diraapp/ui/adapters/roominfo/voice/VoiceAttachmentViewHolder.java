@@ -14,11 +14,13 @@ import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.res.Theme;
 import com.diraapp.ui.adapters.messages.views.viewholders.listenable.ListenableViewHolderState;
+import com.diraapp.ui.adapters.roominfo.BaseAttachmentViewHolder;
 import com.diraapp.ui.components.dynamic.ThemeLinearLayout;
 import com.diraapp.ui.fragments.roominfo.voice.VoiceFragmentAdapterContract;
 import com.diraapp.utils.Logger;
+import com.diraapp.utils.android.DeviceUtils;
 
-public class VoiceAttachmentViewHolder extends RecyclerView.ViewHolder {
+public class VoiceAttachmentViewHolder extends BaseAttachmentViewHolder {
 
     public TextView mainText;
 
@@ -41,8 +43,9 @@ public class VoiceAttachmentViewHolder extends RecyclerView.ViewHolder {
     private VoiceFragmentAdapterContract.ViewClickListener viewClickListener;
 
     public VoiceAttachmentViewHolder(@NonNull View itemView,
-                                     VoiceFragmentAdapterContract.ViewClickListener viewClickListener) {
-        super(itemView);
+                                     VoiceFragmentAdapterContract.ViewClickListener viewClickListener,
+                                     ScrollToMessageButtonListener scrollToMessageButtonListener) {
+        super(itemView, scrollToMessageButtonListener);
 
         mainText = itemView.findViewById(R.id.main_text);
         typeText = itemView.findViewById(R.id.type_text);
@@ -62,7 +65,7 @@ public class VoiceAttachmentViewHolder extends RecyclerView.ViewHolder {
     public void bind(AttachmentMessagePair attachmentMessagePair) {
         pair = attachmentMessagePair;
 
-        mainText.setText(pair.getMessage().getShortAuthorNickname());
+        fillMainText();
 
         AttachmentType type = pair.getAttachment().getAttachmentType();
         if (type == AttachmentType.VOICE) {
@@ -81,6 +84,24 @@ public class VoiceAttachmentViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
+        watchButton.setOnClickListener((View v) -> {
+            super.callScrollToMessage(pair.getMessage().getId(), pair.getMessage().getTime());
+        });
+
+    }
+
+    private void fillMainText() {
+
+        String text = itemView.getContext().getString(R.string.voice_item_text);
+
+        String name = pair.getMessage().getShortAuthorNickname();
+
+        long messageTime = pair.getMessage().getTime();
+        String date = DeviceUtils.getDateFromTimestamp(messageTime, true);
+        String time = DeviceUtils.getTimeFromTimestamp(messageTime);
+
+        mainText.setText(text.replace("%n", name).
+                replace("%d", date).replace("%t", time));
     }
 
     public void setPlayButton() {

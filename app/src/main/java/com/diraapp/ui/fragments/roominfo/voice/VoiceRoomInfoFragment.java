@@ -59,7 +59,7 @@ public class VoiceRoomInfoFragment extends
         AttachmentLoader<AttachmentMessagePair> loader = createLoader();
 
         VoiceAttachmentAdapter adapter = new VoiceAttachmentAdapter(
-                getContext(), pairs, this, this, this);
+                getContext(), pairs, this, this, this, this);
 
         super.setupFragment(loader, adapter, pairs, binding.recycler, binding.noVoiceIndicator);
 

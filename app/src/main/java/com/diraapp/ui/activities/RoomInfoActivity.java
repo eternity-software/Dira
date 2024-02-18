@@ -39,6 +39,7 @@ import com.diraapp.ui.components.DiraPopup;
 import com.diraapp.ui.components.FadingImageView;
 import com.diraapp.ui.components.mediatypeselector.MediaTypeSelector;
 import com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorListener;
+import com.diraapp.ui.fragments.roominfo.BaseRoomInfoFragment;
 import com.diraapp.ui.fragments.roominfo.media.MediaRoomInfoFragment;
 import com.diraapp.ui.fragments.roominfo.voice.VoiceRoomInfoFragment;
 import com.diraapp.utils.CacheUtils;
@@ -52,7 +53,7 @@ import jp.wasabeef.blurry.Blurry;
 
 public class RoomInfoActivity extends DiraActivity implements UpdateListener,
         InvitationCodeBottomSheet.BottomSheetListener, RoomOptionsBottomSheetListener,
-        MediaTypeSelectorListener {
+        MediaTypeSelectorListener, BaseRoomInfoFragment.RoomInfoFragmentListener {
 
     public static final String ROOM_SECRET_EXTRA = "roomSecret";
     public static final String MESSAGE_TO_SCROLL_TIME = "messageToScrollTime";
@@ -488,5 +489,16 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
     public void onSelected(int position) {
 
         viewPager2.setCurrentItem(position);
+    }
+
+    @Override
+    public void scrollToMessage(String messageId, long messageTime) {
+        Intent data = new Intent();
+
+        data.putExtra(MESSAGE_TO_SCROLL_ID, messageId);
+        data.putExtra(MESSAGE_TO_SCROLL_TIME, messageTime);
+
+        setResult(RESULT_OK, data);
+        finish();
     }
 }

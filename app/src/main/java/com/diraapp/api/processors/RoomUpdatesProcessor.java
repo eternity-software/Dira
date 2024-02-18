@@ -32,6 +32,7 @@ import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.exceptions.OldUpdateException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.StringFormatter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -158,6 +159,20 @@ public class RoomUpdatesProcessor {
         if (update instanceof NewMessageUpdate) {
             newMessage = ((NewMessageUpdate) update).getMessage();
             roomSecret = ((NewMessageUpdate) update).getMessage().getRoomSecret();
+
+            boolean hasReply = newMessage.getRepliedMessageId() != null &&
+                    !StringFormatter.EMPTY_STRING.equals(newMessage.getRepliedMessageId());
+
+            if (hasReply) {
+                Message replyMessage = messageDao.
+                        getMessageAndAttachmentsById(newMessage.getRepliedMessageId());
+
+                if (replyMessage == null) {
+                    newMessage.setRepliedMessageId(null);
+                } else {
+                    newMessage.setRepliedMessage(replyMessage);
+                }
+            }
         }
 
         Room room = roomDao.getRoomBySecretName(roomSecret);
@@ -397,7 +412,6 @@ public class RoomUpdatesProcessor {
         String selfId = new CacheUtils(context).getString(CacheUtils.ID);
         if (update.getUserId().equals(selfId)) {
             attachment.setListened(true);
-            messageDao.update(message);
             attachmentDao.update(attachment);
         } else {
             if (message.getAuthorId().equals(selfId)) {

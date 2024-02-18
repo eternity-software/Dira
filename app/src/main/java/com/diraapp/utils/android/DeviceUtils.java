@@ -46,6 +46,20 @@ public class DeviceUtils {
         return DateFormat.format(format, timestamp).toString();
     }
 
+    public static String getDurationTimeMS(long millis) {
+        long seconds = millis / 1000;
+
+        long s = seconds % 60;
+        String st = String.valueOf(s);
+        if (st.length() == 1) st = "0" + st;
+
+        long m = (seconds / 60) % 60;
+        String mt = String.valueOf(m);
+        if (mt.length() == 1) mt = "0" + mt;
+
+        return mt + ":" + st;
+    }
+
     public static boolean getBooleanFromInt(int i) {
         return i == 1;
 

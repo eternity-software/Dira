@@ -25,7 +25,7 @@ import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.anim.BounceInterpolator;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.diraapp.ui.components.MediaGridItem;
-import com.diraapp.ui.fragments.roominfo.ScrollPositionListener;
+import com.diraapp.ui.fragments.roominfo.AttachmentAdaptersListener;
 import com.diraapp.ui.waterfalls.WaterfallBalancer;
 import com.diraapp.utils.android.DiraVibrator;
 
@@ -53,7 +53,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
     private boolean isOnlyImages = true;
     private GalleryListener galleryListener;
 
-    private ScrollPositionListener scrollPositionListener;
+    private AttachmentAdaptersListener scrollPositionListener;
 
     /**
      * Constructor for custom files arrays
@@ -64,7 +64,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
      */
     public MediaGridAdapter(final DiraActivity context, List<SelectorFileInfo> mediaElements,
                             MediaGridItemListener itemClickListener, RecyclerView recyclerView,
-                            ScrollPositionListener scrollPositionListener) {
+                            AttachmentAdaptersListener scrollPositionListener) {
         this.mInflater = LayoutInflater.from(context);
         this.itemClickListener = itemClickListener;
         this.context = context;
@@ -216,6 +216,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
         } catch (Exception e) {
             e.printStackTrace();
+
+            // TODO: put something like trash can
         }
     }
 

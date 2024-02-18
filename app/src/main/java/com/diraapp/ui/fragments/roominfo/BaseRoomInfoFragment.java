@@ -1,8 +1,6 @@
 package com.diraapp.ui.fragments.roominfo;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.ui.activities.DiraActivity;
+import com.diraapp.ui.adapters.roominfo.BaseAttachmentViewHolder;
 import com.diraapp.utils.Logger;
 
 import java.util.List;
 
 public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolder,
         ConvertedType> extends Fragment
-        implements ScrollPositionListener, AttachmentLoader.AttachmentLoaderListener {
+        implements AttachmentAdaptersListener, AttachmentLoader.AttachmentLoaderListener,
+            BaseAttachmentViewHolder.ScrollToMessageButtonListener {
 
     private AttachmentLoader<ConvertedType> attachmentLoader;
 
@@ -29,6 +29,8 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
     private RecyclerView.Adapter<Holder> adapter;
 
     private DiraActivity diraActivity;
+
+    private RoomInfoFragmentListener listener;
 
     private View recycler;
 
@@ -42,6 +44,7 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         diraActivity = (DiraActivity) getActivity();
+        listener = (RoomInfoFragmentListener) getActivity();
 
         return null;
     }
@@ -102,6 +105,16 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
 
         recycler.setVisibility(View.VISIBLE);
         noMediaView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void callScrollToMessage(String messageId, long messageTime) {
+        if (listener == null) return;
+        listener.scrollToMessage(messageId, messageTime);
+    }
+
+    public interface RoomInfoFragmentListener {
+        void scrollToMessage(String messageId, long messageTime);
     }
 
 }

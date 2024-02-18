@@ -85,6 +85,7 @@
     <string name="links">Links</string>
     <string name="documents">Documents</string>
     <string name="no_such_file">File not found</string>
+    <string name="voice_item_text">%n, %d at %t</string>
 
     <!-- Pinned messages activity -->
     <string name="pinned_messages_title">Pinned messages</string>
