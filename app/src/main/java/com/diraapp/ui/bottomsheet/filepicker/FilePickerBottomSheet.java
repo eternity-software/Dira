@@ -269,6 +269,11 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
 
     private void initDocumentPickerButton() {
         final ImageView documentPickerButton = view.findViewById(R.id.documents_picker);
+        if (onlyImages) {
+            documentPickerButton.setVisibility(View.GONE);
+            return;
+        }
+
         documentPickerButton.setOnClickListener((View v) -> {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("*/*");

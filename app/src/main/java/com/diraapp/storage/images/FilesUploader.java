@@ -76,13 +76,18 @@ public class FilesUploader {
 
             if (!encryptionKey.equals("")) {
                 File rawFile = new File(sourceFileUri);
-                File outputFile = new File(rawFile.getPath() + "encrypted_" + rawFile.getName());
+                File outputFile = new File(rawFile.getParent() + "/encrypted_" + rawFile.getName());
                 CryptoUtils.encrypt(encryptionKey, rawFile, outputFile);
+
+                if (deleteAfterUpload) {
+                    rawFile.delete();
+                }
+
                 sourceFileUri = outputFile.getAbsolutePath();
                 deleteAfterUpload = true;
             }
 
-
+            // TODO: Create other extensions
             String ext = ".vid";
 
             if (FileClassifier.isImageFile(sourceFileUri)) {

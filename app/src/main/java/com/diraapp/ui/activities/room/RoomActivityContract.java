@@ -61,7 +61,8 @@ public interface RoomActivityContract {
                         RoomActivityPresenter.AttachmentHandler callback,
                         boolean deleteAfterUpload,
                         String serverAddress,
-                        String encryptionKey);
+                        String encryptionKey,
+                        boolean compressImage);
 
         void compressVideo(List<Uri> urisToCompress,
                            String fileUri,

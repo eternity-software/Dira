@@ -325,29 +325,29 @@ public class RoomActivity extends DiraActivity
 
                 }
             } else if (requestCode == SEND_FILE_CODE) {
+                Logger.logDebug(this.getClass().getSimpleName(), "On result: Sending file");
                 if (data == null) {
-                    Logger.logDebug("onActivityResult", "data = null");
+                    Logger.logDebug(this.getClass().getSimpleName(), "On result: data = null");
                     return;
                 }
 
                 Uri uri = data.getData();
                 if (uri == null) {
-                    Logger.logDebug("onActivityResult", "uri = null");
+                    Logger.logDebug(this.getClass().getSimpleName(), "On result: uri = null");
                     return;
                 }
 
-                String path = AppStorage.getRealPathFromURI(this, uri);
-                if (path == null) path = AppStorage.getPath(this, uri);
-                if (path == null) {
-                    Logger.logDebug("onActivityResult", "path = null");
+                File file = AppStorage.copyFile(getContext(), uri);
+                if (file == null) {
+                    Logger.logDebug(this.getClass().getSimpleName(), "On result: file = null");
                     return;
                 }
-
+                String path = file.getAbsolutePath();
 
                 binding.messageTextInput.setText("");
                 final String messageText = data.getStringExtra("text");
                 presenter.sendStatus(UserStatusType.SENDING_FILE);
-                Logger.logDebug(this.getClass().toString(), "File Path: " + path);
+                Logger.logDebug(this.getClass().getSimpleName(), "On result: File Path: " + path);
 
                 ArrayList<Attachment> attachments = new ArrayList<>();
                 final String replyId = presenter.getAndClearReplyId();
@@ -1113,9 +1113,6 @@ public class RoomActivity extends DiraActivity
     public void notifyMessagesInserted(int start, int last, int scrollPosition) {
         Logger.logDebug("notifying added", "adding item ");
         if (start == IS_ROOM_OPENING) {
-            // Need to clear pool for correcting touch scenario for not recycled views
-            // TODO: investigation required, we must have one pool for all messages in future
-            //  binding.recyclerView.getRecycledViewPool().clear();
             messagesAdapter.notifyDataSetChanged();
         } else {
             messagesAdapter.notifyItemRangeInserted(start, last - start);
@@ -1210,9 +1207,11 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
-    public void uploadFile(String sourceFileUri, RoomActivityPresenter.AttachmentHandler callback, boolean deleteAfterUpload, String serverAddress, String encryptionKey) {
+    public void uploadFile(String sourceFileUri, RoomActivityPresenter.AttachmentHandler callback,
+                           boolean deleteAfterUpload, String serverAddress, String encryptionKey,
+                           boolean compressImage) {
         try {
-            if (FileClassifier.isImageFile(sourceFileUri)) {
+            if (FileClassifier.isImageFile(sourceFileUri) && compressImage) {
                 ImageCompressor.compress(RoomActivity.this, new File(sourceFileUri), new com.diraapp.storage.images.Callback() {
                     @Override
                     public void onComplete(boolean status, @Nullable File file) {

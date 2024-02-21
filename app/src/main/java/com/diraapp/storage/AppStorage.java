@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,10 +14,14 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Base64;
+import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
+import androidx.documentfile.provider.DocumentFile;
 
 import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
@@ -29,6 +34,7 @@ import com.google.gson.Gson;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -106,7 +112,7 @@ public class AppStorage {
         try {
             String[] proj = {MediaStore.Images.Media.DATA};
             cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            int column_index = cursor.getColumnIndexOrThrow(proj[0]);
             cursor.moveToFirst();
             return cursor.getString(column_index);
         } finally {
@@ -404,4 +410,80 @@ public class AppStorage {
                     file + " doesn't exist");
         }
     }
+
+    public static void openFile(Context context, File file, Attachment attachment) {
+        try {
+            Uri uri = FileProvider.getUriForFile(context,
+                    context.getApplicationContext().getPackageName() + ".provider", file);
+
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+
+            String fileExtension = MimeTypeMap.getFileExtensionFromUrl(attachment.getDisplayFileName());
+            Logger.logDebug("File opening", "fileExtension = " + fileExtension);
+
+            String type;
+
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
+
+
+            intent.setDataAndType(uri, type);
+            Logger.logDebug("File opening", "File type - " + type + ", " + attachment.getDisplayFileName());
+
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            context.startActivity(intent);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context,
+                    context.getString(R.string.file_opening_failed),
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public static File copyFile(Context context, Uri uri) {
+        String name = getNameFromURI(context, uri);
+        Logger.logDebug(AppStorage.class.getSimpleName(), "Coping: File name = " + name);
+        File file = new File(context.getCacheDir(), name);
+
+        int maxBufferSize = 1024 * 1024;
+
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(uri);
+            int  bytesAvailable = inputStream.available();
+            int bufferSize = Math.min(bytesAvailable, maxBufferSize);
+            final byte[] buffers = new byte[bufferSize];
+
+            FileOutputStream outputStream = new FileOutputStream(file);
+            int read = 0;
+            while ((read = inputStream.read(buffers)) != -1) {
+                outputStream.write(buffers, 0, read);
+            }
+
+            inputStream.close();
+            outputStream.close();
+
+            Logger.logDebug(AppStorage.class.getSimpleName(), "Coping: File = " + file);
+            return file;
+        } catch (Exception e) {
+            Logger.logDebug(AppStorage.class.getSimpleName(), "Coping: Something went wrong");
+            e.printStackTrace();
+
+            return null;
+        }
+
+    }
+
+    private static String getNameFromURI(Context context, Uri uri) {
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        if (cursor == null) return "Unknown";
+        cursor.moveToFirst();
+
+        int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+        if (index == -1) return "Unknown";
+
+        return cursor.getString(index);
+    }
+
 }

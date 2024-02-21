@@ -178,6 +178,9 @@ public class AttachmentDownloader {
     }
 
 
+    /**
+    *   Returns null if file doesn't exist
+    */
     public static File getFileFromAttachment(@NotNull Attachment attachment, Context context, String roomSecret) {
         if (attachment == null) return null;
         File localFile = new File(context.getExternalCacheDir(), roomSecret + "_" + attachment.getFileUrl());

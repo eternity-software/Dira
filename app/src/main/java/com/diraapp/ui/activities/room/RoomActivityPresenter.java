@@ -558,8 +558,11 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             Logger.logDebug(this.getClass().getSimpleName(),
                     "Uploading started.. ");
 
-            if (FileClassifier.isVideoFile(fileUri) && (attachmentType == AttachmentType.VIDEO
-                    || attachmentType == AttachmentType.BUBBLE)) {
+            boolean isVideo = attachmentType == AttachmentType.VIDEO
+                    || attachmentType == AttachmentType.BUBBLE;
+            if (isVideo) isVideo = isVideo && FileClassifier.isVideoFile(fileUri);
+
+            if (isVideo) {
                 List<Uri> urisToCompress = new ArrayList<>();
                 urisToCompress.add(Uri.fromFile(new File(fileUri)));
                 Logger.logDebug(this.getClass().getSimpleName(),
@@ -586,11 +589,14 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                         room.getServerAddress(), room.getEncryptionKey(), bitrate);
 
             } else {
+                boolean compressImage = attachmentType == AttachmentType.IMAGE;
+                boolean deleteIfFile = attachmentType == AttachmentType.FILE;
                 view.uploadFile(fileUri,
                         new AttachmentHandler(fileUri, attachmentReadyListener, attachmentType),
-                        false,
+                        deleteIfFile,
                         room.getServerAddress(),
-                        room.getEncryptionKey());
+                        room.getEncryptionKey(),
+                        compressImage);
             }
         });
 

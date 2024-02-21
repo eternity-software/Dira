@@ -119,7 +119,7 @@ public class MediaSendActivity extends AppCompatActivity {
 
         Transition sharedElementEnterTransition = TransitionInflater.from(this).inflateTransition(R.transition.image_shared_transition);
 
-// Set the shared element enter transition
+        // Set the shared element enter transition
         getWindow().setSharedElementEnterTransition(sharedElementEnterTransition);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);

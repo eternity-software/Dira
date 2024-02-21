@@ -47,7 +47,7 @@ public class VoiceAttachmentAdapter extends BaseAttachmentAdapter<VoiceAttachmen
     @Override
     public VoiceAttachmentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new VoiceAttachmentViewHolder(
-                inflater.inflate(R.layout.listenable_attachment_element, parent, false),
+                inflater.inflate(R.layout.roominfo_listenable_attachment, parent, false),
                 viewClickListener, scrollToMessageButtonListener);
     }
 
