@@ -25,20 +25,16 @@ public class VoiceAttachmentAdapter extends BaseAttachmentAdapter<VoiceAttachmen
 
     private final VoiceFragmentAdapterContract.ViewClickListener viewClickListener;
 
-    private final BaseAttachmentViewHolder.FragmentViewHolderContract
-            scrollToMessageButtonListener;
-
     public VoiceAttachmentAdapter(Context context, List<AttachmentMessagePair> pairs,
                                   VoiceFragmentAdapterContract.ViewBindListener viewBindListener,
                                   VoiceFragmentAdapterContract.ViewClickListener viewClickListener,
                                   AttachmentAdaptersListener adaptersListener,
                                   BaseAttachmentViewHolder.FragmentViewHolderContract
                                           scrollToMessageButtonListener) {
-        super(adaptersListener, pairs);
+        super(adaptersListener, pairs, scrollToMessageButtonListener);
         this.context = context;
         this.listener = viewBindListener;
         this.viewClickListener = viewClickListener;
-        this.scrollToMessageButtonListener = scrollToMessageButtonListener;
 
         this.inflater = LayoutInflater.from(context);
     }

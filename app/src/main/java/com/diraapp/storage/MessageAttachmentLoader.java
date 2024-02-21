@@ -1,4 +1,4 @@
-package com.diraapp.ui.adapters.messages.views;
+package com.diraapp.storage;
 
 import android.content.Context;
 import android.os.Handler;
@@ -28,20 +28,14 @@ public class MessageAttachmentLoader {
 
     private final Context context;
 
-    public MessageAttachmentLoader(Room room, Context activity) {
+    public MessageAttachmentLoader(Room room, Context context) {
         this.room = room;
-        this.context = activity;
+        this.context = context;
 
-        maxAutoLoadSize = new CacheUtils(activity).getLong(CacheUtils.AUTO_LOAD_SIZE);
+        maxAutoLoadSize = new CacheUtils(context).getLong(CacheUtils.AUTO_LOAD_SIZE);
     }
 
     public void loadMessageAttachment(Message message, AttachmentViewHolder holder) {
-        String encryptionKey = "";
-        if (room != null) {
-            if (message.getLastTimeEncryptionKeyUpdated() == room.getTimeEncryptionKeyUpdated()) {
-                encryptionKey = room.getEncryptionKey();
-            }
-        }
         MessageAttachmentStorageListener listener = new MessageAttachmentStorageListener(holder, message);
         holder.setAttachmentStorageListener(listener);
 
@@ -94,9 +88,9 @@ public class MessageAttachmentLoader {
     public class MessageAttachmentStorageListener implements AttachmentsStorageListener {
 
         private final Message message;
-        private AttachmentViewHolder holder;
+        private AttachmentHolder holder;
 
-        public MessageAttachmentStorageListener(AttachmentViewHolder holder, Message message) {
+        public MessageAttachmentStorageListener(AttachmentHolder holder, Message message) {
             this.holder = holder;
             this.message = message;
         }
@@ -164,6 +158,12 @@ public class MessageAttachmentLoader {
             AttachmentDownloader.removeAttachmentsStorageListener(this);
             holder = null;
         }
+    }
+
+    public interface AttachmentHolder {
+        void onAttachmentLoaded(Attachment attachment, File file, Message message);
+
+        void onLoadFailed(Attachment attachment);
     }
 
 }

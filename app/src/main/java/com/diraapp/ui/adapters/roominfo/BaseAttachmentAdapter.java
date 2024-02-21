@@ -17,10 +17,14 @@ public abstract class BaseAttachmentAdapter<Holder extends BaseAttachmentViewHol
 
     protected final List<AttachmentMessagePair> pairs;
 
+    protected final BaseAttachmentViewHolder.FragmentViewHolderContract scrollToMessageButtonListener;
+
     public BaseAttachmentAdapter(AttachmentAdaptersListener adaptersListener,
-                                 List<AttachmentMessagePair> pairs) {
+                                 List<AttachmentMessagePair> pairs,
+                                 BaseAttachmentViewHolder.FragmentViewHolderContract scrollToMessageButtonListener) {
         this.adaptersListener = adaptersListener;
         this.pairs = pairs;
+        this.scrollToMessageButtonListener = scrollToMessageButtonListener;
     }
 
     private void notifyScrollListener(int pos) {

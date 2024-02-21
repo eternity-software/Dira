@@ -786,6 +786,7 @@ public class LegacyRoomMessagesAdapter extends RecyclerView.Adapter<LegacyViewHo
         if (message.getAttachments() != null) {
             if (message.getAttachments().size() > 0) {
                 holder.attachmentsStorageListener = new AttachmentsStorageListener() {
+
                     @Override
                     public void onAttachmentBeginDownloading(Attachment attachment) {
 

@@ -145,6 +145,9 @@ public class Attachment {
     }
 
     public String getDisplayFileName() {
+        if (displayFileName == null) {
+            return "Unknown";
+        }
         return displayFileName;
     }
 

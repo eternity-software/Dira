@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.diraapp.R;
@@ -47,7 +49,8 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
     public void onAttachmentLoaded(Attachment attachment, File file, Message message) {
         if (file == null) {
             progressBar.setVisibility(View.GONE);
-            fileIcon.setImageDrawable(itemView.getContext().getDrawable(R.drawable.ic_download));
+            fileIcon.setImageDrawable(AppCompatResources.getDrawable(
+                    itemView.getContext(), R.drawable.ic_download));
             fileIcon.setVisibility(View.VISIBLE);
             return;
         }
@@ -55,11 +58,17 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
         fileIcon.setVisibility(View.VISIBLE);
         // stop animation
 
-        fileIcon.setImageDrawable(itemView.getContext().getDrawable(R.drawable.ic_file));
+        fileIcon.setImageDrawable(AppCompatResources.getDrawable(
+                itemView.getContext(), R.drawable.ic_file));
         messageContainer.setOnClickListener((View view) -> {
-            openFile(file, attachment);
+            AppStorage.openFile(itemView.getContext(), file, attachment);
         });
 
+    }
+
+    @Override
+    public void onLoadFailed(Attachment attachment) {
+        // pass
     }
 
     @Override
@@ -109,10 +118,11 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
         fileAttachmentSize.setText(AppStorage.getStringSize(attachment.getSize()) + ", " + type.toUpperCase());
         progressBar.setVisibility(View.GONE);
         fileIcon.setVisibility(View.VISIBLE);
-        fileIcon.setImageDrawable(itemView.getContext().getDrawable(R.drawable.ic_download));
+        fileIcon.setImageDrawable(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_download));
+
         messageContainer.setOnClickListener(v -> {
-            SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(itemView.getContext(), false,
-                    attachment,
+            SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(itemView.getContext(),
+                    false, attachment,
                     getMessageAdapterContract().getRoom().getSecretName());
 
             AttachmentDownloader.saveAttachmentAsync(saveAttachmentTask,
@@ -120,48 +130,16 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
             progressBar.setVisibility(View.VISIBLE);
             fileIcon.setVisibility(View.INVISIBLE);
         });
+
         if (!AttachmentDownloader.isAttachmentSaving(message.getSingleAttachment())) {
-            File attachmentFile = AttachmentDownloader.getFileFromAttachment(message.getSingleAttachment(),
+            File file = AttachmentDownloader.getFileFromAttachment(message.getSingleAttachment(),
                     itemView.getContext(), message.getRoomSecret());
             onAttachmentLoaded(message.getSingleAttachment(),
-                    attachmentFile, message);
+                        file, message);
         } else {
             progressBar.setVisibility(View.VISIBLE);
             fileIcon.setVisibility(View.INVISIBLE);
         }
 
-    }
-
-    private void openFile(File file, Attachment attachment) {
-        try {
-            Uri uri = FileProvider.getUriForFile(getMessageAdapterContract().getContext(),
-                    getMessageAdapterContract().getContext().
-                            getApplicationContext().getPackageName() + ".provider", file);
-
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_VIEW);
-
-            String fileExtension = MimeTypeMap.getFileExtensionFromUrl(attachment.getDisplayFileName());
-            Logger.logDebug("File opening", "fileExtension = " + fileExtension);
-
-            String type;
-
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension);
-
-
-            intent.setDataAndType(uri, type);
-            Logger.logDebug("File opening", "File type - " + type + ", " + attachment.getDisplayFileName());
-
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-            getMessageAdapterContract().getContext().
-                    startActivity(intent);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(getMessageAdapterContract().getContext(),
-                    getMessageAdapterContract().getContext().getString(R.string.file_opening_failed),
-                    Toast.LENGTH_SHORT).show();
-        }
     }
 }

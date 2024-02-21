@@ -15,7 +15,7 @@ import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.media.DiraMediaPlayer;
 import com.diraapp.ui.adapters.messages.legacy.LegacyRoomMessagesAdapter;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
-import com.diraapp.ui.adapters.messages.views.MessageAttachmentLoader;
+import com.diraapp.storage.MessageAttachmentLoader;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
 import com.diraapp.ui.adapters.messages.views.viewholders.AttachmentViewHolder;
 import com.diraapp.ui.adapters.messages.views.viewholders.DelayedMessageBind;

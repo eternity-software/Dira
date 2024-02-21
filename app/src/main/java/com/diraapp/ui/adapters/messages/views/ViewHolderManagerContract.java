@@ -1,6 +1,7 @@
 package com.diraapp.ui.adapters.messages.views;
 
 import com.diraapp.media.DiraMediaPlayer;
+import com.diraapp.storage.MessageAttachmentLoader;
 
 import java.util.concurrent.Executor;
 

@@ -20,15 +20,15 @@ import com.diraapp.utils.android.DeviceUtils;
 
 public class VoiceAttachmentViewHolder extends BaseAttachmentViewHolder {
 
-    public TextView mainText;
+    private final TextView mainText;
 
-    public TextView typeText;
+    private final TextView typeText;
 
-    public ImageView playButton;
+    private final ImageView playButton;
 
-    public ThemeLinearLayout playBackground;
+    private final ThemeLinearLayout playBackground;
 
-    public ImageView watchButton;
+    private final ImageView watchButton;
 
     private AttachmentMessagePair pair;
 
