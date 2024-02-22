@@ -24,7 +24,7 @@
             android:layout_marginHorizontal="100dp"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/montserratsemibold"
-            android:text="@string/no_voice"
+            android:text="@string/no_documents"
             android:textColor="@color/light_gray"
             android:textSize="16sp"
             android:gravity="center_horizontal"

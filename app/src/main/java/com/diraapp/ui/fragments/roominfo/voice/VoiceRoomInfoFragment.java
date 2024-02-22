@@ -19,6 +19,7 @@ import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.roominfo.voice.VoiceAttachmentAdapter;
 import com.diraapp.ui.adapters.roominfo.voice.VoiceAttachmentViewHolder;
@@ -46,8 +47,8 @@ public class VoiceRoomInfoFragment extends
 
     private VoiceAttachmentViewHolder currentViewHolder;
 
-    public VoiceRoomInfoFragment(HashMap<String, Member> members) {
-        super(R.layout.fragment_voice_roominfo, members);
+    public VoiceRoomInfoFragment(HashMap<String, Member> members, Room room) {
+        super(R.layout.fragment_voice_roominfo, members, room);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,

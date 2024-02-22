@@ -17,6 +17,7 @@ import com.diraapp.databinding.FragmentMediaRoominfoBinding;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.activities.DiraActivity;
@@ -39,8 +40,8 @@ public class MediaRoomInfoFragment extends BaseRoomInfoFragment<MediaGridAdapter
     private FragmentMediaRoominfoBinding binding;
     private String roomSecret;
 
-    public MediaRoomInfoFragment(HashMap<String, Member> members) {
-        super(R.layout.fragment_media_roominfo, members);
+    public MediaRoomInfoFragment(HashMap<String, Member> members, Room room) {
+        super(R.layout.fragment_media_roominfo, members, room);
     }
 
     @Nullable

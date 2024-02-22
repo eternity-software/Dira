@@ -11,6 +11,7 @@ import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.storage.attachments.AttachmentsStorageListener;
 import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.ui.adapters.messages.views.viewholders.AttachmentViewHolder;
+import com.diraapp.ui.adapters.roominfo.documents.FileAttachmentViewHolder;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
 
@@ -35,6 +36,19 @@ public class MessageAttachmentLoader {
         maxAutoLoadSize = new CacheUtils(context).getLong(CacheUtils.AUTO_LOAD_SIZE);
     }
 
+    public void loadFileAttachment(Message message, Attachment attachment, FileAttachmentViewHolder holder) {
+        MessageAttachmentStorageListener listener =
+                new MessageAttachmentStorageListener(holder, message);
+        holder.setAttachmentStorageListener(listener);
+
+        AttachmentDownloader.addAttachmentsStorageListener(listener);
+        listeners.add(listener);
+
+        final long attachmentSize = attachment.getSize();
+
+        considerAttachmentLoading(attachmentSize, attachment, message, holder);
+    }
+
     public void loadMessageAttachment(Message message, AttachmentViewHolder holder) {
         MessageAttachmentStorageListener listener = new MessageAttachmentStorageListener(holder, message);
         holder.setAttachmentStorageListener(listener);
@@ -53,21 +67,24 @@ public class MessageAttachmentLoader {
         for (int i = 0; i < attachmentCount; i++) {
             Attachment attachment = message.getAttachments().get(i);
 
-            File file = AttachmentDownloader.getFileFromAttachment(attachment, context, message.getRoomSecret());
+            considerAttachmentLoading(attachmentsSize, attachment, message, holder);
+        }
+    }
 
-            if (file != null && !AttachmentDownloader.isAttachmentSaving(attachment)) {
+    private void considerAttachmentLoading(long size, Attachment attachment, Message message, AttachmentHolder holder) {
+        File file = AttachmentDownloader.getFileFromAttachment(attachment, context, message.getRoomSecret());
 
-                holder.onAttachmentLoaded(attachment, file, message);
+        if (file != null && !AttachmentDownloader.isAttachmentSaving(attachment)) {
+
+            holder.onAttachmentLoaded(attachment, file, message);
+        } else {
+            if (size > maxAutoLoadSize) {
+                // notify that AttachmentToLarge
             } else {
-                if (attachmentsSize > maxAutoLoadSize) {
-                    // notify that AttachmentToLarge
-                } else {
-                    if (!AttachmentDownloader.isAttachmentSaving(attachment)) {
-                        SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment, message.getRoomSecret());
-                        AttachmentDownloader.saveAttachmentAsync(saveAttachmentTask, room.getServerAddress());
-                    }
+                if (!AttachmentDownloader.isAttachmentSaving(attachment)) {
+                    SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment, message.getRoomSecret());
+                    AttachmentDownloader.saveAttachmentAsync(saveAttachmentTask, room.getServerAddress());
                 }
-
             }
 
         }

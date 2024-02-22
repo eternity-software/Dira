@@ -5,7 +5,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 
 import com.diraapp.R;
@@ -45,9 +44,14 @@ public class FileAttachmentViewHolder extends BaseAttachmentViewHolder
 
     private boolean isFileIcon = true;
 
+    private final FileAdapterContract fileAdapterContract;
+
+    private MessageAttachmentLoader.MessageAttachmentStorageListener attachmentStorageListener = null;
+
     public FileAttachmentViewHolder(@NonNull View itemView,
                                     FragmentViewHolderContract scrollToMessageButtonListener,
-                                    String roomSecret, String serverAddress) {
+                                    String roomSecret, String serverAddress,
+                                    FileAdapterContract contract) {
         super(itemView, scrollToMessageButtonListener);
 
         mainText = itemView.findViewById(R.id.main_text);
@@ -55,17 +59,21 @@ public class FileAttachmentViewHolder extends BaseAttachmentViewHolder
         fileButton = itemView.findViewById(R.id.file_button);
         watchButton = itemView.findViewById(R.id.watch);
         fileIcon = itemView.findViewById(R.id.file_icon);
-        progress = itemView.findViewById(R.id.progress_circular);
+        progress = itemView.findViewById(R.id.progress);
+
         this.roomSecret = roomSecret;
         this.serverAddress = serverAddress;
+        this.fileAdapterContract = contract;
     }
 
     @Override
     public void bind(AttachmentMessagePair attachmentMessagePair) {
         pair = attachmentMessagePair;
 
-        fillMainText();
+        fileAdapterContract.getLoader().loadFileAttachment(
+                pair.getMessage(), pair.getAttachment(), this);
 
+        fillMainText();
         String fileName = pair.getAttachment().getDisplayFileName();
         this.fileName.setText(fileName);
 
@@ -146,5 +154,20 @@ public class FileAttachmentViewHolder extends BaseAttachmentViewHolder
     @Override
     public void onLoadFailed(Attachment attachment) {
 
+    }
+
+    public MessageAttachmentLoader.MessageAttachmentStorageListener getAttachmentStorageListener() {
+        return attachmentStorageListener;
+    }
+
+    public void setAttachmentStorageListener(MessageAttachmentLoader.MessageAttachmentStorageListener attachmentStorageListener) {
+        this.attachmentStorageListener = attachmentStorageListener;
+    }
+
+    public void removeAttachmentStorageListener() {
+        if (attachmentStorageListener != null) {
+            attachmentStorageListener.removeViewHolder();
+        }
+        attachmentStorageListener = null;
     }
 }

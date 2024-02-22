@@ -12,6 +12,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.Member;
+import com.diraapp.db.entities.rooms.Room;
+import com.diraapp.ui.fragments.roominfo.documents.FileRoomInfoFragment;
 import com.diraapp.ui.fragments.roominfo.media.MediaRoomInfoFragment;
 import com.diraapp.ui.fragments.roominfo.voice.VoiceRoomInfoFragment;
 
@@ -20,15 +22,15 @@ import java.util.List;
 
 public class RoomInfoPagerAdapter extends FragmentStateAdapter {
 
-    private String roomSecret;
+    private final HashMap<String, Member> members;
 
-    private HashMap<String, Member> members;
+    private final Room room;
 
     public RoomInfoPagerAdapter(@NonNull FragmentManager fragmentManager,
                                 @NonNull Lifecycle lifecycle,
-                                String roomSecret, List<Member> memberList) {
+                                Room room, List<Member> memberList) {
         super(fragmentManager, lifecycle);
-        this.roomSecret = roomSecret;
+        this.room = room;
 
         members = new HashMap<>(memberList.size());
         for (Member member: memberList) {
@@ -40,17 +42,20 @@ public class RoomInfoPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         Bundle bundle = new Bundle();
-        bundle.putString(ROOM_SECRET_EXTRA, roomSecret);
+        bundle.putString(ROOM_SECRET_EXTRA, room.getSecretName());
 
         Fragment fragment;
 
         switch (position) {
             case 1:
-                fragment = new VoiceRoomInfoFragment(members);
+                fragment = new VoiceRoomInfoFragment(members, room);
+                break;
+            case 3:
+                fragment = new FileRoomInfoFragment(members, room);
                 break;
 
             default:
-                fragment = new MediaRoomInfoFragment(members);
+                fragment = new MediaRoomInfoFragment(members, room);
         }
 
         fragment.setArguments(bundle);
@@ -59,6 +64,6 @@ public class RoomInfoPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 2;
+        return 4;
     }
 }

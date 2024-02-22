@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diraapp.R;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.Member;
+import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.roominfo.BaseAttachmentViewHolder;
+import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
 
 import java.util.HashMap;
@@ -31,7 +33,10 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
 
     private RecyclerView.Adapter<Holder> adapter;
 
-    protected HashMap<String, Member> members;
+    protected final HashMap<String, Member> members;
+
+    protected final Room room;
+    private String selfId;
 
     private DiraActivity diraActivity;
 
@@ -41,9 +46,10 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
 
     private View noMediaView;
 
-    public BaseRoomInfoFragment(int layoutId, HashMap<String, Member> members) {
+    public BaseRoomInfoFragment(int layoutId, HashMap<String, Member> members, Room room) {
         super(layoutId);
         this.members = members;
+        this.room = room;
     }
 
     @Override
@@ -70,6 +76,8 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
         this.pairs = pairs;
         this.recycler = recycler;
         this.noMediaView = noMediaView;
+
+        selfId = new CacheUtils(getContext()).getString(CacheUtils.ID);
     }
 
     @Override
@@ -121,6 +129,10 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
 
     @Override
     public String getMemberName(String memberID) {
+        if (selfId.equals(memberID)) {
+            return getContext().getString(R.string.you);
+        }
+
         Member member = members.get(memberID);
 
         if (member == null) {

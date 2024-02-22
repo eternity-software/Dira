@@ -179,12 +179,13 @@
     <string name="no_encryption">Нет шифрования</string>
     <string name="room_encrypted">Комната зашифрована</string>
     <string name="waiting_person">Вы одни в этой комнате</string>
-    <string name="no_media">Никто не отправлял\nмедиа</string>
+    <string name="no_media">Никто не отправлял медиа</string>
     <string name="media">Медиа</string>
     <string name="voice">Голосовые</string>
     <string name="documents">Документы</string>
     <string name="links">Ссылки</string>
     <string name="memory_management_deleting">Очистка...</string>
     <string name="no_voice">Никто не отправлял голосовые сообщения в этой комнате</string>
+    <string name="no_documents">Никто не отправлял документы в этой комнате</string>
     <string name="no_such_file">файл не найден</string>
 </resources>

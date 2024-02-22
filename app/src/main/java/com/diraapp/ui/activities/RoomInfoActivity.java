@@ -123,7 +123,7 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
         bundle.putString(ROOM_SECRET_EXTRA, roomSecret);
 
         pagerAdapter = new RoomInfoPagerAdapter(getSupportFragmentManager(),
-                getLifecycle(), roomSecret, members);
+                getLifecycle(), room, members);
 
         viewPager2.setAdapter(pagerAdapter);
 
