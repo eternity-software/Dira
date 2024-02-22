@@ -36,7 +36,7 @@ public class MessageAttachmentLoader {
         maxAutoLoadSize = new CacheUtils(context).getLong(CacheUtils.AUTO_LOAD_SIZE);
     }
 
-    public void loadFileAttachment(Message message, Attachment attachment, FileAttachmentViewHolder holder) {
+    public void loadFileAttachment(Message message, Attachment attachment, FileAttachmentViewHolder holder, boolean isSizeUnlimited) {
         MessageAttachmentStorageListener listener =
                 new MessageAttachmentStorageListener(holder, message);
         holder.setAttachmentStorageListener(listener);
@@ -46,10 +46,10 @@ public class MessageAttachmentLoader {
 
         final long attachmentSize = attachment.getSize();
 
-        considerAttachmentLoading(attachmentSize, attachment, message, holder);
+        considerAttachmentLoading(attachmentSize, attachment, message, holder, isSizeUnlimited);
     }
 
-    public void loadMessageAttachment(Message message, AttachmentViewHolder holder) {
+    public void loadMessageAttachment(Message message, AttachmentViewHolder holder, boolean isSizeUnlimited) {
         MessageAttachmentStorageListener listener = new MessageAttachmentStorageListener(holder, message);
         holder.setAttachmentStorageListener(listener);
 
@@ -67,24 +67,24 @@ public class MessageAttachmentLoader {
         for (int i = 0; i < attachmentCount; i++) {
             Attachment attachment = message.getAttachments().get(i);
 
-            considerAttachmentLoading(attachmentsSize, attachment, message, holder);
+            considerAttachmentLoading(attachmentsSize, attachment, message, holder, isSizeUnlimited);
         }
     }
 
-    private void considerAttachmentLoading(long size, Attachment attachment, Message message, AttachmentHolder holder) {
+    private void considerAttachmentLoading(long size, Attachment attachment, Message message, AttachmentHolder holder, boolean isSizeUnlimited) {
         File file = AttachmentDownloader.getFileFromAttachment(attachment, context, message.getRoomSecret());
 
         if (file != null && !AttachmentDownloader.isAttachmentSaving(attachment)) {
 
             holder.onAttachmentLoaded(attachment, file, message);
         } else {
-            if (size > maxAutoLoadSize) {
-                // notify that AttachmentToLarge
-            } else {
+            if (size < maxAutoLoadSize || isSizeUnlimited) {
                 if (!AttachmentDownloader.isAttachmentSaving(attachment)) {
-                    SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, true, attachment, message.getRoomSecret());
+                    SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(context, !isSizeUnlimited, attachment, message.getRoomSecret());
                     AttachmentDownloader.saveAttachmentAsync(saveAttachmentTask, room.getServerAddress());
                 }
+            } else {
+                // notify that AttachmentToLarge
             }
 
         }

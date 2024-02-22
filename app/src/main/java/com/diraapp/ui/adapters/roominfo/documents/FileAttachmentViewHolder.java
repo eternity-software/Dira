@@ -42,7 +42,7 @@ public class FileAttachmentViewHolder extends BaseAttachmentViewHolder
 
     private final String serverAddress;
 
-    private boolean isFileIcon = true;
+    private IconState state = IconState.ic_file;
 
     private final FileAdapterContract fileAdapterContract;
 
@@ -71,18 +71,16 @@ public class FileAttachmentViewHolder extends BaseAttachmentViewHolder
         pair = attachmentMessagePair;
 
         fileAdapterContract.getLoader().loadFileAttachment(
-                pair.getMessage(), pair.getAttachment(), this);
+                pair.getMessage(), pair.getAttachment(), this, false);
 
         fillMainText();
         String fileName = pair.getAttachment().getDisplayFileName();
         this.fileName.setText(fileName);
 
         fileButton.setOnClickListener((View v) -> {
-            SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(itemView.getContext(),
-                    false, pair.getAttachment(),
-                    roomSecret);
+            fileAdapterContract.getLoader().loadFileAttachment(
+                    pair.getMessage(), pair.getAttachment(), this, true);
 
-            AttachmentDownloader.saveAttachmentAsync(saveAttachmentTask,serverAddress);
             setLoading();
         });
 
@@ -117,24 +115,25 @@ public class FileAttachmentViewHolder extends BaseAttachmentViewHolder
     private void setLoading() {
         fileIcon.setVisibility(View.GONE);
         progress.setVisibility(View.VISIBLE);
+        state = IconState.ic_progress;
     }
 
     private void setDownload() {
         progress.setVisibility(View.GONE);
         fileIcon.setVisibility(View.VISIBLE);
-        if (!isFileIcon) return;
+        if (state == IconState.ic_download) return;
 
         fileIcon.setImageDrawable(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_download));
-        isFileIcon = false;
+        state = IconState.ic_download;
     }
 
     private void setFileButton() {
         progress.setVisibility(View.GONE);
         fileIcon.setVisibility(View.VISIBLE);
-        if (isFileIcon) return;
+        if (state == IconState.ic_file) return;
 
         fileIcon.setImageDrawable(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_file));
-        isFileIcon = true;
+        state = IconState.ic_file;
     }
 
     @Override
@@ -169,5 +168,13 @@ public class FileAttachmentViewHolder extends BaseAttachmentViewHolder
             attachmentStorageListener.removeViewHolder();
         }
         attachmentStorageListener = null;
+    }
+
+    private enum IconState {
+        ic_file,
+
+        ic_download,
+
+        ic_progress
     }
 }

@@ -121,12 +121,10 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
         fileIcon.setImageDrawable(ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_download));
 
         messageContainer.setOnClickListener(v -> {
-            SaveAttachmentTask saveAttachmentTask = new SaveAttachmentTask(itemView.getContext(),
-                    false, attachment,
-                    getMessageAdapterContract().getRoom().getSecretName());
 
-            AttachmentDownloader.saveAttachmentAsync(saveAttachmentTask,
-                    getMessageAdapterContract().getRoom().getServerAddress());
+            getViewHolderManagerContract().getMessageAttachmentLoader()
+                    .loadMessageAttachment(message, this, true);
+
             progressBar.setVisibility(View.VISIBLE);
             fileIcon.setVisibility(View.INVISIBLE);
         });

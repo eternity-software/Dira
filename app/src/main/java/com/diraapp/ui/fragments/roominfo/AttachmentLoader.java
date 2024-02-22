@@ -89,6 +89,9 @@ public class AttachmentLoader<ConvertedType> {
 
         List<AttachmentMessagePair> answer = attachmentDao.getNewerAttachments
                 (roomSecret, newestId, types);
+        for (AttachmentMessagePair pair: answer) {
+            pair.getMessage().getAttachments().add(pair.getAttachment());
+        }
 
         Logger.logDebug(AttachmentLoader.class.getSimpleName(), "Loaded newer - " + answer.size());
 
@@ -136,6 +139,9 @@ public class AttachmentLoader<ConvertedType> {
 
         List<AttachmentMessagePair> answer = attachmentDao.
                 getOlderAttachments(roomSecret, oldestId, types);
+        for (AttachmentMessagePair pair: answer) {
+            pair.getMessage().getAttachments().add(pair.getAttachment());
+        }
 
         Logger.logDebug(AttachmentLoader.class.getSimpleName(), "Loaded older - " + answer.size());
 
@@ -171,6 +177,9 @@ public class AttachmentLoader<ConvertedType> {
 
     public void loadLatestAttachments() {
         List<AttachmentMessagePair> answer = attachmentDao.getLatestAttachments(roomSecret, types);
+        for (AttachmentMessagePair pair: answer) {
+            pair.getMessage().getAttachments().add(pair.getAttachment());
+        }
 
         Logger.logDebug(AttachmentLoader.class.getSimpleName(), "Loaded latest - " + answer.size());
 

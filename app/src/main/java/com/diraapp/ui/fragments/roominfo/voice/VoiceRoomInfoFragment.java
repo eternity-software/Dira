@@ -156,11 +156,6 @@ public class VoiceRoomInfoFragment extends
             return;
         }
 
-        ArrayList<Attachment> attachments = new ArrayList<>(1);
-        attachments.add(pair.getAttachment());
-
-        pair.getMessage().setAttachments(attachments);
-
         GlobalMediaPlayer.getInstance().changePlyingMessage(pair.getMessage(), file, 0);
     }
 

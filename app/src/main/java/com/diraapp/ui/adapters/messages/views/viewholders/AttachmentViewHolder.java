@@ -42,7 +42,7 @@ public abstract class AttachmentViewHolder extends BaseMessageViewHolder
     public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
         getViewHolderManagerContract().getMessageAttachmentLoader()
-                .loadMessageAttachment(message, this);
+                .loadMessageAttachment(message, this, false);
     }
 
     public abstract void onAttachmentLoaded(Attachment attachment, File file, Message message);
