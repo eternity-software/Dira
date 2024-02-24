@@ -31,15 +31,13 @@ public interface AttachmentDao {
     @Query("SELECT * FROM attachment WHERE id = :id")
     Attachment getAttachmentById(long id);
 
-    @Query("SELECT * FROM attachment WHERE message_id = :messageId")
-    List<Attachment> getAttachmentsByMessageId(String messageId);
+    @Query("SELECT * FROM attachment WHERE message_id = :messageId AND attachmentType != 'LINK'")
+    List<Attachment> getAttachmentsByMessageIdWithOutLinks(String messageId);
 
     @Transaction
     @Query("SELECT * FROM attachment WHERE " +
-
             "(SELECT roomSecret FROM message WHERE id = message_id) = :roomSecret AND " +
             "attachmentType IN (:types) AND " +
-
             "id > :newestId ORDER BY id LIMIT " + ATTACHMENT_LOAD_COUNT)
     List<AttachmentMessagePair> getNewerAttachments(String roomSecret, long newestId, AttachmentType[] types);
 

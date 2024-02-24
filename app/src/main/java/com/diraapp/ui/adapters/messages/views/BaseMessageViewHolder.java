@@ -361,29 +361,19 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     }
 
     public void blink() {
-        ColorFilter colorOnStart = messageBackground.getBackground().getColorFilter();
+        int colorFrom = Color.TRANSPARENT;
 
-        int colorFrom = Theme.getColor(itemView.getContext(),
+        int colorTo = Theme.getColor(itemView.getContext(),
                 R.color.unread_message_background);
 
-        int colorTo = Color.TRANSPARENT;
-
         ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-        colorAnimation.setDuration(200); // milliseconds
+        colorAnimation.setDuration(300); // milliseconds
         colorAnimation.setRepeatMode(ValueAnimator.REVERSE);
-        colorAnimation.setRepeatCount(2);
-        colorAnimation.setInterpolator(new AccelerateInterpolator(2f));
+        colorAnimation.setRepeatCount(5);
+        colorAnimation.setInterpolator(new AccelerateInterpolator(0.5f));
         colorAnimation.addUpdateListener((animator) -> {
             messageBackground.getBackground().setColorFilter((Integer)
                     animator.getAnimatedValue(), PorterDuff.Mode.SRC_IN);
-        });
-
-        colorAnimation.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                messageBackground.getBackground().setColorFilter(colorOnStart);
-            }
         });
 
         if (messageBackgroundAnimator != null) {

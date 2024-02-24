@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.diraapp.db.daos.auxiliaryobjects.MessageWithAttachments;
@@ -36,7 +37,7 @@ public interface MessageDao {
     default Message getMessageAndAttachmentsById(String messageId) {
         MessageWithAttachments messageWithAttachments = getMessageWithAttachmentsById(messageId);
         if (messageWithAttachments == null) return null;
-        return messageWithAttachments.getMessage();
+        return messageWithAttachments.convertToMessageWithoutLinks();
     }
 
     @Query("SELECT * FROM message WHERE id = :messageId")
@@ -49,41 +50,46 @@ public interface MessageDao {
 
 
     default List<Message> getBeforeMessagesInRoom(String roomSecret, Long beforeTime) {
-        return MessageWithAttachments.convertList(getBeforeMessagesWithAttachmentsInRoom(roomSecret, beforeTime));
+        return MessageWithAttachments.convertListWithOutLinks(getBeforeMessagesWithAttachmentsInRoom(roomSecret, beforeTime));
     }
 
+    @Transaction
     @Query("SELECT * FROM message WHERE roomSecret = :roomSecret AND time < :beforeTime ORDER BY time DESC LIMIT " + LOADING_COUNT)
     List<MessageWithAttachments> getBeforeMessagesWithAttachmentsInRoom(String roomSecret, Long beforeTime);
 
 
     default List<Message> getNewerMessages(String roomSecret, long time) {
-        return MessageWithAttachments.convertList(getNewerMessagesWithAttachments(roomSecret, time));
+        return MessageWithAttachments.convertListWithOutLinks(getNewerMessagesWithAttachments(roomSecret, time));
     }
 
+    @Transaction
     @Query("SELECT * FROM message WHERE roomSecret = :roomSecret AND time > :time ORDER BY time LIMIT " + LOADING_COUNT)
     List<MessageWithAttachments> getNewerMessagesWithAttachments(String roomSecret, long time);
 
 
     default List<Message> getLatestMessagesInRoom(String roomSecret) {
-        return MessageWithAttachments.convertList(getLatestMessagesWithAttachmentsInRoomD(roomSecret));
+        return MessageWithAttachments.convertListWithOutLinks(getLatestMessagesWithAttachmentsInRoomD(roomSecret));
     }
 
+    @Transaction
     @Query("SELECT * FROM message WHERE roomSecret = :roomSecret ORDER BY time DESC LIMIT " + LOADING_COUNT)
     List<MessageWithAttachments> getLatestMessagesWithAttachmentsInRoomD(String roomSecret);
 
 
     default List<Message> getBeforePartOnRoomLoading(String roomSecret, Long beforeTime) {
-        return MessageWithAttachments.convertList(getBeforePartOnRoomLoadingWithAttachments(roomSecret, beforeTime));
+        return MessageWithAttachments.convertListWithOutLinks(getBeforePartOnRoomLoadingWithAttachments(roomSecret, beforeTime));
     }
 
+    @Transaction
     @Query("SELECT * FROM message WHERE roomSecret = :roomSecret AND time < :beforeTime ORDER BY time DESC LIMIT " + LOADING_COUNT_HALF)
     List<MessageWithAttachments> getBeforePartOnRoomLoadingWithAttachments(String roomSecret, Long beforeTime);
 
 
     default List<Message> getNewerPartOnRoomLoading(String roomSecret, long time) {
-        return MessageWithAttachments.convertList(getNewerPartOnRoomLoadingWithAttachments(roomSecret, time));
+        return MessageWithAttachments.convertListWithOutLinks(getNewerPartOnRoomLoadingWithAttachments(roomSecret, time));
     }
 
+    @Transaction
     @Query("SELECT * FROM message WHERE roomSecret = :roomSecret AND time >= :time ORDER BY time LIMIT " + LOADING_COUNT_HALF)
     List<MessageWithAttachments> getNewerPartOnRoomLoadingWithAttachments(String roomSecret, long time);
 

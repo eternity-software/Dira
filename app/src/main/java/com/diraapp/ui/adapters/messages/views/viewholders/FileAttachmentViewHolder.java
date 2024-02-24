@@ -125,6 +125,7 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
             getViewHolderManagerContract().getMessageAttachmentLoader()
                     .loadMessageAttachment(message, this, true);
 
+            messageContainer.setOnClickListener(null);
             progressBar.setVisibility(View.VISIBLE);
             fileIcon.setVisibility(View.INVISIBLE);
         });
@@ -135,6 +136,7 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
             onAttachmentLoaded(message.getSingleAttachment(),
                         file, message);
         } else {
+            messageContainer.setOnClickListener(null);
             progressBar.setVisibility(View.VISIBLE);
             fileIcon.setVisibility(View.INVISIBLE);
         }

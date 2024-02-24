@@ -401,7 +401,8 @@ public class RoomUpdatesProcessor {
         Message message = messageDao.getMessageById(update.getMessageId());
 
         if (message == null) return;
-        List<Attachment> attachmentList = attachmentDao.getAttachmentsByMessageId(message.getId());
+        List<Attachment> attachmentList = attachmentDao.
+                getAttachmentsByMessageIdWithOutLinks(message.getId());
 
         if (!message.hasAuthor()) return;
         if (message.getAuthorId().equals(update.getUserId())) return;

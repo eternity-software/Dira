@@ -82,6 +82,7 @@ public class FileAttachmentViewHolder extends BaseAttachmentViewHolder
                     pair.getMessage(), pair.getAttachment(), this, true);
 
             setLoading();
+            fileButton.setOnClickListener(null);
         });
 
         watchButton.setOnClickListener((View v) -> {
@@ -95,6 +96,7 @@ public class FileAttachmentViewHolder extends BaseAttachmentViewHolder
                     file, pair.getMessage());
         } else {
             setLoading();
+            fileButton.setOnClickListener(null);
         }
     }
 
