@@ -71,6 +71,8 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
 
     private MediaTypeSelector selector;
 
+    private boolean isFragmentsInitialized = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,9 +120,8 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
     }
 
     private void initFragments() {
+        isFragmentsInitialized = true;
         viewPager2 = findViewById(R.id.pager);
-        Bundle bundle = new Bundle();
-        bundle.putString(ROOM_SECRET_EXTRA, roomSecret);
 
         pagerAdapter = new RoomInfoPagerAdapter(getSupportFragmentManager(),
                 getLifecycle(), room, members);
@@ -210,7 +211,7 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
 
                         membersCount.setText(getString(R.string.members_count).replace("%s", String.valueOf(members.size() + 1)));
 
-                        initFragments();
+                        if (!isFragmentsInitialized) initFragments();
 
                     }
                 });

@@ -8,17 +8,22 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.diraapp.DiraApplication;
 import com.diraapp.R;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
+import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
+import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.roominfo.BaseAttachmentViewHolder;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,7 +47,7 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
 
     private RoomInfoFragmentListener listener;
 
-    private View recycler;
+    private RecyclerView recycler;
 
     private View noMediaView;
 
@@ -70,7 +75,7 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
     public void setupFragment(AttachmentLoader<ConvertedType> attachmentLoader,
                               RecyclerView.Adapter<Holder> adapter,
                               List<AttachmentMessagePair> pairs,
-                              View recycler, View noMediaView) {
+                              RecyclerView recycler, View noMediaView) {
         this.attachmentLoader = attachmentLoader;
         this.adapter = adapter;
         this.pairs = pairs;
@@ -103,7 +108,7 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
 
     @Override
     public void notifyItemsInserted(int from, int count) {
-        adapter.notifyItemRangeChanged(from, count);
+        adapter.notifyItemRangeInserted(from, count);
     }
 
     @Override
@@ -117,14 +122,18 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
 
         adapter.notifyDataSetChanged();
 
-        recycler.setVisibility(View.VISIBLE);
-        noMediaView.setVisibility(View.GONE);
+        hideNoMedia();
     }
 
     @Override
     public void callScrollToMessage(String messageId, long messageTime) {
         if (listener == null) return;
         listener.scrollToMessage(messageId, messageTime);
+    }
+
+    private void hideNoMedia() {
+        recycler.setVisibility(View.VISIBLE);
+        noMediaView.setVisibility(View.GONE);
     }
 
     @Override
@@ -140,6 +149,43 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
         }
 
         return member.getNickname();
+    }
+
+    public void onNewMessage(Message message) {
+        if (attachmentLoader == null) return;
+        if (!attachmentLoader.isNewestLoaded()) return;
+        Logger.logDebug(BaseRoomInfoFragment.class.getSimpleName(), "New update: isNewestLoaded = " + attachmentLoader.isNewestLoaded());
+
+        final ArrayList<AttachmentMessagePair> newPairs = new ArrayList<>(message.getAttachments().size());
+
+        for (Attachment attachment: message.getAttachments()) {
+            AttachmentMessagePair thisPair = new AttachmentMessagePair();
+            thisPair.setMessage(message);
+            thisPair.setAttachment(attachment);
+
+            newPairs.add(thisPair);
+            Logger.logDebug(BaseRoomInfoFragment.class.getSimpleName(), "New update: attachment added");
+        }
+
+        diraActivity.runOnUiThread(() -> {
+            attachmentLoader.insertNewPairs(newPairs);
+
+            Logger.logDebug(BaseRoomInfoFragment.class.getSimpleName(), "New update: count = " + newPairs.size());
+            if (newPairs.size() == 0) return;
+
+            notifyItemsInserted(0, newPairs.size());
+            scrollToLast();
+            hideNoMedia();
+        });
+    }
+
+    private void scrollToLast() {
+        int lastVisiblePos = ((LinearLayoutManager)
+                recycler.getLayoutManager()).findFirstVisibleItemPosition();
+
+        if (lastVisiblePos < 3) {
+            recycler.scrollToPosition(0);
+        }
     }
 
     public interface RoomInfoFragmentListener {
