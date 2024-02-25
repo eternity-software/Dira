@@ -5,6 +5,7 @@ import static com.diraapp.ui.activities.RoomInfoActivity.MESSAGE_TO_SCROLL_TIME;
 
 import android.Manifest;
 import android.animation.Animator;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -326,37 +327,29 @@ public class RoomActivity extends DiraActivity
                 }
             } else if (requestCode == SEND_FILE_CODE) {
                 Logger.logDebug(this.getClass().getSimpleName(), "On result: Sending file");
-                if (data == null) {
-                    Logger.logDebug(this.getClass().getSimpleName(), "On result: data = null");
-                    return;
-                }
-
-                Uri uri = data.getData();
-                if (uri == null) {
-                    Logger.logDebug(this.getClass().getSimpleName(), "On result: uri = null");
-                    return;
-                }
-
-                File file = AppStorage.copyFile(getContext(), uri);
-                if (file == null) {
-                    Logger.logDebug(this.getClass().getSimpleName(), "On result: file = null");
-                    return;
-                }
-                String path = file.getAbsolutePath();
 
                 binding.messageTextInput.setText("");
-                final String messageText = data.getStringExtra("text");
-                presenter.sendStatus(UserStatusType.SENDING_FILE);
-                Logger.logDebug(this.getClass().getSimpleName(), "On result: File Path: " + path);
+                String messageText = data.getStringExtra("text");
 
-                ArrayList<Attachment> attachments = new ArrayList<>();
-                final String replyId = presenter.getAndClearReplyId();
-                RoomActivityPresenter.AttachmentReadyListener attachmentReadyListener = attachment -> {
-                    attachments.add(attachment);
-                    presenter.sendMessage(attachments, messageText, replyId);
-                };
+                boolean isSingleFile = data.getData() != null;
+                if (isSingleFile) {
+                    Uri uri = data.getData();
 
-                presenter.uploadAttachment(AttachmentType.FILE, attachmentReadyListener, path);
+                    presenter.sendFileAttachmentMessage(uri, messageText, getContext());
+                    return;
+                }
+
+                boolean isMultiple = data.getClipData() != null;
+                if (!isMultiple) return;
+
+                ClipData clipData = data.getClipData();
+                final int count = clipData.getItemCount();
+                for (int i = 0; i < count; i++) {
+                    presenter.sendFileAttachmentMessage(clipData.getItemAt(i).getUri(),
+                            messageText, getContext());
+                    messageText = "";
+                }
+
             } else if (requestCode == RoomInfoActivity.RESULT_CODE_SCROLL_TO_MESSAGE) {
                 final Bundle extras = data.getExtras();
 

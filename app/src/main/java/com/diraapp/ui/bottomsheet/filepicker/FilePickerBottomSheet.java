@@ -278,6 +278,7 @@ public class FilePickerBottomSheet extends BottomSheetDialogFragment {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("*/*");
             intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
 
             intent.putExtra("text", messageInput.getText());
 

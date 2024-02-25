@@ -903,6 +903,28 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     }
 
     @Override
+    public void sendFileAttachmentMessage(Uri uri, String messageText, Context context) {
+        File file = AppStorage.copyFile(context, uri);
+        if (file == null) {
+            Logger.logDebug(this.getClass().getSimpleName(), "On result: file = null");
+            return;
+        }
+        String path = file.getAbsolutePath();
+
+        sendStatus(UserStatusType.SENDING_FILE);
+        Logger.logDebug(this.getClass().getSimpleName(), "On result: File Path: " + path);
+
+        ArrayList<Attachment> attachments = new ArrayList<>();
+        final String replyId = getAndClearReplyId();
+        RoomActivityPresenter.AttachmentReadyListener attachmentReadyListener = attachment -> {
+            attachments.add(attachment);
+            sendMessage(attachments, messageText, replyId);
+        };
+
+        uploadAttachment(AttachmentType.FILE, attachmentReadyListener, path);
+    }
+
+    @Override
     public void onSwiped(int position) {
         replyingMessage = messageList.get(position);
 

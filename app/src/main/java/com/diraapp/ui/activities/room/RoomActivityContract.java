@@ -173,6 +173,8 @@ public interface RoomActivityContract {
         void addPinned(PinnedMessageAddedUpdate update);
 
         void removePinned(PinnedMessageRemovedUpdate update);
+
+        void sendFileAttachmentMessage(Uri uri, String messageText, Context context);
     }
 
 }
