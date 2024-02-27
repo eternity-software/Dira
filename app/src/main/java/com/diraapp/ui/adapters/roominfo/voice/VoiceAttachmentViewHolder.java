@@ -9,14 +9,17 @@ import androidx.core.content.ContextCompat;
 
 import com.diraapp.R;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
+import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.res.Theme;
 import com.diraapp.ui.adapters.messages.views.viewholders.listenable.ListenableViewHolderState;
 import com.diraapp.ui.adapters.roominfo.BaseAttachmentViewHolder;
+import com.diraapp.ui.components.dynamic.ThemeImageView;
 import com.diraapp.ui.components.dynamic.ThemeLinearLayout;
 import com.diraapp.ui.fragments.roominfo.voice.VoiceFragmentAdapterContract;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.android.DeviceUtils;
+import com.squareup.picasso.Picasso;
 
 public class VoiceAttachmentViewHolder extends BaseAttachmentViewHolder {
 
@@ -26,7 +29,7 @@ public class VoiceAttachmentViewHolder extends BaseAttachmentViewHolder {
 
     private final ImageView playButton;
 
-    private final ThemeLinearLayout playBackground;
+    private final ThemeImageView playBackground;
 
     private final ImageView watchButton;
 
@@ -150,7 +153,4 @@ public class VoiceAttachmentViewHolder extends BaseAttachmentViewHolder {
         pause(isPaused);
     }
 
-//    public void release() {
-//        viewClickListener = null;
-//    }
 }

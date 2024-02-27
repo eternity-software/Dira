@@ -8,8 +8,13 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
+import com.abedelazizshe.lightcompressorlibrary.VideoCompressor;
 import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
+import com.abedelazizshe.lightcompressorlibrary.config.AppSpecificStorageConfiguration;
+import com.abedelazizshe.lightcompressorlibrary.config.Configuration;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.SendMessageRequest;
@@ -37,6 +42,9 @@ import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
+import com.diraapp.storage.images.FilesUploader;
+import com.diraapp.storage.images.ImageCompressor;
+import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.messages.legacy.MessageReplyListener;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.ui.components.viewswiper.ViewSwiperListener;
@@ -172,9 +180,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     @Override
     public void detachView() {
-        view = null;
         UpdateProcessor.getInstance().removeUpdateListener(this);
-        //  this.view = null;
+        //this.view = null;
     }
 
     @Override
@@ -560,11 +567,12 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         return false;
     }
 
-
     @Override
-    public void uploadAttachment(AttachmentType attachmentType, AttachmentReadyListener attachmentReadyListener, String fileUri) {
+    public void uploadAttachment(AttachmentType attachmentType,
+                                  AttachmentReadyListener attachmentReadyListener, String fileUri,
+                                  DiraActivity context) {
 
-        view.runBackground(() -> {
+        DiraActivity.runGlobalBackground(() -> {
             Logger.logDebug(this.getClass().getSimpleName(),
                     "Uploading started.. ");
 
@@ -592,24 +600,103 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 }
 
 
-                view.compressVideo(urisToCompress, fileUri, videoQuality,
+                compressVideo(urisToCompress, fileUri, videoQuality,
                         videoHeight, videoWidth,
                         new AttachmentHandler(null, attachmentReadyListener,
                                 attachmentType),
-                        room.getServerAddress(), room.getEncryptionKey(), bitrate);
+                        room.getServerAddress(), room.getEncryptionKey(), bitrate, context);
 
             } else {
                 boolean compressImage = attachmentType == AttachmentType.IMAGE;
                 boolean deleteIfFile = attachmentType == AttachmentType.FILE;
-                view.uploadFile(fileUri,
+                uploadFile(fileUri,
                         new AttachmentHandler(fileUri, attachmentReadyListener, attachmentType),
                         deleteIfFile,
                         room.getServerAddress(),
                         room.getEncryptionKey(),
-                        compressImage);
+                        compressImage, context);
             }
         });
 
+    }
+
+    private void uploadFile(String sourceFileUri, RoomActivityPresenter.AttachmentHandler callback,
+                           boolean deleteAfterUpload, String serverAddress, String encryptionKey,
+                           boolean compressImage, DiraActivity context) {
+        try {
+            if (FileClassifier.isImageFile(sourceFileUri) && compressImage) {
+                ImageCompressor.compress(context, new File(sourceFileUri), new com.diraapp.storage.images.Callback() {
+                    @Override
+                    public void onComplete(boolean status, @Nullable File file) {
+                        try {
+                            FilesUploader.uploadFile(file.getPath(), callback, context, deleteAfterUpload, serverAddress, encryptionKey);
+                        } catch (IOException e) {
+
+                        }
+                    }
+                });
+            } else {
+                FilesUploader.uploadFile(sourceFileUri, callback, context, deleteAfterUpload, serverAddress, encryptionKey);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void compressVideo(List<Uri> urisToCompress, String fileUri, VideoQuality videoQuality, Double videoHeight,
+                              Double videoWidth, RoomActivityPresenter.AttachmentHandler callback, String serverAddress, String encryptionKey, int
+                                      bitrate, Context context) {
+        VideoCompressor.start(context, urisToCompress,
+                true,
+                null,
+                new AppSpecificStorageConfiguration(
+                        new File(fileUri).getName() + "temp_compressed", null), // => required name
+                new Configuration(videoQuality,
+                        false,
+                        2,
+                        false,
+                        false,
+                        videoHeight,
+                        videoWidth), new CompressionListener() {
+                    @Override
+                    public void onStart(int i) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(int i, long l, @Nullable String path) {
+                        if (path != null) {
+                            try {
+
+                                FilesUploader.uploadFile(path,
+                                        callback.setFileUri(path),
+                                        context, true,
+                                        serverAddress, encryptionKey);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int i, @NonNull String s) {
+                        Logger.logDebug(this.getClass().getSimpleName(),
+                                "Compression fail: " + s);
+                    }
+
+                    @Override
+                    public void onProgress(int i, float v) {
+                        Logger.logDebug(this.getClass().getSimpleName(),
+                                "Compression progress: " + i + " " + v);
+                    }
+
+                    @Override
+                    public void onCancelled(int i) {
+                        Logger.logDebug(this.getClass().getSimpleName(),
+                                "Compression cancelled: " + i);
+                    }
+                });
     }
 
 
@@ -903,25 +990,30 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     }
 
     @Override
-    public void sendFileAttachmentMessage(Uri uri, String messageText, Context context) {
-        File file = AppStorage.copyFile(context, uri);
-        if (file == null) {
-            Logger.logDebug(this.getClass().getSimpleName(), "On result: file = null");
-            return;
+    public void sendFileAttachmentMessage(ArrayList<Uri> uris, String messageText, DiraActivity context) {
+        for (Uri uri: uris) {
+            File file = AppStorage.copyFile(context, uri);
+            if (file == null) {
+                Logger.logDebug(this.getClass().getSimpleName(), "On result: file = null");
+                return;
+            }
+            String path = file.getAbsolutePath();
+
+            sendStatus(UserStatusType.SENDING_FILE);
+            Logger.logDebug(this.getClass().getSimpleName(), "On result: File Path: " + path);
+
+            ArrayList<Attachment> attachments = new ArrayList<>();
+            final String replyId = getAndClearReplyId();
+            final String currentText = messageText;
+            RoomActivityPresenter.AttachmentReadyListener attachmentReadyListener = attachment -> {
+                attachments.add(attachment);
+                sendMessage(attachments, currentText, replyId);
+            };
+
+            uploadAttachment(AttachmentType.FILE, attachmentReadyListener, path, context);
+
+            messageText = "";
         }
-        String path = file.getAbsolutePath();
-
-        sendStatus(UserStatusType.SENDING_FILE);
-        Logger.logDebug(this.getClass().getSimpleName(), "On result: File Path: " + path);
-
-        ArrayList<Attachment> attachments = new ArrayList<>();
-        final String replyId = getAndClearReplyId();
-        RoomActivityPresenter.AttachmentReadyListener attachmentReadyListener = attachment -> {
-            attachments.add(attachment);
-            sendMessage(attachments, messageText, replyId);
-        };
-
-        uploadAttachment(AttachmentType.FILE, attachmentReadyListener, path);
     }
 
     @Override

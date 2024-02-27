@@ -17,6 +17,7 @@ import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.exceptions.UnablePerformRequestException;
+import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.utils.CacheUtils;
 
@@ -56,23 +57,6 @@ public interface RoomActivityContract {
         boolean isMessageVisible(int position);
 
         void setMessages(List<Message> messages);
-
-        void uploadFile(String sourceFileUri,
-                        RoomActivityPresenter.AttachmentHandler callback,
-                        boolean deleteAfterUpload,
-                        String serverAddress,
-                        String encryptionKey,
-                        boolean compressImage);
-
-        void compressVideo(List<Uri> urisToCompress,
-                           String fileUri,
-                           VideoQuality videoQuality,
-                           Double videoHeight,
-                           Double videoWidth,
-                           RoomActivityPresenter.AttachmentHandler callback,
-                           String serverAddress,
-                           String encryptionKey,
-                           int bitrate);
 
         DiraRoomDatabase getRoomDatabase();
 
@@ -150,7 +134,8 @@ public interface RoomActivityContract {
 
         boolean sendTextMessage(String text);
 
-        void uploadAttachment(AttachmentType attachmentType, RoomActivityPresenter.AttachmentReadyListener attachmentReadyListener, String fileUri);
+        void uploadAttachment(AttachmentType attachmentType, RoomActivityPresenter.AttachmentReadyListener attachmentReadyListener,
+                              String fileUri, DiraActivity context);
 
         void sendMessage(Message message) throws UnablePerformRequestException;
 
@@ -174,7 +159,7 @@ public interface RoomActivityContract {
 
         void removePinned(PinnedMessageRemovedUpdate update);
 
-        void sendFileAttachmentMessage(Uri uri, String messageText, Context context);
+        void sendFileAttachmentMessage(ArrayList<Uri> uris, String messageText, DiraActivity context);
     }
 
 }

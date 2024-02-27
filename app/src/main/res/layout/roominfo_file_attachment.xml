@@ -62,8 +62,10 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserratsemibold"
             android:padding="0dp"
-            android:text="child_porn.mp4"
+            android:text="my_video.mp4"
             android:textSize="11sp"
+
+            android:maxLines="1"
 
             app:themeColor="medium_light_medium_light_gray" />
 
@@ -71,10 +73,10 @@
 
     <com.diraapp.ui.components.dynamic.ThemeImageView
         android:id="@+id/watch"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="6dp"
+        android:layout_width="42dp"
+        android:layout_height="40dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="10dp"
         android:layout_weight="0"
         android:src="@drawable/ic_eye"
         app:themeImageColor="white"/>

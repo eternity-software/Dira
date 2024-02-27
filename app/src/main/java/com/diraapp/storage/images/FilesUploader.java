@@ -1,6 +1,7 @@
 package com.diraapp.storage.images;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 
@@ -30,7 +31,7 @@ public class FilesUploader {
 
     public static boolean uploadFile(String sourceFileUri,
                                      RoomActivityPresenter.AttachmentHandler callback,
-                                     DiraActivity context,
+                                     Context context,
                                      boolean deleteAfterUpload,
                                      String serverAddress,
                                      String encryptionKey) throws IOException {

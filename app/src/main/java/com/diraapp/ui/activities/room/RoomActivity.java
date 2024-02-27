@@ -331,11 +331,14 @@ public class RoomActivity extends DiraActivity
                 binding.messageTextInput.setText("");
                 String messageText = data.getStringExtra("text");
 
+                ArrayList<Uri> uriList = new ArrayList<>();
+
                 boolean isSingleFile = data.getData() != null;
                 if (isSingleFile) {
                     Uri uri = data.getData();
+                    uriList.add(uri);
 
-                    presenter.sendFileAttachmentMessage(uri, messageText, getContext());
+                    presenter.sendFileAttachmentMessage(uriList, messageText, this);
                     return;
                 }
 
@@ -345,10 +348,10 @@ public class RoomActivity extends DiraActivity
                 ClipData clipData = data.getClipData();
                 final int count = clipData.getItemCount();
                 for (int i = 0; i < count; i++) {
-                    presenter.sendFileAttachmentMessage(clipData.getItemAt(i).getUri(),
-                            messageText, getContext());
-                    messageText = "";
+                    uriList.add(clipData.getItemAt(i).getUri());
                 }
+
+                presenter.sendFileAttachmentMessage(uriList, messageText, this);
 
             } else if (requestCode == RoomInfoActivity.RESULT_CODE_SCROLL_TO_MESSAGE) {
                 final Bundle extras = data.getExtras();
@@ -390,9 +393,9 @@ public class RoomActivity extends DiraActivity
                         };
                         String fileUri = fileUris.get(0);
                         if (FileClassifier.isVideoFile(fileUri)) {
-                            presenter.uploadAttachment(AttachmentType.VIDEO, attachmentReadyListener, fileUri);
+                            presenter.uploadAttachment(AttachmentType.VIDEO, attachmentReadyListener, fileUri, this);
                         } else {
-                            presenter.uploadAttachment(AttachmentType.IMAGE, attachmentReadyListener, fileUri);
+                            presenter.uploadAttachment(AttachmentType.IMAGE, attachmentReadyListener, fileUri, this);
                         }
                     } else {
                         System.out.println("WOw! Several attachments!");
@@ -980,7 +983,7 @@ public class RoomActivity extends DiraActivity
             attachments.add(attachment);
             presenter.sendMessage(attachments, "", replyId);
         };
-        presenter.uploadAttachment(attachmentType, attachmentReadyListener, path);
+        presenter.uploadAttachment(attachmentType, attachmentReadyListener, path, this);
     }
 
     @Override
@@ -1200,87 +1203,6 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
-    public void uploadFile(String sourceFileUri, RoomActivityPresenter.AttachmentHandler callback,
-                           boolean deleteAfterUpload, String serverAddress, String encryptionKey,
-                           boolean compressImage) {
-        try {
-            if (FileClassifier.isImageFile(sourceFileUri) && compressImage) {
-                ImageCompressor.compress(RoomActivity.this, new File(sourceFileUri), new com.diraapp.storage.images.Callback() {
-                    @Override
-                    public void onComplete(boolean status, @Nullable File file) {
-                        try {
-                            FilesUploader.uploadFile(file.getPath(), callback, RoomActivity.this, deleteAfterUpload, serverAddress, encryptionKey);
-                        } catch (IOException e) {
-
-                        }
-                    }
-                });
-            } else {
-                FilesUploader.uploadFile(sourceFileUri, callback, RoomActivity.this, deleteAfterUpload, serverAddress, encryptionKey);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void compressVideo(List<Uri> urisToCompress, String fileUri, VideoQuality videoQuality, Double videoHeight,
-                              Double videoWidth, RoomActivityPresenter.AttachmentHandler callback, String serverAddress, String encryptionKey, int
-                                      bitrate) {
-        VideoCompressor.start(getApplicationContext(), urisToCompress,
-                true,
-                null,
-                new AppSpecificStorageConfiguration(
-                        new File(fileUri).getName() + "temp_compressed", null), // => required name
-                new Configuration(videoQuality,
-                        false,
-                        2,
-                        false,
-                        false,
-                        videoHeight,
-                        videoWidth), new CompressionListener() {
-                    @Override
-                    public void onStart(int i) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(int i, long l, @Nullable String path) {
-                        if (path != null) {
-                            try {
-
-                                FilesUploader.uploadFile(path,
-                                        callback.setFileUri(path),
-                                        RoomActivity.this, true,
-                                        serverAddress, encryptionKey);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(int i, @NonNull String s) {
-                        Logger.logDebug(this.getClass().getSimpleName(),
-                                "Compression fail: " + s);
-                    }
-
-                    @Override
-                    public void onProgress(int i, float v) {
-                        Logger.logDebug(this.getClass().getSimpleName(),
-                                "Compression progress: " + i + " " + v);
-                    }
-
-                    @Override
-                    public void onCancelled(int i) {
-                        Logger.logDebug(this.getClass().getSimpleName(),
-                                "Compression cancelled: " + i);
-                    }
-                });
-    }
-
-    @Override
     public DiraRoomDatabase getRoomDatabase() {
         return DiraRoomDatabase.getDatabase(getApplicationContext());
     }
@@ -1419,7 +1341,7 @@ public class RoomActivity extends DiraActivity
     @Override
     public void onSelectedFilesSent(List<SelectorFileInfo> diraMediaInfoList, String messageText) {
         MultiAttachmentLoader multiAttachmentLoader = new MultiAttachmentLoader(messageText, presenter);
-        multiAttachmentLoader.send(diraMediaInfoList);
+        multiAttachmentLoader.send(diraMediaInfoList, this);
     }
 
     @Override

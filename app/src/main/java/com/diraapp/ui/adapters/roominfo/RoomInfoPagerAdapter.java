@@ -65,7 +65,7 @@ public class RoomInfoPagerAdapter extends FragmentStateAdapter
                 voiceFragment = new VoiceRoomInfoFragment(members, room);
                 fragment = voiceFragment;
                 break;
-            case 3:
+            case 2:
                 fileFragment = new FileRoomInfoFragment(members, room);
                 fragment = fileFragment;
                 break;
@@ -82,7 +82,7 @@ public class RoomInfoPagerAdapter extends FragmentStateAdapter
 
     @Override
     public int getItemCount() {
-        return 4;
+        return 3;
     }
 
     public void release() {

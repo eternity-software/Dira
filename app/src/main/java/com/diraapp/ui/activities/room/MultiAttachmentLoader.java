@@ -3,6 +3,7 @@ package com.diraapp.ui.activities.room;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.storage.DiraMediaInfo;
+import com.diraapp.ui.activities.DiraActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ public class MultiAttachmentLoader {
         this.presenter = roomActivityPresenter;
     }
 
-    public void send(List diraMediaInfoList) {
+    public void send(List diraMediaInfoList, DiraActivity context) {
         readySize = diraMediaInfoList.size();
 
         for (int i = 0; i < readySize; i++) {
@@ -50,7 +51,7 @@ public class MultiAttachmentLoader {
                                 }
                             }
                         },
-                        diraMediaInfo.getFilePath());
+                        diraMediaInfo.getFilePath(), context);
             }
             i++;
         }

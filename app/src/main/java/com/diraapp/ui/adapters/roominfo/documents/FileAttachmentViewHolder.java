@@ -75,7 +75,8 @@ public class FileAttachmentViewHolder extends BaseAttachmentViewHolder
 
         fillMainText();
         String fileName = pair.getAttachment().getDisplayFileName();
-        this.fileName.setText(fileName);
+        this.fileName.setText(AppStorage.getStringSize(
+                pair.getAttachment().getSize()) + ", " + fileName);
 
         fileButton.setOnClickListener((View v) -> {
             fileAdapterContract.getLoader().loadFileAttachment(

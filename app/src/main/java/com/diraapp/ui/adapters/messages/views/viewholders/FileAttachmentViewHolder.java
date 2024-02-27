@@ -1,30 +1,23 @@
 package com.diraapp.ui.adapters.messages.views.viewholders;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 
 import com.diraapp.R;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentDownloader;
-import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
 import com.diraapp.ui.adapters.messages.views.ViewHolderManagerContract;
-import com.diraapp.ui.components.FileAttachmentComponent;
-import com.diraapp.utils.Logger;
+import com.diraapp.ui.components.FileAttachmentView;
 import com.diraapp.utils.StringFormatter;
 
 import java.io.File;
@@ -74,7 +67,7 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
     @Override
     protected void postInflate() {
         super.postInflate();
-        View view = new FileAttachmentComponent(itemView.getContext(), isSelfMessage);
+        View view = new FileAttachmentView(itemView.getContext(), isSelfMessage);
         messageContainer.setVisibility(View.VISIBLE);
         postInflatedViewsContainer.addView(view);
 
