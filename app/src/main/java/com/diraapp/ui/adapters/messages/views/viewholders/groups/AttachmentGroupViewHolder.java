@@ -65,7 +65,7 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder implements 
         super.postInflate();
 
         HeightLimitedCardView cardView = new HeightLimitedCardView(itemView.getContext());
-        cardView.setMaxHeight(DeviceUtils.dpToPx(400f, rootView.getContext()));
+        cardView.setMaxHeight(DeviceUtils.dpToPx(300f, rootView.getContext()));
         cardView.setCardElevation(0f);
         cardView.setClipChildren(true);
         cardView.setCardBackgroundColor(Theme.getColor(itemView.getContext(), R.color.gray));
