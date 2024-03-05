@@ -57,17 +57,37 @@ public class Theme {
 
     public static int getColor(Context context, int resId) {
         try {
-            return getColor(context.getResources().getResourceName(resId).split(":")[1].split("/")[1]);
-        } catch (Exception e) {
-            try {
-                return context.getResources().getColor(resId);
-            } catch (Exception exception) {
-
-                return Color.RED;
-            }
+            return getColor(context, context.getResources().getResourceName(resId).split(":")[1].split("/")[1]);
+        } catch (NoSuchValueException e) {
+            return Color.CYAN;
         }
     }
 
+
+    public static int getColor(Context context, String name) throws NoSuchValueException
+    {
+        try
+        {
+            return getColor(name);
+        } catch (NoSuchValueException e) {
+            int color = getResId(e.getKey(), R.color.class);
+            if(color != -1)
+                return context.getResources().getColor(color);
+
+            color = getResId(name, R.color.class);
+
+            if(color != -1)
+                return context.getResources().getColor(color);
+
+
+            throw new NoSuchValueException(e.getKey());
+        }
+    }
+
+    /**
+     * Should be private in future
+     */
+    @Deprecated
     public static int getColor(String name) throws NoSuchValueException {
 
         if (name == null) return Color.MAGENTA;
@@ -75,9 +95,9 @@ public class Theme {
         if (name.equals("null")) return 0;
         String colorHex = stringsRepository.getValue(name);
 
-
         if(colorHex.startsWith("@"))
         {
+
             return getColor(colorHex);
         }
         if (colorHex.startsWith("#")) {

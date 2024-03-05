@@ -75,9 +75,9 @@ public class DynamicTextView extends androidx.appcompat.widget.AppCompatTextView
 
     public void setupTheme() {
         try {
-            setTextColor(Theme.getColor(String.valueOf(textColor)));
+            setTextColor(Theme.getColor(getContext(), String.valueOf(textColor)));
         } catch (NoSuchValueException e) {
-            setTextColor(Theme.getColor(getContext(), Theme.getResId(String.valueOf(textColor), R.color.class)));
+            e.printStackTrace();
         }
 
         try {
