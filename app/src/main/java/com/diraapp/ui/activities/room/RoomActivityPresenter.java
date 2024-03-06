@@ -586,17 +586,15 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                 Logger.logDebug(this.getClass().getSimpleName(),
                         "Compression started.. ");
 
-                int bitrate = 2;
-
                 Double videoHeight = null;
                 Double videoWidth = null;
 
-                VideoQuality videoQuality = VideoQuality.VERY_LOW;
+                VideoQuality videoQuality = VideoQuality.MEDIUM;
 
                 if (attachmentType == AttachmentType.BUBBLE) {
                     videoHeight = 340D;
                     videoWidth = 340D;
-                    bitrate = 1;
+
                 }
 
 
@@ -604,7 +602,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                         videoHeight, videoWidth,
                         new AttachmentHandler(null, attachmentReadyListener,
                                 attachmentType),
-                        room.getServerAddress(), room.getEncryptionKey(), bitrate, context);
+                        room.getServerAddress(), room.getEncryptionKey(), context);
 
             } else {
                 boolean compressImage = attachmentType == AttachmentType.IMAGE;
@@ -645,8 +643,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     }
 
     public void compressVideo(List<Uri> urisToCompress, String fileUri, VideoQuality videoQuality, Double videoHeight,
-                              Double videoWidth, RoomActivityPresenter.AttachmentHandler callback, String serverAddress, String encryptionKey, int
-                                      bitrate, Context context) {
+                              Double videoWidth, RoomActivityPresenter.AttachmentHandler callback, String serverAddress, String encryptionKey, Context context) {
         VideoCompressor.start(context, urisToCompress,
                 true,
                 null,
@@ -654,7 +651,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                         new File(fileUri).getName() + "temp_compressed", null), // => required name
                 new Configuration(videoQuality,
                         false,
-                        2,
+                        6,
                         false,
                         false,
                         videoHeight,
@@ -682,7 +679,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     @Override
                     public void onFailure(int i, @NonNull String s) {
                         Logger.logDebug(this.getClass().getSimpleName(),
-                                "Compression fail: " + s);
+                                "Compression failed: " + s);
                     }
 
                     @Override

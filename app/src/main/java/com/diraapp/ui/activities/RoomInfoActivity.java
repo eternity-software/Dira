@@ -40,8 +40,6 @@ import com.diraapp.ui.components.FadingImageView;
 import com.diraapp.ui.components.mediatypeselector.MediaTypeSelector;
 import com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorListener;
 import com.diraapp.ui.fragments.roominfo.BaseRoomInfoFragment;
-import com.diraapp.ui.fragments.roominfo.media.MediaRoomInfoFragment;
-import com.diraapp.ui.fragments.roominfo.voice.VoiceRoomInfoFragment;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.SliderActivity;
 import com.diraapp.utils.StringFormatter;
@@ -172,18 +170,21 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
                                 roomPicture.setImageBitmap(bitmap);
 
                                 FadingImageView blurryBackground = findViewById(R.id.blurred_picture);
-                                blurryBackground.setEdgeLength(200);
+                                blurryBackground.setEdgeLength(128);
                                 blurryBackground.setFadeTop(true);
                                 blurryBackground.setFadeBottom(true);
                                 blurryBackground.setFadeLeft(true);
                                 blurryBackground.setFadeRight(true);
+                                blurryBackground.setScaleX(2f);
+                                blurryBackground.setScaleY(2f);
+                                blurryBackground.setAlpha(0.7f);
 
                                 Bitmap bitmap1 = bitmap.copy(Bitmap.Config.ARGB_8888, false);
 
                                 blurryBackground.setImageBitmap(bitmap1);
 
 
-                                Blurry.with(getApplicationContext()).radius(8)
+                                Blurry.with(getApplicationContext()).radius(18)
                                         .sampling(8).from(ImagesWorker.getRoundedCroppedBitmap(bitmap1))
 
                                         .into(blurryBackground);

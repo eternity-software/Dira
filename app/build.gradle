@@ -5,6 +5,9 @@ plugins {
     id 'androidx.room'
 }
 
+
+apply plugin: 'checkstyle'
+
 android {
     namespace 'com.diraapp'
     compileSdk 34

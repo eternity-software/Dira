@@ -40,12 +40,7 @@ public class FileClassifier {
     }
 
     public static boolean isDiraUnknownType(String path) {
-
-        if (path.endsWith(EXT_UNKNOWN)) return true;
-
-
-        return false;
-
+        return path.endsWith(EXT_UNKNOWN);
     }
 
     public static boolean isVideoFile(String path, Context context) {
