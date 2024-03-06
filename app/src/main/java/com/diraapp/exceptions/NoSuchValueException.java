@@ -2,7 +2,8 @@ package com.diraapp.exceptions;
 
 public class NoSuchValueException extends Exception {
 
-    private String key;
+    private final String key;
+
     public NoSuchValueException(String key) {
         super(key);
         this.key = key;

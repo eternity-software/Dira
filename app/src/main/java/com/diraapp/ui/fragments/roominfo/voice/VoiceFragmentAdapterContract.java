@@ -1,6 +1,5 @@
 package com.diraapp.ui.fragments.roominfo.voice;
 
-import com.diraapp.ui.adapters.messages.views.viewholders.listenable.VoiceViewHolder;
 import com.diraapp.ui.adapters.roominfo.voice.VoiceAttachmentViewHolder;
 
 public interface VoiceFragmentAdapterContract {

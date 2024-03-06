@@ -26,7 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
@@ -34,11 +33,6 @@ import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
-import com.abedelazizshe.lightcompressorlibrary.VideoCompressor;
-import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
-import com.abedelazizshe.lightcompressorlibrary.config.AppSpecificStorageConfiguration;
-import com.abedelazizshe.lightcompressorlibrary.config.Configuration;
 import com.diraapp.BuildConfig;
 import com.diraapp.DiraApplication;
 import com.diraapp.R;
@@ -63,8 +57,6 @@ import com.diraapp.res.Theme;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
 import com.diraapp.storage.attachments.AttachmentDownloader;
-import com.diraapp.storage.images.FilesUploader;
-import com.diraapp.storage.images.ImageCompressor;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.MediaSendActivity;
 import com.diraapp.ui.activities.PreparedActivity;
@@ -99,7 +91,6 @@ import com.r0adkll.slidr.model.SlidrInterface;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;

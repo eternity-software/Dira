@@ -19,13 +19,13 @@ public class RoomOptionsBottomSheet extends BottomSheetDialogFragment {
 
     private BottomSheetRoomSettingsBinding binding;
 
-    private boolean showInviteButton;
+    private final boolean showInviteButton;
 
-    private String roomName;
+    private final String roomName;
 
-    private String imagePath;
+    private final String imagePath;
 
-    private boolean isNotificationsEnabled;
+    private final boolean isNotificationsEnabled;
 
     private RoomOptionsBottomSheetListener listener;
 

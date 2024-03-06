@@ -11,7 +11,6 @@ import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
-import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.room.RoomActivityPresenter;
 import com.diraapp.utils.CryptoUtils;
 

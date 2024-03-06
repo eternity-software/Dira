@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
-import androidx.documentfile.provider.DocumentFile;
 
 import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
@@ -34,7 +33,6 @@ import com.google.gson.Gson;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -451,7 +449,7 @@ public class AppStorage {
 
         try {
             InputStream inputStream = context.getContentResolver().openInputStream(uri);
-            int  bytesAvailable = inputStream.available();
+            int bytesAvailable = inputStream.available();
             int bufferSize = Math.min(bytesAvailable, maxBufferSize);
             final byte[] buffers = new byte[bufferSize];
 

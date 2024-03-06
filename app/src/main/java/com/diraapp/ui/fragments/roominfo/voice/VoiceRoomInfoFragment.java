@@ -12,10 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.diraapp.R;
-import com.diraapp.databinding.FragmentMediaRoominfoBinding;
 import com.diraapp.databinding.FragmentVoiceRoominfoBinding;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
-import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
@@ -23,7 +21,6 @@ import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.adapters.roominfo.voice.VoiceAttachmentAdapter;
 import com.diraapp.ui.adapters.roominfo.voice.VoiceAttachmentViewHolder;
-import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.diraapp.ui.fragments.roominfo.AttachmentLoader;
 import com.diraapp.ui.fragments.roominfo.BaseRoomInfoFragment;
 import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayer;
@@ -38,8 +35,8 @@ import java.util.List;
 public class VoiceRoomInfoFragment extends
         BaseRoomInfoFragment<VoiceAttachmentViewHolder, AttachmentMessagePair>
         implements VoiceFragmentAdapterContract.ViewBindListener,
-                    VoiceFragmentAdapterContract.ViewClickListener,
-                    GlobalMediaPlayerListener {
+        VoiceFragmentAdapterContract.ViewClickListener,
+        GlobalMediaPlayerListener {
 
     private final List<AttachmentMessagePair> pairs = new ArrayList<>();
     private FragmentVoiceRoominfoBinding binding;

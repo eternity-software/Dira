@@ -102,6 +102,12 @@ public class MessageAttachmentLoader {
     }
 
 
+    public interface AttachmentHolder {
+        void onAttachmentLoaded(Attachment attachment, File file, Message message);
+
+        void onLoadFailed(Attachment attachment);
+    }
+
     public class MessageAttachmentStorageListener implements AttachmentsStorageListener {
 
         private final Message message;
@@ -175,12 +181,6 @@ public class MessageAttachmentLoader {
             AttachmentDownloader.removeAttachmentsStorageListener(this);
             holder = null;
         }
-    }
-
-    public interface AttachmentHolder {
-        void onAttachmentLoaded(Attachment attachment, File file, Message message);
-
-        void onLoadFailed(Attachment attachment);
     }
 
 }

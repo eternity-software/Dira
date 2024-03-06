@@ -32,7 +32,7 @@ public class MessageWithAttachments {
 
     public Message convertToMessageWithoutLinks() {
         ArrayList<Attachment> list = new ArrayList<>(attachments.size());
-        for (Attachment attachment: attachments) {
+        for (Attachment attachment : attachments) {
             if (attachment.getAttachmentType() == AttachmentType.LINK) continue;
             list.add(attachment);
         }

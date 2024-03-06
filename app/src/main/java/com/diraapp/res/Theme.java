@@ -64,19 +64,17 @@ public class Theme {
     }
 
 
-    public static int getColor(Context context, String name) throws NoSuchValueException
-    {
-        try
-        {
+    public static int getColor(Context context, String name) throws NoSuchValueException {
+        try {
             return getColor(name);
         } catch (NoSuchValueException e) {
             int color = getResId(e.getKey(), R.color.class);
-            if(color != -1)
+            if (color != -1)
                 return context.getResources().getColor(color);
 
             color = getResId(name, R.color.class);
 
-            if(color != -1)
+            if (color != -1)
                 return context.getResources().getColor(color);
 
 
@@ -95,8 +93,7 @@ public class Theme {
         if (name.equals("null")) return 0;
         String colorHex = stringsRepository.getValue(name);
 
-        if(colorHex.startsWith("@"))
-        {
+        if (colorHex.startsWith("@")) {
 
             return getColor(colorHex);
         }
@@ -109,8 +106,7 @@ public class Theme {
                 e.printStackTrace();
                 return Color.RED;
             }
-        }
-        else {
+        } else {
             return getColor(colorHex);
         }
 

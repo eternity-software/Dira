@@ -166,7 +166,7 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
                         if (room.getImagePath() != null) {
                             ImageView roomPicture = findViewById(R.id.room_picture);
                             Bitmap bitmap = AppStorage.getBitmapFromPath(room.getImagePath(), getApplicationContext());
-                            if(bitmap != null) {
+                            if (bitmap != null) {
                                 roomPicture.setImageBitmap(bitmap);
 
                                 FadingImageView blurryBackground = findViewById(R.id.blurred_picture);

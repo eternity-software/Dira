@@ -2,9 +2,9 @@ package com.diraapp.storage;
 
 public class AttachmentInfo {
 
-    private long id;
+    private final long id;
 
-    private String messageId;
+    private final String messageId;
 
     public AttachmentInfo(long id, String messageId) {
         this.id = id;

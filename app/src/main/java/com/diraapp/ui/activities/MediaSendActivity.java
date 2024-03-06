@@ -1,18 +1,15 @@
 package com.diraapp.ui.activities;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.transition.Transition;
-
 import android.transition.TransitionInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,17 +23,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.app.SharedElementCallback;
 import androidx.core.util.Pair;
 
 import com.diraapp.R;
 import com.diraapp.storage.AppStorage;
-import com.diraapp.transition.Transitions;
 import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.ui.components.TouchImageView;
 import com.diraapp.ui.components.VideoPlayer;
@@ -97,7 +91,6 @@ public class MediaSendActivity extends AppCompatActivity {
         }
 
 
-
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(from, pairs.toArray(new Pair[pairs.size()]));
         from.startActivityForResult(intent, CODE, options.toBundle());
 
@@ -147,8 +140,6 @@ public class MediaSendActivity extends AppCompatActivity {
 
             videoPlayer.setVisibility(View.INVISIBLE);
         }
-
-
 
 
         DiraActivity.runGlobalBackground(() -> {
@@ -233,7 +224,7 @@ public class MediaSendActivity extends AppCompatActivity {
                             Bitmap fullsizeBitmap = AppStorage.getBitmapFromPath(finalImageUri, getApplicationContext());
                             if (fullsizeBitmap != null) {
                                 runOnUiThread(() -> {
-                                   // imageView.setImageBitmap(fullsizeBitmap);
+                                    // imageView.setImageBitmap(fullsizeBitmap);
                                 });
                             }
                         });
@@ -323,7 +314,6 @@ public class MediaSendActivity extends AppCompatActivity {
         });
         // overridePendingTransition(R.anim.slide_to_right, R.anim.slide_from_left);
     }
-
 
 
     @Override

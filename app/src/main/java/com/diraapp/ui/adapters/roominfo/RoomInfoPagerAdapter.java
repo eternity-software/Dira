@@ -10,7 +10,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.updates.NewMessageUpdate;
@@ -45,7 +44,7 @@ public class RoomInfoPagerAdapter extends FragmentStateAdapter
         this.room = room;
 
         members = new HashMap<>(memberList.size());
-        for (Member member: memberList) {
+        for (Member member : memberList) {
             members.put(member.getId(), member);
         }
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
-import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
 import com.diraapp.api.updates.PinnedMessageAddedUpdate;
 import com.diraapp.api.updates.PinnedMessageRemovedUpdate;
 import com.diraapp.api.userstatus.UserStatus;

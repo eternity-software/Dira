@@ -142,15 +142,14 @@ public class DiraActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onPause() {
         super.onPause();
         for (DiraActivityListener listener : new ArrayList<>(activityListenerList))
             listener.onPause();
 
-        if (isFinishing()){
-            overridePendingTransition(0,0);
+        if (isFinishing()) {
+            overridePendingTransition(0, 0);
             overridePendingTransition(R.anim.activity_exit_anim, R.anim.activity_exit_anim);
         }
     }

@@ -9,7 +9,6 @@ import com.diraapp.db.daos.AttachmentDao;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
-import com.diraapp.db.entities.messages.Message;
 import com.diraapp.utils.Logger;
 
 import java.util.ArrayList;
@@ -19,29 +18,20 @@ import java.util.List;
 public class AttachmentLoader<ConvertedType> {
 
     private static final int MAX_ATTACHMENTS_COUNT = 240;
-
-    private Context context;
-
-    private String roomSecret;
-
-    // Types searching for in db requests
-    private AttachmentType[] types;
-
-    // Specific data type for adapter (in use only if it needs (use right constructor))
-    private List<ConvertedType> attachments;
-
     // Pairs contain fully loaded Attachment and Message objects
     private final List<AttachmentMessagePair> pairs;
-
+    private final boolean useConverter;
+    private final Context context;
+    private final String roomSecret;
+    // Types searching for in db requests
+    private final AttachmentType[] types;
+    // Specific data type for adapter (in use only if it needs (use right constructor))
+    private List<ConvertedType> attachments;
     // Fragments listening for results of db requests
-    private AttachmentLoaderListener listener;
-
+    private final AttachmentLoaderListener listener;
     // Use only if it's necessary
     private AttachmentDataConverter<ConvertedType> converter;
-
-    private final boolean useConverter;
-
-    private AttachmentDao attachmentDao;
+    private final AttachmentDao attachmentDao;
 
     private boolean isNewestLoaded = true;
 
@@ -94,7 +84,7 @@ public class AttachmentLoader<ConvertedType> {
 
         List<AttachmentMessagePair> answer = attachmentDao.getNewerAttachments
                 (roomSecret, newestId, types);
-        for (AttachmentMessagePair pair: answer) {
+        for (AttachmentMessagePair pair : answer) {
             pair.getMessage().getAttachments().add(pair.getAttachment());
         }
 
@@ -144,7 +134,7 @@ public class AttachmentLoader<ConvertedType> {
 
         List<AttachmentMessagePair> answer = attachmentDao.
                 getOlderAttachments(roomSecret, oldestId, types);
-        for (AttachmentMessagePair pair: answer) {
+        for (AttachmentMessagePair pair : answer) {
             pair.getMessage().getAttachments().add(pair.getAttachment());
         }
 
@@ -170,7 +160,8 @@ public class AttachmentLoader<ConvertedType> {
 
             boolean withRemoving = pairs.size() > MAX_ATTACHMENTS_COUNT;
             if (withRemoving) {
-                if (useConverter) attachments.subList(0, AttachmentDao.ATTACHMENT_LOAD_COUNT).clear();
+                if (useConverter)
+                    attachments.subList(0, AttachmentDao.ATTACHMENT_LOAD_COUNT).clear();
                 pairs.subList(0, AttachmentDao.ATTACHMENT_LOAD_COUNT).clear();
 
                 isNewestLoaded = false;
@@ -182,7 +173,7 @@ public class AttachmentLoader<ConvertedType> {
 
     public void loadLatestAttachments() {
         List<AttachmentMessagePair> answer = attachmentDao.getLatestAttachments(roomSecret, types);
-        for (AttachmentMessagePair pair: answer) {
+        for (AttachmentMessagePair pair : answer) {
             pair.getMessage().getAttachments().add(pair.getAttachment());
         }
 
@@ -201,7 +192,7 @@ public class AttachmentLoader<ConvertedType> {
 
     public void insertNewPairs(final ArrayList<AttachmentMessagePair> newPairs) {
         ArrayList<AttachmentMessagePair> toRemove = new ArrayList<>();
-        for (AttachmentMessagePair pair: newPairs) {
+        for (AttachmentMessagePair pair : newPairs) {
             if (!isValidType(pair.getAttachment())) {
                 Logger.logDebug(AttachmentLoader.class.getSimpleName(), "New update: attachment removed");
                 toRemove.add(pair);
@@ -223,7 +214,7 @@ public class AttachmentLoader<ConvertedType> {
         List<ConvertedType> tList = new ArrayList<>(attachmentList.size());
 
         ArrayList<AttachmentMessagePair> toRemove = new ArrayList<>();
-        for (AttachmentMessagePair attachment: attachmentList) {
+        for (AttachmentMessagePair attachment : attachmentList) {
             ConvertedType element = converter.convert(attachment);
             if (element == null) {
                 toRemove.add(attachment);
@@ -241,7 +232,7 @@ public class AttachmentLoader<ConvertedType> {
     private boolean isValidType(Attachment attachment) {
         if (attachment == null) return false;
 
-        for (AttachmentType t: types) {
+        for (AttachmentType t : types) {
             if (t == attachment.getAttachmentType()) return true;
         }
 

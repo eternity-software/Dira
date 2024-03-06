@@ -569,8 +569,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     @Override
     public void uploadAttachment(AttachmentType attachmentType,
-                                  AttachmentReadyListener attachmentReadyListener, String fileUri,
-                                  DiraActivity context) {
+                                 AttachmentReadyListener attachmentReadyListener, String fileUri,
+                                 DiraActivity context) {
 
         DiraActivity.runGlobalBackground(() -> {
             Logger.logDebug(this.getClass().getSimpleName(),
@@ -619,8 +619,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     }
 
     private void uploadFile(String sourceFileUri, RoomActivityPresenter.AttachmentHandler callback,
-                           boolean deleteAfterUpload, String serverAddress, String encryptionKey,
-                           boolean compressImage, DiraActivity context) {
+                            boolean deleteAfterUpload, String serverAddress, String encryptionKey,
+                            boolean compressImage, DiraActivity context) {
         try {
             if (FileClassifier.isImageFile(sourceFileUri) && compressImage) {
                 ImageCompressor.compress(context, new File(sourceFileUri), new com.diraapp.storage.images.Callback() {
@@ -988,7 +988,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     @Override
     public void sendFileAttachmentMessage(ArrayList<Uri> uris, String messageText, DiraActivity context) {
-        for (Uri uri: uris) {
+        for (Uri uri : uris) {
             File file = AppStorage.copyFile(context, uri);
             if (file == null) {
                 Logger.logDebug(this.getClass().getSimpleName(), "On result: file = null");

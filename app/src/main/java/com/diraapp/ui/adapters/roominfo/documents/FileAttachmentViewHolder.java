@@ -14,7 +14,6 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.MessageAttachmentLoader;
 import com.diraapp.storage.attachments.AttachmentDownloader;
-import com.diraapp.storage.attachments.SaveAttachmentTask;
 import com.diraapp.ui.adapters.roominfo.BaseAttachmentViewHolder;
 import com.diraapp.ui.components.dynamic.ThemeLinearLayout;
 import com.diraapp.utils.android.DeviceUtils;
@@ -35,17 +34,11 @@ public class FileAttachmentViewHolder extends BaseAttachmentViewHolder
     private final ImageView fileIcon;
 
     private final View progress;
-
-    private AttachmentMessagePair pair;
-
     private final String roomSecret;
-
     private final String serverAddress;
-
-    private IconState state = IconState.ic_file;
-
     private final FileAdapterContract fileAdapterContract;
-
+    private AttachmentMessagePair pair;
+    private IconState state = IconState.ic_file;
     private MessageAttachmentLoader.MessageAttachmentStorageListener attachmentStorageListener = null;
 
     public FileAttachmentViewHolder(@NonNull View itemView,

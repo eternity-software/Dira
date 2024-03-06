@@ -66,8 +66,7 @@ public class PreviewActivity extends DiraActivity {
         intent.putExtra(PreviewActivity.IS_VIDEO, isVideo);
 
 
-        if(transitionRecyclerView != null)
-        {
+        if (transitionRecyclerView != null) {
             // This is a simplest way to make proper clipping in transition
             transitionRecyclerView.setClipToPadding(true);
         }
@@ -75,8 +74,7 @@ public class PreviewActivity extends DiraActivity {
         transitionSource.getLocalVisibleRect(localVisibleRect);
 
 
-        if(transitionRecyclerView != null)
-        {
+        if (transitionRecyclerView != null) {
             transitionRecyclerView.setClipToPadding(false);
         }
        /* localVisibleRect.top += DeviceUtils.dpToPx(12, from);
@@ -87,8 +85,6 @@ public class PreviewActivity extends DiraActivity {
         intent.putExtra(PreviewActivity.EXTRA_CLIP_RECT, localVisibleRect);
 
         bitmapPool = previewImage;
-
-
 
 
         from.addListener(new DiraActivityListener() {

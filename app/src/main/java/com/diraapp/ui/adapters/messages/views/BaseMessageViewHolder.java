@@ -1,11 +1,8 @@
 package com.diraapp.ui.adapters.messages.views;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.view.Gravity;
 import android.view.View;

@@ -127,7 +127,7 @@ public class FileAttachmentViewHolder extends TextMessageViewHolder {
             File file = AttachmentDownloader.getFileFromAttachment(message.getSingleAttachment(),
                     itemView.getContext(), message.getRoomSecret());
             onAttachmentLoaded(message.getSingleAttachment(),
-                        file, message);
+                    file, message);
         } else {
             messageContainer.setOnClickListener(null);
             progressBar.setVisibility(View.VISIBLE);

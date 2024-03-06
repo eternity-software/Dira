@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.diraapp.DiraApplication;
 import com.diraapp.R;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.Attachment;
@@ -32,15 +31,11 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
         implements AttachmentAdaptersListener, AttachmentLoader.AttachmentLoaderListener,
         BaseAttachmentViewHolder.FragmentViewHolderContract {
 
-    private AttachmentLoader<ConvertedType> attachmentLoader;
-
-    private List<AttachmentMessagePair> pairs;
-
-    private RecyclerView.Adapter<Holder> adapter;
-
     protected final HashMap<String, Member> members;
-
     protected final Room room;
+    private AttachmentLoader<ConvertedType> attachmentLoader;
+    private List<AttachmentMessagePair> pairs;
+    private RecyclerView.Adapter<Holder> adapter;
     private String selfId;
 
     private DiraActivity diraActivity;
@@ -158,7 +153,7 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
 
         final ArrayList<AttachmentMessagePair> newPairs = new ArrayList<>(message.getAttachments().size());
 
-        for (Attachment attachment: message.getAttachments()) {
+        for (Attachment attachment : message.getAttachments()) {
             AttachmentMessagePair thisPair = new AttachmentMessagePair();
             thisPair.setMessage(message);
             thisPair.setAttachment(attachment);
