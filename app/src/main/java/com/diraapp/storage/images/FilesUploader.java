@@ -51,14 +51,12 @@ public class FilesUploader {
                 }
 
 
-                if (callback instanceof RoomActivityPresenter.AttachmentHandler) {
-                    callback.
-                            setWidthAndHeight(bitmap.getWidth(), bitmap.getHeight());
-                }
+                callback.
+                        setWidthAndHeight(bitmap.getWidth(), bitmap.getHeight());
 
                 // deleteAfterUpload = true;
 
-            } else if (callback instanceof RoomActivityPresenter.AttachmentHandler) {
+            } else {
                 RoomActivityPresenter.AttachmentHandler attachmentHandler =
                         callback;
                 if (attachmentHandler.getAttachmentType() == AttachmentType.VIDEO) {

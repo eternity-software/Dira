@@ -15,6 +15,8 @@ import com.abedelazizshe.lightcompressorlibrary.VideoCompressor;
 import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
 import com.abedelazizshe.lightcompressorlibrary.config.AppSpecificStorageConfiguration;
 import com.abedelazizshe.lightcompressorlibrary.config.Configuration;
+import com.abedelazizshe.lightcompressorlibrary.config.SaveLocation;
+import com.abedelazizshe.lightcompressorlibrary.config.SharedStorageConfiguration;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.SendMessageRequest;
@@ -645,10 +647,9 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     public void compressVideo(List<Uri> urisToCompress, String fileUri, VideoQuality videoQuality, Double videoHeight,
                               Double videoWidth, RoomActivityPresenter.AttachmentHandler callback, String serverAddress, String encryptionKey, Context context) {
         VideoCompressor.start(context, urisToCompress,
-                true,
-                null,
-                new AppSpecificStorageConfiguration(
-                        new File(fileUri).getName() + "temp_compressed", null), // => required name
+                false,
+               null,
+                new AppSpecificStorageConfiguration (new File(fileUri).getName() + "temp_compressed", null),
                 new Configuration(videoQuality,
                         false,
                         6,
@@ -663,8 +664,13 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
                     @Override
                     public void onSuccess(int i, long l, @Nullable String path) {
+
+                        clearJunkAfterCompression(context);
+
+
                         if (path != null) {
                             try {
+
 
                                 FilesUploader.uploadFile(path,
                                         callback.setFileUri(path),
@@ -680,6 +686,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     public void onFailure(int i, @NonNull String s) {
                         Logger.logDebug(this.getClass().getSimpleName(),
                                 "Compression failed: " + s);
+                        clearJunkAfterCompression(context);
+
                     }
 
                     @Override
@@ -692,8 +700,21 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     public void onCancelled(int i) {
                         Logger.logDebug(this.getClass().getSimpleName(),
                                 "Compression cancelled: " + i);
+                        clearJunkAfterCompression(context);
+
                     }
                 });
+    }
+
+    private static void clearJunkAfterCompression(Context context)
+    {
+        // Delete junk after this buggy library finishes its work
+        // New version with fixes not released and it's not supporting sdk 21
+        // TODO: Make our own compression (maybe fork of compression library with fixes)
+        for(File file : new File(context.getApplicationInfo().dataDir).listFiles())
+        {
+            if(file.isFile()) file.delete();
+        }
     }
 
 

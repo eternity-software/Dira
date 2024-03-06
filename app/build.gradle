@@ -120,6 +120,7 @@ dependencies {
 
     implementation 'com.squareup.picasso:picasso:2.8'
 
+    // New versions require minSdk 24
     implementation 'com.github.AbedElazizShe:LightCompressor:1.2.3'
 
     annotationProcessor "androidx.room:room-compiler:$room_version"
