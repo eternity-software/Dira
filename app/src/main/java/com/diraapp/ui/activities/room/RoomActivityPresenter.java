@@ -270,6 +270,9 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
                 Message newestLoaded = messageList.get(0);
 
+                // Collect all massages at last millisecond loaded
+
+
                 List<Message> newMessages = messageDao.getNewerMessages(roomSecret,
                         newestLoaded.getTime());
 

@@ -13,6 +13,7 @@ import com.diraapp.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 public class AttachmentLoader<ConvertedType> {
@@ -92,20 +93,19 @@ public class AttachmentLoader<ConvertedType> {
 
         new Handler(Looper.getMainLooper()).post(() -> {
 
-            int insertedCount = answer.size();
-
-            boolean success = answer.size() != 0;
-            if (!success) {
-                isNewestLoaded = true;
-                return;
-            }
-
             Collections.reverse(answer);
 
             if (useConverter) {
                 List<ConvertedType> attachmentList = convertList(answer);
 
                 attachments.addAll(0, attachmentList);
+            }
+
+            int insertedCount = answer.size();
+            boolean success = insertedCount != 0;
+            if (!success) {
+                isNewestLoaded = true;
+                return;
             }
 
             pairs.addAll(0, answer);
@@ -141,18 +141,18 @@ public class AttachmentLoader<ConvertedType> {
         Logger.logDebug(AttachmentLoader.class.getSimpleName(), "Loaded older - " + answer.size());
 
         new Handler(Looper.getMainLooper()).post(() -> {
-            int insertedCount = answer.size();
-
-            boolean success = answer.size() != 0;
-            if (!success) {
-                isOldestLoaded = true;
-                return;
-            }
 
             if (useConverter) {
                 List<ConvertedType> attachmentList = convertList(answer);
 
                 attachments.addAll(attachmentList);
+            }
+
+            int insertedCount = answer.size();
+            boolean success = insertedCount != 0;
+            if (!success) {
+                isOldestLoaded = true;
+                return;
             }
 
             pairs.addAll(answer);
@@ -210,10 +210,10 @@ public class AttachmentLoader<ConvertedType> {
 
     }
 
-    private List<ConvertedType> convertList(List<AttachmentMessagePair> attachmentList) {
+    private List<ConvertedType> convertList(final List<AttachmentMessagePair> attachmentList) {
         List<ConvertedType> tList = new ArrayList<>(attachmentList.size());
 
-        ArrayList<AttachmentMessagePair> toRemove = new ArrayList<>();
+        HashSet<AttachmentMessagePair> toRemove = new HashSet<>();
         for (AttachmentMessagePair attachment : attachmentList) {
             ConvertedType element = converter.convert(attachment);
             if (element == null) {

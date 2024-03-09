@@ -92,8 +92,6 @@ public class GlobalMediaPlayer {
             diraMediaPlayer.reset();
             diraMediaPlayer.setDataSource(file.getPath());
 
-            diraMediaPlayer.prepareAsync();
-
             diraMediaPlayer.setOnPreparedListener((MediaPlayer mp) -> {
                 notifyStarted();
                 diraMediaPlayer.setOnProgressTick(() -> new Handler(Looper.getMainLooper()).post(() -> {
@@ -122,6 +120,8 @@ public class GlobalMediaPlayer {
 
                 diraMediaPlayer.setOnPreparedListener(null);
             });
+
+            diraMediaPlayer.prepareAsync();
 
         } catch (IOException e) {
             e.printStackTrace();

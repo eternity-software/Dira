@@ -93,5 +93,12 @@ public interface MessageDao {
     @Query("SELECT * FROM message WHERE roomSecret = :roomSecret AND time >= :time ORDER BY time LIMIT " + LOADING_COUNT_HALF)
     List<MessageWithAttachments> getNewerPartOnRoomLoadingWithAttachments(String roomSecret, long time);
 
+    default List<Message> getMessageAtTime(String roomSecret, long time, List<String> messageIds) {
+        return MessageWithAttachments.convertListWithOutLinks(getMessageWithAttachmentsAtTime(roomSecret, time, messageIds));
+    }
+
+    @Transaction
+    @Query("SELECT * FROM message WHERE roomSecret = :roomSecret AND time = :time AND id NOT IN (:messageIds)")
+    List<MessageWithAttachments> getMessageWithAttachmentsAtTime(String roomSecret, long time, List<String> messageIds);
 
 }
