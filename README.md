@@ -76,7 +76,7 @@ Dira is an open-source anonymous messenger that prioritizes privacy and data sec
 
 ## Get it
 
-You can download stable `.apk` from [our site](https://diraapp.com) or from GooglePlay (now in progress)
+You can download stable `.apk` from GitHub (check releases page) or from GooglePlay (now in progress)
 
 Development builds are available in [our Telegram channel](https://t.me/diraapp) 
 
