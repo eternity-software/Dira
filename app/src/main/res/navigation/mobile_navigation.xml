@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_room_selector">
+
+    <fragment
+        android:id="@+id/navigation_explore"
+        android:name="com.diraapp.ui.activities.fragments.explore.ExploreFragment"
+        android:label="@string/title_explore"
+        tools:layout="@layout/fragment_explore" />
+
+    <fragment
+        android:id="@+id/navigation_room_selector"
+        android:name="com.diraapp.ui.activities.fragments.selector.RoomSelectorFragment"
+        android:label="@string/title_room_selector"
+        tools:layout="@layout/fragment_room_selector" />
+
+    <fragment
+        android:id="@+id/navigation_account"
+        android:name="com.diraapp.ui.activities.fragments.account.AccountFragment"
+        android:label="@string/title_account"
+        tools:layout="@layout/fragment_account" />
+</navigation>

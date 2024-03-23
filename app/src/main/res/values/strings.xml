@@ -271,6 +271,10 @@
     <!--Transitions -->
     <string name="transition_image_prepare" translatable="false">img_prepare_transition</string>
     <string name="transition_image_shared" translatable="false">image_shared_transition</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
+    <string name="title_explore">Explore</string>
+    <string name="title_room_selector">Rooms</string>
+    <string name="title_account">Account</string>
 
 
 </resources>

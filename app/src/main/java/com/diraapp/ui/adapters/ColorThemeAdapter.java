@@ -48,8 +48,8 @@ public class ColorThemeAdapter extends RecyclerView.Adapter<ColorThemeAdapter.Vi
         holder.name.setText(theme.getName());
         holder.imageView.setBackgroundTintList(ColorStateList.valueOf(theme.getPreviewColor()));
 
-        if (theme.equals(AppTheme.getInstance().getColorTheme())) {
-            holder.layout.getBackground().setTint(AppTheme.getInstance().
+        if (theme.equals(AppTheme.getInstance(context).getColorTheme())) {
+            holder.layout.getBackground().setTint(AppTheme.getInstance(context).
                     getColorTheme().getPreviewColor());
         } else {
             holder.layout.getBackground().setTint(Theme.getColor(context, R.color.gray));
@@ -60,10 +60,10 @@ public class ColorThemeAdapter extends RecyclerView.Adapter<ColorThemeAdapter.Vi
             public void onClick(View view) {
                 holder.layout.setBackgroundTintList(ColorStateList.valueOf(theme.getPreviewColor()));
 
-                int i = list.indexOf(AppTheme.getInstance().getColorTheme());
+                int i = list.indexOf(AppTheme.getInstance(context).getColorTheme());
                 notifyItemChanged(i);
 
-                AppTheme.getInstance().setColorTheme(theme, context);
+                AppTheme.getInstance(context).setColorTheme(theme, context);
 
                 listener.onSelectorClicked();
             }

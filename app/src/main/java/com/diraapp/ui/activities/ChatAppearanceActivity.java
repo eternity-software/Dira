@@ -270,7 +270,7 @@ public class ChatAppearanceActivity extends DiraActivity {
         messagesAdapter = new MessagesAdapter(contract, messages, room,
                 new AsyncLayoutInflater(this.getBaseContext()), new RoomViewHolderFactory(), cacheUtils);
 
-        AppTheme.getInstance().getChatBackground().applyBackground(backgroundView);
+        AppTheme.getInstance(contract.getContext()).getChatBackground().applyBackground(backgroundView);
 
         recycler.setAdapter(messagesAdapter);
 
@@ -340,12 +340,12 @@ public class ChatAppearanceActivity extends DiraActivity {
         ChatBackground background = new ChatBackground(
                 BackgroundType.CUSTOM.toString(), path, BackgroundType.CUSTOM);
 
-        AppTheme.getInstance().setChatBackground
+        AppTheme.getInstance(getApplicationContext()).setChatBackground
                 (background, ChatAppearanceActivity.this);
 
         chatBackgroundAdapter.notifyDataSetChanged();
 
         ImageView backgroundView = findViewById(R.id.example_background);
-        AppTheme.getInstance().getChatBackground().applyBackground(backgroundView);
+        AppTheme.getInstance(getApplicationContext()).getChatBackground().applyBackground(backgroundView);
     }
 }

@@ -46,7 +46,7 @@ public class ChatBackgroundAdapter extends RecyclerView.Adapter<ChatBackgroundAd
         holder.name.setText(background.getName());
         holder.imageView.setImageDrawable(background.getDrawable(context));
 
-        if (background.equals(AppTheme.getInstance().getChatBackground())) {
+        if (background.equals(AppTheme.getInstance(context).getChatBackground())) {
             holder.layout.getBackground().setTint(Theme.getColor(context, R.color.accent));
         } else {
             holder.layout.getBackground().setTint(Theme.getColor(context, R.color.gray));
@@ -58,10 +58,10 @@ public class ChatBackgroundAdapter extends RecyclerView.Adapter<ChatBackgroundAd
                 holder.layout.getBackground().setTint(
                         Theme.getColor(context, R.color.accent));
 
-                int i = list.indexOf(AppTheme.getInstance().getChatBackground());
+                int i = list.indexOf(AppTheme.getInstance(context).getChatBackground());
                 notifyItemChanged(i);
 
-                AppTheme.getInstance().setChatBackground(background, context);
+                AppTheme.getInstance(context).setChatBackground(background, context);
 
                 listener.onSelectorClicked(background);
             }

@@ -1,4 +1,6 @@
-package com.diraapp.ui.activities;
+package com.diraapp.ui.activities.fragments.selector;
+
+import static android.content.Context.POWER_SERVICE;
 
 import android.Manifest;
 import android.content.ComponentName;
@@ -9,16 +11,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.diraapp.DiraApplication;
 import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.ProcessorListener;
@@ -32,6 +37,8 @@ import com.diraapp.api.updates.UpdateType;
 import com.diraapp.api.userstatus.UserStatus;
 import com.diraapp.api.userstatus.UserStatusHandler;
 import com.diraapp.api.userstatus.UserStatusListener;
+import com.diraapp.databinding.FragmentExploreBinding;
+import com.diraapp.databinding.FragmentRoomSelectorBinding;
 import com.diraapp.db.DiraMessageDatabase;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.daos.MessageDao;
@@ -45,12 +52,17 @@ import com.diraapp.notifications.Notifier;
 import com.diraapp.res.Theme;
 import com.diraapp.services.UpdaterService;
 import com.diraapp.storage.AppStorage;
+import com.diraapp.ui.activities.DiraActivity;
+import com.diraapp.ui.activities.JoinRoomActivity;
+import com.diraapp.ui.activities.NavigationActivity;
+import com.diraapp.ui.activities.PersonalityActivity;
+import com.diraapp.ui.activities.RoomSelectorActivity;
+import com.diraapp.ui.activities.fragments.explore.ExploreViewModel;
 import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.ui.adapters.selector.RoomSelectorAdapter;
 import com.diraapp.ui.adapters.selector.SelectorAdapterContract;
 import com.diraapp.ui.adapters.selector.SelectorViewHolder;
 import com.diraapp.ui.adapters.selector.SelectorViewHolderNotifier;
-import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.components.DiraPopup;
 import com.diraapp.ui.components.GlobalPlayerComponent;
 import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayer;
@@ -64,14 +76,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class RoomSelectorActivity extends AppCompatActivity
-        implements ProcessorListener, UpdateListener, UserStatusListener,
+public class RoomSelectorFragment extends Fragment implements ProcessorListener, UpdateListener, UserStatusListener,
         SelectorAdapterContract {
 
-    public static final String PENDING_ROOM_SECRET = "pendingRoomSecret";
-    public static final String PENDING_ROOM_NAME = "pendingRoomName";
 
-    public static final String CAN_BE_BACK_PRESSED = "canBackPressed";
+
+
     private static final Intent[] POWERMANAGER_INTENTS = {
             new Intent().setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),
             new Intent().setComponent(new ComponentName("com.letv.android.letvsafe", "com.letv.android.letvsafe.AutobootManageActivity")),
@@ -96,62 +106,52 @@ public class RoomSelectorActivity extends AppCompatActivity
 
     private RecyclerView recyclerView;
 
-    private String lastOpenedRoomId = null;
 
     private RoomDao roomDao;
 
     private MessageDao messageDao;
+    
+    private FragmentRoomSelectorBinding binding;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            Theme.loadCurrentTheme(this);
+            Theme.loadCurrentTheme(getContext());
         } catch (LanguageParsingException e) {
 
         }
 
-        setContentView(R.layout.activity_main);
+        ExploreViewModel exploreViewModel =
+                new ViewModelProvider(this).get(ExploreViewModel.class);
+
+        binding = FragmentRoomSelectorBinding.inflate(inflater, container, false);
 
 
+        
 
-
-        if (getIntent().hasExtra(PENDING_ROOM_SECRET)) {
-            if (getIntent().getExtras().getString(PENDING_ROOM_SECRET) != null) {
-                Intent notificationIntent = new Intent(this, RoomActivity.class);
-
-                lastOpenedRoomId = getIntent().getExtras().getString(PENDING_ROOM_SECRET);
-
-
-                RoomActivity.putRoomExtrasInIntent(notificationIntent,
-                        lastOpenedRoomId, getIntent().getExtras().getString(PENDING_ROOM_NAME));
-                startActivity(notificationIntent);
-            }
-        }
-
-
-        cacheUtils = new CacheUtils(getApplicationContext());
-        roomDao = DiraRoomDatabase.getDatabase(getApplicationContext()).getRoomDao();
-        messageDao = DiraMessageDatabase.getDatabase(getApplicationContext()).getMessageDao();
+        cacheUtils = new CacheUtils(getContext());
+        roomDao = DiraRoomDatabase.getDatabase(getContext()).getRoomDao();
+        messageDao = DiraMessageDatabase.getDatabase(getContext()).getMessageDao();
 
         if (!cacheUtils.hasKey(CacheUtils.AUTO_LOAD_SIZE)) {
             cacheUtils.setLong(CacheUtils.AUTO_LOAD_SIZE, AppStorage.MAX_DEFAULT_ATTACHMENT_AUTOLOAD_SIZE);
         }
 
-        startService(new Intent(this, UpdaterService.class));
 
-        findViewById(R.id.button_new_room).setOnClickListener(new View.OnClickListener() {
+
+       binding.buttonNewRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RoomSelectorActivity.this, JoinRoomActivity.class);
+                Intent intent = new Intent(getActivity(), JoinRoomActivity.class);
                 startActivity(intent);
             }
         });
 
-        findViewById(R.id.personality_button).setOnClickListener(new View.OnClickListener() {
+        binding.personalityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RoomSelectorActivity.this, PersonalityActivity.class);
+                Intent intent = new Intent(getActivity(), PersonalityActivity.class);
                 startActivity(intent);
             }
         });
@@ -163,8 +163,8 @@ public class RoomSelectorActivity extends AppCompatActivity
         }
 
 
-        UpdateProcessor.getInstance(getApplicationContext()).addProcessorListener(this);
-        UpdateProcessor.getInstance(getApplicationContext()).addUpdateListener(this);
+        UpdateProcessor.getInstance(getContext()).addProcessorListener(this);
+        UpdateProcessor.getInstance(getContext()).addUpdateListener(this);
 
         updateRooms(true);
 
@@ -173,16 +173,16 @@ public class RoomSelectorActivity extends AppCompatActivity
             askForPermissions();
         }
 
-        if (getIntent().hasExtra(CAN_BE_BACK_PRESSED)) {
-            canBackPress = getIntent().getExtras().getBoolean(CAN_BE_BACK_PRESSED);
-        }
+
 
         UserStatusHandler.getInstance().addListener(this);
         UserStatusHandler.getInstance().startThread();
+
+        return binding.getRoot();
     }
 
     private void askForPermissions() {
-        DiraPopup diraPopup = new DiraPopup(RoomSelectorActivity.this);
+        DiraPopup diraPopup = new DiraPopup(getActivity());
         diraPopup.setCancellable(false);
         diraPopup.show(getString(R.string.permissions_request_title),
                 getString(R.string.permissions_request_text) + " " + getBadPermissionString(),
@@ -195,11 +195,11 @@ public class RoomSelectorActivity extends AppCompatActivity
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
                             Intent intent = new Intent();
-                            String packageName = getPackageName();
-                            PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+                            String packageName = getActivity().getPackageName();
+                            PowerManager pm = (PowerManager) getActivity().getSystemService(POWER_SERVICE);
                             if (!pm.isIgnoringBatteryOptimizations(packageName)) {
                                 for (Intent intent2 : POWERMANAGER_INTENTS) {
-                                    if (getPackageManager().resolveActivity(
+                                    if (getActivity().getPackageManager().resolveActivity(
                                             intent,
                                             PackageManager.MATCH_DEFAULT_ONLY
                                     ) != null) {
@@ -213,7 +213,7 @@ public class RoomSelectorActivity extends AppCompatActivity
                             }
 
                         }
-                        ActivityCompat.requestPermissions(RoomSelectorActivity.this, permissions.toArray(new String[permissions.size()]), 3);
+                        ActivityCompat.requestPermissions(getActivity(), permissions.toArray(new String[permissions.size()]), 3);
 
                     }
                 });
@@ -223,7 +223,7 @@ public class RoomSelectorActivity extends AppCompatActivity
     private boolean hasAllCriticalPermissions() {
 
         for (String permission : getPermissions()) {
-            if (ContextCompat.checkSelfPermission(this, permission)
+            if (ContextCompat.checkSelfPermission(getContext(), permission)
                     != PackageManager.PERMISSION_GRANTED) {
                 if (!permission.equals(Manifest.permission.ACCESS_NOTIFICATION_POLICY) &&
                         !permission.equals(Manifest.permission.ACCESS_MEDIA_LOCATION)) {
@@ -242,7 +242,7 @@ public class RoomSelectorActivity extends AppCompatActivity
     private String getBadPermissionString() {
 
         for (String permission : getPermissions()) {
-            if (ContextCompat.checkSelfPermission(this, permission)
+            if (ContextCompat.checkSelfPermission(getContext(), permission)
                     != PackageManager.PERMISSION_GRANTED) {
                 if (!permission.equals(Manifest.permission.ACCESS_NOTIFICATION_POLICY)) {
                     Logger.logDebug(this.getClass().getSimpleName(),
@@ -302,14 +302,14 @@ public class RoomSelectorActivity extends AppCompatActivity
     private void updateRooms(boolean updateRooms) {
         if (isRoomsUpdating) return;
         isRoomsUpdating = true;
-        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView = binding.recyclerView;
         Thread loadDataThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     roomList = roomDao.getAllRoomsByUpdatedTime();
                     roomSelectorAdapter = new RoomSelectorAdapter(
-                            RoomSelectorActivity.this, RoomSelectorActivity.this);
+                            getActivity(), RoomSelectorFragment.this);
 
                     for (Room room : new ArrayList<>(roomList)) {
                         Logger.logDebug(room.getName(), "" + room.getLastUpdatedTime());
@@ -331,7 +331,7 @@ public class RoomSelectorActivity extends AppCompatActivity
                     }
 
 
-                    runOnUiThread(new Runnable() {
+                    getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
 
@@ -354,7 +354,7 @@ public class RoomSelectorActivity extends AppCompatActivity
     }
 
     private void updateRoom(String roomSecret, boolean withPositionUpdating,
-                            OnRoomLoadedListener onLoadedCallback) {
+                            RoomSelectorFragment.OnRoomLoadedListener onLoadedCallback) {
         DiraActivity.runGlobalBackground(() -> {
 
             Logger.logDebug(RoomSelectorActivity.class.getName(), "update room - " + roomSecret);
@@ -374,7 +374,7 @@ public class RoomSelectorActivity extends AppCompatActivity
             Message message = messageDao.getMessageAndAttachmentsById(room.getLastMessageId());
             room.setMessage(message);
 
-            runOnUiThread(() -> {
+            getActivity().runOnUiThread(() -> {
                 final int NOT_FOUND = -1;
                 final int FIRST_POSITION = 0;
                 int pos = NOT_FOUND;
@@ -415,7 +415,7 @@ public class RoomSelectorActivity extends AppCompatActivity
 
                     boolean isVisible = higthestVisiblePosition == 0;
                     if (isVisible) {
-                        recyclerView.scrollBy(0, -DeviceUtils.dpToPx(76, this));
+                        recyclerView.scrollBy(0, -DeviceUtils.dpToPx(76, getContext()));
                     }
 
                     return;
@@ -436,77 +436,70 @@ public class RoomSelectorActivity extends AppCompatActivity
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-
-        //updateRooms(true);
-        ImageView imageView = findViewById(R.id.profile_picture);
-        String picPath = cacheUtils.getString(CacheUtils.PICTURE);
-        if (picPath != null) imageView.setImageBitmap(AppStorage.getBitmapFromPath(picPath));
-
-        Notifier.cancelAllNotifications(getApplicationContext());
-
-        if (lastOpenedRoomId == null) return;
-        for (int i = 0; i < roomList.size(); i++) {
-            Room room = roomList.get(i);
-            if (lastOpenedRoomId.equals(room.getSecretName())) {
-                updateRoom(lastOpenedRoomId, false, (Room currentRoom) -> {
-                    lastOpenedRoomId = null;
-                    return true;
-                });
-                return;
-            }
-        }
-    }
 
     @Override
     public void onSocketsCountChange(float percentOpened) {
-        runOnUiThread(new Runnable() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ImageView imageView = findViewById(R.id.status_light);
+                ImageView imageView = binding.statusLight;
                 if (percentOpened != 1) {
                     if (percentOpened == 0) {
-                        imageView.setColorFilter(Theme.getColor(getApplicationContext(), R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
-                        UpdateProcessor.getInstance(getApplicationContext()).reconnectSockets();
+                        imageView.setColorFilter(Theme.getColor(getContext(), R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
+                        UpdateProcessor.getInstance(getContext()).reconnectSockets();
                     } else {
-                        imageView.setColorFilter(Theme.getColor(getApplicationContext(), R.color.yellow), android.graphics.PorterDuff.Mode.SRC_IN);
+                        imageView.setColorFilter(Theme.getColor(getContext(), R.color.yellow), android.graphics.PorterDuff.Mode.SRC_IN);
 
                     }
                     imageView.setVisibility(View.VISIBLE);
 
                 } else {
-                    findViewById(R.id.status_light).setVisibility(View.GONE);
+                    imageView.setVisibility(View.GONE);
                 }
             }
         });
 
     }
 
-    @Override
-    public void onBackPressed() {
-        if (canBackPress) {
-            super.onBackPressed();
-        }
-    }
+
 
     public void setCanBackPress(boolean canBackPress) {
         this.canBackPress = canBackPress;
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         UpdateProcessor.getInstance().removeUpdateListener(this);
 
         UserStatusHandler.getInstance().removeListener(this);
 
         GlobalMediaPlayer.getInstance().release();
 
-        GlobalPlayerComponent component = findViewById(R.id.global_player);
+        GlobalPlayerComponent component = binding.globalPlayer;
         component.release();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ImageView imageView = binding.profilePicture;
+        String picPath = cacheUtils.getString(CacheUtils.PICTURE);
+        if (picPath != null) imageView.setImageBitmap(AppStorage.getBitmapFromPath(picPath));
+
+
+        if (NavigationActivity.lastOpenedRoomId == null) return;
+        for (int i = 0; i < roomList.size(); i++) {
+            Room room = roomList.get(i);
+            if (NavigationActivity.lastOpenedRoomId.equals(room.getSecretName())) {
+                updateRoom(NavigationActivity.lastOpenedRoomId, false, (Room currentRoom) -> {
+                    NavigationActivity.lastOpenedRoomId = null;
+                    return true;
+                });
+                return;
+            }
+        }
     }
 
     @Override
@@ -517,10 +510,10 @@ public class RoomSelectorActivity extends AppCompatActivity
             updateRoom(update.getRoomSecret(), false);
         } else if (update.getUpdateType() == UpdateType.SERVER_SYNC) {
             if (!((ServerSyncUpdate) update).getSupportedApis().contains(UpdateProcessor.API_VERSION)) {
-                runOnUiThread(new Runnable() {
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        DiraPopup diraPopup = new DiraPopup(RoomSelectorActivity.this);
+                        DiraPopup diraPopup = new DiraPopup(getActivity());
                         diraPopup.setCancellable(false);
                         diraPopup.show(getString(R.string.unsupported_api_title),
                                 getString(R.string.unsupported_api_text),
@@ -582,7 +575,7 @@ public class RoomSelectorActivity extends AppCompatActivity
         if (!isLastMessage) return;
 
         int finalPosition = position;
-        runOnUiThread(() -> {
+        getActivity().runOnUiThread(() -> {
             notifyViewHolder(finalPosition, new SelectorViewHolderNotifier() {
                 @Override
                 public void notifyViewHolder(SelectorViewHolder holder) {
@@ -600,7 +593,7 @@ public class RoomSelectorActivity extends AppCompatActivity
 
     @Override
     public void onRoomOpen(String roomSecret) {
-        lastOpenedRoomId = roomSecret;
+        NavigationActivity.lastOpenedRoomId = roomSecret;
     }
 
     private interface OnRoomLoadedListener {

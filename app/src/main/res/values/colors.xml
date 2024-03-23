@@ -6,6 +6,8 @@
     <color name="accent_dark">#00BAA3</color>
     <color name="accent_medium">#1AE3CB</color>
     <color name="unread_message_background">#4B50746A</color>
+    <color name="navigation_light_gray">#8F8F8F</color>
+    <color name="navigation_background_light_gray">#2E2E2E</color>
     <color name="dark">#202020</color>
     <color name="dark_medium">#262626</color>
     <color name="dark_lighter">#2F2F2F</color>

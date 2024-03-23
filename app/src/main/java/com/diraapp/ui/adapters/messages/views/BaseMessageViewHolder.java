@@ -24,7 +24,7 @@ import com.diraapp.api.requests.MessageReadRequest;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.exceptions.AlreadyInitializedException;
+import com.diraapp.exceptions.HolderAlreadyInitializedException;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.res.Theme;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
@@ -91,7 +91,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     @Override
     public void onViewInflated(View rootView) {
         if (isInitialized)
-            throw new AlreadyInitializedException(MessageHolderType.values()[getItemViewType()]);
+            throw new HolderAlreadyInitializedException(MessageHolderType.values()[getItemViewType()]);
 
         this.rootView = rootView;
         messageText = find(R.id.message_text);
@@ -147,7 +147,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
      */
     protected void postInflate() {
         if (isInitialized)
-            throw new AlreadyInitializedException(MessageHolderType.values()[getItemViewType()]);
+            throw new HolderAlreadyInitializedException(MessageHolderType.values()[getItemViewType()]);
 
     }
 
@@ -272,9 +272,9 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         timeText.setText(TimeConverter.getTimeFromTimestamp(message.getTime()));
     }
 
-    protected void postInflateReplyViews() throws AlreadyInitializedException {
+    protected void postInflateReplyViews() throws HolderAlreadyInitializedException {
         if (isInitialized)
-            throw new AlreadyInitializedException(MessageHolderType.values()[getItemViewType()]);
+            throw new HolderAlreadyInitializedException(MessageHolderType.values()[getItemViewType()]);
         replyComponent = new MessageReplyComponent(itemView.getContext(),
                 getItemViewType(), isSelfMessage);
 

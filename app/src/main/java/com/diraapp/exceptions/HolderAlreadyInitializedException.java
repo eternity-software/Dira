@@ -5,9 +5,9 @@ import com.diraapp.ui.adapters.messages.views.viewholders.factories.MessageHolde
 /**
  * Throws when a ViewHolder already has been initialized
  */
-public class AlreadyInitializedException extends RuntimeException {
+public class HolderAlreadyInitializedException extends RuntimeException {
 
-    public AlreadyInitializedException(MessageHolderType messageHolderType) {
+    public HolderAlreadyInitializedException(MessageHolderType messageHolderType) {
         super("ViewHolder " + messageHolderType + " already initialized");
     }
 }

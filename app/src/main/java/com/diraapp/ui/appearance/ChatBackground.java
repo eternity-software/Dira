@@ -99,7 +99,7 @@ public class ChatBackground {
 
             if (bitmap == null) {
                 ChatBackground chatBackground = backgrounds.get(BackgroundType.LOVE);
-                AppTheme.getInstance().setChatBackground(chatBackground, context);
+                AppTheme.getInstance(context).setChatBackground(chatBackground, context);
             }
         }
         return bitmap;

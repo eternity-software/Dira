@@ -65,7 +65,7 @@ import java.util.List;
  */
 public class UpdateProcessor {
 
-    public static final String OFFICIAL_ADDRESS = "ws://diraapp.com:8888";
+    public static final String OFFICIAL_ADDRESS = "ws://dira.mflow.site:8888";
     public static final String API_VERSION = "0.0.4";
 
     private static UpdateProcessor instance;
