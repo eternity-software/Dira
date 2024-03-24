@@ -92,6 +92,9 @@
     <string name="settings_file_servers">Файлы серверов</string>
     <string name="settings_appearance">Внешний вид</string>
     <string name="settings_privacy_policy">Политика конфиденциальности</string>
+    <string name="account_edit">Изменить</string>
+    <string name="flow_title">Флоу</string>
+    <string name="flows_title">Флоу</string>
     <string name="room_servers_title">Сервера комнат</string>
     <string name="room_servers_official">Официальный сервер Dira</string>
     <string name="room_servers_add">Добавить пользовательский сервер</string>

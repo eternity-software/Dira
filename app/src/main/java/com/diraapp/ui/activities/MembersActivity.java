@@ -6,9 +6,12 @@ import android.view.View;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.api.requests.PingMembersRequest;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.rooms.Room;
+import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.ui.adapters.MembersAdapter;
 import com.diraapp.utils.SliderActivity;
 
@@ -42,6 +45,11 @@ public class MembersActivity extends DiraActivity {
                     public void run() {
                         MembersAdapter membersAdapter = new MembersAdapter(MembersActivity.this, roomSecret);
                         membersAdapter.setMembers(members);
+                        try {
+                            UpdateProcessor.getInstance().sendRequest(new PingMembersRequest(roomSecret), room.getServerAddress());
+                        } catch (UnablePerformRequestException e) {
+                            e.printStackTrace();
+                        }
 
                         recyclerView.setAdapter(membersAdapter);
                     }

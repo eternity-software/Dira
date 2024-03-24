@@ -1,6 +1,7 @@
 package com.diraapp.ui.activities.fragments.account;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +14,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.diraapp.BuildConfig;
+import com.diraapp.R;
 import com.diraapp.databinding.FragmentAccountBinding;
 import com.diraapp.device.PerformanceTester;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.PersonalityActivity;
+import com.diraapp.ui.activities.PreviewActivity;
 import com.diraapp.ui.activities.SettingsActivity;
 import com.diraapp.utils.CacheUtils;
 
@@ -62,11 +65,32 @@ public class AccountFragment extends Fragment {
         String picPath = cacheUtils.getString(CacheUtils.PICTURE);
         String nickname = cacheUtils.getString(CacheUtils.NICKNAME);
         String id = cacheUtils.getString(CacheUtils.ID);
-        if (picPath != null) imageView.setImageBitmap(AppStorage.getBitmapFromPath(picPath));
+        imageView.setImageDrawable(getContext().getDrawable(R.drawable.placeholder));
+        if (picPath != null)
+        {
+            Bitmap bmp = AppStorage.getBitmapFromPath(picPath);
+            if(bmp == null)
+            {
+                cacheUtils.remove(CacheUtils.PICTURE);
+            }
+            else
+            {
+                imageView.setImageBitmap(bmp);
+            }
+
+        }
+
 
         binding.notImpl.setText("Not implemented in " + BuildConfig.VERSION_NAME);
         binding.nicknameText.setText(nickname);
 
+        imageView.setOnClickListener(v -> {
+            if(picPath == null) return;
+            Intent intent = new Intent(getContext(), PreviewActivity.class);
+            intent.putExtra(PreviewActivity.URI, picPath);
+            intent.putExtra(PreviewActivity.IS_VIDEO, false);
+            getActivity().startActivity(intent);
+        });
         if(id != null)
         {
             if(id.length() > 4) id = id.substring(0, 4);

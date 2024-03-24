@@ -24,6 +24,7 @@
     <color name="red">#FC6240</color>
     <color name="black">#000000</color>
     <color name="white_10">#1AFFFFFF</color>
+    <color name="white_5">#0DFFFFFF</color>
 
     <color name="pink_accent">#BE5DE0</color>
     <color name="kitty_accent">#8978FA</color>

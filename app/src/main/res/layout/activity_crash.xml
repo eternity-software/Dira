@@ -55,11 +55,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginTop="24dp"
-            android:layout_marginRight="60dp"
+
             android:fontFamily="@font/montserratsemibold"
             android:text="@string/crash_text"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/button_reopen"

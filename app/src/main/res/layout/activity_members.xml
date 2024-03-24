@@ -43,6 +43,8 @@
         android:layout_marginTop="12dp"
         android:background="@color/dark"
         android:divider="@color/dark"
+        android:paddingTop="20dp"
+        android:clipToPadding="false"
         android:dividerHeight="0dp"
         android:footerDividersEnabled="false"
         android:visibility="visible"

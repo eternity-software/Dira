@@ -14,7 +14,7 @@
         android:orientation="vertical"
         android:paddingHorizontal="18dp"
         android:paddingBottom="18dp"
-        android:paddingTop="42dp"
+        android:paddingTop="48dp"
    >
 
         <LinearLayout
@@ -78,7 +78,7 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/dark_rect"
-                    android:padding="12dp"
+                    android:padding="10dp"
                     android:src="@drawable/ic_settings"
                     app:tint="@color/white" />
             </LinearLayout>
@@ -149,8 +149,8 @@
             android:orientation="horizontal"
             android:layout_height="wrap_content">
             <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:src="@drawable/ic_star"
                 app:tint="@color/white" />
             <TextView
@@ -161,9 +161,9 @@
                 android:fontFamily="@font/montserratsemibold"
                 android:gravity="center_vertical"
                 android:text="@string/flows_title"
-                android:layout_marginLeft="8dp"
+                android:layout_marginLeft="6dp"
                 android:textColor="@color/white"
-                android:textSize="18dp" />
+                android:textSize="16dp" />
 
         </LinearLayout>
         <TextView

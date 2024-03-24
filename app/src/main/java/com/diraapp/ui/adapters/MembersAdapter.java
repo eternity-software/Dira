@@ -13,8 +13,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
+import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.api.processors.listeners.UpdateListener;
+import com.diraapp.api.requests.PingMembersRequest;
+import com.diraapp.api.updates.BaseMemberUpdate;
+import com.diraapp.api.updates.MemberUpdate;
+import com.diraapp.api.updates.Update;
+import com.diraapp.api.updates.UpdateType;
+import com.diraapp.api.views.BaseMember;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.entities.Member;
+import com.diraapp.res.Theme;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.PreviewActivity;
 import com.diraapp.ui.components.DiraPopup;
@@ -22,24 +31,52 @@ import com.diraapp.ui.components.DiraPopup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHolder> {
+public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHolder> implements UpdateListener {
 
 
     private final LayoutInflater layoutInflater;
     private final Activity context;
     private final String roomSecret;
-    private List<Member> members = new ArrayList<>();
+    private List<StatusMember> members = new ArrayList<>();
+
+
 
 
     public MembersAdapter(Activity context, String roomSecret) {
         this.context = context;
         layoutInflater = LayoutInflater.from(context);
         this.roomSecret = roomSecret;
+        UpdateProcessor.getInstance().addUpdateListener(this);
 
+
+
+        new Thread(() -> {
+            try
+            {
+                Thread.sleep(10 * 1000);
+                for(StatusMember statusMember : members)
+                {
+                    if(statusMember.getStatus() == MemberStatus.WAITING)
+                    {
+                        statusMember.setStatus(MemberStatus.OFFLINE);
+                        context.runOnUiThread(() -> notifyItemChanged(members.indexOf(statusMember)));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+        }).start();
     }
 
     public void setMembers(List<Member> members) {
-        this.members = members;
+        for(Member member : members)
+        {
+            this.members.add(new StatusMember(member, MemberStatus.WAITING));
+        }
+
     }
 
     @NonNull
@@ -50,10 +87,29 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MembersAdapter.ViewHolder holder, int position) {
-        Member member = members.get(position);
+        StatusMember statusMember = members.get(position);
+
+        Member member = statusMember.getMember();
 
         holder.memberName.setText(member.getNickname());
+
         Bitmap pic = AppStorage.getBitmapFromPath(member.getImagePath());
+
+        if(statusMember.getStatus() == MemberStatus.OFFLINE)
+        {
+            holder.memberStatus.setText(context.getString(R.string.members_status_offline));
+            holder.memberStatus.setTextColor(Theme.getColor(context, R.color.paintOrange));
+        }
+        else if(statusMember.getStatus() == MemberStatus.READY)
+        {
+            holder.memberStatus.setText(context.getString(R.string.members_status_online));
+            holder.memberStatus.setTextColor(Theme.getColor(context, R.color.accent));
+        }
+        else if(statusMember.getStatus() == MemberStatus.WAITING)
+        {
+            holder.memberStatus.setText(context.getString(R.string.members_status_pinging));
+            holder.memberStatus.setTextColor(Theme.getColor(context, R.color.light_gray));
+        }
 
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,8 +130,8 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
                                     }
                                 });
                                 thread.start();
-                                int index = members.indexOf(member);
-                                members.remove(member);
+                                int index = members.indexOf(statusMember);
+                                members.remove(statusMember);
 
                                 notifyItemRemoved(index);
 
@@ -96,6 +152,34 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
             });
 
         }
+        else
+        {
+            holder.memberPicture.setImageDrawable(context.getDrawable(R.drawable.placeholder));
+        }
+    }
+
+    @Override
+    public void onUpdate(Update update) {
+        if(update.getUpdateType() != UpdateType.BASE_MEMBER_UPDATE) return;
+        BaseMemberUpdate baseMemberUpdate = (BaseMemberUpdate) update;
+
+        if (baseMemberUpdate.getRoomSecret().equals(roomSecret)) {
+
+
+            BaseMember baseMember = baseMemberUpdate.getBaseMember();
+
+            for(StatusMember statusMember : members)
+            {
+                if(baseMember.getId().equals(statusMember.getMember().getId()))
+                {
+                    statusMember.setStatus(MemberStatus.READY);
+                    context.runOnUiThread(()-> {
+                        notifyItemChanged(members.indexOf(statusMember));
+                    });
+                }
+            }
+
+        }
     }
 
     @Override
@@ -106,6 +190,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView memberName;
+        TextView memberStatus;
         ImageView memberPicture;
         ImageView deleteButton;
 
@@ -114,6 +199,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
             super(itemView);
 
             memberName = itemView.findViewById(R.id.member_name);
+            memberStatus = itemView.findViewById(R.id.member_status);
             memberPicture = itemView.findViewById(R.id.member_picture);
             deleteButton = itemView.findViewById(R.id.button_delete_member);
         }

@@ -77,7 +77,10 @@ public class StatusMemberAdapter extends RecyclerView.Adapter<StatusMemberAdapte
                 }
             });
 
+        } else {
+            holder.memberPicture.setImageDrawable(context.getDrawable(R.drawable.placeholder));
         }
+
     }
 
     @Override

@@ -96,6 +96,9 @@
     <string name="members_title">Members</string>
     <string name="notifications_enabled">Notifications has been enabled</string>
     <string name="notifications_disabled">Notifications has been disabled</string>
+    <string name="members_status_pinging">Pinging...</string>
+    <string name="members_status_online">Online</string>
+    <string name="members_status_offline">Offline</string>
 
     <!-- Edit room -->
     <string name="edit_room">Edit room</string>

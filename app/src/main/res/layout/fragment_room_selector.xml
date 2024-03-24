@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/dark"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="32dp"
             android:clipChildren="true"
             app:layout_scrollFlags="scroll|snap"
             app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar">
