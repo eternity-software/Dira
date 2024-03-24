@@ -42,7 +42,7 @@ import com.diraapp.db.migrations.RoomMigrationFrom29To30;
                 @AutoMigration(from = 27, to = 28),
                 @AutoMigration(from = 28, to = 29),
                 @AutoMigration(from = 29, to = 30, spec = RoomMigrationFrom29To30.class),
-                @AutoMigration(from = 30, to = 31)
+                @AutoMigration(from = 30, to = 31),
         },
         version = 31,
         exportSchema = true)

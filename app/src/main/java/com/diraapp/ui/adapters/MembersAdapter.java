@@ -67,6 +67,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
             {
                 e.printStackTrace();
             }
+            UpdateProcessor.getInstance().removeUpdateListener(MembersAdapter.this);
 
         }).start();
     }

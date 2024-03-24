@@ -75,11 +75,15 @@ public class NavigationActivity extends DiraActivity {
         binding.viewPager.setCurrentItem(1);
 
        // getCacheUtils().setLong(CacheUtils.UPDATER_LAST_ACTIVE_TIME, System.currentTimeMillis() - 1000 * UpdaterService.DEFAULT_RESTART_DELAY_SEC * 100);
-        if(System.currentTimeMillis() - getCacheUtils().getLong(CacheUtils.UPDATER_LAST_ACTIVE_TIME) > 1000 * UpdaterService.DEFAULT_RESTART_DELAY_SEC)
+        if(getCacheUtils().hasKey(CacheUtils.UPDATER_LAST_ACTIVE_TIME))
         {
-            DowntimeBottomSheet downtimeBottomSheet = new DowntimeBottomSheet();
-            downtimeBottomSheet.show(getSupportFragmentManager(), "");
+            if(System.currentTimeMillis() - getCacheUtils().getLong(CacheUtils.UPDATER_LAST_ACTIVE_TIME) > 1200 * UpdaterService.DEFAULT_RESTART_DELAY_SEC )
+            {
+                DowntimeBottomSheet downtimeBottomSheet = new DowntimeBottomSheet();
+                downtimeBottomSheet.show(getSupportFragmentManager(), "");
+            }
         }
+
 
     }
 
