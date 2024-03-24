@@ -45,6 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/dark"
+            android:layout_marginTop="24dp"
             android:clipChildren="true"
             app:layout_scrollFlags="scroll|snap"
             app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar">
@@ -52,7 +53,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="15dp"
+                android:layout_marginHorizontal="15dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -91,32 +92,6 @@
                         android:src="@drawable/ic_add_room"
                         app:tint="@color/white" />
 
-                    <com.diraapp.ui.components.dynamic.ThemeLinearLayout
-                        android:id="@+id/personality_button"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_margin="12dp"
-                        android:background="@drawable/outline_circle"
-                        app:themeBackgroundColor="accent">
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="2dp"
-                            app:cardBackgroundColor="@android:color/transparent"
-                            app:cardCornerRadius="50dp"
-                            app:cardElevation="0dp">
-
-                            <ImageView
-                                android:id="@+id/profile_picture"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:adjustViewBounds="true"
-                                android:src="@drawable/placeholder" />
-                        </androidx.cardview.widget.CardView>
-
-                    </com.diraapp.ui.components.dynamic.ThemeLinearLayout>
 
 
                 </LinearLayout>

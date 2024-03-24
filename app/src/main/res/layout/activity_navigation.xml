@@ -4,17 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
+
     android:layout_height="match_parent"
     tools:context=".ui.activities.NavigationActivity">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navView"
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
+
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
         android:background="@drawable/navigation_round_rect"
         app:itemIconSize="18dp"
+
+
         app:itemBackground="@android:color/transparent"
 
         app:itemIconTint="@drawable/nav_icon_item_color"
@@ -28,6 +32,7 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+
         android:layout_marginBottom="-16dp"
         app:layout_constraintBottom_toTopOf="@+id/navView"
         app:layout_constraintEnd_toEndOf="parent"

@@ -41,9 +41,10 @@ import com.diraapp.db.migrations.RoomMigrationFrom29To30;
                 @AutoMigration(from = 26, to = 27),
                 @AutoMigration(from = 27, to = 28),
                 @AutoMigration(from = 28, to = 29),
-                @AutoMigration(from = 29, to = 30, spec = RoomMigrationFrom29To30.class)
+                @AutoMigration(from = 29, to = 30, spec = RoomMigrationFrom29To30.class),
+                @AutoMigration(from = 30, to = 31)
         },
-        version = 30,
+        version = 31,
         exportSchema = true)
 @TypeConverters({UnreadIdsConverter.class})
 public abstract class DiraRoomDatabase extends RoomDatabase {

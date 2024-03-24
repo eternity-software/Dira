@@ -38,6 +38,7 @@
             android:name=".ui.activities.NavigationActivity"
             android:exported="true"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.Dira"
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
             <action android:name="android.intent.action.MAIN" />

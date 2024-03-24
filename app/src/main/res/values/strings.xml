@@ -140,6 +140,9 @@
     <string name="chat_appearance_background">Background</string>
     <string name="chat_appearance_pick_image">Pick image</string>
 
+    <!-- Account fragment -->
+    <string name="account_edit">Edit</string>
+
     <!-- Room servers -->
     <string name="room_servers_title">Room servers</string>
     <string name="room_servers_official">Dira official server</string>

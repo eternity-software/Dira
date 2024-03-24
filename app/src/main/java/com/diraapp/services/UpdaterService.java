@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.IBinder;
 
 import com.diraapp.api.processors.UpdateProcessor;
+import com.diraapp.utils.CacheUtils;
 
 public class UpdaterService extends Service {
 
@@ -35,7 +36,7 @@ public class UpdaterService extends Service {
             public void run() {
                 updateProcessor.reconnectSockets();
 
-
+                updateOnlineStatus();
                 handler.postDelayed(runnable, DEFAULT_RESTART_DELAY_SEC * 1000);
             }
         };
@@ -52,6 +53,7 @@ public class UpdaterService extends Service {
                 if (isOnline(context)) {
                     updateProcessor.reconnectSockets();
                 }
+                updateOnlineStatus();
 
             }
         };
@@ -59,6 +61,22 @@ public class UpdaterService extends Service {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(br, intentFilter);
+        updateOnlineStatus();
+    }
+
+    /**
+     * Store uptime timestamp to track downtime of Dira's background service
+     */
+    private void updateOnlineStatus()
+    {
+        try
+        {
+            new CacheUtils(getApplicationContext()).setLong(CacheUtils.UPDATER_LAST_ACTIVE_TIME, System.currentTimeMillis());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private boolean isOnline(Context context) {
@@ -83,6 +101,7 @@ public class UpdaterService extends Service {
                 updateProcessor.reconnectSockets();
 
                 handler.postDelayed(runnable, DEFAULT_RESTART_DELAY_SEC * 1000);
+                updateOnlineStatus();
             }
         };
         handler.postDelayed(runnable, 15000);

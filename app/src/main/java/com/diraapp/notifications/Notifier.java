@@ -42,7 +42,7 @@ public class Notifier {
 
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, DIRA_ID)
-                        .setSmallIcon(R.drawable.notification)
+                        .setSmallIcon(R.drawable.logo_white)
                         .setPriority(NotificationCompat.PRIORITY_HIGH);
 
 
@@ -126,7 +126,7 @@ public class Notifier {
             NotificationChannel channel = new NotificationChannel(DIRA_ID, name, importance);
 
             // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
+            // or other logo_white behaviors after this
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }

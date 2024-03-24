@@ -116,14 +116,8 @@ public class RoomSelectorFragment extends Fragment implements ProcessorListener,
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            Theme.loadCurrentTheme(getContext());
-        } catch (LanguageParsingException e) {
 
-        }
 
-        ExploreViewModel exploreViewModel =
-                new ViewModelProvider(this).get(ExploreViewModel.class);
 
         binding = FragmentRoomSelectorBinding.inflate(inflater, container, false);
 
@@ -148,13 +142,6 @@ public class RoomSelectorFragment extends Fragment implements ProcessorListener,
             }
         });
 
-        binding.personalityButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), PersonalityActivity.class);
-                startActivity(intent);
-            }
-        });
 
 
         if (!cacheUtils.hasKey(CacheUtils.ID)) {
@@ -484,9 +471,6 @@ public class RoomSelectorFragment extends Fragment implements ProcessorListener,
     @Override
     public void onResume() {
         super.onResume();
-        ImageView imageView = binding.profilePicture;
-        String picPath = cacheUtils.getString(CacheUtils.PICTURE);
-        if (picPath != null) imageView.setImageBitmap(AppStorage.getBitmapFromPath(picPath));
 
 
         if (NavigationActivity.lastOpenedRoomId == null) return;

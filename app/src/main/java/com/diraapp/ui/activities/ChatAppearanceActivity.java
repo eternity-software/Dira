@@ -62,11 +62,14 @@ public class ChatAppearanceActivity extends DiraActivity {
 
     private int rand = -1;
 
+    private AppTheme appTheme;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_appearance);
 
+        appTheme = AppTheme.getInstance(this);
         initArrowBack();
 
         initSelectors();
@@ -78,6 +81,7 @@ public class ChatAppearanceActivity extends DiraActivity {
     private void initSelectors() {
         RecyclerView.LayoutManager colorManager = new LinearLayoutManager
                 (getApplicationContext());
+
         LinearLayoutManager colorHorizontalLayout = new LinearLayoutManager(this,
                 LinearLayoutManager.HORIZONTAL, false);
 
@@ -270,7 +274,7 @@ public class ChatAppearanceActivity extends DiraActivity {
         messagesAdapter = new MessagesAdapter(contract, messages, room,
                 new AsyncLayoutInflater(this.getBaseContext()), new RoomViewHolderFactory(), cacheUtils);
 
-        AppTheme.getInstance(contract.getContext()).getChatBackground().applyBackground(backgroundView);
+        appTheme.getChatBackground().applyBackground(backgroundView);
 
         recycler.setAdapter(messagesAdapter);
 
@@ -340,12 +344,12 @@ public class ChatAppearanceActivity extends DiraActivity {
         ChatBackground background = new ChatBackground(
                 BackgroundType.CUSTOM.toString(), path, BackgroundType.CUSTOM);
 
-        AppTheme.getInstance(getApplicationContext()).setChatBackground
+        appTheme.setChatBackground
                 (background, ChatAppearanceActivity.this);
 
         chatBackgroundAdapter.notifyDataSetChanged();
 
         ImageView backgroundView = findViewById(R.id.example_background);
-        AppTheme.getInstance(getApplicationContext()).getChatBackground().applyBackground(backgroundView);
+        appTheme.getChatBackground().applyBackground(backgroundView);
     }
 }

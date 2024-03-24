@@ -21,7 +21,7 @@ android {
         minSdk 21
         targetSdk 34
         versionCode 15
-        versionName '0.8.0A-SNAPSHOT-SUBSERVER'
+        versionName '0.8.0B-SNAPSHOT-SUBSERVER'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

@@ -8,6 +8,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
@@ -104,6 +106,17 @@ public class DiraActivity extends AppCompatActivity {
         return waterfallBalancer;
     }
 
+
+    public void setWindowFlag(final int bits, boolean on) {
+        Window win =getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
     public ScaleAnimation performScaleAnimation(float fromScale, float toScale, View view) {
         ScaleAnimation scaleOut = new ScaleAnimation(fromScale, toScale,
                 fromScale, toScale, Animation.RELATIVE_TO_SELF, 0.5f,

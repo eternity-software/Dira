@@ -134,10 +134,7 @@ public class PersonalityActivity extends DiraActivity {
             }
         });
 
-        findViewById(R.id.button_settings).setOnClickListener((View v) -> {
-            Intent intent = new Intent(PersonalityActivity.this, SettingsActivity.class);
-            startActivity(intent);
-        });
+
     }
 
     @Override
