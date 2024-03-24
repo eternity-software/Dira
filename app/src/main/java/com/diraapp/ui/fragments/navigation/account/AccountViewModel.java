@@ -1,4 +1,4 @@
-package com.diraapp.ui.activities.fragments.account;
+package com.diraapp.ui.fragments.navigation.account;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

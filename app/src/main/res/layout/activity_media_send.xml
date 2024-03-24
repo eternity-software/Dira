@@ -93,7 +93,7 @@
             android:layout_marginVertical="7dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="4dp"
-            android:background="@drawable/dark_rounded"
+            android:background="@drawable/trans_rounded"
             android:onClick="editImageButtonClick"
             android:padding="8dp"
             app:srcCompat="@drawable/ic_brush"

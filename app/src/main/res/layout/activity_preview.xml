@@ -69,7 +69,7 @@
         android:layout_marginVertical="7dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/dark_rounded"
+        android:background="@drawable/trans_rounded"
         android:elevation="8dp"
         android:onClick="editImageButtonClick"
         android:padding="8dp"

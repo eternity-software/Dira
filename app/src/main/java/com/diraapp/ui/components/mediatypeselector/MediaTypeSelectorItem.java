@@ -90,7 +90,7 @@ public class MediaTypeSelectorItem extends ThemeLinearLayout {
         }
 
         getBackground().setColorFilter(Theme.getColor(getContext(), R.color.dark_lighter), PorterDuff.Mode.SRC_ATOP);
-        textView.setTextColor(Theme.getColor(getContext(), R.color.light_gray));
-        imageView.setColorFilter(Theme.getColor(getContext(), R.color.light_gray));
+        textView.setTextColor(Theme.getColor(getContext(), R.color.medium_light_light_gray));
+        imageView.setColorFilter(Theme.getColor(getContext(), R.color.medium_light_light_gray));
     }
 }

@@ -1,7 +1,5 @@
-package com.diraapp.ui.activities.fragments.selector;
+package com.diraapp.ui.fragments.navigation.selector;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class RoomSelectorViewModel extends ViewModel {

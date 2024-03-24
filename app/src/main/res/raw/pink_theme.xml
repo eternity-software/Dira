@@ -16,12 +16,16 @@
     <color name="self_message_color">#FFFFFF</color>
     <color name="self_message_background">#693651</color>
     <color name="self_message_color_link">#AE477C</color>
+
     <color name="self_reply_color">#CB70A1</color>
+    <color name="self_reply_text_color">@color/self_message_color</color>
 
     <color name="message_background">#4A2D3A</color>
     <color name="message_color">@color/white</color>
     <color name="message_color_link">#934168</color>
+
     <color name="message_reply_color">#835A6D</color>
+    <color name="message_reply_text_color">@color/message_color</color>
 
     <color name="author_color">@color/white</color>
     <color name="subtitle_color">@color/medium_light_light_gray</color>

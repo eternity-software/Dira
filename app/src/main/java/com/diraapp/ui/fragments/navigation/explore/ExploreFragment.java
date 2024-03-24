@@ -1,4 +1,4 @@
-package com.diraapp.ui.activities.fragments.explore;
+package com.diraapp.ui.fragments.navigation.explore;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

@@ -66,8 +66,8 @@ public class MessageReplyComponent extends FrameLayout {
         }
 
         int textColorId = 0;
-        if (isSelfMessage) textColorId = R.color.self_message_color;
-        else textColorId = R.color.message_color;
+        if (isSelfMessage) textColorId = R.color.self_reply_text_color;
+        else textColorId = R.color.message_reply_text_color;
 
         if (message.hasCustomClientData()) {
             int statusTextColor = 0;
@@ -180,8 +180,7 @@ public class MessageReplyComponent extends FrameLayout {
         }
 
         if (isSelfMessage) {
-            this.findViewById(R.id.message_reply_line).
-                    getBackground().setColorFilter(
+            ((ImageView) findViewById(R.id.message_reply_line)).setColorFilter(
                             Theme.getColor(this.getContext(), R.color.self_reply_color),
                             PorterDuff.Mode.SRC_IN);
             ((TextView) this.findViewById(R.id.message_reply_author_name)).setTextColor(

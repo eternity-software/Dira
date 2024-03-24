@@ -34,7 +34,9 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top_bar">
+        app:layout_constraintTop_toBottomOf="@+id/top_bar"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -437,11 +439,11 @@
                         app:itemIcon="@drawable/ic_mic"
                         app:itemText="@string/voice" />
 
-<!--                    <com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorItem-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        app:itemIcon="@drawable/ic_link"-->
-<!--                        app:itemText="@string/links" />-->
+                    <!--                    <com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorItem-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        app:itemIcon="@drawable/ic_link"-->
+                    <!--                        app:itemText="@string/links" />-->
 
                     <com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorItem
                         android:layout_width="wrap_content"
@@ -470,7 +472,6 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
 
     <ImageView
         android:id="@+id/imageView"

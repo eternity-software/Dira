@@ -18,10 +18,9 @@ import com.diraapp.exceptions.LanguageParsingException;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.res.Theme;
 import com.diraapp.services.UpdaterService;
-import com.diraapp.ui.activities.fragments.NavigationPagerAdapter;
+import com.diraapp.ui.fragments.navigation.NavigationPagerAdapter;
 import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.ui.bottomsheet.DowntimeBottomSheet;
-import com.diraapp.ui.bottomsheet.RoomKeyRenewingBottomSheet;
 import com.diraapp.utils.CacheUtils;
 
 public class NavigationActivity extends DiraActivity {
@@ -96,6 +95,13 @@ public class NavigationActivity extends DiraActivity {
     @Override
     public void onBackPressed() {
         if (canBackPress) {
+            int fragmentIndex = binding.viewPager.getCurrentItem();
+
+            if (fragmentIndex != 1) {
+                binding.viewPager.setCurrentItem(1);
+                return;
+            }
+
             super.onBackPressed();
         }
     }

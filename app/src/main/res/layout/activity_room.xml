@@ -252,7 +252,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginVertical="8dp"
                 android:layout_marginStart="4dp"
-                android:background="@drawable/dark_rounded"
+                android:background="@drawable/trans_rounded"
                 app:themeBackgroundTint="self_reply_color" />
 
             <androidx.cardview.widget.CardView

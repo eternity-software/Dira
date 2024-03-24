@@ -1,13 +1,13 @@
-package com.diraapp.ui.activities.fragments;
+package com.diraapp.ui.fragments.navigation;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.diraapp.ui.activities.fragments.account.AccountFragment;
-import com.diraapp.ui.activities.fragments.explore.ExploreFragment;
-import com.diraapp.ui.activities.fragments.selector.RoomSelectorFragment;
+import com.diraapp.ui.fragments.navigation.account.AccountFragment;
+import com.diraapp.ui.fragments.navigation.explore.ExploreFragment;
+import com.diraapp.ui.fragments.navigation.selector.RoomSelectorFragment;
 
 /** @noinspection deprecation*/
 public class NavigationPagerAdapter extends FragmentPagerAdapter {
