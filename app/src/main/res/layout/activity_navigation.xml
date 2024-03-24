@@ -13,19 +13,21 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
+
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
         android:background="@drawable/navigation_round_rect"
         app:itemIconSize="18dp"
 
 
-        app:itemBackground="@android:color/transparent"
+        app:itemBackground="@drawable/item_background"
 
         app:itemIconTint="@drawable/nav_icon_item_color"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+
         app:menu="@menu/bottom_nav_menu" />
 
     <androidx.viewpager.widget.ViewPager
