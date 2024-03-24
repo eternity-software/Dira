@@ -143,7 +143,9 @@
     <!-- Account fragment -->
     <string name="account_edit">Edit</string>
 
-
+    <!-- Flows -->
+    <string name="flow_title">Flow</string>
+    <string name="flows_title">Flows</string>
 
     <!-- Room servers -->
     <string name="room_servers_title">Room servers</string>

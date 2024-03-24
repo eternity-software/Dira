@@ -182,17 +182,6 @@
                 android:textSize="14sp"
                 app:themeColor="accent_text" />
 
-            <TextView
-                android:id="@+id/version_view"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_marginVertical="8dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/montserratsemibold"
-                android:text="version"
-                android:textColor="@color/light_gray"
-                android:textSize="14sp" />
 
             <ImageView
                 android:layout_width="wrap_content"

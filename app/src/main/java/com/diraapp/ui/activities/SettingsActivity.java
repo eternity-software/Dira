@@ -35,9 +35,7 @@ public class SettingsActivity extends DiraActivity {
         SliderActivity sliderActivity = new SliderActivity();
         sliderActivity.attachSlider(this);
 
-        TextView versionView = findViewById(R.id.version_view);
-        versionView.setText(BuildConfig.VERSION_NAME + ", code " + BuildConfig.VERSION_CODE + ", device " +
-                PerformanceTester.measureDevicePerformanceClass(getApplicationContext()));
+
 
         initViews();
     }

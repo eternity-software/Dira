@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/dark">
 
     <LinearLayout
@@ -14,9 +15,7 @@
         android:paddingHorizontal="18dp"
         android:paddingBottom="18dp"
         android:paddingTop="42dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+   >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,7 +26,17 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/logo_white"/>
+            <TextView
 
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+
+                android:fontFamily="@font/montserratbold"
+                android:gravity="center_vertical"
+                android:text="Dira"
+                android:layout_marginLeft="8dp"
+                android:textColor="@color/white"
+                android:textSize="18dp" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -124,5 +133,66 @@
                 android:textColor="@color/white"
                 android:textSize="18dp" />
         </LinearLayout>
+
+
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:padding="18dp"
+        android:orientation="vertical"
+        android:background="@drawable/dark_rect">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_star"
+                app:tint="@color/white" />
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+
+                android:fontFamily="@font/montserratsemibold"
+                android:gravity="center_vertical"
+                android:text="@string/flows_title"
+                android:layout_marginLeft="8dp"
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+
+        </LinearLayout>
+        <TextView
+            android:id="@+id/not_impl"
+            android:layout_marginTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            android:fontFamily="@font/montserratsemibold"
+            android:gravity="center_vertical"
+
+            android:alpha="0.7"
+            android:textColor="@color/white"
+            android:textSize="16dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/version"
+        android:layout_marginTop="12dp"
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
+
+        android:fontFamily="@font/montserratsemibold"
+        android:gravity="center"
+
+        android:text="unknown"
+        android:alpha="0.7"
+        android:textColor="@color/white"
+        android:textSize="14dp" />
+</LinearLayout>
