@@ -3,35 +3,23 @@ package com.diraapp.ui.activities;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
+
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.viewpager.widget.ViewPager;
 
 import com.diraapp.R;
-import com.diraapp.db.entities.rooms.Room;
+import com.diraapp.databinding.ActivityNavigationBinding;
 import com.diraapp.exceptions.LanguageParsingException;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.res.Theme;
 import com.diraapp.services.UpdaterService;
-import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.fragments.NavigationPagerAdapter;
 import com.diraapp.ui.activities.room.RoomActivity;
-import com.diraapp.utils.CacheUtils;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-import androidx.viewpager.widget.ViewPager;
-
-import com.diraapp.databinding.ActivityNavigationBinding;
 
 public class NavigationActivity extends DiraActivity {
 
@@ -82,6 +70,7 @@ public class NavigationActivity extends DiraActivity {
             canBackPress = getIntent().getExtras().getBoolean(CAN_BE_BACK_PRESSED);
         }
         binding.navView.setSelectedItemId(R.id.navigation_room_selector);
+        binding.viewPager.setCurrentItem(1);
 
 
     }
