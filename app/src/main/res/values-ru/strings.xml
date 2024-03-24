@@ -106,6 +106,21 @@
     <string name="room_servers_popup_delete_server_text">Если вы удалите сервер, все связанные с ним комнаты перестанут получать новые сообщения и обновления</string>
     <string name="edit_room_server_popup_title">Вы уверены?</string>
     <string name="edit_room_server_popup_text">Вы продолжите получать сообщения только от тех пользователей, которые тоже сменили сервер на тот же, что и Вы.</string>
+    <string name="downtime_title">Вы были оффлайн</string>
+    <string name="downtime_text">Dira не работала в фоне, поэтому вы могли пропустить сообщения и события</string>
+    <string name="downtime_text_last_time">Последний раз Dira проверяла обновления</string>
+    <string name="downtime_you_missed">Вы пропустили сообщения</string>
+    <string name="downtime_check_permissions">Исправить</string>
+    <string name="downtime_ignore">Скрыть</string>
+    <string name="downtime_default_info">По умолчанию сообщения исчезают через 6 часов</string>
+    <string name="downtime_time">%s назад</string>
+    <string name="time_unit_days">дней</string>
+    <string name="time_unit_day">день</string>
+    <string name="time_unit_hours">часов</string>
+    <string name="time_unit_hour">час</string>
+    <string name="time_unit_minutes">минут</string>
+    <string name="time_unit_minute">минута</string>
+    <string name="less_than_a_minute">Меньше минуты</string>
     <string name="room_encryption_title">Шифрование комнаты</string>
     <string name="room_encryption_key">Ключ шифрования</string>
     <string name="room_encryption_no_key">Нет ключа</string>
@@ -188,4 +203,8 @@
     <string name="no_voice">Никто не отправлял голосовые сообщения в этой комнате</string>
     <string name="no_documents">Никто не отправлял документы в этой комнате</string>
     <string name="no_such_file">файл не найден</string>
+    <string name="title_activity_navigation">Навигация</string>
+    <string name="title_explore">Найти</string>
+    <string name="title_room_selector">Комнаты</string>
+    <string name="title_account">Аккаунт</string>
 </resources>
