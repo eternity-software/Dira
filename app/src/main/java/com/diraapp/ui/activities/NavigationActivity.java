@@ -20,6 +20,9 @@ import com.diraapp.res.Theme;
 import com.diraapp.services.UpdaterService;
 import com.diraapp.ui.activities.fragments.NavigationPagerAdapter;
 import com.diraapp.ui.activities.room.RoomActivity;
+import com.diraapp.ui.bottomsheet.DowntimeBottomSheet;
+import com.diraapp.ui.bottomsheet.RoomKeyRenewingBottomSheet;
+import com.diraapp.utils.CacheUtils;
 
 public class NavigationActivity extends DiraActivity {
 
@@ -72,6 +75,12 @@ public class NavigationActivity extends DiraActivity {
         binding.navView.setSelectedItemId(R.id.navigation_room_selector);
         binding.viewPager.setCurrentItem(1);
 
+       // getCacheUtils().setLong(CacheUtils.UPDATER_LAST_ACTIVE_TIME, System.currentTimeMillis() - 1000 * UpdaterService.DEFAULT_RESTART_DELAY_SEC * 100);
+        if(System.currentTimeMillis() - getCacheUtils().getLong(CacheUtils.UPDATER_LAST_ACTIVE_TIME) > 1000 * UpdaterService.DEFAULT_RESTART_DELAY_SEC)
+        {
+            DowntimeBottomSheet downtimeBottomSheet = new DowntimeBottomSheet();
+            downtimeBottomSheet.show(getSupportFragmentManager(), "");
+        }
 
     }
 

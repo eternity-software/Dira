@@ -16,7 +16,7 @@ import com.diraapp.utils.CacheUtils;
 public class UpdaterService extends Service {
 
 
-    private static final int DEFAULT_RESTART_DELAY_SEC = 100000;
+    public static final int DEFAULT_RESTART_DELAY_SEC = 60 * 50;
 
     public static Runnable runnable = null;
     public static UpdateProcessor updateProcessor;

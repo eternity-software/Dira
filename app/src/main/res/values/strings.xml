@@ -143,6 +143,8 @@
     <!-- Account fragment -->
     <string name="account_edit">Edit</string>
 
+
+
     <!-- Room servers -->
     <string name="room_servers_title">Room servers</string>
     <string name="room_servers_official">Dira official server</string>
@@ -163,6 +165,26 @@
 
     <!-- Room server selector -->
     <string name="room_server_selector_title">Select server</string>
+
+    <!-- Downtime alert bottom sheet -->
+    <string name="downtime_title">You were offline</string>
+    <string name="downtime_text">Dira was not working in background and you can miss messages and events</string>
+    <string name="downtime_text_last_time">Last time Dira checked updates</string>
+    <string name="downtime_you_missed">You missed messages</string>
+    <string name="downtime_check_permissions">Fix</string>
+    <string name="downtime_ignore">Ignore</string>
+    <string name="downtime_default_info">Default expire time is 6</string>
+    <string name="downtime_time">%s ago</string>
+
+
+    <!--Time units -->
+    <string name="time_unit_days">days</string>
+    <string name="time_unit_day">day</string>
+    <string name="time_unit_hours">hours</string>
+    <string name="time_unit_hour">hour</string>
+    <string name="time_unit_minutes">minutes</string>
+    <string name="time_unit_minute">minute</string>
+    <string name="less_than_a_minute">Less than a minute</string>
 
     <!-- Room encryption bottom sheet -->
     <string name="room_encryption_title">Room encryption</string>
