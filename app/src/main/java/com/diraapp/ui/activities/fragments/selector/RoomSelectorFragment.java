@@ -63,6 +63,8 @@ import com.diraapp.ui.adapters.selector.RoomSelectorAdapter;
 import com.diraapp.ui.adapters.selector.SelectorAdapterContract;
 import com.diraapp.ui.adapters.selector.SelectorViewHolder;
 import com.diraapp.ui.adapters.selector.SelectorViewHolderNotifier;
+import com.diraapp.ui.appearance.AppTheme;
+import com.diraapp.ui.appearance.ColorThemeType;
 import com.diraapp.ui.components.DiraPopup;
 import com.diraapp.ui.components.GlobalPlayerComponent;
 import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayer;
@@ -106,6 +108,7 @@ public class RoomSelectorFragment extends Fragment implements ProcessorListener,
 
     private RecyclerView recyclerView;
 
+    private ColorThemeType currentTheme;
 
     private RoomDao roomDao;
 
@@ -134,6 +137,7 @@ public class RoomSelectorFragment extends Fragment implements ProcessorListener,
 
 
 
+        currentTheme = Theme.getColorThemeType();
        binding.buttonNewRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -286,7 +290,7 @@ public class RoomSelectorFragment extends Fragment implements ProcessorListener,
         notifier.notifyViewHolder(holder);
     }
 
-    private void updateRooms(boolean updateRooms) {
+    private void updateRooms(boolean syncServerUpdates) {
         if (isRoomsUpdating) return;
         isRoomsUpdating = true;
         recyclerView = binding.recyclerView;
@@ -304,7 +308,7 @@ public class RoomSelectorFragment extends Fragment implements ProcessorListener,
                         room.setMessage(message);
                     }
 
-                    if (updateRooms) {
+                    if (syncServerUpdates) {
                         HashMap<String, GetUpdatesRequest> requests = UpdateProcessor.getInstance().
                                 createGetUpdatesRequests(roomList);
 
@@ -472,6 +476,11 @@ public class RoomSelectorFragment extends Fragment implements ProcessorListener,
     public void onResume() {
         super.onResume();
 
+        if(Theme.getColorThemeType() != currentTheme)
+        {
+            updateRooms(false);
+            currentTheme = Theme.getColorThemeType();
+        }
 
         if (NavigationActivity.lastOpenedRoomId == null) return;
         for (int i = 0; i < roomList.size(); i++) {

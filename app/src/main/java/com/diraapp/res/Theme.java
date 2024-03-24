@@ -36,6 +36,8 @@ public class Theme {
         return themeChangeHandlers;
     }
 
+    private static ColorThemeType colorThemeType = ColorThemeType.DIRA;
+
     public static boolean isDayTheme(Context context) {
         // TODO: day theme
         return true;
@@ -53,6 +55,10 @@ public class Theme {
         } catch (Exception e) {
             return -1;
         }
+    }
+
+    public static ColorThemeType getColorThemeType() {
+        return colorThemeType;
     }
 
     public static int getColor(Context context, int resId) {
@@ -189,7 +195,7 @@ public class Theme {
                 cacheUtils.setString(CacheUtils.COLOR_THEME, ColorThemeType.DIRA.toString());
             }
 
-            ColorThemeType colorThemeType = ColorThemeType.valueOf(cacheUtils.getString(CacheUtils.COLOR_THEME));
+            colorThemeType = ColorThemeType.valueOf(cacheUtils.getString(CacheUtils.COLOR_THEME));
 
             int resId = context.getResources().getIdentifier(
                     colorThemeType.name().toLowerCase() + "_theme", "raw", context.getPackageName());
