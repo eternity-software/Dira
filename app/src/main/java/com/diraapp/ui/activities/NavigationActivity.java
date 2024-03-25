@@ -98,14 +98,14 @@ public class NavigationActivity extends DiraActivity {
 
     @Override
     public void onBackPressed() {
+        int fragmentIndex = binding.viewPager.getCurrentItem();
+
+        if (fragmentIndex != 1) {
+            binding.viewPager.setCurrentItem(1);
+            return;
+        }
+
         if (canBackPress) {
-            int fragmentIndex = binding.viewPager.getCurrentItem();
-
-            if (fragmentIndex != 1) {
-                binding.viewPager.setCurrentItem(1);
-                return;
-            }
-
             super.onBackPressed();
         }
     }

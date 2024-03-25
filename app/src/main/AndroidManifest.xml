@@ -165,7 +165,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.activities.RoomSelectorActivity"
+            android:name=".ui.activities.legacy.RoomSelectorActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing">

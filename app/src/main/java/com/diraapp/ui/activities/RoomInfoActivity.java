@@ -39,6 +39,7 @@ import com.diraapp.ui.components.DiraPopup;
 import com.diraapp.ui.components.FadingImageView;
 import com.diraapp.ui.components.mediatypeselector.MediaTypeSelector;
 import com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorListener;
+import com.diraapp.ui.fragments.navigation.selector.RoomSelectorFragment;
 import com.diraapp.ui.fragments.roominfo.BaseRoomInfoFragment;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.SliderActivity;
@@ -475,8 +476,8 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Intent intent = new Intent(RoomInfoActivity.this, RoomSelectorActivity.class);
-                                        intent.putExtra(RoomSelectorActivity.CAN_BE_BACK_PRESSED, false);
+                                        Intent intent = new Intent(RoomInfoActivity.this, NavigationActivity.class);
+                                        intent.putExtra(RoomSelectorFragment.CAN_BE_BACK_PRESSED, false);
                                         startActivity(intent);
                                     }
                                 });

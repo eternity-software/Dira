@@ -1,4 +1,4 @@
-package com.diraapp.ui.activities;
+package com.diraapp.ui.activities.legacy;
 
 import android.Manifest;
 import android.content.ComponentName;
@@ -18,7 +18,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.diraapp.DiraApplication;
 import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.ProcessorListener;
@@ -45,12 +44,14 @@ import com.diraapp.notifications.Notifier;
 import com.diraapp.res.Theme;
 import com.diraapp.services.UpdaterService;
 import com.diraapp.storage.AppStorage;
+import com.diraapp.ui.activities.DiraActivity;
+import com.diraapp.ui.activities.JoinRoomActivity;
+import com.diraapp.ui.activities.PersonalityActivity;
 import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.ui.adapters.selector.RoomSelectorAdapter;
 import com.diraapp.ui.adapters.selector.SelectorAdapterContract;
 import com.diraapp.ui.adapters.selector.SelectorViewHolder;
 import com.diraapp.ui.adapters.selector.SelectorViewHolderNotifier;
-import com.diraapp.ui.appearance.AppTheme;
 import com.diraapp.ui.components.DiraPopup;
 import com.diraapp.ui.components.GlobalPlayerComponent;
 import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayer;

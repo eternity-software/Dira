@@ -25,7 +25,7 @@ public class CrashActivity extends DiraActivity {
         });
 
         findViewById(R.id.button_reopen).setOnClickListener((v) -> {
-            Intent intent = new Intent(CrashActivity.this, RoomSelectorActivity.class);
+            Intent intent = new Intent(CrashActivity.this, NavigationActivity.class);
             startActivity(intent);
             finish();
         });

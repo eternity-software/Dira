@@ -21,7 +21,7 @@ import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.images.ImagesWorker;
-import com.diraapp.ui.activities.RoomSelectorActivity;
+import com.diraapp.ui.activities.NavigationActivity;
 import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.utils.CacheUtils;
 
@@ -81,7 +81,7 @@ public class Notifier {
                 builder.setLargeIcon(bitmap);
             }
 
-            Intent notificationIntent = new Intent(context, RoomSelectorActivity.class);
+            Intent notificationIntent = new Intent(context, NavigationActivity.class);
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             RoomActivity.putRoomExtrasInIntent(notificationIntent, room.getSecretName(), room.getName());
 

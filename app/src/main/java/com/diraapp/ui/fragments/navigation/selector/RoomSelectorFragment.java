@@ -50,7 +50,6 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.JoinRoomActivity;
 import com.diraapp.ui.activities.NavigationActivity;
-import com.diraapp.ui.activities.RoomSelectorActivity;
 import com.diraapp.ui.adapters.selector.RoomSelectorAdapter;
 import com.diraapp.ui.adapters.selector.SelectorAdapterContract;
 import com.diraapp.ui.adapters.selector.SelectorViewHolder;
@@ -72,7 +71,10 @@ import java.util.Random;
 public class RoomSelectorFragment extends Fragment implements ProcessorListener, UpdateListener, UserStatusListener,
         SelectorAdapterContract {
 
+    public static final String PENDING_ROOM_SECRET = "pendingRoomSecret";
+    public static final String PENDING_ROOM_NAME = "pendingRoomName";
 
+    public static final String CAN_BE_BACK_PRESSED = "canBackPressed";
 
 
     private static final Intent[] POWERMANAGER_INTENTS = {
@@ -339,11 +341,11 @@ public class RoomSelectorFragment extends Fragment implements ProcessorListener,
                             RoomSelectorFragment.OnRoomLoadedListener onLoadedCallback) {
         DiraActivity.runGlobalBackground(() -> {
 
-            Logger.logDebug(RoomSelectorActivity.class.getName(), "update room - " + roomSecret);
+            Logger.logDebug(RoomSelectorFragment.class.getSimpleName(), "update room - " + roomSecret);
             Room room = roomDao.getRoomBySecretName(roomSecret);
 
             if (room == null) {
-                Logger.logDebug(RoomSelectorActivity.class.getName(), "room = null");
+                Logger.logDebug(RoomSelectorFragment.class.getSimpleName(), "room = null");
                 return;
             }
 
@@ -351,7 +353,7 @@ public class RoomSelectorFragment extends Fragment implements ProcessorListener,
                 if (!onLoadedCallback.keepUpdate(room)) return;
             }
 
-            Logger.logDebug(RoomSelectorActivity.class.getName(), "name - " + room.getName());
+            Logger.logDebug(RoomSelectorFragment.class.getSimpleName(), "name - " + room.getName());
 
             Message message = messageDao.getMessageAndAttachmentsById(room.getLastMessageId());
             room.setMessage(message);
@@ -369,7 +371,7 @@ public class RoomSelectorFragment extends Fragment implements ProcessorListener,
                 }
 
                 if (pos == NOT_FOUND) {
-                    Logger.logDebug(RoomSelectorActivity.class.toString(),
+                    Logger.logDebug(RoomSelectorFragment.class.getSimpleName(),
                             "pos = -1 -> is it a new room?");
 
                     roomList.add(0, room);

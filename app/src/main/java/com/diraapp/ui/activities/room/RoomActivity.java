@@ -62,7 +62,6 @@ import com.diraapp.ui.activities.MediaSendActivity;
 import com.diraapp.ui.activities.PreparedActivity;
 import com.diraapp.ui.activities.PreviewActivity;
 import com.diraapp.ui.activities.RoomInfoActivity;
-import com.diraapp.ui.activities.RoomSelectorActivity;
 import com.diraapp.ui.activities.resizer.FluidContentResizer;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
@@ -81,6 +80,7 @@ import com.diraapp.ui.components.RecordComponentsController;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.viewswiper.ViewSwiper;
 import com.diraapp.ui.components.viewswiper.ViewSwiperListener;
+import com.diraapp.ui.fragments.navigation.selector.RoomSelectorFragment;
 import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayer;
 import com.diraapp.ui.singlemediaplayer.GlobalMediaPlayerListener;
 import com.diraapp.utils.CacheUtils;
@@ -145,8 +145,8 @@ public class RoomActivity extends DiraActivity
 
 
     public static void putRoomExtrasInIntent(Intent intent, String roomSecret, String roomName) {
-        intent.putExtra(RoomSelectorActivity.PENDING_ROOM_SECRET, roomSecret);
-        intent.putExtra(RoomSelectorActivity.PENDING_ROOM_NAME, roomName);
+        intent.putExtra(RoomSelectorFragment.PENDING_ROOM_SECRET, roomSecret);
+        intent.putExtra(RoomSelectorFragment.PENDING_ROOM_NAME, roomName);
     }
 
     @Override
@@ -158,8 +158,8 @@ public class RoomActivity extends DiraActivity
         SliderActivity sliderActivity = new SliderActivity();
         SlidrInterface slidrInterface = sliderActivity.attachSlider(this);
 
-        roomSecret = getIntent().getExtras().getString(RoomSelectorActivity.PENDING_ROOM_SECRET);
-        String roomName = getIntent().getExtras().getString(RoomSelectorActivity.PENDING_ROOM_NAME);
+        roomSecret = getIntent().getExtras().getString(RoomSelectorFragment.PENDING_ROOM_SECRET);
+        String roomName = getIntent().getExtras().getString(RoomSelectorFragment.PENDING_ROOM_NAME);
 
         presenter = new RoomActivityPresenter(roomSecret, getCacheUtils().getString(CacheUtils.ID));
         presenter.attachView(this);
