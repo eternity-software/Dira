@@ -18,9 +18,9 @@ import com.diraapp.exceptions.LanguageParsingException;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.res.Theme;
 import com.diraapp.services.UpdaterService;
-import com.diraapp.ui.fragments.navigation.NavigationPagerAdapter;
 import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.ui.bottomsheet.DowntimeBottomSheet;
+import com.diraapp.ui.fragments.navigation.NavigationPagerAdapter;
 import com.diraapp.utils.CacheUtils;
 
 public class NavigationActivity extends DiraActivity {
@@ -28,9 +28,8 @@ public class NavigationActivity extends DiraActivity {
     public static final String PENDING_ROOM_SECRET = "pendingRoomSecret";
     public static final String PENDING_ROOM_NAME = "pendingRoomName";
     public static final String CAN_BE_BACK_PRESSED = "canBackPressed";
-    private ActivityNavigationBinding binding;
-
     public static String lastOpenedRoomId = null;
+    private ActivityNavigationBinding binding;
     private boolean canBackPress = true;
 
 
@@ -74,11 +73,9 @@ public class NavigationActivity extends DiraActivity {
         binding.navView.setSelectedItemId(R.id.navigation_room_selector);
         binding.viewPager.setCurrentItem(1);
 
-       // getCacheUtils().setLong(CacheUtils.UPDATER_LAST_ACTIVE_TIME, System.currentTimeMillis() - 1000 * UpdaterService.DEFAULT_RESTART_DELAY_SEC * 100);
-        if(getCacheUtils().hasKey(CacheUtils.UPDATER_LAST_ACTIVE_TIME))
-        {
-            if(System.currentTimeMillis() - getCacheUtils().getLong(CacheUtils.UPDATER_LAST_ACTIVE_TIME) > 1200 * UpdaterService.DEFAULT_RESTART_DELAY_SEC )
-            {
+        // getCacheUtils().setLong(CacheUtils.UPDATER_LAST_ACTIVE_TIME, System.currentTimeMillis() - 1000 * UpdaterService.DEFAULT_RESTART_DELAY_SEC * 100);
+        if (getCacheUtils().hasKey(CacheUtils.UPDATER_LAST_ACTIVE_TIME)) {
+            if (System.currentTimeMillis() - getCacheUtils().getLong(CacheUtils.UPDATER_LAST_ACTIVE_TIME) > 1200 * UpdaterService.DEFAULT_RESTART_DELAY_SEC) {
                 DowntimeBottomSheet downtimeBottomSheet = new DowntimeBottomSheet();
                 downtimeBottomSheet.show(getSupportFragmentManager(), "");
             }
@@ -86,7 +83,6 @@ public class NavigationActivity extends DiraActivity {
 
 
     }
-
 
 
     @Override
@@ -111,7 +107,6 @@ public class NavigationActivity extends DiraActivity {
     }
 
 
-
     private void setupViewPager() {
 
 
@@ -120,7 +115,8 @@ public class NavigationActivity extends DiraActivity {
 
         binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
             @Override
             public void onPageSelected(int position) {
@@ -129,16 +125,15 @@ public class NavigationActivity extends DiraActivity {
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrollStateChanged(int state) {
+            }
         });
 
 
     }
 
 
-    private void setNavigationColors()
-    {
-
+    private void setNavigationColors() {
 
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.navView, (v, insets) -> {

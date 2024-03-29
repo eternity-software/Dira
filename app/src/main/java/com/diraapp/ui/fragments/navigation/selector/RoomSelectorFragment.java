@@ -106,7 +106,7 @@ public class RoomSelectorFragment extends Fragment implements ProcessorListener,
     private RoomDao roomDao;
 
     private MessageDao messageDao;
-    
+
     private FragmentRoomSelectorBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -114,11 +114,8 @@ public class RoomSelectorFragment extends Fragment implements ProcessorListener,
         super.onCreate(savedInstanceState);
 
 
-
         binding = FragmentRoomSelectorBinding.inflate(inflater, container, false);
 
-
-        
 
         cacheUtils = new CacheUtils(getContext());
         roomDao = DiraRoomDatabase.getDatabase(getContext()).getRoomDao();
@@ -129,16 +126,14 @@ public class RoomSelectorFragment extends Fragment implements ProcessorListener,
         }
 
 
-
         currentTheme = Theme.getColorThemeType();
-       binding.buttonNewRoom.setOnClickListener(new View.OnClickListener() {
+        binding.buttonNewRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), JoinRoomActivity.class);
                 startActivity(intent);
             }
         });
-
 
 
         if (!cacheUtils.hasKey(CacheUtils.ID)) {
@@ -156,7 +151,6 @@ public class RoomSelectorFragment extends Fragment implements ProcessorListener,
         if (!hasAllCriticalPermissions()) {
             askForPermissions();
         }
-
 
 
         UserStatusHandler.getInstance().addListener(this);
@@ -421,7 +415,6 @@ public class RoomSelectorFragment extends Fragment implements ProcessorListener,
     }
 
 
-
     @Override
     public void onSocketsCountChange(float percentOpened) {
         getActivity().runOnUiThread(new Runnable() {
@@ -447,7 +440,6 @@ public class RoomSelectorFragment extends Fragment implements ProcessorListener,
     }
 
 
-
     public void setCanBackPress(boolean canBackPress) {
         this.canBackPress = canBackPress;
     }
@@ -469,8 +461,7 @@ public class RoomSelectorFragment extends Fragment implements ProcessorListener,
     public void onResume() {
         super.onResume();
 
-        if(Theme.getColorThemeType() != currentTheme)
-        {
+        if (Theme.getColorThemeType() != currentTheme) {
             updateRooms(false);
             currentTheme = Theme.getColorThemeType();
         }

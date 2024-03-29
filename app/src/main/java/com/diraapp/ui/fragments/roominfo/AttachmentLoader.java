@@ -26,14 +26,13 @@ public class AttachmentLoader<ConvertedType> {
     private final String roomSecret;
     // Types searching for in db requests
     private final AttachmentType[] types;
-    // Specific data type for adapter (in use only if it needs (use right constructor))
-    private List<ConvertedType> attachments;
     // Fragments listening for results of db requests
     private final AttachmentLoaderListener listener;
+    private final AttachmentDao attachmentDao;
+    // Specific data type for adapter (in use only if it needs (use right constructor))
+    private List<ConvertedType> attachments;
     // Use only if it's necessary
     private AttachmentDataConverter<ConvertedType> converter;
-    private final AttachmentDao attachmentDao;
-
     private boolean isNewestLoaded = true;
 
     private boolean isOldestLoaded = false;

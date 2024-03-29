@@ -16,8 +16,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="8dp"
-        android:src="@drawable/dark_rounded"
         android:paddingTop="4dp"
+        android:src="@drawable/dark_rounded"
         app:themeImageColor="message_reply_color" />
 
     <androidx.cardview.widget.CardView

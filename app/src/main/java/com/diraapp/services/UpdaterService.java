@@ -67,14 +67,10 @@ public class UpdaterService extends Service {
     /**
      * Store uptime timestamp to track downtime of Dira's background service
      */
-    private void updateOnlineStatus()
-    {
-        try
-        {
+    private void updateOnlineStatus() {
+        try {
             new CacheUtils(getApplicationContext()).setLong(CacheUtils.UPDATER_LAST_ACTIVE_TIME, System.currentTimeMillis());
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

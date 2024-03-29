@@ -1,8 +1,6 @@
 package com.diraapp.ui.bottomsheet;
 
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -37,8 +35,6 @@ public class DowntimeBottomSheet extends BottomSheetDialogFragment {
     }
 
 
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,12 +48,9 @@ public class DowntimeBottomSheet extends BottomSheetDialogFragment {
 
         long lastOnlineTimestamp = new CacheUtils(getContext()).getLong(CacheUtils.UPDATER_LAST_ACTIVE_TIME);
 
-        if(System.currentTimeMillis() - lastOnlineTimestamp < 1000L * 60 * 60 * 6)
-        {
+        if (System.currentTimeMillis() - lastOnlineTimestamp < 1000L * 60 * 60 * 6) {
             timeSubtext.setText(getString(R.string.downtime_default_info));
-        }
-        else
-        {
+        } else {
             timeIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.red));
         }
 

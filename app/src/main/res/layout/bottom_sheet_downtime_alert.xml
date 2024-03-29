@@ -51,30 +51,32 @@
         android:text="@string/downtime_text_last_time"
         android:textColor="@color/white"
         android:textSize="16sp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/dark_rect_semirounded"
-        android:paddingHorizontal="12dp"
         android:layout_marginTop="12dp"
+        android:background="@drawable/dark_rect_semirounded"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp">
 
         <ImageView
             android:id="@+id/time_icon"
             android:layout_width="32dp"
-            android:layout_weight="0"
             android:layout_height="match_parent"
             android:layout_marginRight="12dp"
-            android:src="@drawable/ic_time"/>
+            android:layout_weight="0"
+            android:src="@drawable/ic_time" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingVertical="8dp"
             android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingVertical="8dp">
+
             <TextView
                 android:id="@+id/time_text"
                 android:layout_width="wrap_content"
@@ -84,8 +86,8 @@
                 android:fontFamily="@font/montserratbold"
                 android:text="0 days ago"
                 android:textColor="@color/white"
-                android:textSize="16sp"
-                />
+                android:textSize="16sp" />
+
             <TextView
                 android:id="@+id/time_subtext"
                 android:layout_width="wrap_content"
@@ -93,12 +95,11 @@
                 android:layout_gravity="center_vertical"
 
                 android:layout_marginTop="4dp"
+                android:alpha="0.7"
                 android:fontFamily="@font/montserratsemibold"
                 android:text="@string/downtime_you_missed"
-                android:alpha="0.7"
                 android:textColor="@color/white"
-                android:textSize="12sp"
-                />
+                android:textSize="12sp" />
         </LinearLayout>
 
 
@@ -112,8 +113,7 @@
             android:text="@string/downtime_check_permissions"
             android:textColor="@color/accent"
             android:textSize="14sp"
-            app:themeColor="accent"
-            />
+            app:themeColor="accent" />
 
     </LinearLayout>
 
@@ -122,13 +122,13 @@
         android:id="@+id/button_ignore"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="8dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
 
+        android:alpha="0.8"
         android:fontFamily="@font/montserratsemibold"
         android:gravity="center"
         android:paddingHorizontal="18dp"
-        android:alpha="0.8"
         android:src="@drawable/ic_next"
         android:text="@string/downtime_ignore"
         android:textColor="@color/white"

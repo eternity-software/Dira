@@ -8,9 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.diraapp.BuildConfig;
 import com.diraapp.R;
-import com.diraapp.device.PerformanceTester;
 import com.diraapp.utils.SliderActivity;
 
 public class SettingsActivity extends DiraActivity {
@@ -34,7 +32,6 @@ public class SettingsActivity extends DiraActivity {
 
         SliderActivity sliderActivity = new SliderActivity();
         sliderActivity.attachSlider(this);
-
 
 
         initViews();

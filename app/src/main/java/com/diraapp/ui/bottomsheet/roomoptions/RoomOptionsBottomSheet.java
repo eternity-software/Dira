@@ -17,16 +17,11 @@ import java.io.File;
 
 public class RoomOptionsBottomSheet extends BottomSheetDialogFragment {
 
-    private BottomSheetRoomSettingsBinding binding;
-
     private final boolean showInviteButton;
-
     private final String roomName;
-
     private final String imagePath;
-
     private final boolean isNotificationsEnabled;
-
+    private BottomSheetRoomSettingsBinding binding;
     private RoomOptionsBottomSheetListener listener;
 
     public RoomOptionsBottomSheet(boolean showInviteButton, String roomName, String imagePath, boolean isNotificationsEnabled, RoomOptionsBottomSheetListener listener) {

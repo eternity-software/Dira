@@ -108,7 +108,7 @@ public class DiraActivity extends AppCompatActivity {
 
 
     public void setWindowFlag(final int bits, boolean on) {
-        Window win =getWindow();
+        Window win = getWindow();
         WindowManager.LayoutParams winParams = win.getAttributes();
         if (on) {
             winParams.flags |= bits;
@@ -117,6 +117,7 @@ public class DiraActivity extends AppCompatActivity {
         }
         win.setAttributes(winParams);
     }
+
     public ScaleAnimation performScaleAnimation(float fromScale, float toScale, View view) {
         ScaleAnimation scaleOut = new ScaleAnimation(fromScale, toScale,
                 fromScale, toScale, Animation.RELATIVE_TO_SELF, 0.5f,

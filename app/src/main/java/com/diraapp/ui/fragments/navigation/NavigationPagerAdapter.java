@@ -9,7 +9,9 @@ import com.diraapp.ui.fragments.navigation.account.AccountFragment;
 import com.diraapp.ui.fragments.navigation.explore.ExploreFragment;
 import com.diraapp.ui.fragments.navigation.selector.RoomSelectorFragment;
 
-/** @noinspection deprecation*/
+/**
+ * @noinspection deprecation
+ */
 public class NavigationPagerAdapter extends FragmentPagerAdapter {
 
 

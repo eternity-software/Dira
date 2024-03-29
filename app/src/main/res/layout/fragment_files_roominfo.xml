@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/no_voice_indicator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="30dp"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ImageView
             android:layout_width="130dp"
             android:layout_height="130dp"
-            android:src="@drawable/ic_moon_face"/>
+            android:src="@drawable/ic_moon_face" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -24,10 +24,10 @@
             android:layout_marginHorizontal="100dp"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/montserratsemibold"
+            android:gravity="center_horizontal"
             android:text="@string/no_documents"
             android:textColor="@color/light_gray"
             android:textSize="16sp"
-            android:gravity="center_horizontal"
             android:transitionName="name" />
 
     </LinearLayout>
@@ -36,11 +36,11 @@
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="600dp"
-        android:paddingHorizontal="12dp"
-
-        android:paddingBottom="20dp"
         android:clipToPadding="true"
 
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        android:paddingHorizontal="12dp"
+        android:paddingBottom="20dp"
+
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </LinearLayout>

@@ -17,10 +17,10 @@
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
         android:background="@drawable/navigation_round_rect"
-        app:itemIconSize="18dp"
-
-
         app:itemBackground="@drawable/item_background"
+
+
+        app:itemIconSize="18dp"
 
         app:itemIconTint="@drawable/nav_icon_item_color"
         app:labelVisibilityMode="unlabeled"
