@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/dark">
+    android:background="@color/dark"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,30 +13,32 @@
 
         android:orientation="vertical"
         android:paddingHorizontal="18dp"
-        android:paddingBottom="18dp"
         android:paddingTop="48dp"
-   >
+        android:paddingBottom="18dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
+
             <ImageView
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:src="@drawable/logo_white"/>
+                android:src="@drawable/logo_white" />
+
             <TextView
 
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
 
+                android:layout_marginLeft="8dp"
                 android:fontFamily="@font/montserratbold"
                 android:gravity="center_vertical"
                 android:text="Dira"
-                android:layout_marginLeft="8dp"
                 android:textColor="@color/white"
                 android:textSize="18dp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -47,20 +49,22 @@
                     android:id="@+id/button_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:background="@drawable/dark_rect"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="12dp"
+                    android:background="@drawable/dark_rect"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="8dp">
+
                     <ImageView
 
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:scaleType="centerInside"
-                        android:adjustViewBounds="true"
                         android:layout_marginRight="8dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerInside"
                         android:src="@drawable/ic_edit"
                         app:tint="@color/white" />
+
                     <TextView
                         android:id="@+id/status_text"
                         android:layout_width="wrap_content"
@@ -72,6 +76,7 @@
                         android:textColor="@color/white"
                         android:textSize="16dp" />
                 </LinearLayout>
+
                 <ImageView
                     android:id="@+id/button_settings"
                     android:layout_width="40dp"
@@ -85,13 +90,15 @@
 
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="220dp"
-            android:gravity="center"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="8dp"
+            android:gravity="center"
             android:orientation="vertical">
+
             <androidx.cardview.widget.CardView
                 android:layout_width="128dp"
                 android:layout_height="128dp"
@@ -110,6 +117,7 @@
                     android:transitionName="icon" />
 
             </androidx.cardview.widget.CardView>
+
             <TextView
                 android:id="@+id/nickname_text"
                 android:layout_width="wrap_content"
@@ -126,10 +134,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:alpha="0.7"
                 android:fontFamily="@font/montserratsemibold"
                 android:gravity="center_vertical"
                 android:text="***ukwn"
-                android:alpha="0.7"
                 android:textColor="@color/white"
                 android:textSize="18dp" />
         </LinearLayout>
@@ -141,58 +149,62 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:padding="18dp"
+        android:background="@drawable/dark_rect"
         android:orientation="vertical"
-        android:background="@drawable/dark_rect">
+        android:padding="18dp">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
             <ImageView
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:src="@drawable/ic_star"
                 app:tint="@color/white" />
+
             <TextView
 
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
 
+                android:layout_marginLeft="6dp"
                 android:fontFamily="@font/montserratsemibold"
                 android:gravity="center_vertical"
                 android:text="@string/flows_title"
-                android:layout_marginLeft="6dp"
                 android:textColor="@color/white"
                 android:textSize="16dp" />
 
         </LinearLayout>
+
         <TextView
             android:id="@+id/not_impl"
-            android:layout_marginTop="12dp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-
-            android:fontFamily="@font/montserratsemibold"
-            android:gravity="center_vertical"
+            android:layout_marginTop="12dp"
 
             android:alpha="0.7"
+            android:fontFamily="@font/montserratsemibold"
+
+            android:gravity="center_vertical"
             android:textColor="@color/white"
             android:textSize="16dp" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/version"
-        android:layout_marginTop="12dp"
         android:layout_width="match_parent"
-
         android:layout_height="wrap_content"
+
         android:layout_marginHorizontal="40dp"
+        android:layout_marginTop="12dp"
 
-        android:fontFamily="@font/montserratsemibold"
-        android:gravity="center"
-
-        android:text="unknown"
         android:alpha="0.7"
+        android:fontFamily="@font/montserratsemibold"
+
+        android:gravity="center"
+        android:text="unknown"
         android:textColor="@color/white"
         android:textSize="14dp" />
 </LinearLayout>

@@ -69,7 +69,6 @@
         app:themeBackgroundColor="dark" />
 
 
-
     <LinearLayout
 
         android:id="@+id/room_info_pan"
@@ -220,8 +219,6 @@
         app:themeBackgroundTint="accent_button_background"
         app:themeImageColor="accent_button_color"
         app:tint="@color/dark" />
-
-
 
 
     <LinearLayout
@@ -592,8 +589,8 @@
                 android:id="@+id/pinned_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/placeholder"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/placeholder" />
 
         </androidx.cardview.widget.CardView>
 
@@ -624,9 +621,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginTop="2dp"
                 android:fontFamily="@font/montserratsemibold"
                 android:maxLines="1"
-                android:layout_marginTop="2dp"
 
                 android:text="Message text"
                 android:textColor="@color/white"

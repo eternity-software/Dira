@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.navigation.selector.RoomSelectorFragment"
-    android:background="@color/dark">
+    android:background="@color/dark"
+    tools:context=".ui.fragments.navigation.selector.RoomSelectorFragment">
 
     <FrameLayout
         android:id="@+id/frame_container"
@@ -19,10 +19,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/dark"
+            android:clipToPadding="false"
             android:divider="@color/dark"
             android:dividerHeight="0dp"
             android:footerDividersEnabled="false"
-            android:clipToPadding="false"
             android:paddingBottom="20dp"
             android:visibility="visible"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
@@ -44,8 +44,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/dark"
             android:layout_marginTop="32dp"
+            android:background="@color/dark"
             android:clipChildren="true"
             app:layout_scrollFlags="scroll|snap"
             app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar">
@@ -91,7 +91,6 @@
                         android:padding="12dp"
                         android:src="@drawable/ic_add_room"
                         app:tint="@color/white" />
-
 
 
                 </LinearLayout>

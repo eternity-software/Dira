@@ -29,15 +29,14 @@
 
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:transitionName="@string/transition_image_shared"
-
             android:src="@drawable/full_placeholder"
+
+            android:transitionName="@string/transition_image_shared"
 
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-          />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.diraapp.ui.components.VideoPlayer
             android:id="@+id/videoView"

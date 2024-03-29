@@ -181,8 +181,8 @@ public class MessageReplyComponent extends FrameLayout {
 
         if (isSelfMessage) {
             ((ImageView) findViewById(R.id.message_reply_line)).setColorFilter(
-                            Theme.getColor(this.getContext(), R.color.self_reply_color),
-                            PorterDuff.Mode.SRC_IN);
+                    Theme.getColor(this.getContext(), R.color.self_reply_color),
+                    PorterDuff.Mode.SRC_IN);
             ((TextView) this.findViewById(R.id.message_reply_author_name)).setTextColor(
                     Theme.getColor(this.getContext(), R.color.self_reply_color));
         }

@@ -15,9 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diraapp.R;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.UpdateListener;
-import com.diraapp.api.requests.PingMembersRequest;
 import com.diraapp.api.updates.BaseMemberUpdate;
-import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
 import com.diraapp.api.views.BaseMember;
@@ -37,9 +35,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
     private final LayoutInflater layoutInflater;
     private final Activity context;
     private final String roomSecret;
-    private List<StatusMember> members = new ArrayList<>();
-
-
+    private final List<StatusMember> members = new ArrayList<>();
 
 
     public MembersAdapter(Activity context, String roomSecret) {
@@ -49,22 +45,16 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
         UpdateProcessor.getInstance().addUpdateListener(this);
 
 
-
         new Thread(() -> {
-            try
-            {
+            try {
                 Thread.sleep(10 * 1000);
-                for(StatusMember statusMember : members)
-                {
-                    if(statusMember.getStatus() == MemberStatus.WAITING)
-                    {
+                for (StatusMember statusMember : members) {
+                    if (statusMember.getStatus() == MemberStatus.WAITING) {
                         statusMember.setStatus(MemberStatus.OFFLINE);
                         context.runOnUiThread(() -> notifyItemChanged(members.indexOf(statusMember)));
                     }
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             UpdateProcessor.getInstance().removeUpdateListener(MembersAdapter.this);
@@ -73,8 +63,7 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
     }
 
     public void setMembers(List<Member> members) {
-        for(Member member : members)
-        {
+        for (Member member : members) {
             this.members.add(new StatusMember(member, MemberStatus.WAITING));
         }
 
@@ -96,18 +85,13 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
 
         Bitmap pic = AppStorage.getBitmapFromPath(member.getImagePath());
 
-        if(statusMember.getStatus() == MemberStatus.OFFLINE)
-        {
+        if (statusMember.getStatus() == MemberStatus.OFFLINE) {
             holder.memberStatus.setText(context.getString(R.string.members_status_offline));
             holder.memberStatus.setTextColor(Theme.getColor(context, R.color.paintOrange));
-        }
-        else if(statusMember.getStatus() == MemberStatus.READY)
-        {
+        } else if (statusMember.getStatus() == MemberStatus.READY) {
             holder.memberStatus.setText(context.getString(R.string.members_status_online));
             holder.memberStatus.setTextColor(Theme.getColor(context, R.color.accent));
-        }
-        else if(statusMember.getStatus() == MemberStatus.WAITING)
-        {
+        } else if (statusMember.getStatus() == MemberStatus.WAITING) {
             holder.memberStatus.setText(context.getString(R.string.members_status_pinging));
             holder.memberStatus.setTextColor(Theme.getColor(context, R.color.light_gray));
         }
@@ -152,16 +136,14 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
                 }
             });
 
-        }
-        else
-        {
+        } else {
             holder.memberPicture.setImageDrawable(context.getDrawable(R.drawable.placeholder));
         }
     }
 
     @Override
     public void onUpdate(Update update) {
-        if(update.getUpdateType() != UpdateType.BASE_MEMBER_UPDATE) return;
+        if (update.getUpdateType() != UpdateType.BASE_MEMBER_UPDATE) return;
         BaseMemberUpdate baseMemberUpdate = (BaseMemberUpdate) update;
 
         if (baseMemberUpdate.getRoomSecret().equals(roomSecret)) {
@@ -169,12 +151,10 @@ public class MembersAdapter extends RecyclerView.Adapter<MembersAdapter.ViewHold
 
             BaseMember baseMember = baseMemberUpdate.getBaseMember();
 
-            for(StatusMember statusMember : members)
-            {
-                if(baseMember.getId().equals(statusMember.getMember().getId()))
-                {
+            for (StatusMember statusMember : members) {
+                if (baseMember.getId().equals(statusMember.getMember().getId())) {
                     statusMember.setStatus(MemberStatus.READY);
-                    context.runOnUiThread(()-> {
+                    context.runOnUiThread(() -> {
                         notifyItemChanged(members.indexOf(statusMember));
                     });
                 }

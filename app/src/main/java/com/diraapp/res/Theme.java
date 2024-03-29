@@ -31,12 +31,11 @@ public class Theme {
     private final static String DARK_THEME = "APP_THEME_NIGHT";
     private static final List<ThemeChangeHandler> themeChangeHandlers = new ArrayList<>();
     private static StringsRepository stringsRepository = new StringsRepository();
+    private static ColorThemeType colorThemeType = ColorThemeType.DIRA;
 
     public static List<ThemeChangeHandler> getThemeChangeHandlers() {
         return themeChangeHandlers;
     }
-
-    private static ColorThemeType colorThemeType = ColorThemeType.DIRA;
 
     public static boolean isDayTheme(Context context) {
         // TODO: day theme

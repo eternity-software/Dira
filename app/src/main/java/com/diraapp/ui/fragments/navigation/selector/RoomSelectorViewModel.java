@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel;
 public class RoomSelectorViewModel extends ViewModel {
 
 
-
     public RoomSelectorViewModel() {
 
     }

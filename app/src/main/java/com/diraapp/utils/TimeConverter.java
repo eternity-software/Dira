@@ -11,52 +11,36 @@ public class TimeConverter {
         return DateFormat.format("HH:mm", timestamp).toString();
     }
 
-    public static String getFormattedTimeAfterTimestamp(long timestamp, Context context)
-    {
+    public static String getFormattedTimeAfterTimestamp(long timestamp, Context context) {
         long time = System.currentTimeMillis() - timestamp;
         long timeSec = time / 1000L;
 
-        if(timeSec < 60)
-        {
+        if (timeSec < 60) {
             return context.getResources().getString(R.string.less_than_a_minute);
         }
 
         int count = 1;
         String suffix = "unknown";
 
-        if(timeSec < 60 * 60)
-        {
+        if (timeSec < 60 * 60) {
             count = (int) (timeSec / 60);
-            if(count > 1)
-            {
+            if (count > 1) {
                 suffix = context.getString(R.string.time_unit_minutes);
-            }
-            else
-            {
+            } else {
                 suffix = context.getString(R.string.time_unit_minute);
             }
-        }
-        else if(timeSec < 24 * 60 * 60)
-        {
+        } else if (timeSec < 24 * 60 * 60) {
             count = (int) (timeSec / 60 / 60);
-            if(count > 1)
-            {
+            if (count > 1) {
                 suffix = context.getString(R.string.time_unit_hours);
-            }
-            else
-            {
+            } else {
                 suffix = context.getString(R.string.time_unit_hour);
             }
-        }
-        else if(timeSec < 24 * 60 * 60 * 60)
-        {
+        } else if (timeSec < 24 * 60 * 60 * 60) {
             count = (int) (timeSec / 60 / 60 / 24);
-            if(count > 1)
-            {
+            if (count > 1) {
                 suffix = context.getString(R.string.time_unit_days);
-            }
-            else
-            {
+            } else {
                 suffix = context.getString(R.string.time_unit_day);
             }
         }

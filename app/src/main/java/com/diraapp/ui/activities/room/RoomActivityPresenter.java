@@ -15,8 +15,6 @@ import com.abedelazizshe.lightcompressorlibrary.VideoCompressor;
 import com.abedelazizshe.lightcompressorlibrary.VideoQuality;
 import com.abedelazizshe.lightcompressorlibrary.config.AppSpecificStorageConfiguration;
 import com.abedelazizshe.lightcompressorlibrary.config.Configuration;
-import com.abedelazizshe.lightcompressorlibrary.config.SaveLocation;
-import com.abedelazizshe.lightcompressorlibrary.config.SharedStorageConfiguration;
 import com.diraapp.api.processors.UpdateProcessor;
 import com.diraapp.api.processors.listeners.UpdateListener;
 import com.diraapp.api.requests.SendMessageRequest;
@@ -91,6 +89,15 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     public RoomActivityPresenter(String roomSecret, String selfId) {
         this.roomSecret = roomSecret;
         this.selfId = selfId;
+    }
+
+    private static void clearJunkAfterCompression(Context context) {
+        // Delete junk after this buggy library finishes its work
+        // New version with fixes not released and it's not supporting sdk 21
+        // TODO: Make our own compression (maybe fork of compression library with fixes)
+        for (File file : new File(context.getApplicationInfo().dataDir).listFiles()) {
+            if (file.isFile()) file.delete();
+        }
     }
 
     @Override
@@ -482,7 +489,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         loadMessagesNearByTime(messageTime, true);
     }
 
-
     @Override
     public void blinkMessage(Message message) {
 //        if (message == null) return;
@@ -651,8 +657,8 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                               Double videoWidth, RoomActivityPresenter.AttachmentHandler callback, String serverAddress, String encryptionKey, Context context) {
         VideoCompressor.start(context, urisToCompress,
                 false,
-               null,
-                new AppSpecificStorageConfiguration (new File(fileUri).getName() + "temp_compressed", null),
+                null,
+                new AppSpecificStorageConfiguration(new File(fileUri).getName() + "temp_compressed", null),
                 new Configuration(videoQuality,
                         false,
                         6,
@@ -708,18 +714,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     }
                 });
     }
-
-    private static void clearJunkAfterCompression(Context context)
-    {
-        // Delete junk after this buggy library finishes its work
-        // New version with fixes not released and it's not supporting sdk 21
-        // TODO: Make our own compression (maybe fork of compression library with fixes)
-        for(File file : new File(context.getApplicationInfo().dataDir).listFiles())
-        {
-            if(file.isFile()) file.delete();
-        }
-    }
-
 
     @Override
     public void sendMessage(ArrayList<Attachment> attachments, String messageText, String replyId) {

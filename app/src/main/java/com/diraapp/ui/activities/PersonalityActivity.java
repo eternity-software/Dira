@@ -50,12 +50,9 @@ public class PersonalityActivity extends DiraActivity {
         CacheUtils cacheUtils = new CacheUtils(getApplicationContext());
 
         String picPath = cacheUtils.getString(CacheUtils.PICTURE);
-        if (picPath != null)
-        {
+        if (picPath != null) {
             imageView.setImageBitmap(AppStorage.getBitmapFromPath(picPath));
-        }
-        else
-        {
+        } else {
             imageView.setImageDrawable(getDrawable(R.drawable.placeholder));
         }
 

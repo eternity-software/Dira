@@ -30,11 +30,10 @@ public class VoiceAttachmentViewHolder extends BaseAttachmentViewHolder {
 
     private final ImageView watchButton;
     private final int playButtonColor;
+    private final VoiceFragmentAdapterContract.ViewClickListener viewClickListener;
     private AttachmentMessagePair pair;
     private ListenableViewHolderState state = ListenableViewHolderState.UNSELECTED;
     private boolean isPlayButtonActive = true;
-
-    private final VoiceFragmentAdapterContract.ViewClickListener viewClickListener;
 
     public VoiceAttachmentViewHolder(@NonNull View itemView,
                                      VoiceFragmentAdapterContract.ViewClickListener viewClickListener,

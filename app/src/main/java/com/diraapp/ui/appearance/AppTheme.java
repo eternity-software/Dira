@@ -2,7 +2,6 @@ package com.diraapp.ui.appearance;
 
 import android.content.Context;
 
-import com.diraapp.exceptions.HolderAlreadyInitializedException;
 import com.diraapp.utils.CacheUtils;
 
 public class AppTheme {
@@ -14,7 +13,8 @@ public class AppTheme {
     private ColorTheme colorTheme;
 
     private AppTheme(Context context) {
-        if(instance != null) throw new RuntimeException("AppTheme singleton initialized second time");
+        if (instance != null)
+            throw new RuntimeException("AppTheme singleton initialized second time");
         instance = this;
         ColorTheme.initColorThemes(context);
 
@@ -52,15 +52,16 @@ public class AppTheme {
     }
 
     public static AppTheme getInstance(Context context) {
-        if(instance == null) new AppTheme(context);
+        if (instance == null) new AppTheme(context);
         return instance;
     }
 
     @Deprecated
     public static AppTheme getInstance() {
-        if(instance == null) throw new RuntimeException("AppTheme singleton not initialized");
+        if (instance == null) throw new RuntimeException("AppTheme singleton not initialized");
         return instance;
     }
+
     public ColorTheme getColorTheme() {
         return colorTheme;
     }

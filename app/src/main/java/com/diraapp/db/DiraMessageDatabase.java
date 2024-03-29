@@ -49,8 +49,9 @@ import com.diraapp.db.migrations.MessageMigrationFrom29To30;
                 @AutoMigration(from = 27, to = 28),
                 @AutoMigration(from = 29, to = 30, spec = MessageMigrationFrom29To30.class),
                 @AutoMigration(from = 30, to = 31),
+                @AutoMigration(from = 31, to = 32),
         },
-        version = 31,
+        version = 32,
         exportSchema = true)
 @TypeConverters({CustomClientDataConverter.class,
         MessageReadingConverter.class})
