@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.diraapp.R;
+import com.diraapp.api.processors.UpdateProcessor;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class InvitationCodeBottomSheet extends BottomSheetDialogFragment {
@@ -23,6 +24,7 @@ public class InvitationCodeBottomSheet extends BottomSheetDialogFragment {
 
     private String code;
     private String roomName;
+    private boolean isOfficialServer;
     private View view;
 
 
@@ -50,6 +52,10 @@ public class InvitationCodeBottomSheet extends BottomSheetDialogFragment {
         this.roomName = roomName;
     }
 
+    public void setOfficialServer(boolean officialServer) {
+        isOfficialServer = officialServer;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,11 +63,20 @@ public class InvitationCodeBottomSheet extends BottomSheetDialogFragment {
         view = v;
         getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         TextView codeView = v.findViewById(R.id.invitation_code_text);
-        TextView codeTip = v.findViewById(R.id.invitation_code_tip);
+        TextView serverAdress = v.findViewById(R.id.server_address);
         ImageView copyCodeButton = v.findViewById(R.id.copy_invitation_code);
 
-        codeTip.setText(getActivity().getString(R.string.invitation_code_tip).replace("%s", roomName));
+        //codeTip.setText(getActivity().getString(R.string.invitation_code_tip).replace("%s", roomName));
         codeView.setText(code);
+
+        if (isOfficialServer) {
+            String link = UpdateProcessor.OFFICIAL_ADDRESS.split("//")[1].split(":")[0];
+            link += "/join/";
+            serverAdress.setText(link);
+        } else {
+            serverAdress.setText(R.string.unofficial_server);
+            serverAdress.setTextColor(getResources().getColor(R.color.yellow));
+        }
 
         copyCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override

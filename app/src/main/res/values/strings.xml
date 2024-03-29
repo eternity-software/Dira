@@ -112,6 +112,8 @@
     <!-- Invitation code -->
     <string name="invitation_code">Invitation code</string>
     <string name="invitation_code_tip">This invitation code to %s will expire soon.</string>
+    <string name="share_code_tip">Share this invitation code to allow people join this room.</string>
+    <string name="unofficial_server">Unofficial server</string>
 
     <!-- Memory management -->
     <string name="memory_management_title">Memory management</string>

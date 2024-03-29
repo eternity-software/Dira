@@ -210,4 +210,6 @@
     <string name="title_explore">Найти</string>
     <string name="title_room_selector">Комнаты</string>
     <string name="title_account">Аккаунт</string>
+    <string name="share_code_tip">Поделитесь этим кодом, чтобы добавить пользователей в комнату</string>
+    <string name="unofficial_server">Неофициальный сервер</string>
 </resources>

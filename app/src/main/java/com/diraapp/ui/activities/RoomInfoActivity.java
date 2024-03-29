@@ -427,8 +427,12 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
 
                                 try {
                                     InvitationCodeBottomSheet invitationCodeBottomSheet = new InvitationCodeBottomSheet();
+
                                     invitationCodeBottomSheet.setCode(newInvitationUpdate.getInvitationCode());
                                     invitationCodeBottomSheet.setRoomName(room.getName());
+                                    invitationCodeBottomSheet.setOfficialServer(
+                                            room.getServerAddress().equals(UpdateProcessor.OFFICIAL_ADDRESS));
+
                                     invitationCodeBottomSheet.show(getSupportFragmentManager(), "Invitation bottom sheet");
                                 } catch (Exception e) {
 
