@@ -301,56 +301,16 @@ public class PreviewActivity extends DiraActivity {
     }
 
     public void addImageToGallery(final String filePath, final Context context) {
-        ImagesWorker.saveBitmapToGallery(AppStorage.getBitmapFromPath(filePath), this);
+        DiraActivity.runGlobalBackground(() -> {
+            ImagesWorker.saveBitmapToGallery(AppStorage.getBitmapFromPath(filePath), this);
+        });
     }
 
     public void addVideoToGallery(final String filePath, final Context context) {
-        String videoFileName = "video_" + System.currentTimeMillis() + ".mp4";
-
-        ContentValues valuesvideos;
-        valuesvideos = new ContentValues();
-        valuesvideos.put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/" + "Folder");
-        valuesvideos.put(MediaStore.Video.Media.TITLE, videoFileName);
-        valuesvideos.put(MediaStore.Video.Media.DISPLAY_NAME, videoFileName);
-        valuesvideos.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-        valuesvideos.put(
-                MediaStore.Video.Media.DATE_ADDED,
-                System.currentTimeMillis() / 1000);
-        valuesvideos.put(MediaStore.Video.Media.DATE_TAKEN, System.currentTimeMillis());
-        valuesvideos.put(MediaStore.Video.Media.IS_PENDING, 1);
-
-        ContentResolver resolver = context.getContentResolver();
-        Uri collection =
-                MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
-        Uri uriSavedVideo = resolver.insert(collection, valuesvideos);
-        ParcelFileDescriptor pfd;
-
-        try {
-            pfd = getContentResolver().openFileDescriptor(uriSavedVideo, "w");
-
-            FileOutputStream out = new FileOutputStream(pfd.getFileDescriptor());
-
-            File imageFile = new File(filePath);
-            FileInputStream in = new FileInputStream(imageFile);
-
-            byte[] buf = new byte[8192];
-            int len;
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
-
-            out.close();
-            in.close();
-            pfd.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        valuesvideos.clear();
-        valuesvideos.put(MediaStore.Video.Media.IS_PENDING, 0);
-        context.getContentResolver().update(uriSavedVideo, valuesvideos, null, null);
+        DiraActivity.runGlobalBackground(() -> {
+            ImagesWorker.saveVideoToGallery(filePath, context);
+        });
     }
-
 
     @Override
     protected void onStop() {
