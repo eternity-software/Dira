@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.diraapp.R;
 import com.diraapp.databinding.FragmentMediaRoominfoBinding;
+import com.diraapp.db.daos.AttachmentDao;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
@@ -116,6 +117,6 @@ public class MediaRoomInfoFragment extends BaseRoomInfoFragment<MediaGridAdapter
                         }
                         return null;
                     }
-                });
+                }, AttachmentDao.ATTACHMENT_LOAD_COUNT);
     }
 }

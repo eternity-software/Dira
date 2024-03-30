@@ -35,19 +35,20 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.activities.MediaPreviewActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.NavigationActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Dira"
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".ui.activities.CrashActivity"
             android:exported="false"
@@ -169,8 +170,6 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing">
-
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

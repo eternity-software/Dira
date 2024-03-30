@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 
 import com.diraapp.R;
 import com.diraapp.databinding.FragmentVoiceRoominfoBinding;
+import com.diraapp.db.daos.AttachmentDao;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
@@ -86,7 +87,7 @@ public class VoiceRoomInfoFragment extends
         types[0] = AttachmentType.VOICE;
         types[1] = AttachmentType.BUBBLE;
 
-        return new AttachmentLoader<>(getContext(), pairs, roomSecret, types, this);
+        return new AttachmentLoader<>(getContext(), pairs, roomSecret, types, this, AttachmentDao.ATTACHMENT_LOAD_COUNT);
     }
 
     @Override
