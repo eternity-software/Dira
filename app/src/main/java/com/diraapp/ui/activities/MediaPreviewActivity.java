@@ -1,7 +1,5 @@
 package com.diraapp.ui.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.animation.DecelerateInterpolator;
 
@@ -11,13 +9,15 @@ import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.ui.adapters.mediapreview.MediaPageListener;
 import com.diraapp.ui.adapters.mediapreview.MediaPreviewAdapter;
 import com.diraapp.ui.adapters.mediapreview.MediaPreviewViewHolder;
+import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.fragments.roominfo.AttachmentLoader;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MediaPreviewActivity extends AppCompatActivity
-        implements MediaPageListener, AttachmentLoader.AttachmentLoaderListener {
+public class MediaPreviewActivity extends DiraActivity
+        implements MediaPageListener, AttachmentLoader.AttachmentLoaderListener,
+            MediaPreviewViewHolder.ViewHolderActivityContract {
 
     public static String ROOM_SECRET = "ROOM_SECRET";
     public static String START_ATTACHMENT_ID = "START_ATTACHMENT_ID";
@@ -44,10 +44,7 @@ public class MediaPreviewActivity extends AppCompatActivity
         startId = getIntent().getExtras().getLong(START_ATTACHMENT_ID);
 
         // setup adapter
-        MediaPreviewViewHolder.WatchCallBack watchCallBack = () -> {
-            // TODO: write callback
-        };
-        adapter = new MediaPreviewAdapter(this, pairs, watchCallBack, this);
+        adapter = new MediaPreviewAdapter(this, pairs, this, this);
         binding.viewPager.setAdapter(adapter);
 
         // setup loader
@@ -102,5 +99,15 @@ public class MediaPreviewActivity extends AppCompatActivity
         }
 
         binding.viewPager.setCurrentItem(pos);
+    }
+
+    @Override
+    public void onWatchClicked() {
+
+    }
+
+    @Override
+    public void attachVideoPlayer(DiraVideoPlayer videoPlayer) {
+        videoPlayer.attachDiraActivity(this);
     }
 }

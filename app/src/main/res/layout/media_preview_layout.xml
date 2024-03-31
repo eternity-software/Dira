@@ -42,7 +42,7 @@
         </androidx.cardview.widget.CardView>
 
 
-        <com.diraapp.ui.components.VideoPlayer
+        <com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer
             android:id="@+id/video_player"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

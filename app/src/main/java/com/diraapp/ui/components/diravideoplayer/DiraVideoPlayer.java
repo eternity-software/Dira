@@ -51,6 +51,8 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
     private boolean attachedRecycler = false;
     private View debugIndicator;
 
+    private float volume = 0;
+
 
     public DiraVideoPlayer(@NonNull Context context) {
         super(context);
@@ -65,6 +67,10 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
     public DiraVideoPlayer(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
+    }
+
+    public void setVolume(float volume) {
+        this.volume = volume;
     }
 
     /**
@@ -124,6 +130,12 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
             @Override
             public void onPause() {
                 pause();
+            }
+
+            @Override
+            public void onDestroy() {
+                pause();
+                reset();
             }
         });
     }
@@ -189,7 +201,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
         threadPoolExecutor.execute(() -> {
             try {
 
-                mediaPlayer.setVolume(0, 0);
+                mediaPlayer.setVolume(volume, volume);
                 mediaPlayer.start();
 
                 if (PerformanceTester.measureDevicePerformanceClass(getContext()) == PerformanceClass.POTATO) {
@@ -465,10 +477,9 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
         try {
             if (mediaPlayer == null) mediaPlayer = new DiraMediaPlayer();
             //  if(state == DiraVideoPlayerState.PREPARING) return;
-            mediaPlayer.setVolume(0, 0);
+            mediaPlayer.setVolume(volume, volume);
 
-
-            mediaPlayer.setAudioStreamType(AudioManager.USE_DEFAULT_STREAM_TYPE);
+            //mediaPlayer.setAudioStreamType(AudioManager.USE_DEFAULT_STREAM_TYPE);
             mediaPlayer.setLooping(true);
 
             if (notifyState) {

@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diraapp.R;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewViewHolder> {
@@ -18,17 +17,17 @@ public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewViewHo
 
     private final List<AttachmentMessagePair> pairs;
 
-    private final MediaPreviewViewHolder.WatchCallBack watchCallBack;
+    private final MediaPreviewViewHolder.ViewHolderActivityContract watchCallBack;
 
     private final MediaPageListener listener;
 
     private final LayoutInflater inflater;
 
     public MediaPreviewAdapter(Context context, List<AttachmentMessagePair> pairs,
-                               MediaPreviewViewHolder.WatchCallBack watchCallBack,
+                               MediaPreviewViewHolder.ViewHolderActivityContract holderActivityContract,
                                MediaPageListener listener) {
         this.pairs = pairs;
-        this.watchCallBack = watchCallBack;
+        this.watchCallBack = holderActivityContract;
         this.listener = listener;
 
         inflater = LayoutInflater.from(context);

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.MediaPreviewActivity"
 
-    android:background="@color/gray_trans">
+    android:background="@color/black_trans">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"

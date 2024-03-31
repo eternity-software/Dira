@@ -16,12 +16,10 @@ import com.diraapp.R;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
-import com.diraapp.exceptions.VideoPlayerException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentDownloader;
-import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.ui.components.TouchImageView;
-import com.diraapp.ui.components.VideoPlayer;
+import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.utils.android.DeviceUtils;
 import com.squareup.picasso.Picasso;
 
@@ -31,7 +29,11 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
     private AttachmentMessagePair pair;
 
+    private File file;
+
     private boolean isMediaShown = false;
+
+    private final ViewHolderActivityContract holderActivityContract;
 
     private final ConstraintLayout imageContainer;
 
@@ -39,7 +41,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
     private final TouchImageView imageView;
 
-    private final VideoPlayer videoPlayer;
+    private final DiraVideoPlayer videoPlayer;
 
     private final TextView messageText, memberName, timeText, sizeView, timeView;
 
@@ -55,7 +57,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
     private boolean isVideoPlayerReady = false;
 
-    public MediaPreviewViewHolder(@NonNull View itemView, WatchCallBack watchCallBack) {
+    public MediaPreviewViewHolder(@NonNull View itemView, ViewHolderActivityContract contract) {
         super(itemView);
 
         imageContainer = itemView.findViewById(R.id.imageContainer);
@@ -74,12 +76,19 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         seekBar = itemView.findViewById(R.id.seek_bar);
         pauseButton = itemView.findViewById(R.id.pause_button);
 
-        watchButton.setOnClickListener((View v) -> watchCallBack.onWatchClicked());
+        holderActivityContract = contract;
+
+        watchButton.setOnClickListener((View v) -> contract.onWatchClicked());
+
+        videoPlayer.setVolume(1);
+        contract.attachVideoPlayer(videoPlayer);
     }
 
     public void bind(AttachmentMessagePair attachmentMessagePair) {
         isMediaShown = true;
         pair = attachmentMessagePair;
+
+        videoPlayer.reset();
 
         Message message = pair.getMessage();
         String text = message.getText();
@@ -95,6 +104,9 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         timeText.setText(DeviceUtils.getDateFromTimestamp(message.getTime(), false));
         sizeView.setText(AppStorage.getStringSize(pair.getAttachment().getSize()));
 
+        file = AttachmentDownloader.getFileFromAttachment(pair.getAttachment(),
+                itemView.getContext(), pair.getMessage().getRoomSecret());
+
         showContent();
     }
 
@@ -108,21 +120,22 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
     public void onDetached() {
         isMediaShown = false;
-        releaseMedia();
+
+        imageView.setImageBitmap(null);
+        videoPlayer.pause();
     }
 
     public void release() {
         isMediaShown = false;
         pair = null;
+        file = null;
 
-        releaseMedia();
+        imageView.setImageBitmap(null);
+        videoPlayer.stop();
     }
 
     private void showContent() {
         boolean isVideo = pair.getAttachment().getAttachmentType() == AttachmentType.VIDEO;
-
-        File file = AttachmentDownloader.getFileFromAttachment(pair.getAttachment(),
-                itemView.getContext(), pair.getMessage().getRoomSecret());
 
         if (file == null) {
             videoPlayer.setVisibility(View.GONE);
@@ -137,7 +150,11 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
             videoPlayer.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.GONE);
             progressLayout.setVisibility(View.VISIBLE);
-            setupVideo(file.getAbsolutePath());
+
+            videoPlayer.play(file.getPath(), () -> {
+                videoPlayer.setSpeed(1f);
+                videoPlayer.setProgress(0);
+            });
 
 
         } else {
@@ -149,56 +166,10 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    private void setupVideo(String path) {
-
-        if (isVideoPlayerReady) {
-            try {
-                videoPlayer.play(path);
-                videoPlayer.setVolume(1);
-            } catch (VideoPlayerException e) {
-                e.printStackTrace();
-            }
-
-            return;
-        }
-
-        videoPlayer.setVideoPlayerListener(new VideoPlayer.VideoPlayerListener() {
-            @Override
-            public void onStarted() {
-
-            }
-
-            @Override
-            public void onPaused() {
-
-            }
-
-            @Override
-            public void onReleased() {
-
-            }
-
-            @Override
-            public void onReady(int width, int height) {
-                try {
-                    videoPlayer.play(path);
-                    videoPlayer.setVolume(1);
-
-                    isVideoPlayerReady = true;
-                } catch (VideoPlayerException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private void releaseMedia() {
-        imageView.setImageBitmap(null);
-        videoPlayer.release();
-    }
-
-    public interface WatchCallBack {
+    public interface ViewHolderActivityContract {
 
         void onWatchClicked();
+
+        void attachVideoPlayer(DiraVideoPlayer videoPlayer);
     }
 }
