@@ -16,6 +16,16 @@
 
         app:layout_constraintTop_toTopOf="parent">
 
+        <com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer
+            android:id="@+id/video_player"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.cardview.widget.CardView
             android:id="@+id/card_view"
             android:layout_width="match_parent"
@@ -40,17 +50,6 @@
                 android:transitionName="@string/transition_image_shared"
                 app:strokeColor="@null" />
         </androidx.cardview.widget.CardView>
-
-
-        <com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer
-            android:id="@+id/video_player"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="4dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -207,7 +206,7 @@
             android:layout_height="wrap_content"
 
             android:progress="0"
-            android:max="100"
+            android:max="1000"
 
             android:paddingHorizontal="-10dp"
 
@@ -237,7 +236,8 @@
                 android:id="@+id/pause_button"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_pause"/>
+                android:src="@drawable/ic_pause"
+                app:tint="@color/white"/>
 
         </LinearLayout>
 

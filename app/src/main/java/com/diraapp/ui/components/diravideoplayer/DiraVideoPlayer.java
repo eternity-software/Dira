@@ -7,6 +7,7 @@ import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.FileUtils;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
@@ -71,6 +72,15 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     public void setVolume(float volume) {
         this.volume = volume;
+    }
+
+    public void setOnTickListener(ProgressTickListener listener) {
+        if (mediaPlayer == null) mediaPlayer = new DiraMediaPlayer();
+
+        mediaPlayer.setOnProgressTick(() -> {
+            float progress = mediaPlayer.getProgress();
+            listener.onProgress(progress);
+        });
     }
 
     /**
@@ -587,6 +597,10 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
             debugLog.remove(0);
         }
         debugLog.add(s);
+    }
+
+    public interface ProgressTickListener {
+        void onProgress(float progress);
     }
 
 }
