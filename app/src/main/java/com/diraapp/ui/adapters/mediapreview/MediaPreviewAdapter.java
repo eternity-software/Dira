@@ -46,9 +46,9 @@ public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewViewHo
     public void onBindViewHolder(@NonNull MediaPreviewViewHolder holder, int position) {
 
         if (position == 0) {
-            listener.onOldestPageOpened();
-        } else if (position == pairs.size() - 1) {
             listener.onNewestPageOpened();
+        } else if (position == pairs.size() - 1) {
+            listener.onOldestPageOpened();
         }
 
         AttachmentMessagePair currentPair = pairs.get(position);
@@ -60,5 +60,22 @@ public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewViewHo
         return pairs.size();
     }
 
+    @Override
+    public void onViewRecycled(@NonNull MediaPreviewViewHolder holder) {
+        super.onViewRecycled(holder);
+        holder.release();
+    }
+
+    @Override
+    public void onViewAttachedToWindow(@NonNull MediaPreviewViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        holder.onAttached();
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull MediaPreviewViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        holder.onDetached();
+    }
 
 }

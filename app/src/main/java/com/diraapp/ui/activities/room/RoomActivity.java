@@ -5,6 +5,7 @@ import static com.diraapp.ui.activities.RoomInfoActivity.MESSAGE_TO_SCROLL_TIME;
 
 import android.Manifest;
 import android.animation.Animator;
+import android.app.ActivityOptions;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -58,6 +60,7 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.FileClassifier;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.activities.DiraActivity;
+import com.diraapp.ui.activities.MediaPreviewActivity;
 import com.diraapp.ui.activities.MediaSendActivity;
 import com.diraapp.ui.activities.PreparedActivity;
 import com.diraapp.ui.activities.PreviewActivity;
@@ -1224,9 +1227,19 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
-    public PreparedActivity preparePreviewActivity(String filePath, boolean isVideo, Bitmap preview, View transitionSource) {
-        return PreviewActivity.prepareActivity(this, filePath, preview,
-                binding.recyclerView, isVideo, transitionSource);
+    public PreparedActivity preparePreviewActivity(String filePath, boolean isVideo, Bitmap preview, View transitionSource, long attachmentId) {
+
+        Intent intent = new Intent(this, MediaPreviewActivity.class);
+        intent.putExtra(MediaPreviewActivity.ROOM_SECRET, roomSecret);
+        intent.putExtra(MediaPreviewActivity.START_ATTACHMENT_ID, attachmentId);
+
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
+                this,
+                Pair.create(transitionSource, getString(R.string.transition_image_shared)));
+
+        return new PreparedActivity(this, intent, options);
+//        return PreviewActivity.prepareActivity(this, filePath, preview,
+//                binding.recyclerView, isVideo, transitionSource);
     }
 
     @Override

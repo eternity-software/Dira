@@ -249,7 +249,7 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder implements 
                         public void onClick(View v) {
                             getMessageAdapterContract().preparePreviewActivity(file.getPath(),
                                     attachment.getAttachmentType() == AttachmentType.VIDEO,
-                                    imagePreview.getLoadedBitmap(), imagePreview.getImageView()).start();
+                                    imagePreview.getLoadedBitmap(), imagePreview.getImageView(), attachment.getId()).start();
                         }
                     });
                 }

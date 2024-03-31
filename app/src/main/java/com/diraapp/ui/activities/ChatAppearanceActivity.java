@@ -212,7 +212,7 @@ public class ChatAppearanceActivity extends DiraActivity {
             }
 
             @Override
-            public PreparedActivity preparePreviewActivity(String filePath, boolean isVideo, Bitmap preview, View transitionSource) {
+            public PreparedActivity preparePreviewActivity(String filePath, boolean isVideo, Bitmap preview, View transitionSource, long attachmentId) {
                 return null;
             }
 

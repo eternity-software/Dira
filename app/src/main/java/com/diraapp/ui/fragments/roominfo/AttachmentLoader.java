@@ -214,9 +214,9 @@ public class AttachmentLoader<ConvertedType> {
         }
         Collections.reverse(newer);
 
-        pairs.addAll(older);
-        pairs.add(current);
         pairs.addAll(newer);
+        pairs.add(current);
+        pairs.addAll(older);
 
         if (useConverter) attachments.addAll(convertList(pairs));
 
