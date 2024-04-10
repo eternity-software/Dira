@@ -31,6 +31,9 @@ public interface AttachmentDao {
     @Query("SELECT * FROM attachment WHERE id = :id")
     Attachment getAttachmentById(long id);
 
+    @Query("SELECT * FROM attachment WHERE fileUrl = :fileURL")
+    Attachment getAttachmentByUrl(String fileURL);
+
     @Query("SELECT * FROM attachment WHERE id = :id")
     AttachmentMessagePair getAttachmentMessagePairById(long id);
 

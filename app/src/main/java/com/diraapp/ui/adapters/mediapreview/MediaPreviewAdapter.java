@@ -62,19 +62,7 @@ public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewViewHo
     @Override
     public void onViewRecycled(@NonNull MediaPreviewViewHolder holder) {
         super.onViewRecycled(holder);
-        holder.release();
-    }
-
-    @Override
-    public void onViewAttachedToWindow(@NonNull MediaPreviewViewHolder holder) {
-        super.onViewAttachedToWindow(holder);
-        holder.onAttached();
-    }
-
-    @Override
-    public void onViewDetachedFromWindow(@NonNull MediaPreviewViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-        holder.onDetached();
+        holder.onRecycled();
     }
 
 }

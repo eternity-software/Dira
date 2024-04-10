@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
 
+import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.rooms.Room;
@@ -44,7 +45,7 @@ public interface MessageAdapterContract {
     default void onLastLoadedMessageDisplayed(Message message, int index) {
     }
 
-    PreparedActivity preparePreviewActivity(String filePath, boolean isVideo, Bitmap preview, View transitionSource, long attachmentId);
+    PreparedActivity preparePreviewActivity(String filePath, boolean isVideo, Bitmap preview, View transitionSource, Attachment attachment);
 
     void attachVideoPlayer(DiraVideoPlayer player);
 

@@ -63,7 +63,6 @@ import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.MediaPreviewActivity;
 import com.diraapp.ui.activities.MediaSendActivity;
 import com.diraapp.ui.activities.PreparedActivity;
-import com.diraapp.ui.activities.PreviewActivity;
 import com.diraapp.ui.activities.RoomInfoActivity;
 import com.diraapp.ui.activities.resizer.FluidContentResizer;
 import com.diraapp.ui.adapters.MediaGridItemListener;
@@ -1227,11 +1226,12 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
-    public PreparedActivity preparePreviewActivity(String filePath, boolean isVideo, Bitmap preview, View transitionSource, long attachmentId) {
+    public PreparedActivity preparePreviewActivity(String filePath, boolean isVideo, Bitmap preview, View transitionSource, Attachment attachment) {
 
         Intent intent = new Intent(this, MediaPreviewActivity.class);
         intent.putExtra(MediaPreviewActivity.ROOM_SECRET, roomSecret);
-        intent.putExtra(MediaPreviewActivity.START_ATTACHMENT_ID, attachmentId);
+        intent.putExtra(MediaPreviewActivity.START_ATTACHMENT_ID, attachment.getId());
+        intent.putExtra(MediaPreviewActivity.START_ATTACHMENT_URL, attachment.getFileUrl());
 
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
                 this,

@@ -1,6 +1,5 @@
 package com.diraapp.ui.adapters.mediapreview;
 
-import android.graphics.PorterDuff;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -16,14 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
+import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.components.TouchImageView;
-import com.diraapp.ui.components.VideoPlayer;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
+import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayerState;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.android.DeviceUtils;
 import com.squareup.picasso.Picasso;
@@ -36,7 +36,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
     private File file;
 
-    private boolean isMediaShown = false;
+    private long duration = 60_000;
 
     private int boundCount = 0;
 
@@ -50,7 +50,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
     private final DiraVideoPlayer videoPlayer;
 
-    private final TextView messageText, memberName, timeText, sizeView, timeView;
+    private final TextView messageText, memberName, timeText, sizeView, progressTime;
 
     private final FrameLayout watchButton;
 
@@ -61,6 +61,8 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
     private final SeekBar seekBar;
 
     private final ImageView pauseButton;
+
+    private boolean isOnScreen = false;
 
     public MediaPreviewViewHolder(@NonNull View itemView, ViewHolderActivityContract contract) {
         super(itemView);
@@ -77,7 +79,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         sizeView = itemView.findViewById(R.id.size_view);
 
         progressLayout = itemView.findViewById(R.id.progress_layout);
-        timeView = itemView.findViewById(R.id.time_view);
+        progressTime = itemView.findViewById(R.id.progress_time);
         seekBar = itemView.findViewById(R.id.seek_bar);
         pauseButton = itemView.findViewById(R.id.pause_button);
 
@@ -86,15 +88,10 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         watchButton.setOnClickListener((View v) -> contract.onWatchClicked());
 
         videoPlayer.setVolume(1);
-        videoPlayer.setOnTickListener((float progress) -> {
-            seekBar.setProgress((int) (progress * 1000f));
-        });
-
         contract.attachVideoPlayer(videoPlayer);
     }
 
     public void bind(AttachmentMessagePair attachmentMessagePair) {
-        isMediaShown = true;
         pair = attachmentMessagePair;
 
         boundCount++;
@@ -120,28 +117,51 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         showContent();
     }
 
-    public void onAttached() {
-        if (isMediaShown) return;
+    public void onSelected() {
         if (pair == null) return;
+        if (file == null) return;
+        Logger.logDebug(MediaPreviewViewHolder.class.getSimpleName(), "Holder selected");
+        isOnScreen = true;
 
-        isMediaShown = true;
-        showContent();
+        boolean isImage = pair.getAttachment().getAttachmentType() == AttachmentType.IMAGE;
+        if (isImage) return;
+
+        videoPlayer.setProgress(0);
+        if (videoPlayer.getState() == DiraVideoPlayerState.PAUSED) {
+            final File currentFile = file;
+            videoPlayer.play(() -> onVideoPlayerPrepared(currentFile));
+
+            pauseButton.setImageDrawable(AppCompatResources.
+                    getDrawable(itemView.getContext(), R.drawable.ic_pause));
+        }
     }
 
-    public void onDetached() {
-        isMediaShown = false;
-
-        imageView.setImageBitmap(null);
+    public void onUnselected() {
+        isOnScreen = false;
         videoPlayer.pause();
     }
 
-    public void release() {
-        isMediaShown = false;
+    public void onRecycled() {
+        isOnScreen = false;
         pair = null;
         file = null;
 
+        pauseButton.setOnClickListener((View v) -> {});
+        videoPlayer.setOnClickListener((View v) -> {});
+        videoPlayer.setOnTickListener((float progress) -> {});
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {}
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
+        duration = 60_000;
+
         imageView.setImageBitmap(null);
-        videoPlayer.stop();
         videoPlayer.reset();
     }
 
@@ -163,26 +183,15 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
             pauseButton.setImageDrawable(AppCompatResources.
                     getDrawable(itemView.getContext(), R.drawable.ic_pause));
 
-            pauseButton.setOnClickListener(null);
-            videoPlayer.setOnClickListener(null);
-
             progressLayout.setVisibility(View.VISIBLE);
             Picasso.get().load(R.drawable.full_placeholder);
 
-            videoPlayer.play(file.getPath(), () -> DiraActivity.runOnMainThread(() -> {
-                if (!isMediaShown) {
-                    onDetached();
-                    return;
-                }
+            duration = DeviceUtils.readDuration(file, imageView.getContext());
 
-                videoPlayer.setSpeed(1f);
-                videoPlayer.setProgress(0);
-                imageView.setVisibility(View.GONE);
-
-                setPlayButtonListener();
-
-                Logger.logDebug(MediaPreviewViewHolder.class.getSimpleName(), "DiraVideoPlayer loaded");
-            }));
+            final File currentFile = file;
+            videoPlayer.play(file.getPath(), () -> {
+                onVideoPlayerPrepared(currentFile);
+            });
 
 
         } else {
@@ -206,19 +215,66 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
     private void onPauseClicked() {
         if (file == null) return;
-        if (!isMediaShown) return;
-        boolean isPlaying = videoPlayer.isPlaying();
+        DiraVideoPlayerState state = videoPlayer.getState();
 
-        if (isPlaying) {
+        if (state == DiraVideoPlayerState.PLAYING) {
             pauseButton.setImageDrawable(AppCompatResources.
                     getDrawable(itemView.getContext(), R.drawable.ic_play));
             videoPlayer.pause();
-            return;
-        }
 
-        pauseButton.setImageDrawable(AppCompatResources.
-                getDrawable(itemView.getContext(), R.drawable.ic_pause));
-        videoPlayer.play();
+        } else if (state == DiraVideoPlayerState.PAUSED) {
+            pauseButton.setImageDrawable(AppCompatResources.
+                    getDrawable(itemView.getContext(), R.drawable.ic_pause));
+            videoPlayer.play();
+        }
+    }
+
+    private void onVideoPlayerPrepared(final File currentFile) {
+        DiraActivity.runOnMainThread(() -> {
+            imageView.setVisibility(View.GONE);
+
+            setPlayButtonListener();
+
+            Logger.logDebug(MediaPreviewViewHolder.class.getSimpleName(),
+                    "DiraVideoPlayer loaded");
+
+            videoPlayer.setOnTickListener((float progress) -> {
+                seekBar.setProgress((int) (progress * 1000));
+            });
+
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
+                    if (!fromUser) return;
+
+                    videoPlayer.setProgress((float) i / 1000);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
+            boolean isSelected = pair != null;
+            if (isSelected) isSelected = holderActivityContract.checkIsSelected(pair.getAttachment());
+
+            if (!currentFile.equals(file) || !isSelected) {
+                Logger.logDebug(MediaPreviewViewHolder.class.getSimpleName(),
+                        "DiraVideoPlayer loaded, but detached | " + !isSelected + " | " + !isOnScreen);
+                onUnselected();
+                return;
+            }
+
+            videoPlayer.setSpeed(1f);
+            videoPlayer.setProgress(0);
+
+        });
     }
 
     public interface ViewHolderActivityContract {
@@ -226,5 +282,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         void onWatchClicked();
 
         void attachVideoPlayer(DiraVideoPlayer videoPlayer);
+
+        boolean checkIsSelected(Attachment attachment);
     }
 }

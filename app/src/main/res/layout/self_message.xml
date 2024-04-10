@@ -88,7 +88,7 @@
 
 
                 <com.diraapp.ui.components.dynamic.DynamicTextView
-                    android:id="@+id/time_view"
+                    android:id="@+id/progress_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"

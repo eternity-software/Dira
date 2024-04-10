@@ -71,7 +71,7 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
         inflate(context);
 
         authorText = findViewById(R.id.author_name);
-        timeView = findViewById(R.id.time_view);
+        timeView = findViewById(R.id.progress_time);
         playButton = findViewById(R.id.play_button);
         closeButton = findViewById(R.id.close_button);
 
@@ -172,23 +172,6 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
         isHidden = false;
     }
 
-    private void readDuration(File file) {
-        try {
-            MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
-            metaRetriever.setDataSource(getContext(), Uri.fromFile(file));
-
-            currentMessageDuration = Long.parseLong(Objects.requireNonNull(
-                    metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)));
-
-            metaRetriever.release();
-        } catch (Exception e) {
-            e.printStackTrace();
-            currentMessageDuration = 60_000;
-        }
-
-        currentMessageDurationString = DeviceUtils.getDurationTimeMS(currentMessageDuration);
-    }
-
     private void fillTimeView(float currentProgress) {
         fillTimeView(currentProgress, null);
     }
@@ -198,7 +181,11 @@ public class GlobalPlayerComponent extends ThemeLinearLayout implements GlobalMe
 
         String s = DeviceUtils.getDurationTimeMS((long) (currentMessageDuration * currentProgress));
 
-        if (file != null) readDuration(file);
+        if (file != null) {
+            currentMessageDuration = DeviceUtils.readDuration(file, getContext());
+
+            currentMessageDurationString = DeviceUtils.getDurationTimeMS(currentMessageDuration);
+        }
 
         String time = s + " / " + currentMessageDurationString;
 

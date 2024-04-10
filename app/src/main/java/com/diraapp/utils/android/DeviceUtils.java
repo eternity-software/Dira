@@ -2,8 +2,13 @@ package com.diraapp.utils.android;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.text.format.DateFormat;
 import android.util.TypedValue;
+
+import java.io.File;
+import java.util.Objects;
 
 public class DeviceUtils {
 
@@ -63,6 +68,22 @@ public class DeviceUtils {
         if (mt.length() == 1) mt = "0" + mt;
 
         return mt + ":" + st;
+    }
+
+    public static long readDuration(File file, Context context) {
+        try {
+            MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
+            metaRetriever.setDataSource(context, Uri.fromFile(file));
+
+            long result = Long.parseLong(Objects.requireNonNull(
+                    metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)));
+
+            metaRetriever.release();
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 60_000;
+        }
     }
 
     public static boolean getBooleanFromInt(int i) {

@@ -198,6 +198,22 @@ public class AttachmentLoader<ConvertedType> {
         });
     }
 
+    public void loadNear(String startPath) {
+
+        if (startPath == null) {
+            loadLatestAttachments();
+            return;
+        }
+
+        Attachment current = attachmentDao.getAttachmentByUrl(startPath);
+        if (current == null) {
+            loadLatestAttachments();
+            return;
+        }
+
+        loadNear(current.getId());
+    }
+
     public void loadNear(long startId) {
         List<AttachmentMessagePair> older = attachmentDao.
                 getOlderAttachments(roomSecret, startId, types, loadCount);

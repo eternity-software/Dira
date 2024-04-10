@@ -78,7 +78,7 @@ public class LegacyViewHolder extends RecyclerView.ViewHolder {
 
         messageText = itemView.findViewById(R.id.message_text);
         nicknameText = itemView.findViewById(R.id.nickname_text);
-        timeText = itemView.findViewById(R.id.time_view);
+        timeText = itemView.findViewById(R.id.progress_time);
 
         emojiText = itemView.findViewById(R.id.emoji_view);
         dateText = itemView.findViewById(R.id.date_view);

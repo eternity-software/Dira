@@ -96,7 +96,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         this.rootView = rootView;
         messageText = find(R.id.message_text);
         nicknameText = find(R.id.nickname_text);
-        timeText = find(R.id.time_view);
+        timeText = find(R.id.progress_time);
         dateText = find(R.id.date_view);
         profilePicture = find(R.id.profile_picture);
         profilePictureContainer = find(R.id.picture_container);

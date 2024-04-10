@@ -62,7 +62,7 @@ public class MediaViewHolder extends AttachmentViewHolder implements DiraActivit
             public void onClick(View v) {
                 getMessageAdapterContract().preparePreviewActivity(file.getPath(),
                         attachment.getAttachmentType() == AttachmentType.VIDEO,
-                        previewImage.getLoadedBitmap(), previewImage.getImageView(), attachment.getId()).start();
+                        previewImage.getLoadedBitmap(), previewImage.getImageView(), attachment).start();
             }
         });
 
@@ -99,7 +99,7 @@ public class MediaViewHolder extends AttachmentViewHolder implements DiraActivit
                 public void onClick(View v) {
                     getMessageAdapterContract().preparePreviewActivity(file.getPath(),
                             attachment.getAttachmentType() == AttachmentType.VIDEO,
-                            previewImage.getLoadedBitmap(), previewImage.getImageView(), attachment.getId()).start();
+                            previewImage.getLoadedBitmap(), previewImage.getImageView(), attachment).start();
                 }
             });
         }
