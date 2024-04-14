@@ -44,8 +44,6 @@ public class MediaPreviewActivity extends DiraActivity
 
     private AttachmentMessagePair currentPair = null;
 
-    private int currentSelectedId = -1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,12 +104,30 @@ public class MediaPreviewActivity extends DiraActivity
         binding.viewPager.setClipToPadding(false);
         binding.viewPager.setClipChildren(false);
         binding.viewPager.setOffscreenPageLimit(5);
-        binding.viewPager.getChildAt(0).setOverScrollMode(View.OVER_SCROLL_NEVER);
+        ((RecyclerView) binding.viewPager.getChildAt(0)).setOverScrollMode(View.OVER_SCROLL_NEVER);
 
         binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+
+                if (currentPair != null) {
+                    MediaPreviewViewHolder previousHolder;
+                    int previousId = 0;
+                    for (int i=0; i < pairs.size(); i++) {
+                        if (currentPair.equals(pairs.get(i))) {
+                            previousId = i;
+                            break;
+                        }
+                    }
+
+                    previousHolder = (MediaPreviewViewHolder) ((RecyclerView)
+                            binding.viewPager.getChildAt(0)).findViewHolderForAdapterPosition(previousId);
+
+                    if (previousHolder != null) {
+                        previousHolder.onUnselected();
+                    }
+                }
 
                 MediaPreviewViewHolder holder = (MediaPreviewViewHolder) ((RecyclerView)
                         binding.viewPager.getChildAt(0)).findViewHolderForAdapterPosition(position);
@@ -120,18 +136,7 @@ public class MediaPreviewActivity extends DiraActivity
                     holder.onSelected();
                 }
 
-                MediaPreviewViewHolder previousHolder;
-                if (currentSelectedId != -1) {
-                    previousHolder = (MediaPreviewViewHolder) ((RecyclerView)
-                            binding.viewPager.getChildAt(0)).findViewHolderForAdapterPosition(currentSelectedId);
-
-                    if (previousHolder != null) {
-                        previousHolder.onUnselected();
-                    }
-                }
-
                 currentPair = pairs.get(position);
-                currentSelectedId = position;
             }
         });
         binding.viewPager.setAdapter(adapter);
@@ -159,12 +164,16 @@ public class MediaPreviewActivity extends DiraActivity
     @Override
     public void attachVideoPlayer(DiraVideoPlayer videoPlayer) {
         videoPlayer.attachDiraActivity(this);
+        videoPlayer.attachRecyclerView((RecyclerView) binding.viewPager.getChildAt(0));
     }
 
     @Override
     public boolean checkIsSelected(Attachment attachment) {
-        if (currentPair == null) return false;
+        boolean result = true;
+        if (currentPair == null) result = false;
+        else result = currentPair.getAttachment().equals(attachment);
 
-        return currentPair.getAttachment().equals(attachment);
+        Logger.logDebug(MediaPreviewActivity.class.getSimpleName(), "Result of currentSelectedId = " + result);
+        return result;
     }
 }

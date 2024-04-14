@@ -266,6 +266,8 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
                     if (source != currentPlayingTask) return;
                     if (mediaPlayer.isReleased()) {
+                        Logger.logDebug(DiraVideoPlayer.class.getSimpleName(),
+                                "Tried to start playing new task, but mediaPlayer is released");
                         return;
                     }
                     mediaPlayer.reset();
