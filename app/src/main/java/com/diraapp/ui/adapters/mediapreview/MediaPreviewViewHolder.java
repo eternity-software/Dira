@@ -41,6 +41,8 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
     private long duration = 60_000;
 
+    private long currentTime = -1000L;
+
     private final ViewHolderActivityContract holderActivityContract;
 
     private final ConstraintLayout imageContainer;
@@ -179,6 +181,8 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         pair = null;
         file = null;
 
+        currentTime = -1000;
+
         pauseButton.setOnClickListener((View v) -> {});
         videoPlayer.setOnClickListener((View v) -> {});
         videoPlayer.setOnTickListener((float progress) -> {});
@@ -279,7 +283,19 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
                     "DiraVideoPlayer loaded");
 
             videoPlayer.setOnTickListener((float progress) -> {
-                seekBar.setProgress((int) (progress * 1000));
+                int time = (int) (progress * 1000);
+                seekBar.setProgress(time);
+
+                DiraActivity.runOnMainThread(() -> {
+                    long currentSecond = (long) (progress * duration);
+
+                    if (currentTime / 1000 == currentSecond / 1000) return;
+
+                    currentTime = currentSecond;
+                    progressTime.setText(
+                            DeviceUtils.getDurationTimeMS(currentSecond) + "/" +
+                                    DeviceUtils.getDurationTimeMS(duration));
+                });
             });
 
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

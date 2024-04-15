@@ -79,8 +79,6 @@
             android:textSize="15sp"
 
             android:layout_marginBottom="12dp"
-
-            android:text="Text text text text text text text text text text text text text text text text text text text text text text text text..."
             />
 
         <LinearLayout
@@ -222,23 +220,30 @@
 
             <TextView
                 android:id="@+id/progress_time"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:fontFamily="@font/montserratbold"
                 android:textColor="@color/white"
 
                 android:layout_gravity="center_vertical"
 
-                android:text="1:30 / 2:40"
+                android:text="00:00/00:00"
                 android:textSize="11sp"/>
 
-            <ImageView
-                android:id="@+id/pause_button"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_pause"
-                app:tint="@color/white"/>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/pause_button"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_pause"
+                    android:layout_gravity="end"
+                    app:tint="@color/white"/>
+
+            </FrameLayout>
+
 
         </LinearLayout>
 

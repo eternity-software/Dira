@@ -459,6 +459,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/medium_light_gray_round"
+            android:backgroundTint="@color/gray"
             android:orientation="horizontal"
             android:paddingHorizontal="8dp"
             android:paddingTop="17dp"
