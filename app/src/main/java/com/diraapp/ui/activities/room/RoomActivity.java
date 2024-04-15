@@ -1237,7 +1237,7 @@ public class RoomActivity extends DiraActivity
                 this,
                 Pair.create(transitionSource, getString(R.string.transition_image_shared)));
 
-        return new PreparedActivity(this, intent, options);
+        return new PreparedActivity.MessagePreviewPreparedActivity(this, intent, options);
 //        return PreviewActivity.prepareActivity(this, filePath, preview,
 //                binding.recyclerView, isVideo, transitionSource);
     }

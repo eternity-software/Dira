@@ -1,7 +1,12 @@
 package com.diraapp.ui.activities;
 
+import static com.diraapp.ui.activities.RoomInfoActivity.MESSAGE_TO_SCROLL_ID;
+import static com.diraapp.ui.activities.RoomInfoActivity.MESSAGE_TO_SCROLL_TIME;
+
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
@@ -160,8 +165,14 @@ public class MediaPreviewActivity extends DiraActivity
     }
 
     @Override
-    public void onWatchClicked() {
+    public void onWatchClicked(String messageId, long messageTime) {
+        Intent data = new Intent();
 
+        data.putExtra(MESSAGE_TO_SCROLL_ID, messageId);
+        data.putExtra(MESSAGE_TO_SCROLL_TIME, messageTime);
+
+        setResult(RESULT_OK, data);
+        finish();
     }
 
     @Override

@@ -88,7 +88,13 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
         holderActivityContract = contract;
 
-        watchButton.setOnClickListener((View v) -> contract.onWatchClicked());
+        watchButton.setOnClickListener((View v) -> {
+            if (pair == null) return;
+
+            String messageId = pair.getMessage().getId();
+            long messageTime = pair.getMessage().getTime();
+            contract.onWatchClicked(messageId, messageTime);
+        });
 
         videoPlayer.setVolume(1);
         contract.attachVideoPlayer(videoPlayer);
@@ -307,7 +313,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
     public interface ViewHolderActivityContract {
 
-        void onWatchClicked();
+        void onWatchClicked(String messageId, long messageTime);
 
         void attachVideoPlayer(DiraVideoPlayer videoPlayer);
 
