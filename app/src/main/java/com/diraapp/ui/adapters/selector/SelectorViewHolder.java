@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
@@ -18,6 +19,7 @@ import com.diraapp.storage.AppStorage;
 import com.diraapp.ui.activities.room.RoomActivity;
 import com.diraapp.ui.components.dynamic.ThemeImageView;
 import com.diraapp.utils.CacheUtils;
+import com.diraapp.utils.Logger;
 import com.diraapp.utils.StringFormatter;
 import com.diraapp.utils.TimeConverter;
 
@@ -136,17 +138,13 @@ public class SelectorViewHolder extends RecyclerView.ViewHolder {
             }
 
             bindReading(message);
-            Bitmap bitmap = AppStorage.getBitmapFromPath(room.getImagePath(), itemView.getContext());
-            if (room.getImagePath() != null && bitmap != null) {
 
-                roomPicture.setImageBitmap(bitmap);
-            } else {
-                roomPicture.setImageDrawable(
-                        itemView.getContext().getResources().getDrawable(R.drawable.placeholder));
-            }
-
+            bindRoomImage(room);
         } catch (Exception e) {
             e.printStackTrace();
+
+            Logger.logDebug(SelectorViewHolder.class.getSimpleName(),
+                    "Image path = " + room.getImagePath());
         }
     }
 
@@ -165,4 +163,23 @@ public class SelectorViewHolder extends RecyclerView.ViewHolder {
             readingIndicator.setVisibility(View.GONE);
         }
     }
+
+    public void bindRoomImage(Room room) {
+        if (room.getImagePath() == null) {
+            roomPicture.setImageDrawable(
+                    ContextCompat.getDrawable(itemView.getContext(), R.drawable.placeholder));
+            return;
+        }
+
+        Bitmap bitmap = AppStorage.getBitmapFromPath(room.getImagePath(), itemView.getContext());
+        if (room.getImagePath() != null && bitmap != null) {
+
+            roomPicture.setImageBitmap(bitmap);
+        } else {
+            roomPicture.setImageDrawable(
+                    ContextCompat.getDrawable(itemView.getContext(), R.drawable.placeholder));
+        }
+
+    }
+
 }

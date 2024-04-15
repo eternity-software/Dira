@@ -1,5 +1,6 @@
 package com.diraapp.ui.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -11,6 +12,8 @@ import com.diraapp.databinding.ActivityMediaPreviewBinding;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
+import com.diraapp.storage.AppStorage;
+import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.ui.adapters.mediapreview.MediaPageListener;
 import com.diraapp.ui.adapters.mediapreview.MediaPreviewAdapter;
 import com.diraapp.ui.adapters.mediapreview.MediaPreviewViewHolder;
@@ -175,5 +178,17 @@ public class MediaPreviewActivity extends DiraActivity
 
         Logger.logDebug(MediaPreviewActivity.class.getSimpleName(), "Result of currentSelectedId = " + result);
         return result;
+    }
+
+    @Override
+    public void saveAttachment(String uri, boolean isVideo) {
+        DiraActivity.runGlobalBackground(() -> {
+            if (isVideo) {
+                ImagesWorker.saveVideoToGallery(uri, this);
+            } else {
+                ImagesWorker.saveBitmapToGallery(AppStorage.getBitmapFromPath(uri), this);
+            }
+        });
+
     }
 }

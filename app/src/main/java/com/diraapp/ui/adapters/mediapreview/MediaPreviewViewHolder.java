@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
@@ -36,6 +37,8 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
     private File file;
 
+    private boolean isSaved = false;
+
     private long duration = 60_000;
 
     private final ViewHolderActivityContract holderActivityContract;
@@ -58,7 +61,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
     private final SeekBar seekBar;
 
-    private final ImageView pauseButton;
+    private final ImageView pauseButton, saveButtonIcon;
 
     private boolean isSetup = false;
 
@@ -73,7 +76,9 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         memberName = itemView.findViewById(R.id.member_name);
         timeText = itemView.findViewById(R.id.time);
         watchButton = itemView.findViewById(R.id.watch);
+
         saveButton = itemView.findViewById(R.id.save_button);
+        saveButtonIcon = itemView.findViewById(R.id.save_button_icon);
         sizeView = itemView.findViewById(R.id.size_view);
 
         progressLayout = itemView.findViewById(R.id.progress_layout);
@@ -91,10 +96,28 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         videoPlayer.addListener((DiraVideoPlayerState state) -> {
             if (state != DiraVideoPlayerState.PLAYING) return false;
             if (isSetup) return false;
+            if (pair == null) return false;
+
+            boolean isImage = pair.getAttachment().getAttachmentType() == AttachmentType.IMAGE;
+            if (isImage) return false;
 
             onVideoPlayerPrepared();
 
             return false;
+        });
+
+        saveButton.setOnClickListener((View v) -> {
+            if (isSaved) return;
+            if (file == null) return;
+            if (pair == null) return;
+
+            isSaved = true;
+
+            boolean isVideo = pair.getAttachment().getAttachmentType() == AttachmentType.VIDEO;
+            contract.saveAttachment(file.getAbsolutePath(), isVideo);
+
+            saveButtonIcon.setImageDrawable(ContextCompat.getDrawable(
+                    itemView.getContext(), R.drawable.ic_check));
         });
     }
 
@@ -167,6 +190,13 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
         imageView.setImageBitmap(null);
         videoPlayer.stop();
+
+        if (isSaved) {
+            isSaved = false;
+
+            saveButtonIcon.setImageDrawable(ContextCompat.getDrawable(
+                    itemView.getContext(), R.drawable.ic_download));
+        }
     }
 
     private void showContent() {
@@ -282,5 +312,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         void attachVideoPlayer(DiraVideoPlayer videoPlayer);
 
         boolean checkIsSelected(Attachment attachment);
+
+        void saveAttachment(String uri, boolean isVideo);
     }
 }
