@@ -18,6 +18,7 @@ import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.ui.activities.DiraActivity;
+import com.diraapp.ui.activities.RoomInfoActivity;
 import com.diraapp.ui.adapters.roominfo.BaseAttachmentViewHolder;
 import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
@@ -40,7 +41,7 @@ public abstract class BaseRoomInfoFragment<Holder extends RecyclerView.ViewHolde
 
     private DiraActivity diraActivity;
 
-    private RoomInfoFragmentListener listener;
+    protected RoomInfoFragmentListener listener;
 
     private RecyclerView recycler;
 
