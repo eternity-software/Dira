@@ -182,10 +182,10 @@ public class MediaPreviewActivity extends DiraActivity
     }
 
     @Override
-    public boolean checkIsSelected(Attachment attachment) {
-        boolean result = true;
+    public boolean checkIsSelected(AttachmentMessagePair pair) {
+        final boolean result;
         if (currentPair == null) result = false;
-        else result = currentPair.getAttachment().equals(attachment);
+        else result = currentPair.equals(pair);
 
         Logger.logDebug(MediaPreviewActivity.class.getSimpleName(), "Result of currentSelectedId = " + result);
         return result;

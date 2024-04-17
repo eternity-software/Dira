@@ -103,13 +103,31 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
         videoPlayer.addListener((DiraVideoPlayerState state) -> {
             if (state != DiraVideoPlayerState.PLAYING) return false;
-            if (isSetup) return false;
-            if (pair == null) return false;
+
+            if (pair == null) {
+                onUnselected();
+                return false;
+            }
 
             boolean isImage = pair.getAttachment().getAttachmentType() == AttachmentType.IMAGE;
             if (isImage) return false;
 
-            onVideoPlayerPrepared();
+
+            DiraActivity.runOnMainThread(() -> {
+                if (!isSetup) {
+                    onVideoPlayerPrepared();
+                }
+
+                videoPlayer.setSpeed(1f);
+                videoPlayer.setProgress(0);
+
+                boolean isSelected = holderActivityContract.checkIsSelected(pair);
+                if (!isSelected) {
+                    Logger.logDebug(MediaPreviewViewHolder.class.getSimpleName(),
+                            "DiraVideoPlayer loaded, but detached | " + !isSelected);
+                    onUnselected();
+                }
+            });
 
             return false;
         });
@@ -183,17 +201,25 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
         currentTime = -1000;
 
-        pauseButton.setOnClickListener((View v) -> {});
-        videoPlayer.setOnClickListener((View v) -> {});
-        videoPlayer.setOnTickListener((float progress) -> {});
+        pauseButton.setOnClickListener((View v) -> {
+        });
+        videoPlayer.setOnClickListener((View v) -> {
+        });
+        videoPlayer.setOnTickListener((float progress) -> {
+        });
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {}
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+            }
+
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
 
         duration = 60_000;
@@ -273,57 +299,45 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void onVideoPlayerPrepared() {
-        DiraActivity.runOnMainThread(() -> {
-            isSetup = true;
-            imageView.setVisibility(View.GONE);
+        isSetup = true;
+        imageView.setVisibility(View.GONE);
 
-            setPlayButtonListener();
+        setPlayButtonListener();
 
-            Logger.logDebug(MediaPreviewViewHolder.class.getSimpleName(),
-                    "DiraVideoPlayer loaded");
+        Logger.logDebug(MediaPreviewViewHolder.class.getSimpleName(),
+                "DiraVideoPlayer loaded");
 
-            videoPlayer.setOnTickListener((float progress) -> {
-                int time = (int) (progress * 1000);
-                seekBar.setProgress(time);
+        videoPlayer.setOnTickListener((float progress) -> {
+            int time = (int) (progress * 1000);
+            seekBar.setProgress(time);
 
-                DiraActivity.runOnMainThread(() -> {
-                    long currentSecond = (long) (progress * duration);
+            DiraActivity.runOnMainThread(() -> {
+                long currentSecond = (long) (progress * duration);
 
-                    if (currentTime / 1000 == currentSecond / 1000) return;
+                if (currentTime / 1000 == currentSecond / 1000) return;
 
-                    currentTime = currentSecond;
-                    progressTime.setText(
-                            DeviceUtils.getDurationTimeMS(currentSecond) + "/" +
-                                    DeviceUtils.getDurationTimeMS(duration));
-                });
+                currentTime = currentSecond;
+                progressTime.setText(
+                        DeviceUtils.getDurationTimeMS(currentSecond) + "/" +
+                                DeviceUtils.getDurationTimeMS(duration));
             });
+        });
 
-            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
-                    if (!fromUser) return;
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
+                if (!fromUser) return;
 
-                    videoPlayer.setProgress((float) i / 1000);
-                }
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {}
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {}
-            });
-
-            boolean isSelected = pair != null;
-            if (isSelected) isSelected = holderActivityContract.checkIsSelected(pair.getAttachment());
-
-            if (!isSelected) {
-                Logger.logDebug(MediaPreviewViewHolder.class.getSimpleName(),
-                        "DiraVideoPlayer loaded, but detached | " + !isSelected);
-                onUnselected();
-                return;
+                videoPlayer.setProgress((float) i / 1000);
             }
 
-            videoPlayer.setSpeed(1f);
-            videoPlayer.setProgress(0);
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
     }
 
@@ -333,7 +347,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
         void attachVideoPlayer(DiraVideoPlayer videoPlayer);
 
-        boolean checkIsSelected(Attachment attachment);
+        boolean checkIsSelected(AttachmentMessagePair pair);
 
         void saveAttachment(String uri, boolean isVideo);
     }
