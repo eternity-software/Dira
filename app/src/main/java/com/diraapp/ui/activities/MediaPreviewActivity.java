@@ -25,6 +25,7 @@ import com.diraapp.ui.adapters.mediapreview.MediaPreviewViewHolder;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.fragments.roominfo.AttachmentLoader;
 import com.diraapp.utils.Logger;
+import com.diraapp.utils.android.DeviceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,8 @@ public class MediaPreviewActivity extends DiraActivity
     private MediaPreviewAdapter adapter;
 
     private AttachmentMessagePair currentPair = null;
+
+    private int activityWidth = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,5 +204,14 @@ public class MediaPreviewActivity extends DiraActivity
             }
         });
 
+    }
+
+    @Override
+    public int getActivityWidth() {
+        if (activityWidth == -1) {
+            activityWidth = DeviceUtils.getDeviceWidth(this);
+        }
+
+        return activityWidth;
     }
 }

@@ -1,6 +1,9 @@
 package com.diraapp.ui.adapters.mediapreview;
 
+import android.view.Gravity;
+import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,7 +48,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
     private final ViewHolderActivityContract holderActivityContract;
 
-    private final ConstraintLayout imageContainer;
+    //private final ConstraintLayout imageContainer;
 
     private final CardView cardView;
 
@@ -70,7 +73,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
     public MediaPreviewViewHolder(@NonNull View itemView, ViewHolderActivityContract contract) {
         super(itemView);
 
-        imageContainer = itemView.findViewById(R.id.imageContainer);
+        //imageContainer = itemView.findViewById(R.id.imageContainer);
         cardView = itemView.findViewById(R.id.card_view);
         imageView = itemView.findViewById(R.id.image_view);
         videoPlayer = itemView.findViewById(R.id.video_player);
@@ -258,10 +261,21 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
             duration = DeviceUtils.readDuration(file, imageView.getContext());
 
-//            final File currentFile = file;
-//            videoPlayer.play(file.getPath(), () -> onVideoPlayerPrepared(currentFile));
-            videoPlayer.play(file.getPath());
+            int width = holderActivityContract.getActivityWidth();
+            double ratio = (double) pair.getAttachment().getHeight() /
+                            (double) pair.getAttachment().getWidth();
+            int height = (int) ((double) width * (double) ratio);
+            Logger.logDebug(MediaPreviewViewHolder.class.getSimpleName(),
+                    "height = " + height + " | wight = " + width);
 
+            ConstraintLayout.LayoutParams params =
+                    (ConstraintLayout.LayoutParams) videoPlayer.getLayoutParams();
+            params.height = height;
+            params.width = width;
+
+            videoPlayer.requestLayout();
+
+            videoPlayer.play(file.getPath());
 
         } else {
             videoPlayer.setVisibility(View.GONE);
@@ -350,5 +364,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         boolean checkIsSelected(AttachmentMessagePair pair);
 
         void saveAttachment(String uri, boolean isVideo);
+
+        int getActivityWidth();
     }
 }

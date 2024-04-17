@@ -1,10 +1,12 @@
 package com.diraapp.utils.android;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.text.format.DateFormat;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
 import java.io.File;
@@ -36,6 +38,13 @@ public class DeviceUtils {
 
     public static int spToPx(float sp, Context context) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
+    }
+
+    public static int getDeviceWidth(Activity activity) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        return displayMetrics.widthPixels;
     }
 
 
