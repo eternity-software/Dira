@@ -329,7 +329,8 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
                         android:layout_weight="1"
                         android:orientation="horizontal">
 
@@ -347,6 +348,7 @@
                             android:id="@+id/encryption_button"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:paddingVertical="12dp"
                             android:layout_gravity="center_horizontal"
                             android:src="@drawable/ic_encryption"
                             android:visibility="gone"

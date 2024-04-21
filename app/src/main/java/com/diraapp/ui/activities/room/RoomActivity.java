@@ -900,7 +900,6 @@ public class RoomActivity extends DiraActivity
                     size + ")");
 
             if (size == 0) {
-                fillPinnedComponent(null);
                 isLastPinnedShown = false;
 
                 binding.pinnedCount.setVisibility(View.GONE);
