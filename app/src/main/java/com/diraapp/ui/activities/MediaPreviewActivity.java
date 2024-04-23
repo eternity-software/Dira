@@ -14,9 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.diraapp.databinding.ActivityMediaPreviewBinding;
+import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
+import com.diraapp.db.entities.Member;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.images.ImagesWorker;
 import com.diraapp.ui.adapters.mediapreview.MediaPageListener;
@@ -24,10 +26,12 @@ import com.diraapp.ui.adapters.mediapreview.MediaPreviewAdapter;
 import com.diraapp.ui.adapters.mediapreview.MediaPreviewViewHolder;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.fragments.roominfo.AttachmentLoader;
+import com.diraapp.utils.CacheUtils;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.android.DeviceUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MediaPreviewActivity extends DiraActivity
@@ -46,6 +50,8 @@ public class MediaPreviewActivity extends DiraActivity
     private String startUrl;
 
     private final List<AttachmentMessagePair> pairs = new ArrayList<>();
+
+    private HashMap<String, Member> members = new HashMap<>();
 
     private AttachmentLoader<AttachmentMessagePair> loader;
 
@@ -158,6 +164,8 @@ public class MediaPreviewActivity extends DiraActivity
     private void initViewPager() {
         // setup loader
         DiraActivity.runGlobalBackground(() -> {
+            initMembersMap();
+
             AttachmentType[] types = new AttachmentType[2];
             types[0] = AttachmentType.IMAGE;
             types[1] = AttachmentType.VIDEO;
@@ -165,6 +173,20 @@ public class MediaPreviewActivity extends DiraActivity
             loader = new AttachmentLoader<>(this, pairs, roomSecret, types, this, 10);
             loader.loadNear(startUrl);
         });
+    }
+
+    private void initMembersMap() {
+        List<Member> memberList = DiraRoomDatabase.getDatabase(this).getMemberDao().getMembersByRoomSecret(roomSecret);
+        for (Member member: memberList) {
+            members.put(member.getId(), member);
+        }
+
+        String id = this.getCacheUtils().getString(CacheUtils.ID);
+        Member you = new Member(id, this.getCacheUtils().getString(CacheUtils.NICKNAME),
+                this.getCacheUtils().getString(CacheUtils.PICTURE),
+                roomSecret,
+                0);
+        members.put(id, you);
     }
 
     @Override
@@ -213,5 +235,10 @@ public class MediaPreviewActivity extends DiraActivity
         }
 
         return activityWidth;
+    }
+
+    @Override
+    public Member getMember(String id) {
+        return members.get(id);
     }
 }

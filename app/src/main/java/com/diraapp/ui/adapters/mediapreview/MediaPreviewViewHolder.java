@@ -21,6 +21,7 @@ import com.diraapp.R;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
+import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentDownloader;
@@ -66,7 +67,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
     private final SeekBar seekBar;
 
-    private final ImageView pauseButton, saveButtonIcon;
+    private final ImageView pauseButton, saveButtonIcon, memberImage;
 
     private boolean isSetup = false;
 
@@ -77,8 +78,10 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         cardView = itemView.findViewById(R.id.card_view);
         imageView = itemView.findViewById(R.id.image_view);
         videoPlayer = itemView.findViewById(R.id.video_player);
+
         messageText = itemView.findViewById(R.id.message_text);
         memberName = itemView.findViewById(R.id.member_name);
+        memberImage = itemView.findViewById(R.id.member_picture);
         timeText = itemView.findViewById(R.id.time);
         watchButton = itemView.findViewById(R.id.watch);
 
@@ -135,6 +138,8 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
             return false;
         });
 
+        setPlayButtonListener();
+
         saveButton.setOnClickListener((View v) -> {
             if (isSaved) return;
             if (file == null) return;
@@ -165,7 +170,8 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
             messageText.setText(message.getText());
         }
 
-        memberName.setText(message.getAuthorNickname());
+        bindMember(message);
+
         timeText.setText(DeviceUtils.getDateFromTimestamp(message.getTime(), false));
         sizeView.setText(AppStorage.getStringSize(pair.getAttachment().getSize()));
 
@@ -173,6 +179,30 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
                 itemView.getContext(), pair.getMessage().getRoomSecret());
 
         showContent();
+    }
+
+    private void bindMember(Message message) {
+        Member member = holderActivityContract.getMember(message.getAuthorId());
+
+        if (member != null) {
+            memberName.setText(member.getNickname());
+
+            if (member.getImagePath() != null) {
+                int imageSize = DeviceUtils.dpToPx(40, itemView.getContext());
+                Picasso.get().load(new File(member.getImagePath()))
+                        .resize(imageSize, imageSize)
+                        .into(memberImage);
+            } else {
+                memberImage.setImageDrawable(ContextCompat.
+                        getDrawable(itemView.getContext(), R.drawable.placeholder));
+            }
+        } else {
+            memberName.setText(message.getAuthorNickname());
+            memberImage.setImageDrawable(ContextCompat.
+                    getDrawable(itemView.getContext(), R.drawable.placeholder));
+
+        }
+
     }
 
     public void onSelected() {
@@ -184,8 +214,6 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
         videoPlayer.setProgress(0);
         if (videoPlayer.getState() == DiraVideoPlayerState.PAUSED) {
-            //final File currentFile = file;
-            //videoPlayer.play(() -> onVideoPlayerPrepared(currentFile));
             videoPlayer.play();
 
             pauseButton.setImageDrawable(AppCompatResources.
@@ -207,8 +235,6 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         pauseButton.setOnClickListener((View v) -> {
         });
         videoPlayer.setOnClickListener((View v) -> {
-        });
-        videoPlayer.setOnTickListener((float progress) -> {
         });
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -259,7 +285,9 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
             progressLayout.setVisibility(View.VISIBLE);
             Picasso.get().load(R.drawable.full_placeholder);
 
-            duration = DeviceUtils.readDuration(file, imageView.getContext());
+            DiraActivity.runGlobalBackground(() -> {
+                duration = DeviceUtils.readDuration(file, imageView.getContext());
+            });
 
             int width = holderActivityContract.getActivityWidth();
             double ratio = (double) pair.getAttachment().getHeight() /
@@ -272,8 +300,6 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
                     (ConstraintLayout.LayoutParams) videoPlayer.getLayoutParams();
             params.height = height;
             params.width = width;
-
-            videoPlayer.requestLayout();
 
             videoPlayer.play(file.getPath());
 
@@ -315,8 +341,6 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
     private void onVideoPlayerPrepared() {
         isSetup = true;
         imageView.setVisibility(View.GONE);
-
-        setPlayButtonListener();
 
         Logger.logDebug(MediaPreviewViewHolder.class.getSimpleName(),
                 "DiraVideoPlayer loaded");
@@ -366,5 +390,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         void saveAttachment(String uri, boolean isVideo);
 
         int getActivityWidth();
+
+        Member getMember(String id);
     }
 }
