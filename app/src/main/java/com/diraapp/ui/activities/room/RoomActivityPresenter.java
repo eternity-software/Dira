@@ -412,7 +412,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         }
 
         view.runOnUiThread(() -> {
-            view.showLastPinned();
+            view.showLastPinned(false);
         });
     }
 
@@ -977,7 +977,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             room.getPinnedMessagesIds().add(update.getMessageId());
 
             view.runOnUiThread(() -> {
-                view.showLastPinned();
+                view.showLastPinned(true);
             });
         });
     }
@@ -1001,7 +1001,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
         room.getPinnedMessagesIds().remove(update.getMessageId());
 
-        view.showLastPinned();
+        view.showLastPinned(true);
     }
 
     @Override

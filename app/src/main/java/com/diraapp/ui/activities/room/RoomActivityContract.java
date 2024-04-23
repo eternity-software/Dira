@@ -85,11 +85,11 @@ public interface RoomActivityContract {
 
         void updateScrollArrowIndicator();
 
-        void showLastPinned();
+        void showLastPinned(boolean useHideAnimation);
 
         void showNextPinned();
 
-        void updatePinned(int messagePos);
+        void updatePinned(int messagePos, boolean useAnimation);
 
         void addMessageToBlinkId(String messageId);
     }

@@ -874,9 +874,9 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
-    public void showLastPinned() {
+    public void showLastPinned(boolean useHideAnimation) {
         currentPinnedShownPos = presenter.getPinnedMessages().size() - 1;
-        updatePinned(currentPinnedShownPos);
+        updatePinned(currentPinnedShownPos, useHideAnimation);
     }
 
     @Override
@@ -886,11 +886,11 @@ public class RoomActivity extends DiraActivity
         int size = presenter.getPinnedMessages().size();
         if (currentPinnedShownPos == -1) currentPinnedShownPos += size;
 
-        updatePinned(currentPinnedShownPos);
+        updatePinned(currentPinnedShownPos, false);
     }
 
     @Override
-    public void updatePinned(int messagePos) {
+    public void updatePinned(int messagePos, boolean useHideAnimation) {
         runOnUiThread(() -> {
             ArrayList<Message> pinnedMessages = presenter.getPinnedMessages();
 
@@ -903,17 +903,12 @@ public class RoomActivity extends DiraActivity
                 isLastPinnedShown = false;
 
                 binding.pinnedCount.setVisibility(View.GONE);
+
+                if (useHideAnimation) fillPinnedComponent(null);
                 return;
             }
 
             isLastPinnedShown = currentPinnedShownPos != size - 1;
-//            if (isLastPinnedShown) {
-//                binding.pinnedLeftLine.getBackground().setColorFilter(Theme.getColor(this,
-//                        R.color.self_reply_color), PorterDuff.Mode.SRC_ATOP);
-//            } else {
-//                binding.pinnedLeftLine.getBackground().setColorFilter(Theme.getColor(this,
-//                        R.color.accent), PorterDuff.Mode.SRC_ATOP);
-//            }
 
             binding.pinnedCount.setVisibility(View.VISIBLE);
 

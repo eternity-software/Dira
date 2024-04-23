@@ -172,7 +172,9 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
         bindMember(message);
 
-        timeText.setText(DeviceUtils.getDateFromTimestamp(message.getTime(), false));
+        timeText.setText(
+                DeviceUtils.getDateFromTimestamp(message.getTime(), false) + ", " +
+                        DeviceUtils.getTimeFromTimestamp(message.getTime()));
         sizeView.setText(AppStorage.getStringSize(pair.getAttachment().getSize()));
 
         file = AttachmentDownloader.getFileFromAttachment(pair.getAttachment(),
@@ -188,7 +190,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
             memberName.setText(member.getNickname());
 
             if (member.getImagePath() != null) {
-                int imageSize = DeviceUtils.dpToPx(40, itemView.getContext());
+                int imageSize = DeviceUtils.dpToPx(36, itemView.getContext());
                 Picasso.get().load(new File(member.getImagePath()))
                         .resize(imageSize, imageSize)
                         .into(memberImage);
