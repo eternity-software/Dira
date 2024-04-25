@@ -1230,13 +1230,18 @@ public class RoomActivity extends DiraActivity
         intent.putExtra(MediaPreviewActivity.START_ATTACHMENT_ID, attachment.getId());
         intent.putExtra(MediaPreviewActivity.START_ATTACHMENT_URL, attachment.getFileUrl());
 
-        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
-                this,
-                Pair.create(transitionSource, getString(R.string.transition_image_shared)));
+//        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
+//                this,
+//                Pair.create(transitionSource, getString(R.string.transition_image_shared)));
+
+        ActivityOptions options = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            options = ActivityOptions.makeBasic();
+        } else {
+            options = ActivityOptions.makeTaskLaunchBehind();
+        }
 
         return new PreparedActivity.MessagePreviewPreparedActivity(this, intent, options);
-//        return PreviewActivity.prepareActivity(this, filePath, preview,
-//                binding.recyclerView, isVideo, transitionSource);
     }
 
     @Override
