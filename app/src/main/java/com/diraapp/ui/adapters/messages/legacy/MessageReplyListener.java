@@ -4,5 +4,5 @@ import com.diraapp.db.entities.messages.Message;
 
 public interface MessageReplyListener {
 
-    void onReplyClicked(Message message);
+    void onReplyClicked(Message message, Message holderMessage);
 }

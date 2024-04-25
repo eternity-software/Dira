@@ -160,6 +160,9 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
     public void bindMessage(@NonNull Message message, @Nullable Message previousMessage) {
         isOnScreen = true;
         currentMessage = message;
+
+        clearBackgroundAnimator();
+
         fillDateAndTime(message, previousMessage);
         checkReadStatus(message);
         itemView.setClickable(true);
@@ -172,7 +175,7 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
         });
         bindUserPicture(message, previousMessage);
         if (hasReplySupport())
-            replyComponent.fillMessageReply(message.getRepliedMessage(), messageAdapterContract);
+            replyComponent.fillMessageReply(message.getRepliedMessage(), messageAdapterContract, currentMessage);
 
         if (messageAdapterContract.isMessageNeedBlink(message.getId())) {
             blink();
@@ -453,6 +456,13 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
 
     public void setDelayedMessageBind(DelayedMessageBind delayedMessageBind) {
         this.delayedMessageBind = delayedMessageBind;
+    }
+
+    private void clearBackgroundAnimator() {
+        if (messageBackgroundAnimator == null) return;
+        if (!messageBackgroundAnimator.isRunning()) return;
+
+        messageBackgroundAnimator.end();
     }
 
     public interface ViewHolderNotification {

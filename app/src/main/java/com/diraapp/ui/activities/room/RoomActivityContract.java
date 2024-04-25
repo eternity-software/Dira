@@ -129,6 +129,8 @@ public interface RoomActivityContract {
 
         void scrollToMessage(String messageId, long messageTime);
 
+        void scrollToMessage(String messageId, long messageTime, boolean blink);
+
         void blinkMessage(Message message);
 
         boolean sendTextMessage(String text);
@@ -140,7 +142,7 @@ public interface RoomActivityContract {
 
         void setReplyingMessage(Message message);
 
-        void onScrollArrowPressed();
+        void onScrollArrowPressed(int newestVisible);
 
         String getAndClearReplyId();
 

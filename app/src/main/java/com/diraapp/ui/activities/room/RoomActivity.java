@@ -789,7 +789,9 @@ public class RoomActivity extends DiraActivity
         updateScrollArrowIndicator();
 
         arrow.setOnClickListener((View view) -> {
-            presenter.onScrollArrowPressed();
+            int lastVisiblePos = ((LinearLayoutManager)
+                    binding.recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+            presenter.onScrollArrowPressed(lastVisiblePos);
         });
 
         // Dirty code bellow. Fix is required

@@ -50,7 +50,7 @@ public class MessageReplyComponent extends FrameLayout {
         initView();
     }
 
-    public void fillMessageReply(Message message, MessageAdapterContract config) {
+    public void fillMessageReply(Message message, MessageAdapterContract config, Message holderMessage) {
         if (message == null) {
             replyContainer.setVisibility(View.GONE);
             return;
@@ -139,7 +139,7 @@ public class MessageReplyComponent extends FrameLayout {
             @Override
             public void onClick(View view) {
                 if (config.getReplyListener() != null)
-                    config.getReplyListener().onReplyClicked(message);
+                    config.getReplyListener().onReplyClicked(message, holderMessage);
             }
         });
     }

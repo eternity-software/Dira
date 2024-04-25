@@ -84,7 +84,7 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     private HashMap<String, Member> members = new HashMap<>();
 
-    private Message lastReadMessage;
+    private Message clickedRepliedMessage = null;
 
     public RoomActivityPresenter(String roomSecret, String selfId) {
         this.roomSecret = roomSecret;
@@ -130,7 +130,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             if (message.hasAuthor()) {
                 if (message.getAuthorId().equals(selfId)) {
                     room.getUnreadMessagesIds().clear();
-                    lastReadMessage = message;
                 } else {
                     room.getUnreadMessagesIds().add(message.getId());
                 }
@@ -471,21 +470,28 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
 
     @Override
     public void scrollToMessage(String messageId, long messageTime) {
+        scrollToMessage(messageId, messageTime, true);
+    }
+
+    @Override
+    public void scrollToMessage(String messageId, long messageTime, boolean blink) {
         if (messageId == null) return;
         int messageIndex = getMessagePos(messageId);
 
         if (messageIndex != -1) {
-            if (view.isMessageVisible(messageIndex)) {
-                view.blinkViewHolder(messageIndex);
-            } else {
-                view.addMessageToBlinkId(messageId);
+            if (blink) {
+                if (view.isMessageVisible(messageIndex)) {
+                    view.blinkViewHolder(messageIndex);
+                } else {
+                    view.addMessageToBlinkId(messageId);
+                }
             }
 
             view.scrollToAndStop(messageIndex);
             return;
         }
 
-        view.addMessageToBlinkId(messageId);
+        if (blink) view.addMessageToBlinkId(messageId);
         loadMessagesNearByTime(messageTime, true);
     }
 
@@ -773,11 +779,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
                     toDelete.add(room.getUnreadMessagesIds().get(i));
                 }
                 room.removeFromUnreadMessages(toDelete);
-
-                if (lastReadMessage == null) lastReadMessage = thisMessage;
-                else if (thisMessage.getTime() > lastReadMessage.getTime()) {
-                    lastReadMessage = thisMessage;
-                }
             }
 
             view.updateScrollArrow();
@@ -889,9 +890,6 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
             }
 
             String messageId = message.getId();
-            if (lastReadMessage != null) {
-                if (messageId.equals(lastReadMessage.getId())) lastReadMessage = null;
-            }
 
             RoomDao roomDao = view.getRoomDatabase().getRoomDao();
             Room dbRoom = roomDao.getRoomBySecretName(roomSecret);
@@ -1053,79 +1051,47 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     }
 
     @Override
-    public void onScrollArrowPressed() {
+    public void onScrollArrowPressed(int newestVisible) {
         view.runBackground(() -> {
-            final int NOT_FOUND = -1;
-            final int START_VAL = -2;
-            int position = START_VAL;
 
             if (messageList.size() == 0) return;
 
-            MessageDao messageDao = view.getMessagesDatabase().getMessageDao();
-            int unreadMessagesSize = room.getUnreadMessagesIds().size();
-            if (lastReadMessage == null) {
-                String lastReadMessageId;
-                if (unreadMessagesSize > 0) {
-                    lastReadMessageId = room.getUnreadMessagesIds().get(0);
+            Message message = messageList.get(newestVisible);
+            if (clickedRepliedMessage != null) {
+                if (message.getTime() >= clickedRepliedMessage.getTime()) {
+                    clickedRepliedMessage = null;
+                    Logger.logDebug("fsdfsdf", "sdfsdfsdfs / " + message.getText());
+                }
+            }
+
+            Message messageToScroll = null;
+            if (clickedRepliedMessage != null) {
+                messageToScroll = clickedRepliedMessage;
+                clickedRepliedMessage = null;
+            } else {
+                final String id;
+                if (room.getUnreadMessagesIds().size() > 0) {
+                    id = room.getUnreadMessagesIds().get(0);
                 } else {
-                    lastReadMessageId = room.getLastMessageId();
+                    id = room.getLastMessageId();
                 }
 
                 for (int i = 0; i < messageList.size(); i++) {
                     Message m = messageList.get(i);
-                    if (m.getId().equals(lastReadMessageId)) {
-                        position = i;
-                        lastReadMessage = m;
+                    if (m.getId().equals(id)) {
+                        messageToScroll = m;
                         break;
                     }
                 }
 
-                if (position == START_VAL) {
-                    lastReadMessage = messageDao.getMessageAndAttachmentsById(lastReadMessageId);
-                    if (lastReadMessageId == null) {
-                        Logger.logDebug("Scroll arrow",
-                                "Can't find last read message in database");
-                        return;
-                    }
-                    position = NOT_FOUND;
+                if (messageToScroll == null) {
+                    messageToScroll = view.getMessagesDatabase().getMessageDao().getMessageById(id);
                 }
             }
 
-            if (position == START_VAL) {
-                for (int i = 0; i < messageList.size(); i++) {
-                    Message m = messageList.get(i);
-                    if (m.getId().equals(lastReadMessage.getId())) {
-                        position = i;
-                        break;
-                    }
-                }
-
-                if (position == START_VAL) position = NOT_FOUND;
-            }
-
-            if (position == NOT_FOUND) {
-                Logger.logDebug("Scroll arrow", "Not found!");
-                if (lastReadMessage == null) return;
-                if (!lastReadMessage.getRoomSecret().equals(roomSecret)) return;
-                loadMessagesNearByTime(lastReadMessage.getTime());
-                return;
-            }
-
-            Logger.logDebug("Scroll arrow", "position: " + position);
-            if (unreadMessagesSize > 0 && view.isMessageVisible(position)) {
-                Logger.logDebug("Scroll arrow", "Has been scrolled to bottom");
-                if (isNewestMessagesLoaded) {
-                    view.runOnUiThread(() -> {
-                        view.scrollTo(0);
-                    });
-                } else loadRoomBottomMessages();
-                return;
-            }
-
-            int finalPosition = position;
+            Message finalMessageToScroll = messageToScroll;
             view.runOnUiThread(() -> {
-                Logger.logDebug("Scroll arrow", "Has been scrolled to position");
-                view.scrollTo(finalPosition);
+                scrollToMessage(finalMessageToScroll.getId(), finalMessageToScroll.getTime(), false);
             });
         });
     }
@@ -1141,8 +1107,9 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
     }
 
     @Override
-    public void onReplyClicked(Message message) {
+    public void onReplyClicked(Message message, Message holderMessage) {
         scrollToMessage(message.getId(), message.getTime());
+        clickedRepliedMessage = holderMessage;
     }
 
     @Override
