@@ -270,6 +270,11 @@ public class ChatAppearanceActivity extends DiraActivity {
             public void currentListenableProgressChangedByUser(float progress, ListenableViewHolder viewHolder) {
 
             }
+
+            @Override
+            public boolean isSecurePrivateRoom() {
+                return false;
+            }
         };
 
         messagesAdapter = new MessagesAdapter(contract, messages, room,

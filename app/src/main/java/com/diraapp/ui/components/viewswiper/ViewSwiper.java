@@ -7,6 +7,8 @@ import android.view.animation.DecelerateInterpolator;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.diraapp.ui.adapters.ColorThemeAdapter;
+import com.diraapp.ui.adapters.messages.views.BaseMessageViewHolder;
 import com.diraapp.utils.android.DeviceUtils;
 import com.diraapp.utils.android.DiraVibrator;
 
@@ -55,6 +57,7 @@ public class ViewSwiper {
         RecyclerView.ViewHolder viewHolder = rv.findContainingViewHolder(child);
 
         if (viewHolder == null) return false;
+        if (viewSwiperListener.denySwipe(viewHolder)) return false;
 
         int position = viewHolder.getAdapterPosition();
 

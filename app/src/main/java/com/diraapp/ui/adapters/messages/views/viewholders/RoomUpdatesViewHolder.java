@@ -72,8 +72,6 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
     public void bindMessage(@NonNull Message message, Message previousMessage) {
         super.bindMessage(message, previousMessage);
 
-        profilePictureContainer.setVisibility(View.VISIBLE);
-
         boolean isRoomUpdate = true;
 
         Context context = this.itemView.getContext();
@@ -205,5 +203,10 @@ public class RoomUpdatesViewHolder extends BaseMessageViewHolder {
         roomUpdatesIcon.getBackground().setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN);
         int padding = DeviceUtils.dpToPx(6, itemView.getContext());
         roomUpdatesIcon.setPadding(padding, padding, padding, padding);
+    }
+
+    @Override
+    public boolean canBeSwiped() {
+        return false;
     }
 }

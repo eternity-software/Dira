@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
 import com.abedelazizshe.lightcompressorlibrary.VideoCompressor;
@@ -1034,6 +1035,14 @@ public class RoomActivityPresenter implements RoomActivityContract.Presenter, Up
         replyingMessage = messageList.get(position);
 
         view.setReplyMessage(replyingMessage);
+    }
+
+    @Override
+    public boolean denySwipe(RecyclerView.ViewHolder viewHolder) {
+        if (!(viewHolder instanceof BaseMessageViewHolder)) return false;
+
+        BaseMessageViewHolder baseMessageViewHolder = (BaseMessageViewHolder) viewHolder;
+        return !baseMessageViewHolder.canBeSwiped();
     }
 
     @Override

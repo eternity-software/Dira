@@ -68,4 +68,6 @@ public interface MessageAdapterContract {
     void currentListenablePaused(ListenableViewHolder viewHolder);
 
     void currentListenableProgressChangedByUser(float progress, ListenableViewHolder viewHolder);
+
+    boolean isSecurePrivateRoom();
 }

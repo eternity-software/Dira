@@ -199,6 +199,15 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
             return;
         }
 
+        if (messageAdapterContract.isSecurePrivateRoom()) {
+            profilePictureContainer.setVisibility(View.GONE);
+            nicknameText.setVisibility(View.GONE);
+            return;
+        } else {
+            profilePictureContainer.setVisibility(View.VISIBLE);
+            nicknameText.setVisibility(View.VISIBLE);
+        }
+
         boolean showProfilePicture = isProfilePictureRequired(message, previousMessage);
 
         if (!showProfilePicture) {
@@ -456,6 +465,10 @@ public abstract class BaseMessageViewHolder extends RecyclerView.ViewHolder impl
 
     public void setDelayedMessageBind(DelayedMessageBind delayedMessageBind) {
         this.delayedMessageBind = delayedMessageBind;
+    }
+
+    public boolean canBeSwiped() {
+        return true;
     }
 
     private void clearBackgroundAnimator() {

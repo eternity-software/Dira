@@ -53,6 +53,7 @@ import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.rooms.Room;
+import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.notifications.Notifier;
 import com.diraapp.res.Theme;
@@ -1326,6 +1327,11 @@ public class RoomActivity extends DiraActivity
         if (GlobalMediaPlayer.getInstance().setCurrentProgress(progress)) {
             currentListenableViewHolder = viewHolder;
         }
+    }
+
+    @Override
+    public boolean isSecurePrivateRoom() {
+        return getRoom().getRoomType() == RoomType.PRIVATE && getMembers().size() == 1;
     }
 
     @Override
