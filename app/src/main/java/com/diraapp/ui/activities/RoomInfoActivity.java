@@ -30,6 +30,7 @@ import com.diraapp.api.requests.CreateInviteRequest;
 import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.updates.NewInvitationUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
+import com.diraapp.api.updates.RenewingConfirmUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
 import com.diraapp.api.views.RoomMember;
@@ -263,6 +264,16 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
             if (isSelf) return;
 
             initInviteButton();
+        } else if (update.getUpdateType() == UpdateType.RENEWING_CONFIRMED) {
+            runBackground(() -> {
+                room = DiraRoomDatabase.getDatabase(this).
+                        getRoomDao().getRoomBySecretName(roomSecret);
+
+                if (room.getEncryptionKey() != null) {
+                    runOnMainThread(this::initStatuses);
+                }
+            });
+
         }
     }
 
@@ -332,12 +343,20 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
         if (noKey) {
             findViewById(R.id.room_info_room_not_encrypted).setVisibility(View.VISIBLE);
             findViewById(R.id.room_info_room_encrypted).setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.room_info_room_not_encrypted).setVisibility(View.GONE);
+            findViewById(R.id.room_info_room_encrypted).setVisibility(View.VISIBLE);
         }
 
         boolean isEmptyPrivate = room.getRoomType() == RoomType.PRIVATE && members.size() == 0;
         if (isEmptyPrivate) {
             findViewById(R.id.room_info_empty_private_room).setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.room_name)).setText(getText(R.string.room_type_private));
+        }
+
+        boolean isPrivateNotEmpty = room.getRoomType() == RoomType.PRIVATE && members.size() != 0;
+        if (isPrivateNotEmpty) {
+            findViewById(R.id.room_info_empty_private_room).setVisibility(View.GONE);
         }
 
         boolean showEncryptionButton = room.getRoomType() == RoomType.PRIVATE && members.size() > 0;

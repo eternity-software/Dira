@@ -76,7 +76,7 @@ public class DiraKeyProtocolProcessor {
                 DhKey dhKey = keyReceivedUpdate.getDhKey();
                 Logger.logDebug(this.getClass().getSimpleName(), "Received N=" + dhKey.getN());
 
-                if (room.getRoomType() == RoomType.PRIVATE && dhKey.getN() > 1) {
+                if (room.getRoomType() == RoomType.PRIVATE && dhKey.getN() > 2) {
                     Logger.logDebug(this.getClass().getSimpleName(), "Received N=" + dhKey.getN() + ", but room is private");
                     return;
                 }
