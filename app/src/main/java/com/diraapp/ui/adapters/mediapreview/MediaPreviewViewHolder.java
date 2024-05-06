@@ -124,6 +124,8 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
                     onVideoPlayerPrepared();
                 }
 
+                setupVideoPlayerListener();
+
                 videoPlayer.setSpeed(1f);
                 videoPlayer.setProgress(0);
 
@@ -340,13 +342,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    private void onVideoPlayerPrepared() {
-        isSetup = true;
-        imageView.setVisibility(View.GONE);
-
-        Logger.logDebug(MediaPreviewViewHolder.class.getSimpleName(),
-                "DiraVideoPlayer loaded");
-
+    private void setupVideoPlayerListener() {
         videoPlayer.setOnTickListener((float progress) -> {
             int time = (int) (progress * 1000);
             seekBar.setProgress(time);
@@ -362,6 +358,14 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
                                 DeviceUtils.getDurationTimeMS(duration));
             });
         });
+    }
+
+    private void onVideoPlayerPrepared() {
+        isSetup = true;
+        imageView.setVisibility(View.GONE);
+
+        Logger.logDebug(MediaPreviewViewHolder.class.getSimpleName(),
+                "DiraVideoPlayer loaded");
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
