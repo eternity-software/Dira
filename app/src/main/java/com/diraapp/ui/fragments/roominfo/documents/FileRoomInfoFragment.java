@@ -77,6 +77,6 @@ public class FileRoomInfoFragment extends
         types[0] = AttachmentType.FILE;
 
         return new AttachmentLoader<>(getContext(), pairs, roomSecret, types, this,
-                AttachmentDao.ATTACHMENT_LOAD_COUNT);
+                AttachmentDao.ATTACHMENT_LOAD_COUNT, true);
     }
 }

@@ -87,7 +87,8 @@ public class VoiceRoomInfoFragment extends
         types[0] = AttachmentType.VOICE;
         types[1] = AttachmentType.BUBBLE;
 
-        return new AttachmentLoader<>(getContext(), pairs, roomSecret, types, this, AttachmentDao.ATTACHMENT_LOAD_COUNT);
+        return new AttachmentLoader<>(getContext(), pairs, roomSecret, types,
+                this, AttachmentDao.ATTACHMENT_LOAD_COUNT, true);
     }
 
     @Override

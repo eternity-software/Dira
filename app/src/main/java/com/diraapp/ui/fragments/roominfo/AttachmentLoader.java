@@ -43,12 +43,15 @@ public class AttachmentLoader<ConvertedType> {
     public AttachmentLoader(Context context,
                             List<AttachmentMessagePair> pairs,
                             String roomSecret, AttachmentType[] types,
-                            AttachmentLoaderListener listener, int loadCount) {
+                            AttachmentLoaderListener listener,
+                            int loadCount, boolean isNewestLoaded) {
         this.context = context;
         this.pairs = pairs;
         this.roomSecret = roomSecret;
         this.types = types;
         this.listener = listener;
+
+        this.isNewestLoaded = isNewestLoaded;
 
         useConverter = false;
 
@@ -229,6 +232,8 @@ public class AttachmentLoader<ConvertedType> {
             pair.getMessage().getAttachments().add(pair.getAttachment());
         }
         Collections.reverse(newer);
+
+        if (newer.size() < loadCount) isNewestLoaded = true;
 
         pairs.addAll(newer);
         pairs.add(current);

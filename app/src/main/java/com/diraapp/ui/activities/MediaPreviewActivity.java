@@ -170,7 +170,8 @@ public class MediaPreviewActivity extends DiraActivity
             types[0] = AttachmentType.IMAGE;
             types[1] = AttachmentType.VIDEO;
 
-            loader = new AttachmentLoader<>(this, pairs, roomSecret, types, this, 10);
+            loader = new AttachmentLoader<>(this, pairs, roomSecret,
+                    types, this, 10, false);
             loader.loadNear(startUrl);
         });
     }
