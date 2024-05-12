@@ -43,7 +43,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <com.diraapp.ui.components.TouchImageView
+            <com.github.chrisbanes.photoview.PhotoView
                 android:id="@+id/image_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

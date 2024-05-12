@@ -31,6 +31,7 @@ import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayerState;
 import com.diraapp.utils.Logger;
 import com.diraapp.utils.android.DeviceUtils;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -49,11 +50,9 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
     private final ViewHolderActivityContract holderActivityContract;
 
-    //private final ConstraintLayout imageContainer;
-
     private final CardView cardView;
 
-    private final TouchImageView imageView;
+    private final PhotoView imageView;
 
     private final DiraVideoPlayer videoPlayer;
 
@@ -214,7 +213,12 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         if (file == null) return;
         Logger.logDebug(MediaPreviewViewHolder.class.getSimpleName(), "Holder selected");
         boolean isImage = pair.getAttachment().getAttachmentType() == AttachmentType.IMAGE;
-        if (isImage) return;
+        if (isImage) {
+            imageView.setZoomable(true);
+            return;
+        }
+
+        imageView.setZoomable(false);
 
         videoPlayer.setProgress(0);
         if (videoPlayer.getState() == DiraVideoPlayerState.PAUSED) {
@@ -227,6 +231,8 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
     public void onUnselected() {
         videoPlayer.pause();
+
+        imageView.setScale(1, true);
     }
 
     public void onRecycled() {
@@ -290,7 +296,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
             Picasso.get().load(R.drawable.full_placeholder);
 
             DiraActivity.runGlobalBackground(() -> {
-                duration = DeviceUtils.readDuration(file, imageView.getContext());
+                duration = DeviceUtils.readDuration(file, itemView.getContext());
             });
 
             int width = holderActivityContract.getActivityWidth();
