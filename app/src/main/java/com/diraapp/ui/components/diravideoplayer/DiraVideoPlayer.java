@@ -54,6 +54,8 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
 
     private float volume = 0;
 
+    private boolean playOnResume = true;
+
 
     public DiraVideoPlayer(@NonNull Context context) {
         super(context);
@@ -68,6 +70,10 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
     public DiraVideoPlayer(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
+    }
+
+    public void setPlayOnResume(boolean playOnResume) {
+        this.playOnResume = playOnResume;
     }
 
     public void setVolume(float volume) {
@@ -134,7 +140,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
         diraActivity.addListener(new DiraActivityListener() {
             @Override
             public void onResume() {
-                play();
+                if (playOnResume) play();
             }
 
             @Override
@@ -190,6 +196,7 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
             try {
                 mediaPlayer.pause();
                 state = DiraVideoPlayerState.PAUSED;
+                notifyStateChanged(state);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -363,6 +370,10 @@ public class DiraVideoPlayer extends TextureView implements TextureView.SurfaceT
         if (mediaPlayer != null) {
             mediaPlayer.seekTo((int) (progress * mediaPlayer.getDuration()));
         }
+    }
+
+    public float getProgress() {
+        return mediaPlayer.getProgress();
     }
 
     /**

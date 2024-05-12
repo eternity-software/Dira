@@ -1,9 +1,7 @@
 package com.diraapp.ui.adapters.mediapreview;
 
-import android.view.Gravity;
-import android.view.TextureView;
+import android.animation.Animator;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,14 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diraapp.R;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
-import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.activities.DiraActivity;
-import com.diraapp.ui.components.TouchImageView;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayer;
 import com.diraapp.ui.components.diravideoplayer.DiraVideoPlayerState;
 import com.diraapp.utils.Logger;
@@ -50,6 +46,8 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
     private final ViewHolderActivityContract holderActivityContract;
 
+    private final LinearLayout messageInfoContainer;
+
     private final CardView cardView;
 
     private final PhotoView imageView;
@@ -66,12 +64,20 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
     private final SeekBar seekBar;
 
-    private final ImageView pauseButton, saveButtonIcon, memberImage;
+    private final ImageView pauseButton, saveButtonIcon, memberImage, pauseButtonMiddle;
 
     private boolean isSetup = false;
 
+    private boolean isPaused = false;
+
+    private boolean isInterfaceShown = true;
+
+
     public MediaPreviewViewHolder(@NonNull View itemView, ViewHolderActivityContract contract) {
         super(itemView);
+
+        messageInfoContainer = itemView.findViewById(R.id.bottom_layout);
+        pauseButtonMiddle = itemView.findViewById(R.id.pause_button_middle);
 
         //imageContainer = itemView.findViewById(R.id.imageContainer);
         cardView = itemView.findViewById(R.id.card_view);
@@ -104,10 +110,25 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         });
 
         videoPlayer.setVolume(1);
+        videoPlayer.setPlayOnResume(false);
         contract.attachVideoPlayer(videoPlayer);
 
         videoPlayer.addListener((DiraVideoPlayerState state) -> {
+            if (state == DiraVideoPlayerState.PAUSED) {
+                pauseButton.setImageDrawable(AppCompatResources.
+                        getDrawable(itemView.getContext(), R.drawable.ic_play));
+
+                pauseButtonMiddle.setImageDrawable(AppCompatResources.
+                        getDrawable(itemView.getContext(), R.drawable.ic_play));
+            }
+
             if (state != DiraVideoPlayerState.PLAYING) return false;
+
+            pauseButton.setImageDrawable(AppCompatResources.
+                    getDrawable(itemView.getContext(), R.drawable.ic_pause));
+
+            pauseButtonMiddle.setImageDrawable(AppCompatResources.
+                    getDrawable(itemView.getContext(), R.drawable.ic_pause));
 
             if (pair == null) {
                 onUnselected();
@@ -126,7 +147,8 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
                 setupVideoPlayerListener();
 
                 videoPlayer.setSpeed(1f);
-                videoPlayer.setProgress(0);
+
+//                if (isPaused) videoPlayer.setProgress(0);
 
                 boolean isSelected = holderActivityContract.checkIsSelected(pair);
                 if (!isSelected) {
@@ -154,6 +176,8 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
             saveButtonIcon.setImageDrawable(ContextCompat.getDrawable(
                     itemView.getContext(), R.drawable.ic_check));
         });
+
+        setupContentOnClickListener();
     }
 
     public void bind(AttachmentMessagePair attachmentMessagePair) {
@@ -218,6 +242,8 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
             return;
         }
 
+        isPaused = false;
+
         imageView.setZoomable(false);
 
         videoPlayer.setProgress(0);
@@ -233,6 +259,8 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         videoPlayer.pause();
 
         imageView.setScale(1, true);
+
+        if (!isInterfaceShown) onInterfaceViewsBehaviorChanged();
     }
 
     public void onRecycled() {
@@ -241,11 +269,6 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         file = null;
 
         currentTime = -1000;
-
-        pauseButton.setOnClickListener((View v) -> {
-        });
-        videoPlayer.setOnClickListener((View v) -> {
-        });
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -282,6 +305,8 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
             imageView.setVisibility(View.VISIBLE);
             Picasso.get().load(R.drawable.full_placeholder);
 
+            pauseButtonMiddle.setVisibility(View.GONE);
+
             progressLayout.setVisibility(View.GONE);
             return;
         }
@@ -289,6 +314,10 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         if (isVideo) {
             imageView.setVisibility(View.VISIBLE);
             videoPlayer.setVisibility(View.VISIBLE);
+
+            pauseButtonMiddle.setImageDrawable(AppCompatResources.
+                    getDrawable(itemView.getContext(), R.drawable.ic_pause));
+
             pauseButton.setImageDrawable(AppCompatResources.
                     getDrawable(itemView.getContext(), R.drawable.ic_pause));
 
@@ -301,7 +330,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
             int width = holderActivityContract.getActivityWidth();
             double ratio = (double) pair.getAttachment().getHeight() /
-                            (double) pair.getAttachment().getWidth();
+                    (double) pair.getAttachment().getWidth();
             int height = (int) ((double) width * (double) ratio);
             Logger.logDebug(MediaPreviewViewHolder.class.getSimpleName(),
                     "height = " + height + " | wight = " + width);
@@ -313,9 +342,13 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
             videoPlayer.play(file.getPath());
 
+            pauseButtonMiddle.setVisibility(View.VISIBLE);
+
         } else {
             videoPlayer.setVisibility(View.GONE);
             progressLayout.setVisibility(View.GONE);
+
+            pauseButtonMiddle.setVisibility(View.GONE);
 
             Picasso.get().load(file).placeholder(R.drawable.full_placeholder).into(imageView);
             imageView.setVisibility(View.VISIBLE);
@@ -327,7 +360,7 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
             onPauseClicked();
         });
 
-        videoPlayer.setOnClickListener((View v) -> {
+        pauseButtonMiddle.setOnClickListener((View v) -> {
             onPauseClicked();
         });
     }
@@ -337,15 +370,73 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
         DiraVideoPlayerState state = videoPlayer.getState();
 
         if (state == DiraVideoPlayerState.PLAYING) {
-            pauseButton.setImageDrawable(AppCompatResources.
-                    getDrawable(itemView.getContext(), R.drawable.ic_play));
             videoPlayer.pause();
+            isPaused = true;
 
         } else if (state == DiraVideoPlayerState.PAUSED) {
-            pauseButton.setImageDrawable(AppCompatResources.
-                    getDrawable(itemView.getContext(), R.drawable.ic_pause));
+
             videoPlayer.play();
+            isPaused = false;
+
         }
+    }
+
+    private void setupContentOnClickListener() {
+        imageView.setOnClickListener((View v) -> {
+            onInterfaceViewsBehaviorChanged();
+        });
+        videoPlayer.setOnClickListener((View v) -> {
+            onInterfaceViewsBehaviorChanged();
+        });
+
+        itemView.setOnClickListener((View v) -> {
+            onInterfaceViewsBehaviorChanged();
+        });
+    }
+
+    private void onInterfaceViewsBehaviorChanged() {
+        boolean isVideo = pair.getAttachment().getAttachmentType() == AttachmentType.VIDEO;
+
+        float to;
+        if (isInterfaceShown) {
+            to = 0;
+            isInterfaceShown = false;
+        } else {
+            to = 1;
+
+            messageInfoContainer.setVisibility(View.VISIBLE);
+
+            if (isVideo) pauseButtonMiddle.setVisibility(View.VISIBLE);
+
+            isInterfaceShown = true;
+        }
+
+        performHideAnimation(to, messageInfoContainer);
+        if (isVideo) performHideAnimation(to, pauseButtonMiddle);
+    }
+
+    private void performHideAnimation(float alphaTo, View v) {
+        long animationDuration = 300;
+        v.animate().alpha(alphaTo).setDuration(animationDuration).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(@NonNull Animator animator) {
+            }
+
+            @Override
+            public void onAnimationEnd(@NonNull Animator animator) {
+                if (!isInterfaceShown) {
+                    v.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(@NonNull Animator animator) {
+            }
+
+            @Override
+            public void onAnimationRepeat(@NonNull Animator animator) {
+            }
+        });
     }
 
     private void setupVideoPlayerListener() {

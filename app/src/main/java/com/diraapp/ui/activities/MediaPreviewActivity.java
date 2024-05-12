@@ -61,6 +61,8 @@ public class MediaPreviewActivity extends DiraActivity
 
     private int activityWidth = -1;
 
+    private boolean isResumed = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +78,13 @@ public class MediaPreviewActivity extends DiraActivity
 
         getWindow().getSharedElementEnterTransition().setInterpolator(new DecelerateInterpolator(2f));
         getWindow().getSharedElementEnterTransition().setDuration(250);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        isResumed = true;
     }
 
     @Override
