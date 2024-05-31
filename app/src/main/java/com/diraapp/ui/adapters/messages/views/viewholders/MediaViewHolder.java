@@ -60,9 +60,9 @@ public class MediaViewHolder extends AttachmentViewHolder implements DiraActivit
         previewImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getMessageAdapterContract().preparePreviewActivity(file.getPath(),
+                MediaViewHolder.this.openMediaPreviewActivity(file.getPath(),
                         attachment.getAttachmentType() == AttachmentType.VIDEO,
-                        previewImage.getLoadedBitmap(), previewImage.getImageView(), attachment).start();
+                        previewImage.getLoadedBitmap(), previewImage.getImageView(), attachment);
             }
         });
 
@@ -97,9 +97,10 @@ public class MediaViewHolder extends AttachmentViewHolder implements DiraActivit
             videoPlayer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getMessageAdapterContract().preparePreviewActivity(file.getPath(),
+                    openMediaPreviewActivity(file.getPath(),
                             attachment.getAttachmentType() == AttachmentType.VIDEO,
-                            previewImage.getLoadedBitmap(), previewImage.getImageView(), attachment).start();
+                            previewImage.getLoadedBitmap(),
+                            previewImage.getImageView(), attachment);
                 }
             });
         }

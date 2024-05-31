@@ -1,10 +1,13 @@
 package com.diraapp.ui.adapters.messages.views.viewholders;
 
+import android.graphics.Bitmap;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
 import com.diraapp.db.entities.Attachment;
+import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.messages.Message;
 import com.diraapp.storage.MessageAttachmentLoader;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;
@@ -48,4 +51,12 @@ public abstract class AttachmentViewHolder extends BaseMessageViewHolder
     public abstract void onAttachmentLoaded(Attachment attachment, File file, Message message);
 
     public abstract void onLoadFailed(Attachment attachment);
+
+    final protected void openMediaPreviewActivity(String path, boolean isVideo, Bitmap bitmap,
+                                                  ImageView imageView, Attachment attachment) {
+        if (getMessageAdapterContract().isMediaPreviewActivityOpened()) return;
+
+        getMessageAdapterContract().
+                preparePreviewActivity(path, isVideo, bitmap, imageView, attachment).start();
+    }
 }

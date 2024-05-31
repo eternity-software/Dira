@@ -247,9 +247,10 @@ public class AttachmentGroupViewHolder extends TextMessageViewHolder implements 
                     imagePreview.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            getMessageAdapterContract().preparePreviewActivity(file.getPath(),
+                            openMediaPreviewActivity(file.getPath(),
                                     attachment.getAttachmentType() == AttachmentType.VIDEO,
-                                    imagePreview.getLoadedBitmap(), imagePreview.getImageView(), attachment).start();
+                                    imagePreview.getLoadedBitmap(), imagePreview.getImageView(),
+                                    attachment);
                         }
                     });
                 }
