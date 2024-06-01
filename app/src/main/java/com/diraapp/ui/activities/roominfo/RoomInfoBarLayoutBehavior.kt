@@ -2,15 +2,19 @@ package com.diraapp.ui.activities.roominfo
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.cardview.widget.CardView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.diraapp.R
 import com.diraapp.ui.components.FadingImageView
 import com.diraapp.utils.Logger
 import com.google.android.material.appbar.AppBarLayout
 import com.masoudss.lib.utils.Utils
-import kotlin.math.sqrt
+import kotlin.math.pow
 
 class RoomInfoBarLayoutBehavior: AppBarLayout.Behavior {
 
@@ -19,6 +23,10 @@ class RoomInfoBarLayoutBehavior: AppBarLayout.Behavior {
     private lateinit var fadeImage: FadingImageView
 
     private lateinit var toolbar: Toolbar
+
+    private lateinit var roomName: TextView
+
+    private lateinit var roomImageCard: CardView
 
     constructor(context: Context, attributeSet: AttributeSet?): super(context, attributeSet)
 
@@ -31,37 +39,45 @@ class RoomInfoBarLayoutBehavior: AppBarLayout.Behavior {
             val totalScrollRange = bar.totalScrollRange
 
             val progress = 1 - kotlin.math.round(
-                    100 * kotlin.math.abs(offset).toFloat() / totalScrollRange) / 100
+                    500 * kotlin.math.abs(offset).toFloat() / totalScrollRange) / 500
 
-            Logger.logDebug(this.javaClass.simpleName,
-                    "Scroll progress = $progress, total = $totalScrollRange, cur = $offset")
+//            Logger.logDebug(this.javaClass.simpleName,
+//                    "Scroll progress = $progress, total = $totalScrollRange, cur = $offset")
 
             if (progress == previousProgress) return@addOnOffsetChangedListener
             previousProgress = progress
 
-            if (!this::fadeImage.isInitialized)
-                fadeImage = parent.findViewById(R.id.blurred_picture)
-            fadeImage.alpha = progress * sqrt(progress)
+            animateFading(parent, progress)
 
-            if (!this::toolbar.isInitialized)
-                toolbar = parent.findViewById(R.id.toolbar)
-            toolbar.background.alpha = (255 - progress * 255).toInt()
+            animateBarAlpha(parent, progress)
         }
 
 
         return isHandled
     }
 
-    private fun animateFadeImage(fadeImageView: FadingImageView, progress: Float) {
-        val toSize = Utils.dp(fadeImageView.context, 300) * progress
-        val toMargin = -1 * Utils.dp(fadeImageView.context, 90) * progress
+    private fun animateFading(parent: CoordinatorLayout, progress: Float) {
+        if (!this::fadeImage.isInitialized)
+            fadeImage = parent.findViewById(R.id.blurred_picture)
 
-        val params = fadeImageView.layoutParams as ViewGroup.MarginLayoutParams
-        params.height = toSize.toInt()
-        params.width = toSize.toInt()
 
-        params.leftMargin = toMargin.toInt()
-
-        fadeImageView.requestLayout()
+        fadeImage.alpha = progress.toDouble().pow(1.3).toFloat()
     }
+
+    private fun animateBarAlpha(parent: CoordinatorLayout, progress: Float) {
+        if (!this::toolbar.isInitialized) {
+            toolbar = parent.findViewById(R.id.toolbar)
+
+            roomName = parent.findViewById(R.id.room_name_bar)
+
+            roomImageCard = parent.findViewById(R.id.room_picture_bar_card)
+        }
+
+        val barAlpha = (255 - progress * 255).toDouble().pow(1.3).toInt()
+        toolbar.background.alpha = barAlpha
+
+        roomName.alpha = 1 - progress
+        roomImageCard.alpha = 1 - progress
+    }
+
 }

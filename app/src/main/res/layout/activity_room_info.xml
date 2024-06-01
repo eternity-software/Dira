@@ -403,22 +403,67 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_height="62dp"
 
                 android:background="@drawable/bottom_rounded"
                 android:backgroundTint="@color/medium_gray"
 
                 app:layout_collapseMode="pin">
 
-                <com.diraapp.ui.components.dynamic.ThemeImageView
-                    android:id="@+id/button_back"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="6dp"
-                    android:layout_marginTop="20dp"
-                    android:background="?actionBarItemBackground"
-                    android:src="@drawable/ic_back"
-                    app:themeImageColor="accent_image_button_color" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+
+                    android:paddingHorizontal="6dp">
+
+                    <com.diraapp.ui.components.dynamic.ThemeImageView
+                        android:id="@+id/button_back"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="?actionBarItemBackground"
+                        android:src="@drawable/ic_back"
+                        app:themeImageColor="accent_image_button_color" />
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/room_picture_bar_card"
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:background="#24FFFFFF"
+
+                        android:layout_marginStart="16dp"
+
+                        app:cardCornerRadius="55dp"
+                        app:cardElevation="0dp">
+
+                        <ImageView
+                            android:id="@+id/room_picture_bar"
+                            android:layout_width="34dp"
+                            android:layout_height="34dp"
+                            android:src="@drawable/placeholder"
+                            android:transitionName="icon" />
+
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:id="@+id/room_name_bar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp"
+
+                        android:layout_marginStart="16dp"
+
+                        android:layout_weight="1"
+                        android:fontFamily="@font/montserratbold"
+                        android:gravity="center_vertical"
+                        android:text="@string/room_name"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+
+                        android:transitionName="name" />
+
+                </LinearLayout>
+
 
             </androidx.appcompat.widget.Toolbar>
 

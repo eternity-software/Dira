@@ -87,7 +87,7 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
 //        SliderActivity sliderActivity = new SliderActivity();
 //        sliderActivity.attachSlider(this);
 
-        findViewById(R.id.toolbar).getBackground().setAlpha(0);
+        initToolBar();
 
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams)
                 findViewById(R.id.app_bar_layout).getLayoutParams();
@@ -180,6 +180,8 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
                             Bitmap bitmap = AppStorage.getBitmapFromPath(room.getImagePath(), getApplicationContext());
                             if (bitmap != null) {
                                 roomPicture.setImageBitmap(bitmap);
+                                ((ImageView) findViewById(R.id.room_picture_bar)).
+                                        setImageBitmap(bitmap);
 
                                 FadingImageView blurryBackground = findViewById(R.id.blurred_picture);
                                 blurryBackground.setEdgeLength(128);
@@ -217,6 +219,7 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
                         }
 
                         roomName.setText(room.getName());
+                        ((TextView) findViewById(R.id.room_name_bar)).setText(room.getName());
 
                         initInviteButton();
                         initOptionsButton();
@@ -348,6 +351,7 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
         if (isEmptyPrivate) {
             findViewById(R.id.room_info_empty_private_room).setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.room_name)).setText(getText(R.string.room_type_private));
+            ((TextView) findViewById(R.id.room_name_bar)).setText(getText(R.string.room_type_private));
         }
 
         boolean isPrivateNotEmpty = room.getRoomType() == RoomType.PRIVATE && members.size() != 0;
@@ -375,6 +379,15 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
     private void showEncryptionButton() {
         findViewById(R.id.icon_invite).setVisibility(View.GONE);
         findViewById(R.id.encryption_button).setVisibility(View.VISIBLE);
+    }
+
+    private void initToolBar() {
+
+        findViewById(R.id.toolbar).getBackground().setAlpha(0);
+
+        findViewById(R.id.room_picture_bar_card).setAlpha(0);
+
+        findViewById(R.id.room_name_bar).setAlpha(0);
     }
 
     @Override
