@@ -115,7 +115,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.activities.RoomInfoActivity"
+            android:name=".ui.activities.roominfo.RoomInfoActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/AppSlideTheme">

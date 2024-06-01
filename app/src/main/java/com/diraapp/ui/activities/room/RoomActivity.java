@@ -1,7 +1,7 @@
 package com.diraapp.ui.activities.room;
 
-import static com.diraapp.ui.activities.RoomInfoActivity.MESSAGE_TO_SCROLL_ID;
-import static com.diraapp.ui.activities.RoomInfoActivity.MESSAGE_TO_SCROLL_TIME;
+import static com.diraapp.ui.activities.roominfo.RoomInfoActivity.MESSAGE_TO_SCROLL_ID;
+import static com.diraapp.ui.activities.roominfo.RoomInfoActivity.MESSAGE_TO_SCROLL_TIME;
 
 import android.Manifest;
 import android.animation.Animator;
@@ -18,7 +18,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -64,7 +63,7 @@ import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.MediaPreviewActivity;
 import com.diraapp.ui.activities.MediaSendActivity;
 import com.diraapp.ui.activities.PreparedActivity;
-import com.diraapp.ui.activities.RoomInfoActivity;
+import com.diraapp.ui.activities.roominfo.RoomInfoActivity;
 import com.diraapp.ui.activities.resizer.FluidContentResizer;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.adapters.messages.MessageAdapterContract;

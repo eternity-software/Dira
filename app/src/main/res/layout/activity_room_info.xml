@@ -1,50 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/AppSlideTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark"
+    tools:context=".ui.activities.roominfo.RoomInfoActivity"
+
     android:clipChildren="false"
     android:clipToPadding="false"
-    tools:context=".ui.activities.RoomInfoActivity">
+
+    tools:fitsSystemWindows="true">
 
 
-    <!--    <ImageView-->
-    <!--        android:id="@+id/search"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="40dp"-->
-    <!--        android:layout_gravity="center_vertical"-->
-    <!--        android:layout_marginEnd="8dp"-->
-    <!--        android:padding="8dp"-->
-    <!--        android:src="@drawable/ic_encryption"-->
-    <!--        app:layout_constraintBottom_toBottomOf="@+id/button_back"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-
-    <!--        app:layout_constraintTop_toTopOf="@+id/button_back"-->
-    <!--        app:tint="@color/white"-->
-    <!--        android:visibility="gone"/>-->
-
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/scrollView2"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+
         android:clipChildren="false"
         android:clipToPadding="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top_bar"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="0dp">
 
-        <LinearLayout
+        tools:fitsSystemWindows="true"
+
+        app:layout_behavior="com.diraapp.ui.activities.roominfo.RoomInfoBarLayoutBehavior">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:clipChildren="false"
             android:clipToPadding="false"
-            android:nestedScrollingEnabled="true"
-            android:orientation="vertical">
+
+            android:fitsSystemWindows="true"
+
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -53,19 +44,14 @@
                 android:backgroundTint="@color/medium_gray"
                 android:clipChildren="false"
                 android:clipToPadding="false"
+                android:fitsSystemWindows="true"
                 android:orientation="vertical"
                 android:paddingHorizontal="18dp"
-                android:paddingBottom="18dp">
 
-                <com.diraapp.ui.components.dynamic.ThemeImageView
-                    android:id="@+id/button_back"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="6dp"
-                    android:layout_marginTop="20dp"
-                    android:background="?actionBarItemBackground"
-                    android:src="@drawable/ic_back"
-                    app:themeImageColor="accent_image_button_color" />
+                app:layout_collapseMode="none"
+
+                android:paddingBottom="18dp"
+                android:paddingTop="50dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -348,8 +334,8 @@
                             android:id="@+id/encryption_button"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:paddingVertical="12dp"
                             android:layout_gravity="center_horizontal"
+                            android:paddingVertical="12dp"
                             android:src="@drawable/ic_encryption"
                             android:visibility="gone"
                             app:tint="@color/white" />
@@ -414,109 +400,116 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <HorizontalScrollView
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:orientation="horizontal"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="8dp"
-                android:scrollbars="none">
+                android:layout_height="70dp"
 
-                <com.diraapp.ui.components.mediatypeselector.MediaTypeSelector
-                    android:id="@+id/media_type_selector"
+                android:background="@drawable/bottom_rounded"
+                android:backgroundTint="@color/medium_gray"
+
+                app:layout_collapseMode="pin">
+
+                <com.diraapp.ui.components.dynamic.ThemeImageView
+                    android:id="@+id/button_back"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="20dp"
+                    android:background="?actionBarItemBackground"
+                    android:src="@drawable/ic_back"
+                    app:themeImageColor="accent_image_button_color" />
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:clipToPadding="false"
+            android:scrollbars="none">
+
+            <com.diraapp.ui.components.mediatypeselector.MediaTypeSelector
+                android:id="@+id/media_type_selector"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:selected="0">
+
+                <com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorItem
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    app:selected="0">
+                    android:layout_height="wrap_content"
+                    app:itemIcon="@drawable/ic_image"
+                    app:itemText="@string/media" />
 
-                    <com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:itemIcon="@drawable/ic_image"
-                        app:itemText="@string/media" />
+                <com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:itemIcon="@drawable/ic_mic"
+                    app:itemText="@string/voice" />
 
-                    <com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:itemIcon="@drawable/ic_mic"
-                        app:itemText="@string/voice" />
+                <!--                    <com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorItem-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        app:itemIcon="@drawable/ic_link"-->
+                <!--                        app:itemText="@string/links" />-->
 
-                    <!--                    <com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorItem-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        app:itemIcon="@drawable/ic_link"-->
-                    <!--                        app:itemText="@string/links" />-->
+                <com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:itemIcon="@drawable/ic_documents"
+                    app:itemText="@string/documents" />
 
-                    <com.diraapp.ui.components.mediatypeselector.MediaTypeSelectorItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:itemIcon="@drawable/ic_documents"
-                        app:itemText="@string/documents" />
+            </com.diraapp.ui.components.mediatypeselector.MediaTypeSelector>
 
-                </com.diraapp.ui.components.mediatypeselector.MediaTypeSelector>
+        </HorizontalScrollView>
 
-            </HorizontalScrollView>
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="@android:color/transparent"
+    </com.google.android.material.appbar.AppBarLayout>
 
-                app:cardCornerRadius="18dp"
-                app:cardElevation="0dp">
-
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-            </androidx.cardview.widget.CardView>
-
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/scrollView2"
-        app:srcCompat="@drawable/shadow_gradient" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:scaleY="-1"
-        app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/shadow_gradient" />
-
-    <FrameLayout
-        android:id="@+id/top_bar"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/medium_gray"
-        android:src="@drawable/ic_back"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        app:cardBackgroundColor="@android:color/transparent"
 
-        <com.diraapp.ui.components.dynamic.ThemeImageView
-            android:id="@+id/button_back_bar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:background="?actionBarItemBackground"
-            android:padding="10dp"
-            android:src="@drawable/ic_back"
-            app:themeImageColor="accent_image_button_color" />
+        app:cardCornerRadius="18dp"
+        app:cardElevation="0dp"
 
-    </FrameLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:clipToPadding="false"
+
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.cardview.widget.CardView>
+
+    
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/imageView"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="50dp"-->
+    <!--        android:visibility="gone"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="1.0"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="@+id/scrollView2"-->
+    <!--        app:srcCompat="@drawable/shadow_gradient" />-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/imageView2"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="50dp"-->
+    <!--        android:scaleY="-1"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@+id/scrollView2"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="1.0"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:srcCompat="@drawable/shadow_gradient" />-->
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

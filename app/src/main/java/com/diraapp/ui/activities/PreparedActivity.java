@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 
+import com.diraapp.ui.activities.roominfo.RoomInfoActivity;
+
 public class PreparedActivity {
     protected final Intent intent;
     protected final ActivityOptions options;

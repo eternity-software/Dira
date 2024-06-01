@@ -1,12 +1,8 @@
-package com.diraapp.ui.activities;
+package com.diraapp.ui.activities.roominfo;
 
-import android.app.Activity;
-import android.app.ActivityOptions;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,13 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.diraapp.R;
@@ -30,21 +20,21 @@ import com.diraapp.api.requests.CreateInviteRequest;
 import com.diraapp.api.updates.MemberUpdate;
 import com.diraapp.api.updates.NewInvitationUpdate;
 import com.diraapp.api.updates.NewMessageUpdate;
-import com.diraapp.api.updates.RenewingConfirmUpdate;
 import com.diraapp.api.updates.Update;
 import com.diraapp.api.updates.UpdateType;
 import com.diraapp.api.views.RoomMember;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.daos.RoomDao;
-import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
-import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.Member;
-import com.diraapp.db.entities.messages.Message;
 import com.diraapp.db.entities.rooms.Room;
 import com.diraapp.db.entities.rooms.RoomType;
 import com.diraapp.exceptions.UnablePerformRequestException;
 import com.diraapp.storage.AppStorage;
 import com.diraapp.storage.images.ImagesWorker;
+import com.diraapp.ui.activities.DiraActivity;
+import com.diraapp.ui.activities.EditRoomActivity;
+import com.diraapp.ui.activities.MembersActivity;
+import com.diraapp.ui.activities.NavigationActivity;
 import com.diraapp.ui.adapters.roominfo.RoomInfoPagerAdapter;
 import com.diraapp.ui.bottomsheet.InvitationCodeBottomSheet;
 import com.diraapp.ui.bottomsheet.RoomEncryptionBottomSheet;
@@ -94,8 +84,14 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
 
         roomSecret = getIntent().getExtras().getString(ROOM_SECRET_EXTRA);
 
-        SliderActivity sliderActivity = new SliderActivity();
-        sliderActivity.attachSlider(this);
+//        SliderActivity sliderActivity = new SliderActivity();
+//        sliderActivity.attachSlider(this);
+
+        findViewById(R.id.toolbar).getBackground().setAlpha(0);
+
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams)
+                findViewById(R.id.app_bar_layout).getLayoutParams();
+        params.setBehavior(new RoomInfoBarLayoutBehavior(this, null));
 
         findViewById(R.id.button_back).setOnClickListener(new View.OnClickListener() {
             @Override

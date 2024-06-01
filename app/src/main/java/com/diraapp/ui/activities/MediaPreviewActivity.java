@@ -1,12 +1,10 @@
 package com.diraapp.ui.activities;
 
-import static com.diraapp.ui.activities.RoomInfoActivity.MESSAGE_TO_SCROLL_ID;
-import static com.diraapp.ui.activities.RoomInfoActivity.MESSAGE_TO_SCROLL_TIME;
+import static com.diraapp.ui.activities.roominfo.RoomInfoActivity.MESSAGE_TO_SCROLL_ID;
+import static com.diraapp.ui.activities.roominfo.RoomInfoActivity.MESSAGE_TO_SCROLL_TIME;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
@@ -16,7 +14,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.diraapp.databinding.ActivityMediaPreviewBinding;
 import com.diraapp.db.DiraRoomDatabase;
 import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
-import com.diraapp.db.entities.Attachment;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.storage.AppStorage;

@@ -1,6 +1,6 @@
 package com.diraapp.ui.adapters.roominfo;
 
-import static com.diraapp.ui.activities.RoomInfoActivity.ROOM_SECRET_EXTRA;
+import static com.diraapp.ui.activities.roominfo.RoomInfoActivity.ROOM_SECRET_EXTRA;
 
 import android.os.Bundle;
 

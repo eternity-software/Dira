@@ -27,6 +27,7 @@ import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
 import com.diraapp.ui.components.MediaGridItem;
 import com.diraapp.ui.fragments.roominfo.AttachmentAdaptersListener;
 import com.diraapp.ui.waterfalls.WaterfallBalancer;
+import com.diraapp.utils.Logger;
 import com.diraapp.utils.android.DiraVibrator;
 
 import java.util.ArrayList;
@@ -153,6 +154,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
+        Logger.logDebug("bound pos " + position, "fdfdff");
 
         MediaGridItem picturesView = holder.fileParingImageView;
         SelectorFileInfo diraMediaInfo = mediaElements.get(position);

@@ -1,6 +1,6 @@
 package com.diraapp.ui.fragments.roominfo.media;
 
-import static com.diraapp.ui.activities.RoomInfoActivity.ROOM_SECRET_EXTRA;
+import static com.diraapp.ui.activities.roominfo.RoomInfoActivity.ROOM_SECRET_EXTRA;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -24,12 +24,10 @@ import com.diraapp.db.daos.auxiliaryobjects.AttachmentMessagePair;
 import com.diraapp.db.entities.AttachmentType;
 import com.diraapp.db.entities.Member;
 import com.diraapp.db.entities.rooms.Room;
-import com.diraapp.storage.DiraMediaInfo;
 import com.diraapp.storage.attachments.AttachmentDownloader;
 import com.diraapp.ui.activities.DiraActivity;
 import com.diraapp.ui.activities.MediaPreviewActivity;
-import com.diraapp.ui.activities.PreviewActivity;
-import com.diraapp.ui.activities.RoomInfoActivity;
+import com.diraapp.ui.activities.roominfo.RoomInfoActivity;
 import com.diraapp.ui.adapters.MediaGridAdapter;
 import com.diraapp.ui.adapters.MediaGridItemListener;
 import com.diraapp.ui.bottomsheet.filepicker.SelectorFileInfo;
