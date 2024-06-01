@@ -45,6 +45,8 @@ public interface MessageAdapterContract {
     default void onLastLoadedMessageDisplayed(Message message, int index) {
     }
 
+    boolean isMediaPreviewActivityOpened();
+
     PreparedActivity preparePreviewActivity(String filePath, boolean isVideo, Bitmap preview, View transitionSource, Attachment attachment);
 
     void attachVideoPlayer(DiraVideoPlayer player);

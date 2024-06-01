@@ -148,8 +148,6 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
                 videoPlayer.setSpeed(1f);
 
-//                if (isPaused) videoPlayer.setProgress(0);
-
                 boolean isSelected = holderActivityContract.checkIsSelected(pair);
                 if (!isSelected) {
                     Logger.logDebug(MediaPreviewViewHolder.class.getSimpleName(),
@@ -386,10 +384,6 @@ public class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
             onInterfaceViewsBehaviorChanged();
         });
         videoPlayer.setOnClickListener((View v) -> {
-            onInterfaceViewsBehaviorChanged();
-        });
-
-        itemView.setOnClickListener((View v) -> {
             onInterfaceViewsBehaviorChanged();
         });
     }

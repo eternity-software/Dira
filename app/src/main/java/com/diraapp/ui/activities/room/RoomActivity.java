@@ -145,6 +145,8 @@ public class RoomActivity extends DiraActivity
 
     private ListenableViewHolder currentListenableViewHolder;
 
+    private boolean isMediaPreviewActivityOpened = false;
+
 
     public static void putRoomExtrasInIntent(Intent intent, String roomSecret, String roomName) {
         intent.putExtra(RoomSelectorFragment.PENDING_ROOM_SECRET, roomSecret);
@@ -472,6 +474,7 @@ public class RoomActivity extends DiraActivity
         super.onResume();
 
         presenter.initRoomInfo();
+        isMediaPreviewActivityOpened = false;
 
         if (lastVisiblePosition != 0) {
             binding.recyclerView.scrollToPosition(lastVisiblePosition);
@@ -1222,7 +1225,15 @@ public class RoomActivity extends DiraActivity
     }
 
     @Override
-    public PreparedActivity preparePreviewActivity(String filePath, boolean isVideo, Bitmap preview, View transitionSource, Attachment attachment) {
+    public boolean isMediaPreviewActivityOpened() {
+        return isMediaPreviewActivityOpened;
+    }
+
+    @Override
+    public PreparedActivity preparePreviewActivity(String filePath, boolean isVideo,
+                                                   Bitmap preview, View transitionSource,
+                                                   Attachment attachment) {
+        isMediaPreviewActivityOpened = true;
 
         Intent intent = new Intent(this, MediaPreviewActivity.class);
         intent.putExtra(MediaPreviewActivity.ROOM_SECRET, roomSecret);
