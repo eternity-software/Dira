@@ -48,6 +48,10 @@ public class RoomInfoPagerAdapter extends FragmentStateAdapter
             members.put(member.getId(), member);
         }
 
+        voiceFragment = new VoiceRoomInfoFragment(members, room);
+        fileFragment = new FileRoomInfoFragment(members, room);
+        mediaFragment = new MediaRoomInfoFragment(members, room);
+
         UpdateProcessor.getInstance().addUpdateListener(this);
     }
 
@@ -61,16 +65,13 @@ public class RoomInfoPagerAdapter extends FragmentStateAdapter
 
         switch (position) {
             case 1:
-                voiceFragment = new VoiceRoomInfoFragment(members, room);
                 fragment = voiceFragment;
                 break;
             case 2:
-                fileFragment = new FileRoomInfoFragment(members, room);
                 fragment = fileFragment;
                 break;
 
             default:
-                mediaFragment = new MediaRoomInfoFragment(members, room);
                 fragment = mediaFragment;
                 break;
         }

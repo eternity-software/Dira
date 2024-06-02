@@ -65,6 +65,7 @@ class RoomInfoBarLayoutBehavior: AppBarLayout.Behavior {
     }
 
     private fun animateBarAlpha(parent: CoordinatorLayout, progress: Float) {
+        val pr = progress.toDouble().pow(1.4)
         if (!this::toolbar.isInitialized) {
             toolbar = parent.findViewById(R.id.toolbar)
 
@@ -73,11 +74,11 @@ class RoomInfoBarLayoutBehavior: AppBarLayout.Behavior {
             roomImageCard = parent.findViewById(R.id.room_picture_bar_card)
         }
 
-        val barAlpha = (255 - progress * 255).toDouble().pow(1.3).toInt()
+        val barAlpha = (255 - pr * 255).toInt()
         toolbar.background.alpha = barAlpha
 
-        roomName.alpha = 1 - progress
-        roomImageCard.alpha = 1 - progress
+        roomName.alpha = (1 - pr).toFloat()
+        roomImageCard.alpha = (1 - pr).toFloat()
     }
 
 }
