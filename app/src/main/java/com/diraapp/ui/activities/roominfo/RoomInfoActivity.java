@@ -191,7 +191,6 @@ public class RoomInfoActivity extends DiraActivity implements UpdateListener,
                                 blurryBackground.setFadeRight(true);
                                 blurryBackground.setScaleX(2f);
                                 blurryBackground.setScaleY(2f);
-                                blurryBackground.setAlpha(0.7f);
 
                                 Bitmap bitmap1 = bitmap.copy(Bitmap.Config.ARGB_8888, false);
 

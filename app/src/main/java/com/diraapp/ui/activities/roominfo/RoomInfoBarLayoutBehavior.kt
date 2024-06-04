@@ -1,10 +1,8 @@
 package com.diraapp.ui.activities.roominfo
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
@@ -12,8 +10,8 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.diraapp.R
 import com.diraapp.ui.components.FadingImageView
 import com.diraapp.utils.Logger
+import com.diraapp.utils.android.DeviceUtils
 import com.google.android.material.appbar.AppBarLayout
-import com.masoudss.lib.utils.Utils
 import kotlin.math.pow
 
 class RoomInfoBarLayoutBehavior: AppBarLayout.Behavior {
@@ -28,7 +26,17 @@ class RoomInfoBarLayoutBehavior: AppBarLayout.Behavior {
 
     private lateinit var roomImageCard: CardView
 
-    constructor(context: Context, attributeSet: AttributeSet?): super(context, attributeSet)
+    private lateinit var cardView: CardView
+
+    private var cardViewAnimator = ValueAnimator.ofFloat(0f, 100f)
+
+    private val cardViewRadius: Int
+
+    private var isCardRound = true
+
+    constructor(context: Context, attributeSet: AttributeSet?): super(context, attributeSet) {
+        cardViewRadius = DeviceUtils.dpToPx(18F, context)
+    }
 
     override fun onLayoutChild(parent: CoordinatorLayout,
                                appBarLayout: AppBarLayout,
@@ -41,8 +49,8 @@ class RoomInfoBarLayoutBehavior: AppBarLayout.Behavior {
             val progress = 1 - kotlin.math.round(
                     500 * kotlin.math.abs(offset).toFloat() / totalScrollRange) / 500
 
-//            Logger.logDebug(this.javaClass.simpleName,
-//                    "Scroll progress = $progress, total = $totalScrollRange, cur = $offset")
+            Logger.logDebug(this.javaClass.simpleName,
+                    "Scroll progress = $progress, total = $totalScrollRange, cur = $offset")
 
             if (progress == previousProgress) return@addOnOffsetChangedListener
             previousProgress = progress
@@ -50,6 +58,8 @@ class RoomInfoBarLayoutBehavior: AppBarLayout.Behavior {
             animateFading(parent, progress)
 
             animateBarAlpha(parent, progress)
+
+            animateCard(parent, progress)
         }
 
 
@@ -60,8 +70,7 @@ class RoomInfoBarLayoutBehavior: AppBarLayout.Behavior {
         if (!this::fadeImage.isInitialized)
             fadeImage = parent.findViewById(R.id.blurred_picture)
 
-
-        fadeImage.alpha = progress.toDouble().pow(1.3).toFloat()
+        fadeImage.alpha = (progress * 0.7).pow(1.3).toFloat()
     }
 
     private fun animateBarAlpha(parent: CoordinatorLayout, progress: Float) {
@@ -79,6 +88,46 @@ class RoomInfoBarLayoutBehavior: AppBarLayout.Behavior {
 
         roomName.alpha = (1 - pr).toFloat()
         roomImageCard.alpha = (1 - pr).toFloat()
+    }
+
+    private fun animateCard(parent: CoordinatorLayout, progress: Float) {
+        if (!this::cardView.isInitialized)
+            cardView = parent.findViewById(R.id.card_view)
+
+        // Scrolled down
+        if (progress == 0F) {
+            if (isCardRound) {
+                if (cardViewAnimator.isRunning) cardViewAnimator.end()
+                cardViewAnimator = ValueAnimator.ofFloat(0f, 100f)
+
+                cardViewAnimator.addUpdateListener { animation ->
+                    val p = animation.animatedValue as Float
+
+                    cardView.radius = cardViewRadius * (100 - p)/100
+                }
+
+                cardViewAnimator.duration = 500
+                cardViewAnimator.start()
+                isCardRound = false
+            }
+            return
+        }
+
+        // Scrolled up
+        if (isCardRound) return
+
+        if (cardViewAnimator.isRunning) cardViewAnimator.end()
+        cardViewAnimator = ValueAnimator.ofFloat(0f, 100f)
+
+        cardViewAnimator.addUpdateListener { animation ->
+            val p = animation.animatedValue as Float
+
+            cardView.radius = cardViewRadius * p/100
+        }
+
+        cardViewAnimator.duration = 500
+        cardViewAnimator.start()
+        isCardRound = true
     }
 
 }
