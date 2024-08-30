@@ -14,7 +14,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/eternity-software/Dira">
-    <img src="https://i.imgur.com/zpaH5VM.png" alt="Logo" width="180" height="180">
+    <img src="https://i.imgur.com/Llqw90j.png" alt="Logo" width="180" height="180">
   </a>
 
   <h3 align="center">Dira</h3>
@@ -150,4 +150,4 @@ Contact us with [Official Discord Server](https://discord.gg/MDJ2jTgFCv)
 [license-shield]: https://img.shields.io/github/license/eternity-software/Dira.svg?style=for-the-badge
 [license-url]: https://github.com/eternity-software/Dira/blob/master/LICENSE
 [product-screenshot]: https://i.imgur.com/EukZItj.png
-[server-lifecycle]: https://i.imgur.com/3yEcd49.png
+[server-lifecycle]: https://i.imgur.com/ir8zYnC.png
